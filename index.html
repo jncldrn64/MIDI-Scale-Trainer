@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIDI Scale Trainer Pro - V11.0 (Inteligencia Armónica)</title>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-panel: #1e293b;
+            --accent: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 20px; overflow-x: hidden; }
+        .container { max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+        
+        .header { text-align: center; margin-bottom: 5px; }
+        .header h1 { font-size: 2em; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
+        .header .credits { font-size: 0.9em; color: var(--text-muted); letter-spacing: 1px; }
+        .header .credits span { color: var(--accent); font-weight: bold; }
+        
+        /* Layout de Paneles */
+        .top-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .panel { background: var(--bg-panel); border-radius: 12px; padding: 20px; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .panel h3 { color: var(--accent); margin-bottom: 15px; font-size: 1.1em; display: flex; align-items: center; justify-content: space-between; }
+
+        /* Barra de Universo */
+        .universe-bar { background: var(--bg-panel); padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; gap: 15px;}
+        select, button { padding: 8px 16px; background: #334155; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: bold; transition: 0.2s;}
+        select:hover, button:hover { background: #475569; }
+        .formula-display { display: flex; align-items: center; background: #0b1120; padding: 10px 20px; border-radius: 8px; font-family: monospace; font-size: 16px; border: 1px solid #1e293b;}
+        .f-note { color: var(--accent); font-weight: bold; } .f-step { color: #64748b; margin: 0 10px; font-size: 12px;}
+
+        /* Status */
+        .status-item { text-align: center; }
+        .status-label { font-size: 0.7em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; font-weight: bold; letter-spacing: 1px;}
+        .status-value { font-size: 1.6em; font-weight: 800; color: #facc15; }
+
+        /* Teclado Full Width */
+        .keyboard-wrapper { 
+            background: #000; border-radius: 8px; padding: 30px 20px; 
+            box-shadow: inset 0 10px 20px rgba(0,0,0,0.5); 
+            display: flex; justify-content: center; overflow: hidden;
+            border-top: 15px solid #0f172a; margin: 10px 0;
+            position: relative;
+            --kb-scale: 1;
+            min-height: calc(240px * var(--kb-scale)); 
+            transition: min-height 0.2s ease;
+        }
+        .keyboard { display: flex; position: relative; height: 180px; transform-origin: top center; }
+        
+        .key { 
+            border-radius: 0 0 5px 5px; position: absolute; user-select: none; 
+            border: 1px solid rgba(0,0,0,0.3); display: flex; justify-content: center; 
+            align-items: flex-end; padding-bottom: 10px; font-weight: 700; font-size: 11px; 
+            transition: background 0.1s, transform 0.1s;
+        }
+        .key.white { background: #f8fafc; color: #475569; z-index: 1; }
+        .key.black { background: #1e293b; color: #f8fafc; z-index: 2; border-color: #000;}
+
+        /* Accesibilidad: Símbolos */
+        .key::before {
+            position: absolute; top: 15px; width: 100%; text-align: center;
+            font-size: 22px; font-weight: bold; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        .key.black::before { top: 8px; font-size: 18px; }
+
+        /* Colores de Evaluación Armónica */
+        .color-scale.white { background: #bae6fd; border-color: #0284c7; }
+        .color-scale.black { background: #0369a1; border-color: #38bdf8; color: #fff;}
+        .color-scale::before { content: '•'; color: rgba(0,0,0,0.4); }
+        .color-scale.black::before { color: rgba(255,255,255,0.6); }
+
+        .color-chord { background: #f59e0b !important; color: #000 !important; border-color: #b45309 !important; transform: translateY(2px); }
+        .color-chord::before { content: '♦'; color: #000; text-shadow: none; font-size: 16px;}
+
+        .color-good { background: #22c55e !important; color: #fff !important; border-color: #14532d !important; box-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
+        .color-good::before { content: '✓'; color: #fff; }
+
+        .color-tension { background: #f97316 !important; color: #fff !important; border-color: #c2410c !important; box-shadow: 0 0 15px rgba(249, 115, 22, 0.4); }
+        .color-tension::before { content: '!'; color: #fff; }
+
+        .color-passing { background: #a855f7 !important; color: #fff !important; border-color: #7e22ce !important; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+        .color-passing::before { content: '~'; color: #fff; }
+
+        .color-bad { background: #ef4444 !important; color: #fff !important; border-color: #7f1d1d !important; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); animation: shake 0.3s; }
+        .color-bad::before { content: '✕'; color: #fff; }
+        
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+
+        /* Botones y Ajustes */
+        .btn-success { background: #10b981 !important; color: white !important; }
+        .btn-warning { background: #f59e0b !important; color: black !important; }
+        .btn-danger { background: #ef4444 !important; color: white !important; }
+
+        .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+        .setting-row { display: flex; flex-direction: column; background: #0f172a; padding: 10px; border-radius: 6px; border: 1px solid #1e293b;}
+        .setting-row label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; font-weight: bold;}
+        .setting-row input { background: #1e293b; border: 1px solid #334155; color: var(--accent); padding: 5px 10px; border-radius: 4px; font-weight: bold; width: 100%;}
+
+        /* Consola de Logs */
+        .logs-wrapper { 
+            background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 10px; 
+            height: 250px; overflow-y: auto; overflow-x: hidden; font-family: 'Courier New', monospace; font-size: 11px; 
+            word-wrap: break-word; white-space: pre-wrap; line-height: 1.4;
+        }
+        .log-entry { margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px dotted #1e293b; color: #cbd5e1;}
+        .cat-MIDI { color: var(--accent); } .cat-MATH { color: #f472b6; } .cat-SYS { color: #22c55e; } .cat-EVAL { color: #a855f7; }
+        
+        .legend-grid { display: flex; gap: 15px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--text-muted); background: #0f172a; padding: 5px 10px; border-radius: 6px; }
+        .l-box { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎹 MIDI Scale Trainer Pro - V11.0</h1>
+            <div class="credits">Desarrollado con asistencia de IA</div>
+        </div>
+        
+        <div class="universe-bar">
+            <div style="display:flex; gap:10px; align-items:center;">
+                <strong>🌌 Universo:</strong>
+                <select id="root-select"></select>
+                <select id="scale-select">
+                    <option value="major">Mayor (Natural)</option>
+                    <option value="minor">Menor (Natural)</option>
+                    <option value="harmonic_minor">Menor Armónica</option>
+                </select>
+            </div>
+            <div class="formula-display" id="formula-display"></div>
+            <button id="btn-toggle-nom">Nomenclatura: Anglosajona</button>
+        </div>
+        
+        <div class="top-row">
+            <div class="panel status-item">
+                <div class="status-label">Notas Activas (Izq/Der)</div>
+                <div class="status-value"><span id="bass-count">0</span> / <span id="mel-count">0</span></div>
+            </div>
+            <div class="panel status-item">
+                <div class="status-label">Acorde Detectado</div>
+                <div class="status-value" id="chord-display">-</div>
+                <div id="chord-inversion" style="font-size:11px; color:var(--text-muted);">-</div>
+            </div>
+            <div class="panel status-item">
+                <div class="status-label">Análisis de Armonía</div>
+                <div class="status-value" id="chord-relation" style="font-size:1.2em;">-</div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-warning" id="btn-lock">🔓 Motor Automático</button>
+                    <button class="btn" id="btn-c4">🎯 Centrar en Split</button>
+                </div>
+            </div>
+            <div class="keyboard-wrapper" id="keyboard-wrapper">
+                <div class="keyboard" id="keyboard"></div>
+            </div>
+            <div class="legend-grid">
+                <div class="legend-item"><div class="l-box" style="background:#bae6fd; color:black">•</div> Escala</div>
+                <div class="legend-item"><div class="l-box" style="background:#f59e0b; color:black">♦</div> Acorde</div>
+                <div class="legend-item"><div class="l-box" style="background:#22c55e">✓</div> Correcto</div>
+                <div class="legend-item"><div class="l-box" style="background:#f97316; color:white">!</div> Tensión Legal</div>
+                <div class="legend-item"><div class="l-box" style="background:#a855f7; color:white">~</div> Paso Cromático</div>
+                <div class="legend-item"><div class="l-box" style="background:#ef4444">✕</div> Error</div>
+            </div>
+        </div>
+
+        <div class="bottom-row">
+            <div class="panel">
+                <h3>📚 Práctica: Fijar Acordes</h3>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button class="btn btn-success" onclick="UI.lockChord([48,52,55],'M')">Do Mayor</button>
+                    <button class="btn btn-success" onclick="UI.lockChord([50,53,57,60],'m7')">Re Menor 7</button>
+                    <button class="btn btn-danger" onclick="UI.unlockChord()">✕ Liberar</button>
+                </div>
+            </div>
+            <div class="panel">
+                <h3>⚙️ Ajustes del Motor</h3>
+                <div class="settings-grid">
+                    <div class="setting-row"><label>Acumulación (ms)</label><input type="number" id="cfg-accum" value="120"></div>
+                    <div class="setting-row"><label>Retención (ms)</label><input type="number" id="cfg-hold" value="2000"></div>
+                    <div class="setting-row"><label>Error Vis. (ms)</label><input type="number" id="cfg-err" value="1000"></div>
+                    <div class="setting-row"><label>Split (MIDI)</label><input type="number" id="cfg-split" value="60"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                <h3 style="margin:0;">📋 Consola y Logs Históricos</h3>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-success" id="btn-export">Exportar .txt</button>
+                    <button class="btn btn-danger" id="btn-clear">Limpiar</button>
+                </div>
+            </div>
+            <div class="logs-wrapper" id="logs-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN BASE ---
+        const NOTES_EN = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        const NOTES_ES = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
+        const BLACK_KEYS = [1, 3, 6, 8, 10];
+        const KEYBOARD_START = 36; const KEYBOARD_END = 96; 
+        
+        const SCALES = {
+            'major':          { f: [2, 2, 1, 2, 2, 2, 1], n: 'Mayor' },
+            'minor':          { f: [2, 1, 2, 2, 1, 2, 2], n: 'Menor Natural' },
+            'harmonic_minor': { f: [2, 1, 2, 2, 1, 3, 1], n: 'Menor Armónica' }
+        };
+
+        const CHORD_TEMPLATES = {
+            'M': [0, 4, 7], 'm': [0, 3, 7], 'dim': [0, 3, 6], 'aug': [0, 4, 8],
+            'sus4': [0, 5, 7], 'sus2': [0, 2, 7], '7': [0, 4, 7, 10], 'm7': [0, 3, 7, 10],
+            'M7': [0, 4, 7, 11], 'm7b5': [0, 3, 6, 10], 'dim7': [0, 3, 6, 9],
+            '6': [0, 4, 7, 9], 'm6': [0, 3, 7, 9], 'add9': [0, 2, 4, 7], 'madd9': [0, 2, 3, 7], 
+            '7(no5)': [0, 4, 10], 'm7(no5)': [0, 3, 10]
+        };
+
+        // --- ESTADO GLOBAL ---
+        const State = {
+            config: { latino: false, accumMs: 120, holdMs: 2000, errMs: 1000, splitNote: 60 },
+            universe: { root: 0, type: 'major', validPitches: new Set() },
+            midi: { access: null, activeBasses: new Set(), activeMelodies: new Set(), keysDown: new Set(), sustainActive: false },
+            harmony: { chord: null, isLocked: false },
+            evaluations: new Map(),
+            timers: { accumulation: null, contextHold: null },
+            logHistory: []
+        };
+
+        function getNoteStr(midi) {
+            const pc = midi % 12;
+            return { name: State.config.latino ? NOTES_ES[pc] : NOTES_EN[pc], oct: Math.floor(midi/12)-1, pc };
+        }
+
+        // --- SISTEMA DE LOGS OPTIMIZADO ---
+        function SysLog(cat, msg, data = null) {
+            const time = new Date().toISOString().split('T')[1].slice(0, -1);
+            
+            // Límite de retención en RAM
+            if (State.logHistory.length >= 5000) State.logHistory.shift(); 
+            State.logHistory.push({ time, cat, msg, data });
+
+            const container = document.getElementById('logs-container');
+            if (!container) return;
+
+            // Creación eficiente en DOM
+            const logDiv = document.createElement('div');
+            logDiv.className = 'log-entry';
+            logDiv.innerHTML = `<span style="color:#64748b">[${time}]</span> <span class="cat-${cat}"><b>${cat}</b></span>: ${msg} ${data ? '<br><small>'+JSON.stringify(data)+'</small>' : ''}`;
+            container.appendChild(logDiv);
+
+            if (container.children.length > 100) container.removeChild(container.firstChild);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function exportLogsTxt() {
+            const txt = State.logHistory.map(l => `[${l.time}] ${l.cat}: ${l.msg} ${l.data ? JSON.stringify(l.data) : ''}`).join('\n');
+            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], {type: 'text/plain'}));
+            a.download = `midi-logs-${Date.now()}.txt`; a.click();
+        }
+
+        // --- MOTOR MATEMÁTICO ---
+        const MathEngine = {
+            detectChord(notesArray) {
+                if(notesArray.length < 3) return null;
+                const pitchClasses = [...new Set(notesArray.map(n => n % 12))].sort((a,b) => a-b);
+                const bassPC = Math.min(...notesArray) % 12;
+                for(let root of pitchClasses) {
+                    const intervals = pitchClasses.map(pc => (pc - root + 12) % 12).sort((a,b) => a-b);
+                    for(const [type, template] of Object.entries(CHORD_TEMPLATES)) {
+                        if(template.length === intervals.length && template.every((v,i) => v === intervals[i])) {
+                            const invIndex = template.indexOf((bassPC - root + 12) % 12);
+                            const invNames = ['Fundamental', '1ª Inversión', '2ª Inversión', '3ª Inversión'];
+                            return { rootPC: root, type, bassPC, inversion: invNames[invIndex] || 'Desc.', rawNotes: notesArray, template };
+                        }
+                    }
+                }
+                return null;
+            },
+            isDiatonic(chordObj, universePitchesSet) {
+                return chordObj.template.every(interval => universePitchesSet.has((chordObj.rootPC + interval) % 12));
+            }
+        };
+
+        // --- CONTROLADOR MIDI ---
+        const MIDI = {
+            init() {
+                if(navigator.requestMIDIAccess) {
+                    navigator.requestMIDIAccess().then(access => {
+                        State.midi.access = access;
+                        this.bindDevices();
+                        access.onstatechange = (e) => { SysLog('SYS', `Puerto MIDI: ${e.port.name} ${e.port.state}`); this.bindDevices(); };
+                    }).catch(e => SysLog('ERROR', 'MIDI denegado'));
+                }
+            },
+            bindDevices() {
+                for (let input of State.midi.access.inputs.values()) {
+                    if (!input.onmidimessage) {
+                        SysLog('MIDI', `Listo: ${input.name}`);
+                        input.onmidimessage = (msg) => this.processMsg(msg);
+                    }
+                }
+            },
+            processMsg(msg) {
+                const [cmd, data1, data2] = msg.data; 
+                const status = cmd >> 4;
+                
+                // Soporte nativo para Pedal Sustain (CC 64)
+                if (status === 11 && data1 === 64) { 
+                    this.handleSustain(data2 >= 64);
+                    return;
+                }
+
+                if(status === 9 && data2 > 0) this.noteOn(data1, data2);
+                else if(status === 8 || (status === 9 && data2 === 0)) this.noteOff(data1);
+            },
+            handleSustain(isOn) {
+                State.midi.sustainActive = isOn;
+                SysLog('MIDI', `🎛️ Pedal Sustain: ${isOn ? 'ON' : 'OFF'}`);
+                
+                if (!isOn) {
+                    for (let note of State.midi.activeBasses) {
+                        if (!State.midi.keysDown.has(note)) this.releaseNoteInternal(note, true);
+                    }
+                    for (let note of State.midi.activeMelodies) {
+                        if (!State.midi.keysDown.has(note)) this.releaseNoteInternal(note, false);
+                    }
+                    UI.renderKeyboard(); UI.updateStatus();
+                }
+            },
+            noteOn(note, vel) {
+                State.midi.keysDown.add(note); 
+                SysLog('MIDI', `↓ DOWN: ${getNoteStr(note).name} (${note})`);
+                if(note < State.config.splitNote) { State.midi.activeBasses.add(note); this.triggerAccumulation(); }
+                else { State.midi.activeMelodies.add(note); this.evaluateMelody(note); }
+                UI.renderKeyboard(); UI.updateStatus();
+            },
+            noteOff(note) {
+                State.midi.keysDown.delete(note); 
+                SysLog('MIDI', `↑ UP: ${getNoteStr(note).name} (${note})`);
+                if (State.midi.sustainActive) return; 
+                this.releaseNoteInternal(note, note < State.config.splitNote);
+                UI.renderKeyboard(); UI.updateStatus();
+            },
+            releaseNoteInternal(note, isBass) {
+                const ev = State.evaluations.get(note);
+                
+                if (ev) {
+                    // Indulto Heurístico: Pasos Cromáticos
+                    const duration = Date.now() - ev.startTime;
+                    if (ev.status !== 'good' && duration < 180) {
+                        ev.status = 'passing';
+                        SysLog('EVAL', `PASO CROMÁTICO: ${getNoteStr(note).name} (${duration}ms)`);
+                    }
+
+                    if (isBass) {
+                        State.midi.activeBasses.delete(note);
+                        this.triggerContextTimeout();
+                    } else {
+                        State.midi.activeMelodies.delete(note);
+                        if (ev.status === 'good') {
+                            clearTimeout(ev.timeout);
+                            State.evaluations.delete(note);
+                        }
+                    }
+                } else {
+                    if (isBass) State.midi.activeBasses.delete(note);
+                    else State.midi.activeMelodies.delete(note);
+                }
+            },
+            triggerAccumulation() {
+                if(State.timers.accumulation) clearTimeout(State.timers.accumulation);
+                if(State.midi.activeBasses.size >= 3 && !State.harmony.isLocked) {
+                    State.timers.accumulation = setTimeout(() => {
+                        const chord = MathEngine.detectChord(Array.from(State.midi.activeBasses));
+                        if(chord) { State.harmony.chord = chord; UI.clearEvaluations(); SysLog('MATH', 'Contexto: ' + getNoteStr(chord.rootPC).name + chord.type); }
+                        else { SysLog('MATH', '⚠️ Acorde no reconocido'); }
+                        UI.renderKeyboard(); UI.updateStatus();
+                    }, State.config.accumMs); 
+                }
+            },
+            triggerContextTimeout() {
+                if(State.timers.contextHold) clearTimeout(State.timers.contextHold);
+                State.timers.contextHold = setTimeout(() => {
+                    if(!State.harmony.isLocked && State.midi.activeBasses.size === 0) {
+                        State.harmony.chord = null; UI.clearEvaluations(); UI.renderKeyboard(); UI.updateStatus();
+                    }
+                }, State.config.holdMs); 
+            },
+            evaluateMelody(note) {
+                const pc = note % 12;
+                const inScale = State.universe.validPitches.has(pc);
+                const inChord = State.harmony.chord && State.harmony.chord.template.some(i => (State.harmony.chord.rootPC + i)%12 === pc);
+                
+                // Heurística de Tensión: Identificación de la Sensible en escalas menores
+                const isMinor = State.universe.type === 'minor' || State.universe.type === 'harmonic_minor';
+                const sensiblePC = (State.universe.root + 11) % 12;
+                const isSensible = isMinor && pc === sensiblePC && !inScale && !inChord;
+                
+                let evalStatus = 'bad';
+                if (inScale || inChord) evalStatus = 'good';
+                else if (isSensible) evalStatus = 'tension';
+                
+                if(State.evaluations.has(note)) clearTimeout(State.evaluations.get(note).timeout);
+                
+                const timeoutTime = evalStatus === 'good' ? 0 : State.config.errMs;
+                const timeoutId = setTimeout(() => { State.evaluations.delete(note); UI.renderKeyboard(); }, timeoutTime);
+                
+                State.evaluations.set(note, { status: evalStatus, timeout: timeoutId, startTime: Date.now() });
+                
+                let logMsg = evalStatus === 'good' ? 'OK ' : (evalStatus === 'tension' ? 'TENSIÓN ' : 'ERROR ');
+                SysLog('EVAL', logMsg + getNoteStr(note).name);
+            }
+        };
+
+        // --- INTERFAZ DE USUARIO ---
+        const UI = {
+            buildUniverse() {
+                State.universe.root = parseInt(document.getElementById('root-select').value);
+                State.universe.type = document.getElementById('scale-select').value;
+                const scaleDef = SCALES[State.universe.type];
+                State.universe.validPitches.clear();
+                
+                let current = State.universe.root; 
+                State.universe.validPitches.add(current % 12);
+                
+                let html = `<span class="f-note">${getNoteStr(current).name}</span>`;
+                
+                scaleDef.f.forEach(step => {
+                    current += step;
+                    if(current - State.universe.root < 12) {
+                        State.universe.validPitches.add(current % 12);
+                        let label = step === 1 ? 'S' : (step === 2 ? 'T' : 'T+S');
+                        html += `<span class="f-step">-${label}-</span><span class="f-note">${getNoteStr(current).name}</span>`;
+                    }
+                });
+                
+                document.getElementById('formula-display').innerHTML = html;
+                this.renderKeyboard(); 
+                this.updateStatus();
+            },
+            buildKeyboard() {
+                const kb = document.getElementById('keyboard'); 
+                kb.innerHTML = '';
+                const W_WIDTH = 36; 
+                let whites = [];
+                
+                for(let i=KEYBOARD_START; i<=KEYBOARD_END; i++) {
+                    if(!BLACK_KEYS.includes(i%12)) whites.push(i);
+                }
+
+                const wrapper = document.getElementById('keyboard-wrapper');
+                const scale = Math.min(1, (wrapper.clientWidth - 40) / (whites.length * W_WIDTH));
+                
+                kb.style.width = `${whites.length * W_WIDTH}px`;
+                kb.style.transform = `scale(${scale})`; 
+                kb.style.transformOrigin = 'top center';
+                wrapper.style.setProperty('--kb-scale', scale);
+
+                whites.forEach((m, idx) => {
+                    const d = document.createElement('div'); d.className='key white'; d.id=`k-${m}`;
+                    d.style.width=`${W_WIDTH}px`; d.style.height='180px'; d.style.left=`${idx*W_WIDTH}px`;
+                    kb.appendChild(d);
+                });
+                for(let m=KEYBOARD_START; m<=KEYBOARD_END; m++) {
+                    if(BLACK_KEYS.includes(m%12)) {
+                        const d = document.createElement('div'); d.className='key black'; d.id=`k-${m}`;
+                        d.style.width='24px'; d.style.height='110px';
+                        const prevW = whites.filter(w=>w<m).length;
+                        d.style.left=`${(prevW*W_WIDTH)-12}px`; kb.appendChild(d);
+                    }
+                }
+                this.renderKeyboard();
+            },
+            renderKeyboard() {
+                for(let i=KEYBOARD_START; i<=KEYBOARD_END; i++) {
+                    const key = document.getElementById(`k-${i}`); if(!key) continue;
+                    const pc = i % 12; let color = 'color-inactive';
+                    
+                    if(State.harmony.chord && State.harmony.chord.rawNotes.includes(i)) {
+                        color = 'color-chord';
+                    } else if(State.evaluations.has(i)) {
+                        const status = State.evaluations.get(i).status;
+                        color = status === 'good' ? 'color-good' : (status === 'tension' ? 'color-tension' : (status === 'passing' ? 'color-passing' : 'color-bad'));
+                    } else if(State.midi.activeBasses.has(i) || State.midi.activeMelodies.has(i)) {
+                        color = State.universe.validPitches.has(pc) ? 'color-good' : 'color-inactive';
+                    } else if(State.universe.validPitches.has(pc)) {
+                        color = 'color-scale';
+                    }
+                    
+                    key.className = `key ${BLACK_KEYS.includes(pc)?'black':'white'} ${color}`;
+                    key.innerHTML = `<span>${getNoteStr(i).name}</span>`;
+                }
+            },
+            updateStatus() {
+                document.getElementById('bass-count').innerText = State.midi.activeBasses.size;
+                document.getElementById('mel-count').innerText = State.midi.activeMelodies.size;
+                if(State.harmony.chord) {
+                    const c = State.harmony.chord;
+                    document.getElementById('chord-display').innerText = `${getNoteStr(c.rootPC).name}${c.type==='M'?'':c.type}`;
+                    document.getElementById('chord-inversion').innerText = c.inversion;
+                    
+                    const isDiatonic = MathEngine.isDiatonic(c, State.universe.validPitches);
+                    const relEl = document.getElementById('chord-relation');
+                    
+                    if (isDiatonic) {
+                        relEl.innerText = "✓ Diatónico"; 
+                        relEl.style.color = "#22c55e"; 
+                    } else {
+                        // Heurística de Dominantes Secundarias
+                        const isDominantType = ['M', '7', '7(no5)'].includes(c.type);
+                        const targetPC = (c.rootPC + 5) % 12;
+                        
+                        if (isDominantType && State.universe.validPitches.has(targetPC)) {
+                            relEl.innerText = `💡 Dom. Secundaria (Empuja a ${getNoteStr(targetPC).name})`;
+                            relEl.style.color = "#f97316"; 
+                        } else {
+                            relEl.innerText = "⚠ Intercambio Modal"; 
+                            relEl.style.color = "#ef4444"; 
+                        }
+                    }
+                } else {
+                    document.getElementById('chord-display').innerText = '-'; 
+                    document.getElementById('chord-inversion').innerText = '-'; 
+                    document.getElementById('chord-relation').innerText = '-';
+                }
+            },
+            clearEvaluations() { State.evaluations.forEach(v => clearTimeout(v.timeout)); State.evaluations.clear(); },
+            lockChord(notes, type) {
+                const root = notes[0]%12;
+                State.harmony.chord = { rootPC: root, type, bassPC: root, inversion: 'Fijado', rawNotes: notes, template: CHORD_TEMPLATES[type] };
+                State.harmony.isLocked = true;
+                const btn = document.getElementById('btn-lock'); btn.innerText = "🔒 Motor Pausado"; btn.className = "btn btn-success";
+                this.clearEvaluations(); this.renderKeyboard(); this.updateStatus();
+            },
+            unlockChord() {
+                State.harmony.isLocked = false; State.harmony.chord = null;
+                const btn = document.getElementById('btn-lock'); btn.innerText = "🔓 Motor Automático"; btn.className = "btn btn-warning";
+                this.clearEvaluations(); this.renderKeyboard(); this.updateStatus();
+            }
+        };
+
+        // --- INICIALIZACIÓN Y PERSISTENCIA ---
+        function saveConfig() { localStorage.setItem('midiTrainerCfg', JSON.stringify(State.config)); }
+        function loadConfig() { const saved = localStorage.getItem('midiTrainerCfg'); if (saved) State.config = { ...State.config, ...JSON.parse(saved) }; }
+
+        window.onload = () => {
+            loadConfig(); 
+
+            document.getElementById('cfg-accum').value = State.config.accumMs;
+            document.getElementById('cfg-hold').value = State.config.holdMs;
+            document.getElementById('cfg-err').value = State.config.errMs;
+            document.getElementById('cfg-split').value = State.config.splitNote;
+            
+            const btnNom = document.getElementById('btn-toggle-nom');
+            btnNom.innerText = State.config.latino ? "Nomenclatura: Latina" : "Nomenclatura: Anglosajona";
+
+            const rs = document.getElementById('root-select');
+            (State.config.latino ? NOTES_ES : NOTES_EN).forEach((n,i) => { 
+                const o=document.createElement('option'); o.value=i; o.innerText=n; rs.appendChild(o); 
+            });
+            
+            rs.onchange = () => UI.buildUniverse();
+            document.getElementById('scale-select').onchange = () => UI.buildUniverse();
+            
+            document.getElementById('cfg-accum').onchange = (e) => { State.config.accumMs = parseInt(e.target.value); saveConfig(); };
+            document.getElementById('cfg-hold').onchange = (e) => { State.config.holdMs = parseInt(e.target.value); saveConfig(); };
+            document.getElementById('cfg-err').onchange = (e) => { State.config.errMs = parseInt(e.target.value); saveConfig(); };
+            document.getElementById('cfg-split').onchange = (e) => { State.config.splitNote = parseInt(e.target.value); saveConfig(); };
+            
+            btnNom.onclick = (e) => {
+                State.config.latino = !State.config.latino;
+                e.target.innerText = State.config.latino ? "Nomenclatura: Latina" : "Nomenclatura: Anglosajona";
+                saveConfig(); 
+                const v = rs.value; rs.innerHTML='';
+                (State.config.latino ? NOTES_ES : NOTES_EN).forEach((n,i) => { const o=document.createElement('option'); o.value=i; o.innerText=n; rs.appendChild(o); });
+                rs.value = v; UI.buildUniverse();
+            };
+
+            document.getElementById('btn-lock').onclick = () => UI.unlockChord();
+            document.getElementById('btn-c4').onclick = () => {
+                const w = document.getElementById('keyboard-wrapper'); const c4 = document.getElementById(`k-${State.config.splitNote}`);
+                if(w && c4) w.scrollLeft = c4.offsetLeft - (w.clientWidth/2);
+            };
+            document.getElementById('btn-clear').onclick = () => document.getElementById('logs-container').innerHTML='';
+            document.getElementById('btn-export').onclick = exportLogsTxt;
+            
+            window.addEventListener('resize', () => UI.buildKeyboard());
+            UI.buildUniverse(); UI.buildKeyboard(); MIDI.init();
+            setTimeout(() => document.getElementById('btn-c4').click(), 500);
+        };
+    </script>
+</body>
+</html>
