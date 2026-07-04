@@ -197,6 +197,28 @@ El trabajo vuelve al flujo por PR, sin patches ni subidas manuales.
 
 ---
 
+## 2026-07-04 — Fase 1: el bajo como raíz candidata, y el límite de la ambigüedad enarmónica
+
+**Contexto:** `detectChord` elegía siempre la raíz de menor pitch class que matcheara un
+template (ver `ARCHITECTURE.md` §4). Para La-Do-Mi-Sol (pitch classes 0, 4, 7, 9) devolvía
+"Do6" aunque el bajo estuviera en La y la música fuera vi7.
+
+**Decisión:** en `src/engine.js`, `detectChord` prueba primero el pitch class del bajo real
+(`bassPC`) como raíz candidata, antes del orden ascendente. Si el bajo arma un template
+válido, gana esa lectura; si no, cae al orden ascendente de siempre, que es la inversión
+real.
+
+**Razón y límite:** esto prefiere la lectura más probable, el bajo como raíz, pero no
+resuelve la ambigüedad. Do6 y La m7 son las mismas cuatro notas; con el bajo en La el motor
+ahora dice La m7, con el bajo en Do dice Do6. La ambigüedad enarmónica total (mismas notas,
+mismo bajo, dos lecturas que solo separa la canción entera) no tiene solución algorítmica
+simple, y no la va a tener sin el contexto de la progresión completa. Queda como límite
+documentado, no como bug pendiente.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

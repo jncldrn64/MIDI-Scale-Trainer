@@ -1,0 +1,47 @@
+{
+  "name": "raiz-ambigua",
+  "title": "Raíz ambigua con bajo conocido: el mismo conjunto de notas se lee según el bajo",
+  "source": "Fase 1. Pitch classes 0,4,7,9 son a la vez Do6 y La m7. Antes del fix, detectChord elegía la raíz de menor pitch class (Do) y devolvía siempre Do6, ignorando el bajo. Ahora prueba el bajo como raíz candidata primero.",
+  "universe": { "root": 0, "type": "major" },
+  "cases": [
+    {
+      "kind": "chord",
+      "label": "Bajo en La (57): raíz = bajo → La m7, no Do6",
+      "notesPlayed": [57, 60, 64, 67],
+      "expected": {
+        "detected": true,
+        "rootPC": 9,
+        "type": "m7",
+        "isDiatonic": true,
+        "relation": "diatonic",
+        "targetPC": null
+      }
+    },
+    {
+      "kind": "chord",
+      "label": "Mismas cuatro notas, bajo en Do (48): raíz = bajo → Do6",
+      "notesPlayed": [48, 52, 55, 57],
+      "expected": {
+        "detected": true,
+        "rootPC": 0,
+        "type": "6",
+        "isDiatonic": true,
+        "relation": "diatonic",
+        "targetPC": null
+      }
+    },
+    {
+      "kind": "chord",
+      "label": "Inversión real: Mi-Sol-Do con bajo en Mi. El bajo (Mi) no arma template, cae al orden ascendente → Do Mayor",
+      "notesPlayed": [52, 55, 60],
+      "expected": {
+        "detected": true,
+        "rootPC": 0,
+        "type": "M",
+        "isDiatonic": true,
+        "relation": "diatonic",
+        "targetPC": null
+      }
+    }
+  ]
+}

@@ -52,7 +52,13 @@
             if (notesArray.length < 3) return null;
             const pitchClasses = [...new Set(notesArray.map(n => n % 12))].sort((a, b) => a - b);
             const bassPC = Math.min(...notesArray) % 12;
-            for (let root of pitchClasses) {
+            // Fase 1: se prueba el bajo real como raíz candidata antes del orden
+            // ascendente. Una tríada en fundamental o con bajo claro se identifica
+            // con su raíz real; solo se cae al orden numérico cuando el bajo no arma
+            // un template por sí solo (inversión real). La-Do-Mi-Sol con bajo en La
+            // da La m7, no Do6. Ver docs/DECISIONS.md (2026-07-04).
+            const candidateRoots = [bassPC, ...pitchClasses.filter(pc => pc !== bassPC)];
+            for (const root of candidateRoots) {
                 const intervals = pitchClasses.map(pc => (pc - root + 12) % 12).sort((a, b) => a - b);
                 for (const [type, template] of Object.entries(CHORD_TEMPLATES)) {
                     if (template.length === intervals.length && template.every((v, i) => v === intervals[i])) {
