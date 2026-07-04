@@ -47,15 +47,18 @@ Docs y comentarios en español, en mi voz, aplicando dos skills:
 `no-ai-slop-writing-rules:no-ai-slop` y `no-ai-slop-writing-rules:rossmann-voice`. Las dos
 salen del plugin `no-ai-slop-writing-rules` (realrossmanngroup). No están vendoreadas en el
 repo: se sacaron por no traer licencia (ver "Vendoreo de dependencias de terceros" y
-CHANGELOG v11.3). Esas referencias no resuelven hasta instalar el plugin con `/plugin`. Sin
-relleno, sin frases de IA, sin guion largo en la prosa. Cada afirmación cierra sobre un
-dato concreto: un número, una línea de código, una fecha, un pitch class.
+CHANGELOG v11.3). Esas referencias no resuelven hasta instalar el plugin: se instala por
+sesión con `/plugin marketplace add realrossmanngroup/no_ai_slop_writing_rules` y después
+`/plugin install no-ai-slop-writing-rules`
+(https://github.com/realrossmanngroup/no_ai_slop_writing_rules). Sin relleno, sin frases de
+IA, sin guion largo en la prosa. Cada afirmación cierra sobre un dato concreto: un número,
+una línea de código, una fecha, un pitch class.
 
 ## Guion largo
 
-Guion largo (—): prohibido en toda la prosa (regla 1 de no-ai-slop). Se permite únicamente
-como token de formato en los encabezados de fecha de CHANGELOG (## vX.Y — YYYY-MM-DD) y
-DECISIONS (## YYYY-MM-DD — <título>). La historia no se normaliza: los encabezados ya
+Guion largo (`—`): prohibido en toda la prosa (regla 1 de no-ai-slop). Se permite únicamente
+como token de formato en los encabezados de fecha de CHANGELOG (`## vX.Y — YYYY-MM-DD`) y
+DECISIONS (`## YYYY-MM-DD — <título>`). La historia no se normaliza: los encabezados ya
 escritos quedan como están.
 
 ## Honestidad de estado

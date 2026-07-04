@@ -2,6 +2,13 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.3.1 — 2026-07-04
+
+### Fixed
+
+- `CLAUDE.md`, sección "Guion largo": el carácter y los ejemplos de encabezado van en backticks, así son tokens y no prosa. Antes la regla usaba guion largo suelto, lo mismo que prohíbe.
+- `CLAUDE.md`, sección "Prosa": la instrucción de instalar el plugin trae los comandos exactos (`/plugin marketplace add realrossmanngroup/no_ai_slop_writing_rules` y `/plugin install no-ai-slop-writing-rules`) y la URL, en vez de un `/plugin` genérico.
+
 ## v11.3 — 2026-07-04
 
 ### Removed
