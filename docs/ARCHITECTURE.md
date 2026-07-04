@@ -1,22 +1,24 @@
-# ARCHITECTURE.md — MIDI Scale Trainer Pro
+# ARCHITECTURE.md: MIDI Scale Trainer Pro
 
-> **Regla de este documento:** todo lo escrito acá está verificado línea por línea contra
-> el código fuente real. Si algo no se pudo verificar, se marca explícitamente como
-> "no verificado" o "narrativa no confirmada". Este proyecto perdió una versión (v11.5)
-> que solo existía como descripción en chats de IA — nunca más se documenta algo como
-> hecho sin haber leído el código que lo prueba.
+> **Regla de este documento:** todo lo que está acá se verificó línea por línea contra
+> el código real. Lo que no se pudo verificar se marca como "no verificado" o "narrativa
+> no confirmada". Este proyecto ya perdió una versión, la v11.5, que existía solo como
+> descripción en chats de IA. No se vuelve a documentar nada como hecho sin haber leído
+> el código que lo prueba.
 
 ## 0. Punto de partida real
 
-- **Fuente de verdad actual:** `midi-trainer-completo_v11_0.html` (604 líneas), verificado
-  el 2026-07-03.
-- **v3.0** (3514 líneas): arquetipo procedimental temprano, se conserva solo como referencia
-  histórica de "qué NO hacer" (evaluación binaria, sin módulos, comentarios de dependencias
-  en vez de dependencias reales).
-- **v11.5:** código perdido. Todo lo que se decía de v11.5 (V10.1–V10.5, V11.1–V11.3, con
-  changelog detallado) proviene de reconstrucciones narrativas de Gemini sobre logs de chat,
-  **no de haber leído el archivo**. Se trata como hipótesis no verificada, no como historia.
-  No se reconstruye de memoria: se reconstruye hacia adelante, versionado desde ya.
+La fuente de verdad es `midi-trainer-completo_v11_0.html`, 604 líneas, verificado el
+2026-07-03. Todo lo demás es referencia o hipótesis.
+
+La v3.0 tiene 3514 líneas y se guarda solo como muestra de qué no hacer: evaluación
+binaria, cero módulos, comentarios que describen dependencias en vez de dependencias
+reales.
+
+La v11.5 no existe como archivo. El changelog detallado que se le atribuye (V10.1 a
+V10.5, V11.1 a V11.3) sale de reconstrucciones de Gemini sobre logs de chat, no de haber
+abierto el archivo. Se trata como hipótesis no verificada. No se reconstruye de memoria;
+se reconstruye hacia adelante, versionado desde ahora.
 
 ## 1. Modelo de estado (`State`)
 
@@ -32,24 +34,24 @@ State = {
 }
 ```
 
-Fuente única de verdad centralizada. Sin frameworks, sin proxies reactivos — el render se
-dispara manualmente llamando `UI.renderKeyboard()` / `UI.updateStatus()` después de cada
-mutación. Esto funciona porque el volumen de mutaciones por segundo es bajo (eventos MIDI
-humanos, no un loop de animación).
+El estado es único y centralizado. No hay framework ni proxy reactivo. El render se
+dispara a mano llamando `UI.renderKeyboard()` y `UI.updateStatus()` después de cada
+mutación. Esto alcanza porque el volumen de mutaciones por segundo es bajo: eventos MIDI
+de dedos humanos, no un loop de animación a 60 fps.
 
 ## 2. Separación de responsabilidades (confirmada en código)
 
 | Módulo | Responsabilidad | Toca el DOM |
 |---|---|---|
-| `MathEngine` | Detección de acordes, diatonismo | No — función pura |
-| `MIDI` | Recibe eventos hardware, actualiza `State`, dispara evaluación | Indirectamente (llama a `UI.*`) |
-| `UI` | Construye/pinta teclado, actualiza paneles | Sí |
+| `MathEngine` | Detección de acordes, diatonismo | No, función pura |
+| `MIDI` | Recibe eventos hardware, actualiza `State`, dispara evaluación | Indirecto (llama a `UI.*`) |
+| `UI` | Construye y pinta el teclado, actualiza paneles | Sí |
 | `SysLog` / config | Logs y persistencia | Sí (logs) / localStorage (config) |
 
-`MathEngine.detectChord` y `MathEngine.isDiatonic` no leen `State` ni el DOM — reciben
-argumentos y devuelven datos. Esto es correcto y hay que preservarlo: cualquier lógica
-nueva de teoría musical (grados romanos, prioridad de reglas armónicas) debe vivir acá,
-no en `UI` ni en `MIDI`.
+`MathEngine.detectChord` y `MathEngine.isDiatonic` no leen `State` ni el DOM. Reciben
+argumentos y devuelven datos. Cualquier lógica nueva de teoría musical (grados romanos,
+prioridad de reglas armónicas) va acá, no en `UI` ni en `MIDI`. Esta es la línea que
+mantiene las fixtures corriendo en Node contra el mismo código que usa el navegador.
 
 ## 3. Flujo de evento MIDI (verificado)
 
@@ -61,7 +63,7 @@ noteOn(note, vel)
   → UI.renderKeyboard() + UI.updateStatus()
 
 triggerAccumulation()
-  → espera accumMs (debounce)
+  → espera accumMs (debounce, 120ms por defecto)
   → si activeBasses.size >= 3 → MathEngine.detectChord(activeBasses)
   → guarda en State.harmony.chord
 
@@ -70,25 +72,24 @@ evaluateMelody(note)
   → inChord = pc está en el template del acorde activo
   → isSensible = escala menor && pc === (root+11)%12 && !inScale && !inChord
   → status = inScale||inChord ? 'good' : (isSensible ? 'tension' : 'bad')
-  → si status !== 'good': se autolimpia solo a los errMs ms (timeout)
+  → si status !== 'good': se autolimpia a los errMs (1000ms por defecto)
 
 releaseNoteInternal(note, isBass)  [al soltar la tecla]
   → duration = now - startTime
   → si status !== 'good' && duration < 180ms → status = 'passing' (INDULTO)
 ```
 
-**Detalle importante no documentado antes:** el indulto de 180ms aplica a **cualquier**
-estado que no sea `'good'` — incluye tanto `'bad'` como `'tension'`. Una nota de tensión
-legítima que dura menos de 180ms se reclasifica igual a `'passing'`. No rompe nada hoy,
-pero si en el futuro se quiere distinguir visualmente "tensión corta" de "error corto",
-esta línea hay que tocarla.
+El indulto de 180ms aplica a cualquier estado que no sea `'good'`, o sea a `'bad'` y a
+`'tension'` por igual. Una nota de tensión legítima que dura 179ms se reclasifica a
+`'passing'` igual que un error. Hoy no rompe nada. El día que se quiera distinguir
+"tensión corta" de "error corto" en pantalla, esta línea es la que hay que tocar.
 
-## 4. Detección de acorde: el bug de raíz ambigua (hallazgo nuevo, no documentado antes)
+## 4. Detección de acorde: el bug de raíz ambigua
 
 ```js
 detectChord(notesArray) {
   const pitchClasses = [...new Set(notesArray.map(n => n % 12))].sort((a,b) => a-b);
-  for (let root of pitchClasses) {           // ← itera en orden ASCENDENTE de pitch class
+  for (let root of pitchClasses) {           // itera en orden ASCENDENTE de pitch class
     const intervals = pitchClasses.map(pc => (pc - root + 12) % 12).sort((a,b)=>a-b);
     for (const [type, template] of Object.entries(CHORD_TEMPLATES)) {
       if (template matches intervals) return { rootPC: root, type, ... };  // primer match gana
@@ -97,57 +98,57 @@ detectChord(notesArray) {
 }
 ```
 
-**Problema:** para un mismo conjunto de notas físicas, este algoritmo **siempre** elige
-la raíz de menor pitch class que matchee algún template, sin importar dónde está el bajo
-ni la intención armónica real.
+Para un mismo conjunto de notas físicas, el algoritmo elige siempre la raíz de menor
+pitch class que matchee algún template. No mira dónde está el bajo ni la intención
+armónica.
 
-**Ejemplo concreto:** Do-Mi-Sol-La (pitch classes 0,4,7,9).
-- Probando raíz=0 (Do) primero (por ser la más baja numéricamente): intervalos `[0,4,7,9]`
-  → matchea el template `'6'` → el motor dice **"Do6"**.
-- Nunca prueba la interpretación **"La menor 7"** (La-Do-Mi-Sol, mismas notas, raíz=9),
-  aunque el bajo físico esté en La y la canción esté claramente en vi7.
+El caso concreto es Do-Mi-Sol-La, pitch classes 0, 4, 7, 9. Probando raíz 0 (Do) primero,
+por ser la más baja, los intervalos dan `[0,4,7,9]`, que matchea el template `'6'`: el
+motor dice "Do6". Nunca prueba "La menor 7" (La-Do-Mi-Sol, mismas notas, raíz 9), aunque
+el bajo físico esté en La y la canción esté en vi7.
 
-Esto es tolerable hoy porque el output es solo texto informativo. **Deja de ser tolerable
-en cuanto se implementen Grados Romanos**, porque el numeral depende 100% de qué pitch
-class se eligió como raíz. El motor nunca tirará error — tirará el numeral equivocado
-de forma silenciosa y consistente. Este bug se prioriza en el roadmap antes de Grados
-Romanos (ver `ROADMAP.md`, Fase 1).
+Hoy se tolera porque el output es texto informativo. Deja de tolerarse en cuanto se
+implementen los grados romanos: el numeral depende cien por ciento de qué pitch class se
+eligió como raíz. El motor no tira error. Tira el numeral equivocado, en silencio y
+siempre igual. Por eso este bug va en la Fase 1 del roadmap, antes que los grados romanos.
 
-## 5. Evaluación armónica: reglas existentes, sin jerarquía formal (gap real)
+## 5. Evaluación armónica: seis reglas sin jerarquía escrita
 
-Hoy conviven, sin un orden explícito documentado en ningún lado:
+Hoy conviven seis reglas y ninguna tiene un orden documentado:
 
-1. Nota dentro de la escala activa (`inScale`)
-2. Nota dentro del acorde activo (`inChord`)
-3. Sensible en escala menor (`isSensible`)
-4. Paso cromático por duración (`<180ms` al soltar)
-5. Dominante secundaria — **solo visual, no afecta `evaluateMelody`**
-6. Intercambio modal — fallback genérico cuando nada más aplica, **solo visual**
+1. Nota dentro de la escala activa (`inScale`).
+2. Nota dentro del acorde activo (`inChord`).
+3. Sensible en escala menor (`isSensible`).
+4. Paso cromático por duración: menos de 180ms al soltar.
+5. Dominante secundaria: solo actualiza la UI, no afecta `evaluateMelody`.
+6. Intercambio modal: fallback genérico cuando nada más aplica, también solo visual.
 
-El orden en que estas reglas se evalúan hoy es un accidente del orden del código, no una
-decisión de diseño escrita. Antes de agregar Grados Romanos hace falta fijar por escrito
-la prioridad de estas reglas (ver `ROADMAP.md`, Fase 2) para que agregar una regla nueva
-no dependa de adivinar en qué orden compiten con las existentes.
+El orden en que se evalúan es un accidente del orden del código, no una decisión escrita.
+Antes de agregar grados romanos hay que fijar por escrito esa prioridad (ver `ROADMAP.md`,
+Fase 2), para que sumar una regla nueva no dependa de adivinar contra qué compite.
 
-## 6. Gaps confirmados (no narrativa — confirmados leyendo el código)
+## 6. Gaps confirmados leyendo el código
 
-- `State.universe` (tonalidad/escala elegida) no se persiste — solo `State.config`.
-- Sin feedback sonoro (cero Web Audio API en el archivo).
-- "Fijar Acordes" hardcodea Do Mayor y Re m7 únicamente.
-- Sin control de versiones — el proyecto vivió y se perdió como archivos sueltos.
-- **PII hardcodeada:** el `<div class="credits">` tiene un nombre real hardcodeado en el
-  HTML. Se debe reemplazar antes de subir esto a cualquier repositorio, incluso privado.
+- `State.universe` (tonalidad y escala elegidas) no se persiste. Solo se persiste
+  `State.config`. Recargás la página y perdés la tonalidad.
+- Cero feedback sonoro. No hay una sola llamada a Web Audio API en las 604 líneas.
+- "Fijar Acordes" hardcodea dos acordes: Do Mayor y Re m7.
+- Sin control de versiones hasta la Fase 0. El proyecto vivió como archivos sueltos y así
+  perdió la v11.5.
+- PII hardcodeada: el `<div class="credits">` tenía un nombre real escrito en el HTML. Se
+  reemplazó antes del primer commit.
 
-## 7. Decisión de arquitectura: no framework (por ahora)
+## 7. No framework, por ahora
 
-604 líneas con objetos-módulo (`State`/`MathEngine`/`MIDI`/`UI`) ya separan responsabilidades
-razonablemente. Los colapsos históricos documentados (freeze de hilo principal, fuga de
-memoria por `innerHTML +=`) fueron problemas de patrones DOM/async, no del lenguaje. Migrar
-a React/Vue ahora no resuelve el bug de raíz ambigua ni ningún problema de teoría musical, y
-apila una curva de aprendizaje adicional sobre la de teoría musical, que es la prioridad real.
+604 líneas con objetos-módulo (`State`, `MathEngine`, `MIDI`, `UI`) ya separan
+responsabilidades. Los colapsos que se documentan del historial (freeze del hilo
+principal, fuga de memoria por `innerHTML +=`) fueron problemas de patrones DOM y async,
+no del lenguaje. Migrar a React o Vue no arregla el bug de raíz ambigua ni ningún problema
+de teoría musical, y apila una curva de aprendizaje de framework encima de la de teoría
+musical, que es la prioridad real.
 
-**Umbral de reconsideración:** si el archivo supera ~1000 líneas o el estado se vuelve
-genuinamente difícil de razonar, el primer paso es modularizar con ES Modules nativos
+El umbral está fijado en números: si el archivo pasa las 1000 líneas, o el estado se
+vuelve difícil de razonar, el primer paso es modularizar con ES Modules nativos
 (`<script type="module">`), no adoptar un framework. Un framework se reconsidera solo si
-aparece una necesidad real de UI reactiva compleja (ej. múltiples vistas, routing) que hoy
-no existe.
+aparece una necesidad real de UI reactiva compleja, tipo múltiples vistas o routing, que
+hoy no existe.

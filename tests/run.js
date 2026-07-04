@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 /*
- * tests/run.js — Runner de fixtures de regresión (Fase 0 del roadmap)
+ * tests/run.js: runner de fixtures de regresión (Fase 0 del roadmap).
  *
- * Sin framework de testing: solo Node + assert, tal como pide docs/ROADMAP.md.
- * Corre el motor puro real (src/engine.js) contra los casos ya resueltos
- * grabados en tests/fixtures/*.json. Si una regla nueva rompe un caso viejo,
- * este script lo grita.
+ * Sin framework de testing. Node más assert, como pide docs/ROADMAP.md. Corre el
+ * motor puro real (src/engine.js) contra los casos ya resueltos grabados en
+ * tests/fixtures/*.json. Si una regla nueva rompe un caso viejo, este script lo
+ * grita en vez de dejarlo pasar en silencio.
  *
  * Uso:
- *   node tests/run.js            # corre todas las fixtures
- *   node tests/run.js blues      # corre solo las fixtures cuyo archivo matchee
+ *   node tests/run.js            # todas las fixtures
+ *   node tests/run.js blues      # solo las fixtures cuyo archivo matchee
  *
- * Salida: exit code 0 si todo pasa, 1 si algo falla (apto para CI a futuro).
+ * Exit code 0 si pasa todo, 1 si algo falla. Sirve para CI más adelante.
  */
 'use strict';
 
@@ -40,8 +40,8 @@ function record(fixtureName, label, fn) {
     }
 }
 
-// Construye un chordObj (con template) a partir de notas MIDI, como lo haría el
-// motor en vivo. Devuelve null si no hay notas o no se reconoce el acorde.
+// Arma un chordObj (con template) a partir de notas MIDI, como lo haría el motor
+// en vivo. Devuelve null si no hay notas o si el acorde no se reconoce.
 function chordFromNotes(notes) {
     if (!notes) return null;
     return Engine.MathEngine.detectChord(notes);
