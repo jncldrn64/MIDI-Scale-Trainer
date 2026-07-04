@@ -84,3 +84,9 @@ Este repo (MIDI-Scale-Trainer) es el único destino de escritura. Cualquier otro
 repositorio clonado en la sesión es solo lectura y contexto: se copia DESDE él, nunca
 se escribe EN él. No se traen a este repo convenciones de otro (idioma, DECISIONS vs
 Known gaps, formato). Ante duda de en qué repo estás escribiendo, se para y se pregunta.
+
+## Versión mostrada
+
+La versión que muestra la app (el `<title>` y el `<h1>` de `index.html`) es fuente única
+con el CHANGELOG: siempre es la última versión del CHANGELOG. Se bumpea en el mismo PR que
+trae el cambio de código que la amerita, nunca en un PR doc-only.
