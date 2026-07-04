@@ -163,6 +163,40 @@ el acceso se habilita, se pushea la branch tal cual.
 
 ---
 
+## 2026-07-04 — Ratificada la extracción del motor a `src/engine.js`
+
+**Contexto:** la entrada del 2026-07-03 aplicó la extracción del motor, pero al
+revisarla se la trató como decisión abierta: adoptarla ahora o diferirla al umbral
+de ~1000 líneas de `ARCHITECTURE.md` §7. El batch de Fase 0 ya llegó a `main` con la
+extracción puesta.
+
+**Decisión:** se ratifica. `src/engine.js` queda como fuente única de verdad e
+`index.html` lo carga por `<script src>`. No se difiere.
+
+**Razón:** ya funciona y está verificado (15/15 fixtures en verde contra el motor
+real, corrida del 2026-07-04). La Fase 1 edita `detectChord`, que ahora vive en un
+solo lugar cubierto por las fixtures; diferir la extracción obligaría a mover ese
+código en plena Fase 1. El umbral de ~1000 líneas sigue vigente para la pregunta
+grande (¿modularizar todo `index.html`?), pero para el núcleo de teoría musical el
+beneficio de fuente única ya se justifica hoy.
+
+**Estado:** vigente. Confirma la decisión del 2026-07-03.
+
+---
+
+## 2026-07-04 — Acceso de escritura concedido
+
+**Contexto:** la entrada del 2026-07-03 "El agente no tiene permiso de escritura en
+el repo" documentó un bloqueo 403 en push/branch/PR.
+
+**Decisión:** se habilitó la escritura del GitHub App sobre el repo. `create_branch`,
+`push_files` y `create_pull_request` funcionan; los commits por API salen Verified.
+El trabajo vuelve al flujo por PR, sin patches ni subidas manuales.
+
+**Estado:** cierra y deja obsoleta la entrada de bloqueo del 2026-07-03.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
