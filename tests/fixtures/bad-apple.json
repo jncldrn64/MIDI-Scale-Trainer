@@ -1,0 +1,70 @@
+{
+  "name": "bad-apple",
+  "title": "Bad Apple en Re menor — sensible menor + paso cromático (indulto de 180ms)",
+  "source": "Caso real recurrente. Es el caso contra el que se calibró empíricamente el umbral de 180ms del paso cromático (ver docs/DECISIONS.md).",
+  "universe": { "root": 2, "type": "minor" },
+  "cases": [
+    {
+      "kind": "chord",
+      "label": "La7 (dominante que resuelve a Re menor): no diatónico en menor natural, empuja a Re",
+      "notesPlayed": [57, 61, 64, 67],
+      "expected": {
+        "detected": true,
+        "rootPC": 9,
+        "type": "7",
+        "isDiatonic": false,
+        "relation": "secondary_dominant",
+        "targetPC": 2
+      }
+    },
+    {
+      "kind": "melody",
+      "label": "Do# (sensible de Re menor) sin acorde activo -> tension",
+      "melodyNote": 61,
+      "chordNotes": null,
+      "expected": { "status": "tension" }
+    },
+    {
+      "kind": "melody",
+      "label": "Do# CON el La7 sonando: es nota del acorde -> good (deja de ser tensión)",
+      "melodyNote": 61,
+      "chordNotes": [57, 61, 64, 67],
+      "expected": { "status": "good" }
+    },
+    {
+      "kind": "melody",
+      "label": "Fa (diatónica de Re menor) -> good",
+      "melodyNote": 65,
+      "chordNotes": null,
+      "expected": { "status": "good" }
+    },
+    {
+      "kind": "melody",
+      "label": "Sol# (cromática, no escala, no sensible, sin acorde) -> bad",
+      "melodyNote": 68,
+      "chordNotes": null,
+      "expected": { "status": "bad" }
+    },
+    {
+      "kind": "passing",
+      "label": "Nota 'bad' que dura menos de 180ms al soltarse -> indulto a 'passing'",
+      "status": "bad",
+      "durationMs": 150,
+      "expected": { "status": "passing" }
+    },
+    {
+      "kind": "passing",
+      "label": "Nota 'bad' que dura 180ms o más -> sigue 'bad' (sin indulto)",
+      "status": "bad",
+      "durationMs": 200,
+      "expected": { "status": "bad" }
+    },
+    {
+      "kind": "passing",
+      "label": "El indulto nunca toca una nota 'good' (aunque dure poco)",
+      "status": "good",
+      "durationMs": 50,
+      "expected": { "status": "good" }
+    }
+  ]
+}

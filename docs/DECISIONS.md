@@ -75,6 +75,94 @@ versiones V10.x/V11.x de Gemini, que no se pudo verificar):
 
 ---
 
+### 2026-07-03 — Fase 0: fixtures de regresión + extracción del motor puro a `src/engine.js`
+
+**Contexto:** la Fase 0 del roadmap pide grabar los casos reales ya resueltos
+(Bad Apple, Oda a la Alegría, Blues) como fixtures y correrlos en Node. Pero la
+lógica de teoría musical vivía duplicable dentro del `<script>` inline de
+`index.html`, entrelazada con DOM/State/timers, y correrla en Node hubiera
+implicado copiarla a un archivo de test — exactamente la duplicación
+"código-que-nadie-verifica-contra-el-real" que este proyecto quiere evitar.
+
+**Decisión:** se extrajo el núcleo puro de teoría musical a `src/engine.js` como
+fuente única de verdad, y `index.html` lo carga vía `<script src>` y lo usa. El
+módulo funciona como global de navegador y como `require` de Node sin build step
+ni ES Modules. Se movió `SCALES`, `CHORD_TEMPLATES` y `MathEngine` tal cual, y se
+extrajeron a funciones puras las reglas que estaban inline: relación acorde/
+universo (`classifyChordRelation`), estado de nota de melodía
+(`evaluateMelodyStatus`) e indulto de paso cromático (`applyPassingTone`).
+`index.html` ahora llama a esas funciones en vez de reimplementarlas. Las
+fixtures viven en `tests/fixtures/*.json` y corren con `node tests/run.js` (solo
+`assert`, sin framework). 15 casos, todos en verde.
+
+**Razón:** con el motor en un solo lugar, las fixtures prueban el código real que
+usa la app, no una copia. Además la Fase 1 va a editar `detectChord`: tenerlo ya
+en `src/engine.js` hace que ese cambio quede automáticamente cubierto por las
+fixtures. Se descartó (a) duplicar la lógica en el test —anti-patrón que costó
+v11.5— y (b) migrar a ES Modules/framework —innecesario, un `<script src>` global
+alcanza y respeta la decisión de "no framework" de más arriba.
+
+**Salvedad (honestidad de estado):** el refactor del navegador preserva el
+comportamiento línea por línea (verificado leyendo cada reemplazo y con un smoke
+test headless en Chromium: carga sin errores de consola, `MathEngine`/`Engine`
+disponibles, detección y relación correctas, teclado renderizado). Pero el gate
+del roadmap —probar en el piano físico antes de cerrar una fase— no se puede
+correr en este entorno (no hay MIDI). La Fase 0 no se da por cerrada hasta ese
+smoke test manual en el piano.
+
+**Nota de sincronización:** `Engine.scalePitches` (pitch classes de un universo)
+es el único derivado que queda en paralelo con el recorrido inline de
+`UI.buildUniverse` (que además arma el HTML de la fórmula). Ambos leen la misma
+constante `SCALES` y hacen la misma cuenta de 2 líneas; no se unificó para no
+tocar código de DOM que hoy funciona. Si se toca uno, tocar el otro.
+
+**Estado:** vigente.
+
+---
+
+### 2026-07-03 — El agente no tiene permiso de escritura en el repo (push/branch/PR bloqueados)
+
+**Contexto:** terminada la Fase 0, el commit quedó armado localmente en la branch
+`claude/regression-fixtures-phase-0-no7fe1` pero **no se pudo pushear**. Se
+verificó que es un bloqueo de permisos de escritura, no de red:
+
+- `git fetch` (lectura) funciona.
+- `git push` → el endpoint `git-receive-pack` del relay devuelve `403 Forbidden`.
+- GitHub App API: `create_branch` y `create_pull_request` devuelven
+  `403 Resource not accessible by integration`.
+
+Es decir: el GitHub App de la sesión tiene acceso de **solo lectura** a
+`jncldrn64/midi-scale-trainer`. Desde el agente no se puede crear branch, pushear
+ni abrir PR.
+
+**Decisión:** no se reintenta el 403 (política del entorno: los 403/407 son
+denegaciones de policy, no fallas transitorias). El trabajo se entrega commiteado
+localmente + como patch (`git format-patch`), y el push/PR queda como paso manual
+del humano hasta que se habilite escritura.
+
+**Procedimiento para próximas iteraciones (mientras el acceso siga en solo lectura):**
+
+1. Habilitar escritura (recomendado, lo resuelve de raíz): en la config del
+   Claude GitHub App, dar permiso **Contents: read & write** (y Pull requests si
+   se quiere que el agente abra PRs) sobre `jncldrn64/midi-scale-trainer`. Una vez
+   hecho, el agente puede `git push -u origin <branch>` y abrir el PR normalmente.
+2. Alternativa sin cambiar permisos (push manual del humano): aplicar el patch que
+   entrega el agente y pushear con una credencial con escritura:
+   ```bash
+   git checkout -b claude/regression-fixtures-phase-0-no7fe1 origin/main
+   git am 0001-*.patch          # patch entregado por el agente
+   git push -u origin claude/regression-fixtures-phase-0-no7fe1
+   # luego abrir el PR a mano contra main
+   ```
+
+**Nota de estado del commit:** autor/committer = `noreply@anthropic.com` (para que
+GitHub no lo marque Unverified). El contenido de la Fase 0 no depende de esto; si
+el acceso se habilita, se pushea la branch tal cual.
+
+**Estado:** vigente hasta que se habilite escritura del GitHub App sobre el repo.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

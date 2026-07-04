@@ -1,0 +1,47 @@
+{
+  "name": "blues",
+  "title": "Blues Do7-Fa7-Sol7 en Do Mayor (I7 - IV7 - V7)",
+  "source": "Caso real recurrente del historial. Los tres dominantes del blues de 12 compases sobre un universo Do Mayor.",
+  "universe": { "root": 0, "type": "major" },
+  "cases": [
+    {
+      "kind": "chord",
+      "label": "Do7 (I7): no diatónico, funciona como V/IV -> empuja a Fa",
+      "notesPlayed": [48, 52, 55, 58],
+      "expected": {
+        "detected": true,
+        "rootPC": 0,
+        "type": "7",
+        "isDiatonic": false,
+        "relation": "secondary_dominant",
+        "targetPC": 5
+      }
+    },
+    {
+      "kind": "chord",
+      "label": "Fa7 (IV7): no diatónico y su target (Sib) no está en Do Mayor -> intercambio modal",
+      "notesPlayed": [53, 57, 60, 63],
+      "expected": {
+        "detected": true,
+        "rootPC": 5,
+        "type": "7",
+        "isDiatonic": false,
+        "relation": "modal_interchange",
+        "targetPC": null
+      }
+    },
+    {
+      "kind": "chord",
+      "label": "Sol7 (V7): dominante diatónico de Do Mayor",
+      "notesPlayed": [55, 59, 62, 65],
+      "expected": {
+        "detected": true,
+        "rootPC": 7,
+        "type": "7",
+        "isDiatonic": true,
+        "relation": "diatonic",
+        "targetPC": null
+      }
+    }
+  ]
+}

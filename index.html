@@ -205,26 +205,21 @@
         </div>
     </div>
 
+    <!-- Núcleo puro de teoría musical (fuente única de verdad, ver src/engine.js).
+         Define los globales SCALES, CHORD_TEMPLATES y MathEngine, y el objeto Engine
+         con las funciones puras de evaluación. Las fixtures de regresión (tests/)
+         corren este mismo archivo en Node. -->
+    <script src="src/engine.js"></script>
     <script>
         // --- CONFIGURACIÓN BASE ---
         const NOTES_EN = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         const NOTES_ES = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
         const BLACK_KEYS = [1, 3, 6, 8, 10];
-        const KEYBOARD_START = 36; const KEYBOARD_END = 96; 
-        
-        const SCALES = {
-            'major':          { f: [2, 2, 1, 2, 2, 2, 1], n: 'Mayor' },
-            'minor':          { f: [2, 1, 2, 2, 1, 2, 2], n: 'Menor Natural' },
-            'harmonic_minor': { f: [2, 1, 2, 2, 1, 3, 1], n: 'Menor Armónica' }
-        };
+        const KEYBOARD_START = 36; const KEYBOARD_END = 96;
 
-        const CHORD_TEMPLATES = {
-            'M': [0, 4, 7], 'm': [0, 3, 7], 'dim': [0, 3, 6], 'aug': [0, 4, 8],
-            'sus4': [0, 5, 7], 'sus2': [0, 2, 7], '7': [0, 4, 7, 10], 'm7': [0, 3, 7, 10],
-            'M7': [0, 4, 7, 11], 'm7b5': [0, 3, 6, 10], 'dim7': [0, 3, 6, 9],
-            '6': [0, 4, 7, 9], 'm6': [0, 3, 7, 9], 'add9': [0, 2, 4, 7], 'madd9': [0, 2, 3, 7], 
-            '7(no5)': [0, 4, 10], 'm7(no5)': [0, 3, 10]
-        };
+        // SCALES, CHORD_TEMPLATES y MathEngine viven ahora en src/engine.js
+        // (cargado arriba). Se exponen como globales para el código de abajo.
+        const { classifyChordRelation, evaluateMelodyStatus, applyPassingTone } = Engine;
 
         // --- ESTADO GLOBAL ---
         const State = {
@@ -270,27 +265,8 @@
         }
 
         // --- MOTOR MATEMÁTICO ---
-        const MathEngine = {
-            detectChord(notesArray) {
-                if(notesArray.length < 3) return null;
-                const pitchClasses = [...new Set(notesArray.map(n => n % 12))].sort((a,b) => a-b);
-                const bassPC = Math.min(...notesArray) % 12;
-                for(let root of pitchClasses) {
-                    const intervals = pitchClasses.map(pc => (pc - root + 12) % 12).sort((a,b) => a-b);
-                    for(const [type, template] of Object.entries(CHORD_TEMPLATES)) {
-                        if(template.length === intervals.length && template.every((v,i) => v === intervals[i])) {
-                            const invIndex = template.indexOf((bassPC - root + 12) % 12);
-                            const invNames = ['Fundamental', '1ª Inversión', '2ª Inversión', '3ª Inversión'];
-                            return { rootPC: root, type, bassPC, inversion: invNames[invIndex] || 'Desc.', rawNotes: notesArray, template };
-                        }
-                    }
-                }
-                return null;
-            },
-            isDiatonic(chordObj, universePitchesSet) {
-                return chordObj.template.every(interval => universePitchesSet.has((chordObj.rootPC + interval) % 12));
-            }
-        };
+        // MathEngine.detectChord / isDiatonic viven en src/engine.js (fuente única
+        // de verdad). Se referencian abajo como global MathEngine.
 
         // --- CONTROLADOR MIDI ---
         const MIDI = {
@@ -356,10 +332,11 @@
                 const ev = State.evaluations.get(note);
                 
                 if (ev) {
-                    // Indulto Heurístico: Pasos Cromáticos
+                    // Indulto Heurístico: Pasos Cromáticos (lógica en src/engine.js)
                     const duration = Date.now() - ev.startTime;
-                    if (ev.status !== 'good' && duration < 180) {
-                        ev.status = 'passing';
+                    const indultado = applyPassingTone(ev.status, duration);
+                    if (indultado !== ev.status) {
+                        ev.status = indultado;
                         SysLog('EVAL', `PASO CROMÁTICO: ${getNoteStr(note).name} (${duration}ms)`);
                     }
 
@@ -398,19 +375,15 @@
                 }, State.config.holdMs); 
             },
             evaluateMelody(note) {
-                const pc = note % 12;
-                const inScale = State.universe.validPitches.has(pc);
-                const inChord = State.harmony.chord && State.harmony.chord.template.some(i => (State.harmony.chord.rootPC + i)%12 === pc);
-                
-                // Heurística de Tensión: Identificación de la Sensible en escalas menores
-                const isMinor = State.universe.type === 'minor' || State.universe.type === 'harmonic_minor';
-                const sensiblePC = (State.universe.root + 11) % 12;
-                const isSensible = isMinor && pc === sensiblePC && !inScale && !inChord;
-                
-                let evalStatus = 'bad';
-                if (inScale || inChord) evalStatus = 'good';
-                else if (isSensible) evalStatus = 'tension';
-                
+                // Lógica de clasificación (escala / acorde / sensible menor) en src/engine.js
+                const evalStatus = evaluateMelodyStatus({
+                    pc: note % 12,
+                    universePitchesSet: State.universe.validPitches,
+                    chordObj: State.harmony.chord,
+                    universeType: State.universe.type,
+                    universeRoot: State.universe.root
+                });
+
                 if(State.evaluations.has(note)) clearTimeout(State.evaluations.get(note).timeout);
                 
                 const timeoutTime = evalStatus === 'good' ? 0 : State.config.errMs;
@@ -510,24 +483,20 @@
                     document.getElementById('chord-display').innerText = `${getNoteStr(c.rootPC).name}${c.type==='M'?'':c.type}`;
                     document.getElementById('chord-inversion').innerText = c.inversion;
                     
-                    const isDiatonic = MathEngine.isDiatonic(c, State.universe.validPitches);
+                    // Relación acorde/universo (diatónico / dom. secundaria / intercambio
+                    // modal): lógica en src/engine.js, acá solo el texto y color de la UI.
+                    const rel = classifyChordRelation(c, State.universe.validPitches);
                     const relEl = document.getElementById('chord-relation');
-                    
-                    if (isDiatonic) {
-                        relEl.innerText = "✓ Diatónico"; 
-                        relEl.style.color = "#22c55e"; 
+
+                    if (rel.relation === 'diatonic') {
+                        relEl.innerText = "✓ Diatónico";
+                        relEl.style.color = "#22c55e";
+                    } else if (rel.relation === 'secondary_dominant') {
+                        relEl.innerText = `💡 Dom. Secundaria (Empuja a ${getNoteStr(rel.targetPC).name})`;
+                        relEl.style.color = "#f97316";
                     } else {
-                        // Heurística de Dominantes Secundarias
-                        const isDominantType = ['M', '7', '7(no5)'].includes(c.type);
-                        const targetPC = (c.rootPC + 5) % 12;
-                        
-                        if (isDominantType && State.universe.validPitches.has(targetPC)) {
-                            relEl.innerText = `💡 Dom. Secundaria (Empuja a ${getNoteStr(targetPC).name})`;
-                            relEl.style.color = "#f97316"; 
-                        } else {
-                            relEl.innerText = "⚠ Intercambio Modal"; 
-                            relEl.style.color = "#ef4444"; 
-                        }
+                        relEl.innerText = "⚠ Intercambio Modal";
+                        relEl.style.color = "#ef4444";
                     }
                 } else {
                     document.getElementById('chord-display').innerText = '-'; 

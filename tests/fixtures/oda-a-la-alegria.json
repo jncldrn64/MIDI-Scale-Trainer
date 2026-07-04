@@ -1,0 +1,48 @@
+{
+  "name": "oda-a-la-alegria",
+  "title": "Oda a la Alegría — dominante secundaria V/V (Re7 en Do Mayor)",
+  "source": "Caso real del historial. Formato base tomado del ejemplo de docs/ROADMAP.md (Fase 0).",
+  "universe": { "root": 0, "type": "major" },
+  "cases": [
+    {
+      "kind": "chord",
+      "label": "Re7 sobre Do Mayor debe leerse como dominante secundaria que empuja a Sol (V/V)",
+      "notesPlayed": [50, 54, 57, 60],
+      "expected": {
+        "detected": true,
+        "rootPC": 2,
+        "type": "7",
+        "isDiatonic": false,
+        "relation": "secondary_dominant",
+        "targetPC": 7
+      }
+    },
+    {
+      "kind": "chord",
+      "label": "Sol Mayor (V) es diatónico en Do Mayor",
+      "notesPlayed": [55, 59, 62],
+      "expected": {
+        "detected": true,
+        "rootPC": 7,
+        "type": "M",
+        "isDiatonic": true,
+        "relation": "diatonic",
+        "targetPC": null
+      }
+    },
+    {
+      "kind": "melody",
+      "label": "Fa# en la melodía CON el Re7 sonando: es nota del acorde -> good",
+      "melodyNote": 66,
+      "chordNotes": [50, 54, 57, 60],
+      "expected": { "status": "good" }
+    },
+    {
+      "kind": "melody",
+      "label": "GAP conocido (Fase 3): Fa# sin el acorde Re7 activo marca error hoy. Cuando la Fase 3 conecte la dominante secundaria a evaluateMelody, este esperado pasa a 'good'.",
+      "melodyNote": 66,
+      "chordNotes": null,
+      "expected": { "status": "bad" }
+    }
+  ]
+}
