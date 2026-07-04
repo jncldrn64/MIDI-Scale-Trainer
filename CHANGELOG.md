@@ -2,6 +2,13 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.4 — 2026-07-04
+
+### Changed
+
+- `ARCHITECTURE.md` sincronizado con el estado real tras la extracción del motor: §2 suma la columna "Vive en" (`MathEngine` y las reglas puras en `src/engine.js`, el resto en `index.html`); §7 reemplaza "604 líneas" por los dos archivos reales (`index.html` 573 líneas, `src/engine.js` 139); §6 saca el conteo stale de 604.
+- `ROADMAP.md`: la Fase 0 queda marcada como cerrada (2026-07-04) y el criterio de éxito refleja que `tests/run.js` corre las fixtures (15 en verde), en vez de "todavía no haya runner".
+
 ## v11.3.1 — 2026-07-04
 
 ### Fixed

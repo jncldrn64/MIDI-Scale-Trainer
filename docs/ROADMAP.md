@@ -9,6 +9,10 @@
 
 ## FASE 0: Infraestructura, antes de tocar una regla de teoría musical
 
+**Estado: cerrada el 2026-07-04.** El repo existe, las 3 fixtures (Bad Apple, Oda a la
+Alegría, Blues Do7-Fa7-Sol7) están grabadas y el runner `tests/run.js` las corre: 15 casos,
+15 en verde.
+
 **Objetivo:** que el proyecto no se vuelva a perder, y que agregar una regla nueva no
 pueda romper una vieja sin que algo avise.
 
@@ -41,9 +45,10 @@ pueda romper una vieja sin que algo avise.
    Cada caso nuevo que se resuelva (canción real, log real) se agrega como fixture. Cada
    fase que toque `MathEngine` corre las fixtures existentes antes de darse por terminada.
 
-**Criterio de éxito:** el repo existe, tiene al menos 2 commits, y hay al menos 3 fixtures
-grabadas (Bad Apple, Oda a la Alegría, Blues Do7-Fa7-Sol7). Alcanza con correrlas a mano
-al principio, aunque todavía no haya runner automatizado.
+**Criterio de éxito (cumplido el 2026-07-04):** el repo existe, pasó los 2 commits, y hay 3
+fixtures grabadas (Bad Apple, Oda a la Alegría, Blues Do7-Fa7-Sol7). El runner `tests/run.js`
+las corre con Node y `assert`, sin framework: 15 casos en verde. Ya no hay que correrlas a
+mano.
 
 ---
 

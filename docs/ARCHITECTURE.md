@@ -41,17 +41,21 @@ de dedos humanos, no un loop de animación a 60 fps.
 
 ## 2. Separación de responsabilidades (confirmada en código)
 
-| Módulo | Responsabilidad | Toca el DOM |
-|---|---|---|
-| `MathEngine` | Detección de acordes, diatonismo | No, función pura |
-| `MIDI` | Recibe eventos hardware, actualiza `State`, dispara evaluación | Indirecto (llama a `UI.*`) |
-| `UI` | Construye y pinta el teclado, actualiza paneles | Sí |
-| `SysLog` / config | Logs y persistencia | Sí (logs) / localStorage (config) |
+| Módulo | Responsabilidad | Toca el DOM | Vive en |
+|---|---|---|---|
+| `MathEngine` | Detección de acordes, diatonismo | No, función pura | `src/engine.js` |
+| `MIDI` | Recibe eventos hardware, actualiza `State`, dispara evaluación | Indirecto (llama a `UI.*`) | `index.html` |
+| `UI` | Construye y pinta el teclado, actualiza paneles | Sí | `index.html` |
+| `SysLog` / config | Logs y persistencia | Sí (logs) / localStorage (config) | `index.html` |
 
 `MathEngine.detectChord` y `MathEngine.isDiatonic` no leen `State` ni el DOM. Reciben
-argumentos y devuelven datos. Cualquier lógica nueva de teoría musical (grados romanos,
-prioridad de reglas armónicas) va acá, no en `UI` ni en `MIDI`. Esta es la línea que
-mantiene las fixtures corriendo en Node contra el mismo código que usa el navegador.
+argumentos y devuelven datos. Desde la extracción del 2026-07-04 (ver `DECISIONS.md`),
+`MathEngine` y las tres reglas puras `classifyChordRelation`, `evaluateMelodyStatus` y
+`applyPassingTone` viven en `src/engine.js`, que `index.html` carga con `<script src>`. El
+resto (`State`, `MIDI`, `UI`, `SysLog`) sigue en `index.html`. Cualquier lógica nueva de
+teoría musical (grados romanos, prioridad de reglas armónicas) va en `src/engine.js`, no en
+`UI` ni en `MIDI`. Esa es la línea que mantiene las fixtures corriendo en Node contra el
+mismo código que usa el navegador.
 
 ## 3. Flujo de evento MIDI (verificado)
 
@@ -131,7 +135,7 @@ Fase 2), para que sumar una regla nueva no dependa de adivinar contra qué compi
 
 - `State.universe` (tonalidad y escala elegidas) no se persiste. Solo se persiste
   `State.config`. Recargás la página y perdés la tonalidad.
-- Cero feedback sonoro. No hay una sola llamada a Web Audio API en las 604 líneas.
+- Cero feedback sonoro. No hay una sola llamada a Web Audio API en el código.
 - "Fijar Acordes" hardcodea dos acordes: Do Mayor y Re m7.
 - Sin control de versiones hasta la Fase 0. El proyecto vivió como archivos sueltos y así
   perdió la v11.5.
@@ -140,15 +144,16 @@ Fase 2), para que sumar una regla nueva no dependa de adivinar contra qué compi
 
 ## 7. No framework, por ahora
 
-604 líneas con objetos-módulo (`State`, `MathEngine`, `MIDI`, `UI`) ya separan
-responsabilidades. Los colapsos que se documentan del historial (freeze del hilo
-principal, fuga de memoria por `innerHTML +=`) fueron problemas de patrones DOM y async,
-no del lenguaje. Migrar a React o Vue no arregla el bug de raíz ambigua ni ningún problema
-de teoría musical, y apila una curva de aprendizaje de framework encima de la de teoría
+Hoy el código son dos archivos: `index.html` (573 líneas: `State`, `MIDI`, `UI`, `SysLog`)
+y `src/engine.js` (139 líneas: `MathEngine` y las tres reglas puras). Los objetos-módulo ya
+separan responsabilidades. Los colapsos que se documentan del historial (freeze del hilo
+principal, fuga de memoria por `innerHTML +=`) fueron problemas de patrones DOM y async, no
+del lenguaje. Migrar a React o Vue no arregla el bug de raíz ambigua ni ningún problema de
+teoría musical, y apila una curva de aprendizaje de framework encima de la de teoría
 musical, que es la prioridad real.
 
-El umbral está fijado en números: si el archivo pasa las 1000 líneas, o el estado se
-vuelve difícil de razonar, el primer paso es modularizar con ES Modules nativos
+El umbral está fijado en números: si `index.html` pasa las 1000 líneas, o el estado se
+vuelve difícil de razonar, el siguiente paso es modularizar con ES Modules nativos
 (`<script type="module">`), no adoptar un framework. Un framework se reconsidera solo si
 aparece una necesidad real de UI reactiva compleja, tipo múltiples vistas o routing, que
 hoy no existe.
