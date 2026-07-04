@@ -1,0 +1,4 @@
+# No hay build step todavía. Solo ruido de entorno.
+node_modules/
+.DS_Store
+*.log
