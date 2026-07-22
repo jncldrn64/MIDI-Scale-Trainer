@@ -88,33 +88,40 @@ El indulto de 180ms aplica a cualquier estado que no sea `'good'`, o sea a `'bad
 `'passing'` igual que un error. Hoy no rompe nada. El día que se quiera distinguir
 "tensión corta" de "error corto" en pantalla, esta línea es la que hay que tocar.
 
-## 4. Detección de acorde: el bug de raíz ambigua
+## 4. Detección de acorde: raíz por el bajo, y la ambigüedad que queda
 
 ```js
 detectChord(notesArray) {
   const pitchClasses = [...new Set(notesArray.map(n => n % 12))].sort((a,b) => a-b);
-  for (let root of pitchClasses) {           // itera en orden ASCENDENTE de pitch class
+  const bassPC = Math.min(...notesArray) % 12;
+  const candidateRoots = [bassPC, ...pitchClasses.filter(pc => pc !== bassPC)];  // el bajo, primero
+  for (const root of candidateRoots) {
     const intervals = pitchClasses.map(pc => (pc - root + 12) % 12).sort((a,b)=>a-b);
     for (const [type, template] of Object.entries(CHORD_TEMPLATES)) {
-      if (template matches intervals) return { rootPC: root, type, ... };  // primer match gana
+      if (template matches intervals) return { rootPC: root, type, bassPC, ... };  // primer match gana
     }
   }
 }
 ```
 
-Para un mismo conjunto de notas físicas, el algoritmo elige siempre la raíz de menor
-pitch class que matchee algún template. No mira dónde está el bajo ni la intención
-armónica.
+Desde la v11.6 (Fase 1), el algoritmo prueba el pitch class del bajo real como raíz antes
+que el orden ascendente. `src/engine.js:54` calcula `bassPC`; `:60` arma `candidateRoots`
+con el bajo al frente. Si el bajo forma un template, gana esa lectura; si no, cae al orden
+ascendente, que es la inversión real.
 
-El caso concreto es Do-Mi-Sol-La, pitch classes 0, 4, 7, 9. Probando raíz 0 (Do) primero,
-por ser la más baja, los intervalos dan `[0,4,7,9]`, que matchea el template `'6'`: el
-motor dice "Do6". Nunca prueba "La menor 7" (La-Do-Mi-Sol, mismas notas, raíz 9), aunque
-el bajo físico esté en La y la canción esté en vi7.
+El caso Do-Mi-Sol-La sigue de ejemplo, pitch classes 0, 4, 7, 9. Con el bajo en La el motor
+devuelve La m7; con el bajo en Do, Do6. El bajo decide, que es lo que antes no pasaba: la
+versión previa a la v11.6 devolvía siempre Do6, por ser Do la raíz de menor pitch class.
 
-Hoy se tolera porque el output es texto informativo. Deja de tolerarse en cuanto se
-implementen los grados romanos: el numeral depende cien por ciento de qué pitch class se
-eligió como raíz. El motor no tira error. Tira el numeral equivocado, en silencio y
-siempre igual. Por eso este bug va en la Fase 1 del roadmap, antes que los grados romanos.
+Lo que no se resuelve es la ambigüedad enarmónica de fondo. Con el bajo en Do el motor dice
+Do6, pero esas mismas cuatro notas con Do en el bajo también pueden ser La m7 en primera
+inversión (Am7/C). El bajo ya no alcanza para separarlas; solo el contexto de la canción
+entera lo hace, y eso no tiene solución algorítmica simple (ver `DECISIONS.md`, 2026-07-04).
+No es un bug abierto: es un límite documentado.
+
+Para los grados romanos esto importa: el numeral depende cien por ciento de qué pitch class
+quedó como raíz. Ahora la raíz sigue al bajo, la apuesta más probable, pero cuando la
+ambigüedad persiste el numeral la hereda.
 
 ## 5. Evaluación armónica: seis reglas sin jerarquía escrita
 
@@ -137,15 +144,11 @@ Fase 2), para que sumar una regla nueva no dependa de adivinar contra qué compi
   `State.config`. Recargás la página y perdés la tonalidad.
 - Cero feedback sonoro. No hay una sola llamada a Web Audio API en el código.
 - "Fijar Acordes" hardcodea dos acordes: Do Mayor y Re m7.
-- Sin control de versiones hasta la Fase 0. El proyecto vivió como archivos sueltos y así
-  perdió la v11.5.
-- PII hardcodeada: el `<div class="credits">` tenía un nombre real escrito en el HTML. Se
-  reemplazó antes del primer commit.
 
 ## 7. No framework, por ahora
 
 Hoy el código son dos archivos: `index.html` (573 líneas: `State`, `MIDI`, `UI`, `SysLog`)
-y `src/engine.js` (139 líneas: `MathEngine` y las tres reglas puras). Los objetos-módulo ya
+y `src/engine.js` (145 líneas: `MathEngine` y las tres reglas puras). Los objetos-módulo ya
 separan responsabilidades. Los colapsos que se documentan del historial (freeze del hilo
 principal, fuga de memoria por `innerHTML +=`) fueron problemas de patrones DOM y async, no
 del lenguaje. Migrar a React o Vue no arregla el bug de raíz ambigua ni ningún problema de

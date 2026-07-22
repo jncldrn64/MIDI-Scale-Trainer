@@ -14,6 +14,11 @@ Se saltea la v11.5: ese número es el de la versión que se perdió (ver `docs/A
 
 - Fixture `tests/fixtures/raiz-ambigua.json`: el mismo conjunto de notas (pitch classes 0, 4, 7, 9) leído según el bajo, más un caso de inversión real que cae al orden ascendente. Las 15 fixtures previas siguen en verde; el runner corre 18 casos.
 
+### Fixed
+
+- `index.html`: el `<title>` y el `<h1>` mostraban `V11.0` con el CHANGELOG en v11.6. Bumpeados a `V11.6` (regla "Versión mostrada" de `CLAUDE.md`). El bump quedó pendiente del PR de código de la Fase 1; este lo cierra. Por tocar `index.html`, el commit es `fix`, no doc-only.
+- Documentación sincronizada con el código de la v11.6: `ARCHITECTURE.md` §4 describe el `detectChord` vigente (bajo como raíz, ambigüedad enarmónica como límite, no bug), §6 saca dos gaps ya cerrados (control de versiones y PII), §7 corrige el conteo de `src/engine.js` a 145 líneas; `ROADMAP.md` marca la Fase 1 como cerrada.
+
 ## v11.4 — 2026-07-04
 
 ### Changed
