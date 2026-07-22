@@ -219,6 +219,30 @@ documentado, no como bug pendiente.
 
 ---
 
+## 2026-07-04 — Documentación que describía código previo a un fix ya mergeado
+
+**Contexto:** después de mergear la v11.6 (Fase 1), la doc quedó atrás del código.
+`ARCHITECTURE.md` §4 seguía describiendo el `detectChord` viejo ("elige siempre la raíz de
+menor pitch class", "no mira el bajo"), §6 listaba dos gaps ya cerrados, §7 tenía el conteo
+de líneas viejo, `ROADMAP.md` no marcaba la Fase 1, e `index.html` mostraba `V11.0`. La doc
+describía un estado que el código dejó de tener el mismo día.
+
+**Decisión:** cada PR que cambia el comportamiento del motor actualiza, en ese mismo PR, la
+sección de `ARCHITECTURE.md` que describe ese comportamiento, el estado de la fase en
+`ROADMAP.md` y la versión mostrada en `index.html`. La doc no se sincroniza en un pase
+aparte "más adelante"; se toca junto al código que la vuelve falsa. Cuando igual aparece un
+desfasaje, se corrige leyendo el código, no de memoria.
+
+**Razón:** la regla de `ARCHITECTURE.md` §0 es una sola: nada se documenta como hecho sin
+leer el código que lo prueba. Un fix que cambia el algoritmo y deja intacta la sección que
+lo describe rompe esa regla en silencio, el mismo modo en que se perdió la v11.5 (descrita
+sin código). Atar la actualización de doc al PR de código evita que la descripción y el
+código se separen entre fases.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

@@ -54,6 +54,12 @@ mano.
 
 ## FASE 1: Bug de raíz ambigua en `detectChord`
 
+**Estado: cerrada el 2026-07-04.** Implementada en la v11.6: `detectChord` prueba el bajo
+como raíz candidata antes del orden ascendente. El criterio de éxito se cumple con
+`tests/fixtures/raiz-ambigua.json` (acorde ambiguo con bajo conocido: La m7 con bajo en La,
+Do6 con bajo en Do) y con las fixtures de la Fase 0, que siguen pasando. `node tests/run.js`
+da 18 casos en verde.
+
 Bloquea la Fase 3. Un numeral romano calculado sobre una raíz mal elegida es un dato
 incorrecto que no se nota a simple vista (ver `ARCHITECTURE.md` §4). Por eso va antes que
 los grados romanos.
