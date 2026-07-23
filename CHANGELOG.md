@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.10 — 2026-07-23
+
+### Changed
+
+- `CLAUDE.md`, sección "Repos hermanos": corregida la descripción de TL-FCCU. "Un solo script bash (`run.sh`)" era falso; el repo hoy suma un agente Java en `scripts/` (Byte Buddy) que intercepta el HTTP, verificado el 2026-07-23 contra el repo en la sesión. La política de referencias cruzadas ahora exige que una descripción diga qué es el proyecto, no cómo está construido, salvo que su estructura se haya verificado en la sesión.
+
 ## v11.9 — 2026-07-23
 
 ### Changed
