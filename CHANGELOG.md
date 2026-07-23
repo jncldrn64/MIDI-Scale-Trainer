@@ -9,6 +9,7 @@ Se saltea la v11.5: ese número es el de la versión que se perdió (ver `docs/A
 ### Changed
 
 - `src/engine.js`, `MathEngine.detectChord`: prueba el pitch class del bajo real (`bassPC`) como raíz candidata antes del orden ascendente. La-Do-Mi-Sol con bajo en La se lee La m7; con bajo en Do, Do6. Cuando el bajo no arma un template, cae al orden ascendente (inversión real). Fase 1 del roadmap; ver `DECISIONS.md` (2026-07-04).
+- `CLAUDE.md` (doc): orden de lectura al inicio (`ARCHITECTURE` → `DECISIONS` → `ROADMAP` antes de tocar código, con `DECISIONS` obligatorio en el orden) y excepción por categoría para los `README.md` de subcarpeta, que documentan su propia carpeta y quedan fuera de la regla de los tres docs canónicos.
 
 ### Added
 
