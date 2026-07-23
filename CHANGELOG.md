@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.9 — 2026-07-23
+
+### Changed
+
+- `CLAUDE.md`, sección "Guion largo": la exención se amplía. La prosa escrita antes de que se adoptara la regla (v11.3) queda como está, igual que los encabezados. En `docs/DECISIONS.md` es obligatorio porque el archivo es append-only: sus guiones largos viejos (entradas del 2026-07-03 y sección Histórico, en prosa corrida y entre paréntesis) son deuda tolerada, no algo a arreglar.
+
+### Added
+
+- `CLAUDE.md`, sección "Repos hermanos": nombra los otros tres repos del autor (TL-FCCU, TdeA-Mimos-Website, TdeA-Mimos-API-REST) con una línea cada uno, y fija la política de referencias cruzadas. Una mención a otro repo se ancla en esa sección, no se borra; la historia no se reescribe para agregar ni sacar anclajes (la mención a TLauncher_FCCU en v11.8 resuelve contra ella).
+
 ## v11.8 — 2026-07-23
 
 ### Changed
