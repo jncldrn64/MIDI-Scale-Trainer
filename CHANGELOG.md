@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.13 — 2026-07-23
+
+### Fixed
+
+- `docs/DECISIONS.md`: la plantilla del final abría el ejemplo con `### YYYY-MM-DD` (tres almohadillas), pero el estándar de `CLAUDE.md` y las últimas cinco entradas usan `##`. Corregido a `## YYYY-MM-DD`, para que quien copie el machete no arranque desalineado. La plantilla no es una entrada: append-only protege el registro de decisiones, no el machete del final, así que esto no reescribe historia. Las entradas del 2026-07-03 que usan `###` quedan como están.
+
 ## v11.12 — 2026-07-23
 
 ### Added
