@@ -117,28 +117,9 @@ repositorio clonado en la sesión es solo lectura y contexto: se copia DESDE él
 se escribe EN él. No se traen a este repo convenciones de otro (idioma, DECISIONS vs
 Known gaps, formato). Ante duda de en qué repo estás escribiendo, se para y se pregunta.
 
-## Repos hermanos
-
-Este repo comparte estándar de documentación con otros tres del autor, que son repositorios
-separados:
-
-- **TL-FCCU** (`TLauncher_FCCU`): un sandbox personal de auditoría de seguridad para
-  TLauncher. Corre el launcher bajo `firejail` y registra qué toca: archivos, procesos
-  hijos y conexiones de red. Ya no es un solo script: verificado el 2026-07-23 contra el
-  repo en la sesión, hoy suma un agente Java en `scripts/`, construido con Byte Buddy, que
-  intercepta el HTTP del launcher.
-- **TdeA-Mimos-Website**: el sitio web del proyecto TdeA-Mimos.
-- **TdeA-Mimos-API-REST**: la API REST del proyecto TdeA-Mimos.
-
-Política de referencias cruzadas: una mención a otro repo se ancla, no se borra. El anclaje
-vive en esta sección y cualquier mención en cualquier archivo resuelve contra ella. Una
-identificación inline en la primera mención también vale, que es como lo hace TL-FCCU. La
-historia no se reescribe ni para agregar ni para sacar anclajes: la mención a
-`TLauncher_FCCU` en el CHANGELOG v11.8 queda como está y resuelve contra esta sección. Una
-descripción de repo hermano dice qué es el proyecto, no cómo está construido, salvo que su
-estructura se haya verificado en esta sesión: la estructura de archivos cambia, y una
-descripción de memoria envejece mal. La de TL-FCCU decía "un solo script bash" después de
-que el repo sumara un agente Java.
+Este repo no describe otros repos. El nombre de otro repo puede aparecer como procedencia
+histórica, de dónde salió una convención, nunca como información operativa. Ningún documento
+de este repo depende de otro para entenderse ni para trabajar acá.
 
 ## Versión mostrada
 

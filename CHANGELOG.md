@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.11 — 2026-07-23
+
+### Removed
+
+- `CLAUDE.md`, sección "Repos hermanos": borrada, con su política de anclaje. Describir otros repos fue un error: esas descripciones envejecen (la de TL-FCCU afirmó "un solo script bash" después de que ese repo sumara un agente Java, y hubo que corregirla) e insinúan una dependencia entre repos que no existe.
+
+### Added
+
+- `CLAUDE.md`, en "Scope de escritura": regla corta. Este repo no describe otros repos; el nombre de otro solo aparece como procedencia histórica, nunca como información operativa, y ningún documento de acá depende de otro para entenderse.
+
 ## v11.10 — 2026-07-23
 
 ### Changed
