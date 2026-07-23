@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.8 — 2026-07-23
+
+### Changed
+
+- `docs/ROADMAP.md`: reformateado al molde uniforme por fase, tomado del ROADMAP de TLauncher_FCCU y traducido al español. Cada fase numerada lleva `Estado`, `Objetivo`, `Alcance`, `Criterio de aceptación` y `Bloquea`/`Bloqueada por`, y arriba se declara el vocabulario de estado (`pendiente`, `en progreso`, `cerrada (YYYY-MM-DD)`). Mismo contenido: el "Tarea" de la Fase 1 se separó en `Objetivo` (el para qué) y `Alcance` (el qué se hace), el "Bloquea la Fase 3" pasó a campo, y los criterios que no existían quedaron en "por definir". La nota introductoria, el BACKLOG y el "Track paralelo de teoría" quedan como estaban.
+
 ## v11.7 — 2026-07-23
 
 ### Changed
