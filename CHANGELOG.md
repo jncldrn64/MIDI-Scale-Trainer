@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.7 — 2026-07-23
+
+### Changed
+
+- `CLAUDE.md`, sección "CHANGELOG": regla nueva. Un PR doc-only abre su propia sección fechada, con la fecha real del cambio, en vez de plegarse en una versión ya publicada. La última versión del CHANGELOG puede quedar por delante de la versión mostrada; ese desfase es intencional y lo cierra el próximo PR de código. Esta sección estrena la regla: es doc-only, así que la versión mostrada no se bumpea y sigue en V11.6.
+
 ## v11.6 — 2026-07-04
 
 Se saltea la v11.5: ese número es el de la versión que se perdió (ver `docs/ARCHITECTURE.md` §0 y `docs/DECISIONS.md`). No se reusa, para no confundir la reconstrucción con la narrativa perdida.
