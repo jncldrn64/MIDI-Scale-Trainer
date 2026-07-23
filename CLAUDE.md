@@ -2,11 +2,30 @@
 
 Reglas que valen en cada sesión. Se leen antes de tocar nada.
 
+## Orden de lectura
+
+Este repo no tiene `AGENTS.md`. Antes de tocar código se leen tres archivos de `docs/`, en
+este orden:
+
+1. `ARCHITECTURE.md`: el estado real del sistema, qué módulo vive en qué archivo y qué gaps
+   quedan.
+2. `DECISIONS.md`: las restricciones vigentes. No es opcional y va en este orden.
+   Restricciones como "no migrar a framework" y "reconstruir desde v11.0, no desde v11.5"
+   viven solo acá; un agente que las saltee puede proponer justo lo que ya está descartado.
+3. `ROADMAP.md`: la fase actual y qué sigue.
+
+Recién después se toca código.
+
 ## Documentación
 
-La documentación vive en `docs/`. Los archivos canónicos son tres: `ARCHITECTURE.md`,
+La documentación canónica vive en `docs/` y son tres archivos: `ARCHITECTURE.md`,
 `ROADMAP.md` y `DECISIONS.md`. No se crea ningún archivo de documentación nuevo sin
 preguntar primero.
+
+Excepción por categoría: un `README.md` de subcarpeta documenta su propia carpeta y no
+cuenta como doc canónico. `tests/README.md` explica cómo correr las fixtures; un futuro
+`src/README.md` explicaría el motor. Mientras se queden en describir su carpeta, no piden
+permiso aparte.
 
 ## CHANGELOG
 
