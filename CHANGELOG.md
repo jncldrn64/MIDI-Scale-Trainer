@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.12 — 2026-07-23
+
+### Added
+
+- `docs/DECISIONS.md`: entrada 2026-07-23 que fija la jerarquía de evaluación de una nota de melodía (Fase 2 del roadmap). Cinco pasos, la primera regla que matchea gana: escala activa, acorde activo (incluida la dominante secundaria que completa la Fase 3), sensible en contexto menor, indulto de paso cromático (180 ms), y bad. Documenta qué pasos ya están en el código y cuál falta, más el límite conocido de que el indulto colapsa una tensión corta igual que un error corto.
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 2 queda marcada como `cerrada (2026-07-23)` y su criterio de aceptación cita el ADR. Es especificación, no código: la implementación es de la Fase 3.
+
 ## v11.11 — 2026-07-23
 
 ### Removed

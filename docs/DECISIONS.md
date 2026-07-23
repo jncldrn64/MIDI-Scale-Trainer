@@ -243,6 +243,51 @@ código se separen entre fases.
 
 ---
 
+## 2026-07-23 — Jerarquía de evaluación de una nota de melodía (Fase 2)
+
+**Contexto:** `MathEngine.evaluateMelodyStatus` (en `src/engine.js`) decide el estado de una
+nota con un orden que es un accidente del código, no una decisión escrita. `ARCHITECTURE.md`
+§5 lista seis reglas y ninguna tiene prioridad documentada. Antes de sumar grados romanos
+(Fase 3), ese orden se fija por escrito, para que agregar una regla nueva sea contra una
+prioridad declarada y no contra el orden de las líneas.
+
+**Decisión:** el estado de una nota de melodía se resuelve en este orden. La primera regla
+que matchea gana.
+
+1. El pitch class está en la escala activa (`validPitches`) → `good`.
+2. El pitch class está en el acorde activo, incluida la dominante secundaria reconocida →
+   `good`. Hoy `evaluateMelodyStatus` solo mira el template del acorde literal (`inScale ||
+   inChord`); conectar la dominante secundaria a la evaluación, no solo a la UI de
+   `classifyChordRelation`, es trabajo de la Fase 3. Hasta entonces este paso cubre solo las
+   notas del acorde literal.
+3. Es la sensible en contexto menor, `(root + 11) % 12`, y no cayó en 1 ni en 2 → `tension`.
+   Solo en universos `minor` y `harmonic_minor`.
+4. Al soltar la tecla, la nota duró menos de `PASSING_TONE_MS` (180 ms) y había quedado
+   no-`good` → `passing`. Se evalúa al final, en `MIDI.releaseNoteInternal`, sobre lo que
+   haya quedado como no-`good`. El umbral de 180 ms se calibró a mano contra Bad Apple.
+5. Nada de lo anterior → `bad`.
+
+**Qué ya existe y qué falta:** los pasos 1, 3, 4 y 5 ya están en el código
+(`evaluateMelodyStatus` más `applyPassingTone`) y las 18 fixtures los cubren. El paso 2 está
+a medias: el acorde literal sí, la dominante secundaria todavía no; eso lo completa la Fase
+3. El intercambio modal (regla 6 de `ARCHITECTURE.md` §5) no entra en esta jerarquía: es una
+etiqueta de relación del acorde con el universo (`classifyChordRelation`), no un estado de
+nota, y se queda en la UI.
+
+**Límite conocido, no un bug:** el paso 4 reclasifica a `passing` cualquier no-`good` corto,
+así que una tensión de menos de 180 ms se colapsa igual que un error corto (ver
+`ARCHITECTURE.md` §3). Por ahora el indulto no distingue "tensión corta" de "error corto";
+separarlas obligaría a tocar `MIDI.releaseNoteInternal`. Queda como decisión, no como
+pendiente silencioso.
+
+**Razón:** este orden es el que ya vive en el código para los pasos que existen, más el que
+la Fase 3 completará en el paso 2. No es código todavía: es la especificación que la Fase 3
+implementa.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

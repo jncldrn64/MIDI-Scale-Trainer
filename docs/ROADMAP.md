@@ -83,7 +83,7 @@ nueva para el acorde ambiguo con bajo conocido. Cumplido con `tests/fixtures/rai
 
 ## FASE 2: Fijar por escrito la jerarquía de evaluación armónica
 
-**Estado:** `pendiente`
+**Estado:** `cerrada (2026-07-23)`
 
 **Objetivo:** que la pregunta "¿en qué orden se evalúan las reglas cuando una nota no es
 diatónica?" tenga una respuesta escrita, no un orden implícito en el código.
@@ -103,7 +103,8 @@ diatónica?" tenga una respuesta escrita, no un orden implícito en el código.
 Esto no es código todavía: es la especificación que la Fase 3 implementa.
 
 **Criterio de aceptación:** el orden de evaluación queda escrito y fijado en `DECISIONS.md`
-antes de programarlo.
+antes de programarlo. Cumplido el 2026-07-23: la jerarquía de cinco pasos quedó fijada en
+`DECISIONS.md` (entrada 2026-07-23), con qué ya está en el código y qué completa la Fase 3.
 
 **Bloquea:** ninguna declarada
 
