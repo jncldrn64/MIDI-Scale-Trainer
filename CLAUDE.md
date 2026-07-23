@@ -86,6 +86,13 @@ como token de formato en los encabezados de fecha de CHANGELOG (`## vX.Y — YYY
 DECISIONS (`## YYYY-MM-DD — <título>`). La historia no se normaliza: los encabezados ya
 escritos quedan como están.
 
+La regla se adoptó en la v11.3 (ver CHANGELOG). La prosa escrita antes de esa versión queda
+como está, igual que los encabezados, aunque use guion largo en oración corrida o entre
+paréntesis. En `docs/DECISIONS.md` eso además es obligatorio: el archivo es append-only, así
+que las entradas viejas (las del 2026-07-03 y la sección Histórico, con guion largo en
+prosa) no se editan ni para sacarlo. Es deuda tolerada, no algo a arreglar; tocarla
+violaría append-only.
+
 ## Honestidad de estado
 
 Nada se declara "funciona" o "probado" sin una corrida real. Si no se verificó, se dice
@@ -109,6 +116,23 @@ Este repo (MIDI-Scale-Trainer) es el único destino de escritura. Cualquier otro
 repositorio clonado en la sesión es solo lectura y contexto: se copia DESDE él, nunca
 se escribe EN él. No se traen a este repo convenciones de otro (idioma, DECISIONS vs
 Known gaps, formato). Ante duda de en qué repo estás escribiendo, se para y se pregunta.
+
+## Repos hermanos
+
+Este repo comparte estándar de documentación con otros tres del autor, que son repositorios
+separados:
+
+- **TL-FCCU** (`TLauncher_FCCU`): un sandbox personal de auditoría de seguridad para
+  TLauncher. Corre el launcher bajo `firejail` y registra qué toca: archivos, procesos
+  hijos y conexiones de red. Un solo script bash (`run.sh`).
+- **TdeA-Mimos-Website**: el sitio web del proyecto TdeA-Mimos.
+- **TdeA-Mimos-API-REST**: la API REST del proyecto TdeA-Mimos.
+
+Política de referencias cruzadas: una mención a otro repo se ancla, no se borra. El anclaje
+vive en esta sección y cualquier mención en cualquier archivo resuelve contra ella. Una
+identificación inline en la primera mención también vale, que es como lo hace TL-FCCU. La
+historia no se reescribe ni para agregar ni para sacar anclajes: la mención a
+`TLauncher_FCCU` en el CHANGELOG v11.8 queda como está y resuelve contra esta sección.
 
 ## Versión mostrada
 
