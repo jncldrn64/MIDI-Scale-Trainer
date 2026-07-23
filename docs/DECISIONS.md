@@ -291,7 +291,7 @@ implementa.
 ### Plantilla para nuevas entradas
 
 ```
-### YYYY-MM-DD — Título corto de la decisión
+## YYYY-MM-DD — Título corto de la decisión
 
 **Contexto:** qué problema o pregunta motivó esto.
 
