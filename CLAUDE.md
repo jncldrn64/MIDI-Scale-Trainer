@@ -34,6 +34,12 @@ Es un solo archivo que crece por secciones, nunca uno por fase. Lo más nuevo va
 orden descendente. Cada sección abre con `## vX.Y — YYYY-MM-DD` y adentro lleva
 `### Added`, `### Changed`, `### Fixed` o `### Removed`.
 
+Un PR doc-only abre su propia sección fechada. No se pliega dentro de la sección de una
+versión ya publicada: esa sección es historia y no se reescribe. La sección nueva lleva la
+fecha real del cambio en ISO 8601, nunca la de una versión anterior. Un PR doc-only puede
+dejar la última versión del CHANGELOG por delante de la versión que muestra el artefacto;
+ese desfase es intencional y lo cierra el próximo PR de código (ver "Versión mostrada").
+
 ## DECISIONS
 
 `docs/DECISIONS.md` es append-only, estilo ADR. No se borra una entrada vieja aunque quede
