@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.14 — 2026-07-25
+
+### Added
+
+- `docs/DECISIONS.md`: dos entradas nuevas (2026-07-25) que se apoyan en la del 2026-07-24 (arquitectura de UI de paneles sobre un fondo fijo). "Protocolo de clasificación" fija el criterio para clasificar toda parte de la UI en característica, salida del motor, o fondo/chrome, como corolario de la regla "característica es un rol, no una clase". "Glosario del modelo" define en un solo lugar el vocabulario de arquitectura (fondo, panel, ranura, característica, salida del motor, buffer del motor, superficie de feedback); solo arquitectura, sin vocabulario musical.
+
 ## v11.13 — 2026-07-23
 
 ### Fixed

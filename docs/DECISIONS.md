@@ -321,6 +321,44 @@ implementa.
 
 ---
 
+## 2026-07-25 — Protocolo de clasificación: característica, salida del motor, fondo o chrome
+
+**Contexto:** la entrada del 2026-07-24, regla 2, dice que "característica es un rol, no una clase", pero no da el criterio para clasificar algo nuevo cuando aparece. Sin ese criterio, cada idea futura reabre la discusión de si es característica o no. Esta entrada fija el criterio como corolario operativo de esa regla.
+
+**Decisión:** toda parte de la UI cae en exactamente una de tres categorías.
+
+- **Característica:** tiene contenido intercambiable, compite por una de las tres ranuras, y el usuario la abre, mueve o cierra. Puede tener varias vistas de la misma estructura (la escala, en vista lineal y en rueda de quintas). Ejemplos: la escala; las progresiones cuando existan.
+- **Salida del motor:** el motor la deriva del estado y varios paneles la consumen del mismo buffer único. No compite por ranura, no se abre ni se cierra, está disponible para todos los paneles a la vez. Ejemplos: los grados romanos, la función tonal (tónica, subdominante, dominante), el veredicto nota por nota. Nada de esto es característica: darle panel propio sería hardcodearlo, el mismo pecado que los botones de Fijar Acordes que la entrada del 2026-07-24 ya señala.
+- **Fondo o chrome:** permanente, no se cierra. Ejemplos: el teclado, la zona de notas que caen, la barra de menú de detección MIDI.
+
+**Razón:** sin este protocolo, "¿esto es característica o motor?" se rediscute cada vez. Con él, cualquier idea futura cae sola en su lugar. La prueba práctica: si el motor lo puede derivar del estado, es salida del motor y va al buffer, no es característica de nadie.
+
+**Consecuencia:** hay tres superficies de texto distintas y no se fusionan. Los subtítulos del entrenamiento (directrices en tiempo real, propias del entrenamiento activo) y el feedback del sistema (el veredicto nota por nota) son salida visible para el usuario. La consola de debug (logs de desarrollo) es una tercera superficie, no es lo mismo que el feedback, y se queda detrás de submenús, oculta para quien solo toca. Un modelo previo fusionó feedback y consola; esta consecuencia existe para que no se repita.
+
+**Estado:** vigente.
+
+---
+
+## 2026-07-25 — Glosario del modelo: vocabulario de arquitectura
+
+**Contexto:** los términos de arquitectura del proyecto (ranura, panel, buffer del motor, superficie de feedback, fondo) se usan en las entradas de DECISIONS y se van a usar en el ROADMAP y en los prompts, pero no están definidos en un solo lugar. Un modelo frío que llegue puede inventar su propio vocabulario o interpretar mal el existente. Este glosario fija los términos. Es solo vocabulario de arquitectura, para quien construye. El vocabulario musical (tónica, dominante, grado romano) no va acá: eso es contenido de la app que la característica de la escala y la guía de interfaz le explican al usuario, y vive en el buffer del motor y en la guía, no en la documentación del repo.
+
+**Decisión:** se definen los términos, cada uno en una línea, alineados con la entrada del 2026-07-24 (no son definiciones nuevas):
+
+- **Fondo:** el teclado y la zona de notas que caen. Permanente, no se cierra, no cede espacio.
+- **Panel:** cualquier overlay con contenido que flota sobre el fondo. Puede cerrarse.
+- **Ranura:** una de las tres posiciones donde vive una característica. Máximo tres simultáneas.
+- **Característica:** un panel con contenido intercambiable que compite por una ranura (ver Protocolo de clasificación).
+- **Salida del motor:** dato que `MathEngine` deriva del estado y expone en un buffer único que cualquier panel consume (ver Protocolo de clasificación).
+- **Buffer del motor:** el punto único desde donde los paneles leen la salida del motor. Ningún panel recalcula ni hardcodea lo que el buffer ya provee.
+- **Superficie de feedback:** un panel que muestra salida del motor al usuario. Hay tres distintas: subtítulos del entrenamiento, feedback del sistema, y la consola de debug (esta última oculta).
+
+**Razón:** un glosario corto evita que cada sesión reinvente los términos o los use con sentidos distintos. Se limita a arquitectura a propósito; mezclar vocabulario musical lo volvería contenido de producto y no documentación de repo.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
