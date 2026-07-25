@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.26 — 2026-07-25
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 5 suma terminología de pantalla a su Alcance, correcciones de display, no de motor. Las etiquetas del botón de nomenclatura pasan de "Latina" y "Anglosajona" a "Silábica" (Do-Re-Mi) y "Alfabética" (C-D-E), con valor por defecto, persistencia por `localStorage` y el botón alcanzable en los menús nuevos. La etiqueta "Intercambio Modal", que hoy sale del caso else de `classifyChordRelation` y afirma un análisis que el motor no hizo, se relabela a "no clasificado" o "por definir" hasta que la Fase 11 escriba la teoría. Y la función tonal de la Fase 4 se muestra en el panel de Análisis junto al numeral y la relación, coherente con el relabel honesto. Además el criterio deja de decir "los 18 fixtures" y pasa a "todos los fixtures existentes", que no se pone rancio cuando el conteo sube.
+
 ## v11.25 — 2026-07-25
 
 ### Added
