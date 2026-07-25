@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.17 — 2026-07-25
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 5 se parte en dos. Ahora la Fase 5 es solo el rediseño visual, la escala como panel de característica sobre el teclado de fondo, en vista lineal, sin rueda ni conmutador (con una sola vista no hay nada que conmutar). Es presentación pura: lee `scalePitches` del motor y no lo toca.
+
+### Added
+
+- `docs/ROADMAP.md`: Fase 10, la rueda de quintas como segunda vista de la escala, con el conmutador que nace ahí. La rueda deriva de `scalePitches`; queda abierto si además muestra las calidades diatónicas, en cuyo caso depende de la función tonal de la Fase 4. Bloqueada por la Fase 5; su número es posterior por secuencia de decisión, no por dependencia con las progresiones.
+
 ## v11.16 — 2026-07-25
 
 ### Changed
