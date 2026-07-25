@@ -193,11 +193,29 @@ widget que la pidió, garantizando que siga habiendo una lectura visible o que e
 El teclado visual es fijo de 88 teclas a todo el ancho, independiente del zoom. No se toca el
 motor ni el coloreo de `renderKeyboard`.
 
+**Terminología de pantalla.** La Fase 5 también corrige los nombres que ve el usuario, que son
+de display, no de motor. Primero, las etiquetas del botón de nomenclatura, hoy "Latina" y
+"Anglosajona", se reemplazan por etiquetas de forma: "Silábica" para Do-Re-Mi y "Alfabética"
+para C-D-E. Do-Re-Mi es solfeo, de origen italiano medieval, no latinoamericano, y las letras
+no son propiamente anglosajonas; nombrarlas por su forma evita atribuir a una cultura algo que
+es de notación. Junto con eso, se define el valor por defecto de la nomenclatura, se persiste la
+elección por `localStorage` con el mismo mecanismo que la persistencia de layout, y se deja el
+botón alcanzable en los menús nuevos. Segundo, la etiqueta "Intercambio Modal" que hoy muestra
+el panel de Análisis sale del caso else de `classifyChordRelation`, el fallback de "no diatónico
+y no dominante secundaria"; no es un diagnóstico derivado, es "no reconocido", y presentarlo
+como intercambio modal le afirma al usuario un análisis que el motor no hizo. Se cambia a "no
+clasificado" o "por definir", hasta que la Fase 11 escriba la teoría del intercambio modal; el
+nombre interno de esa relación en el motor se decide en la Fase 11, no en esta fase. Tercero, la
+función tonal que la Fase 4 calcula y escribe en el buffer sin mostrarla se muestra acá en el
+panel de Análisis, junto al numeral y la relación, de forma consistente con el relabel honesto:
+para un acorde no diatónico la función dice "por definir" y la relación dice "no clasificado",
+sin que una contradiga a la otra.
+
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, el panel de pestañas existe como chrome
 permanente para opciones y logs, la salida del motor tiene un lugar visible definido o queda
-cubierta por el log, el motor y el coloreo quedan intactos, los 18 fixtures siguen pasando, y
-el autor lo corrobora en el navegador.
+cubierta por el log, el motor y el coloreo quedan intactos, todos los fixtures existentes
+siguen pasando, y el autor lo corrobora en el navegador.
 
 **Nota de reapertura (2026-07-25):** el primer intento, apilado, se construyó y quedó en
 V11.19. Sirvió para ver que el modelo real es de capas, no de pila. Se reabre la fase para
