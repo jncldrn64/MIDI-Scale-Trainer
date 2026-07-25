@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.22 — 2026-07-25
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva que fija el log como canal canónico de validación. Toda salida del motor emite al log etiquetada cada vez que se calcula, se muestre o no en pantalla, cerrando la asimetría actual (`detectChord` loguea con MATH, `classifyChordRelation` no). Una fase se valida por tres vías a la vez: fixtures verdes, sesión humana en Chrome y el log auditable; cada fase registra lo que agrega (el grado romano de la Fase 3, la función tonal de la Fase 4). Refina el trato que el protocolo del 2026-07-25 le da a la consola de debug y extiende la refinación del contrato del mismo día. Cerrar el hueco de `classifyChordRelation` es código y va con la Fase 3.
+
 ## v11.21 — 2026-07-25
 
 ### Added

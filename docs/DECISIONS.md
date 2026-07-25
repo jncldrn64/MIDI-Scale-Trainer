@@ -448,6 +448,50 @@ fondo, no solo a los paneles, algo que la refinación del contrato del 2026-07-2
 
 ---
 
+## 2026-07-25 — El log como canal de validación: toda salida del motor se registra, se muestre o no
+
+**Contexto:** el borde MIDI no se puede testear solo. Nadie automatiza "¿el humano oyó o vio
+lo correcto?". Y el rediseño de UI puede ocultar o reencaminar la lectura en pantalla. Hoy hay
+un hueco concreto: `detectChord` registra su resultado en el log con la etiqueta MATH
+(`index.html:441`), pero `classifyChordRelation`, que puebla el panel Análisis de Armonía y es
+donde vivirá el grado romano de la Fase 3, no registra nada, se muestra solo en pantalla. La
+salida del motor que más importa para validar el núcleo armónico es la única invisible al log.
+
+**Decisión:** cuatro reglas.
+
+1. Toda salida del motor emite al log, etiquetada, cada vez que se calcula, sin importar si se
+   muestra en pantalla ni dónde. Hoy `detectChord` lo hace, `classifyChordRelation` no; esa
+   asimetría se cierra.
+
+2. El log es el canal canónico de validación. Una fase se valida por tres vías a la vez: los
+   fixtures verdes desde los archivos, una sesión humana en Chrome, y el log capturando qué
+   decidió el motor para que la sesión sea auditable después. Cuando la sesión no puede
+   mostrarlo, porque la UI ocultó o reencaminó la lectura, el log es la única verdad visible.
+
+3. Cada fase, al implementarse, emite al log etiquetado lo que esa fase agrega. Cuando la Fase
+   3 agregue el grado romano derivado, ese número se registra; cuando la Fase 4 agregue la
+   función tonal, se registra. Es criterio de aceptación permanente, y el ROADMAP lo referencia
+   por fase.
+
+4. La obligación del log es independiente de la decisión de display. Se oculte el panel, se
+   borre de la vista, o se reencamine a otra superficie de feedback, la salida del motor sigue
+   yendo al log.
+
+**Razón:** el borde MIDI no se testea solo y el rediseño puede cegar la validación visible; el
+log es el único lugar donde "qué decidió el motor" siempre se recupera.
+
+**Consecuencia:** cerrar el hueco actual, que `classifyChordRelation` registre su resultado, es
+código y queda fuera del alcance de esta entrada doc-only. Va con la Fase 3, que extiende justo
+ese camino con el grado romano: al agregar el número se agrega también el `SysLog`, y se cierra
+el hueco nuevo y el viejo de una. Esta entrada refina el trato que el protocolo de
+clasificación del 2026-07-25 le da a la consola de debug: el log no es solo una superficie
+oculta, es el canal canónico de validación. Y extiende la refinación del contrato del
+2026-07-25: la salida del motor la consume cualquier superficie, y además siempre el log.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
