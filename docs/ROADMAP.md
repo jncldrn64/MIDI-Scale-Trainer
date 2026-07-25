@@ -137,7 +137,54 @@ error.
 
 ---
 
-## FASE 4: Calidad de vida
+## FASE 4: Función tonal
+
+**Estado:** `pendiente`
+
+**Objetivo:** que el motor nombre la función de cualquier acorde (Tónica: I, vi, iii;
+Subdominante: IV, ii; Dominante: V, vii°) y la exponga en el buffer del motor para que
+cualquier panel la consuma.
+
+**Alcance:** es salida del motor, no una característica (ver el protocolo de clasificación
+en `DECISIONS.md`, 2026-07-25). No lleva panel propio: el motor deriva la función del grado
+del acorde en la tonalidad y la escribe en el buffer del motor, del que leen todos los
+paneles a la vez. El material teórico ya está escrito en la sección "Track paralelo de
+teoría" de este documento; el motor implementa eso: Tónica (I, vi, iii), Subdominante
+(IV, ii), Dominante (V, vii°).
+
+**Criterio de aceptación:** dado un acorde y una tonalidad, el motor devuelve su función, y
+las fixtures existentes lo confirman en los casos que apliquen.
+
+**Bloquea:** Fase 8.
+
+**Bloqueada por:** Fase 3 (necesita el numeral romano).
+
+---
+
+## FASE 5: Escala con rueda de quintas
+
+**Estado:** `pendiente`
+
+**Objetivo:** la escala como característica en una ranura, con dos vistas conmutables, lineal
+y rueda de quintas, sobre el fondo del teclado.
+
+**Alcance:** es el primer incremento del ADR del 2026-07-24 (paneles sobre un fondo fijo) y
+estrena el sistema de ranuras que las progresiones reusarán después. No construye el gestor
+de paneles completo: una sola ranura, sin mover, sin opacidad, sin persistencia. El ADR del
+2026-07-24 ya explica por qué el gestor completo espera a la segunda característica. La rueda
+de quintas no es un sistema nuevo: es otra vista de lo que `MathEngine` ya calcula, la misma
+fórmula T-T-S-T-T-T-S aplicada 7 veces.
+
+**Criterio de aceptación:** la escala se ve en vista lineal y en rueda de quintas, el
+conmutador cambia entre las dos, y el teclado queda de fondo.
+
+**Bloquea:** Fase 9 (aporta el sistema de ranuras).
+
+**Bloqueada por:** ninguna declarada; puede ir en paralelo con las fases de teoría.
+
+---
+
+## FASE 6: Calidad de vida
 
 **Estado:** `pendiente`
 
@@ -157,7 +204,7 @@ error.
 
 ---
 
-## FASE 5: Feedback sonoro (Web Audio API)
+## FASE 7: Feedback sonoro (Web Audio API)
 
 **Estado:** `pendiente`
 
@@ -173,12 +220,49 @@ líneas, sin dependencias.
 
 ---
 
+## FASE 8: Progresiones, detección de la secuencia de acordes
+
+**Estado:** `pendiente`
+
+**Objetivo:** que el motor detecte la secuencia de acordes en el tiempo y la exponga en el
+buffer del motor.
+
+**Alcance:** es salida del motor, no una característica (ver el protocolo de clasificación en
+`DECISIONS.md`, 2026-07-25). El motor deriva la progresión del estado, los acordes que fueron
+sonando, y la escribe en el buffer del motor. Sin panel todavía: esta fase solo produce la
+salida que la característica de progresiones va a dibujar. Una progresión sin funciones
+nombradas no dice nada, por eso depende de la función tonal.
+
+**Criterio de aceptación:** el motor expone en el buffer la secuencia de acordes detectada
+del estado, lista para que un panel la consuma.
+
+**Bloquea:** Fase 9.
+
+**Bloqueada por:** Fase 4 (la función tonal).
+
+---
+
+## FASE 9: Progresiones, la característica
+
+**Estado:** `pendiente`
+
+**Objetivo:** la característica de progresiones, el panel que dibuja la progresión y sus
+ejemplos en una ranura.
+
+**Alcance:** es una característica, un panel en una ranura. Reusa el sistema de ranuras que
+estrena la Fase 5 (la escala con rueda) y consume la secuencia de acordes del buffer del
+motor que produce la Fase 8.
+
+**Criterio de aceptación:** por definir cuando exista la Fase 8 (detección de secuencia).
+
+**Bloqueada por:** Fase 8 (detección de secuencia) y Fase 5 (el sistema de ranuras).
+
+---
+
 ## BACKLOG (sin fecha, necesita más teoría antes de programarse)
 
 - Modos griegos (Dórico, Frigio, Mixolidio, Lidio): extensión directa de `SCALES`.
 - Pentatónicas y Blues como universos propios, no como parches de excepción.
-- Círculo de quintas. Ya es derivable de la fórmula T-T-S-T-T-T-S aplicada 7 veces. No es
-  un sistema nuevo; es otra vista de lo que `MathEngine` ya calcula.
 - Glosario in-app que crezca junto con lo aprendido.
 - Modo "canción": cargar un MIDI, reproducir el bajo, evaluar la melodía en vivo.
 - Entrenamiento de oído puro (dictado de intervalos, identificar un acorde solo de oído).
