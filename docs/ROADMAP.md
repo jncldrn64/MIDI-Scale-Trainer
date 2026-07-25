@@ -436,6 +436,13 @@ infraestructura o teoría que todavía no existe. No se construyen hasta que su 
   paneles y pedirle al usuario que la acepte o no; es consumidor que no impone, no cambia el
   layout por su cuenta. Bloqueada por: que exista el sistema de entrenamientos, acoplada con
   "entrenamientos como datos".
+- Widgets como motores adicionales. Hoy un widget solo presenta lo que el motor calcula; a futuro
+  un widget podría además calcular, siendo un motor más, no solo una vista. Bloqueada por: que el
+  sistema de widgets exista y se estabilice primero; es dirección, no fase.
+- Apagar los efectos del fondo. El teclado y las notas que caen son fondo permanente, pero sus
+  efectos, el coloreo de las teclas y lo que se pinte sobre las notas, son salida del motor y
+  podrían apagarse como cualquier otra, dejando el teclado limpio. Bloqueada por: nada duro, es
+  opción de display; se decide cuando haya con qué probarla.
 
 ---
 

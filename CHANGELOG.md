@@ -2,6 +2,13 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.30 — 2026-07-25
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva que refina el modelo de capas en cinco puntos. El readout de la salida del motor es un widget de presentación (lee el buffer, no recalcula, así que presentar no es hardcodear): se mueve tipo picture in picture, opacidad, se cierra, y ocupa una ranura contando contra el límite, mientras el dato sigue en el buffer y el log. La ranura es un límite de tres widgets abiertos a la vez, no una grilla de espacios fijos; los overlays se ubican libres como un HUD de simulador y la misma info se puede repetir. El menú (panel de pestañas) coloca, cierra y restaura cualquier widget, y aloja opciones y el log, que solo se descarga o copia, sin terminal. Se nombra "widget de sistema" a los paneles sin contenido intercambiable (guía, subtítulos, feedback, readout). Y el feedback, además del veredicto nota por nota, trae avisos simples del sistema (ranuras completas, restaurar widget oculto). Refina el protocolo, el glosario, el ADR y la refinación del contrato del 2026-07-25, sin reescribirlos ni tocar el motor.
+- `docs/ROADMAP.md`: "Direcciones sin fase" suma dos ideas capturadas: widgets como motores adicionales a futuro, y apagar los efectos del fondo (coloreo del teclado y de las notas) dejando el teclado limpio. Cada una con su bloqueo.
+
 ## v11.29 — 2026-07-25
 
 ### Changed
