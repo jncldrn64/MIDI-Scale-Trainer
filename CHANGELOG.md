@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.20 — 2026-07-25
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 5 (reencuadre visual al modelo de paneles) pasa de `pendiente` a `cerrada (2026-07-25)`, ya implementada y mergeada en V11.19 con los 18 fixtures en verde y el motor intacto. Se le suma una nota de cierre que deja registrado que la disposición quedó apilada a propósito, no superpuesta: el overlay real de características flotando sobre el fondo llega en la Fase 10, cuando la escala se vuelve un panel con contenido. El apilado es decisión, no deuda olvidada.
+
 ## v11.19 — 2026-07-25
 
 ### Changed

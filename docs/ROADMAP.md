@@ -165,7 +165,7 @@ las fixtures existentes lo confirman en los casos que apliquen.
 
 ## FASE 5: Reencuadre visual al modelo de paneles (el teclado como fondo)
 
-**Estado:** `pendiente`
+**Estado:** `cerrada (2026-07-25)`
 
 **Objetivo:** reencuadrar la UI actual al modelo de paneles del ADR del 2026-07-24, sin mover
 la escala a un panel. Es reencuadre visual puro: el teclado gana protagonismo como fondo fijo
@@ -184,6 +184,13 @@ sigue viendo coloreada sobre el teclado, las ranuras reservadas se ven indicando
 futuro, la consola queda detrás de un submenú, el motor y el coloreo de notas quedan intactos,
 y los 18 fixtures siguen pasando. El "se siente reorganizado" lo corrobora el autor en el
 navegador.
+
+**Nota de cierre (2026-07-25):** la disposición quedó apilada a propósito. Ranuras
+reservadas, zona de notas que caen y teclado van en pila vertical, no superpuestos. El overlay
+real, las características flotando sobre el fondo del ADR del 2026-07-24, llega en la Fase 10,
+cuando la escala se vuelve un panel con contenido. Superponer ranuras vacías ahora sería
+resolver la estética de cajas sin contenido, y además arrancaría el gestor de paneles que el
+ADR reserva para la segunda característica. El apilado es decisión, no deuda olvidada.
 
 **Bloquea:** Fase 9 (aporta la primera ranura y la estructura fondo-overlay).
 
