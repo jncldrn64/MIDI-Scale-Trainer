@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.29 — 2026-07-25
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 5 aclara que el gestor de paneles se parte. El ADR reservaba el gestor completo para la segunda característica; se precisa que mover y persistir la posición de un overlay es de esta fase, sobre los overlays del fondo único, y que lo que espera a la Fase 9 es la competencia por las tres ranuras. Además resuelve el "dónde vive la salida del motor" del incremento 5.1: las tres lecturas, notas activas, acorde y análisis, se consolidan en una sola superficie permanente sobre el fondo, sin ranura ni conmutador, y colorean teclas o escriben feedback como consumidores del buffer, no por ser widget.
+
+### Added
+
+- `docs/ROADMAP.md`: la Fase 9 suma una nota de pregunta abierta, el contrato de salida de una característica, qué puede escribir hacia afuera y si el reporte va en abanico o en cadena, que se decide con la primera característica real y no antes.
+
 ## v11.28 — 2026-07-25
 
 ### Changed
