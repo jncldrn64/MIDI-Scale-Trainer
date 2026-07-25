@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.32 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.33 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -161,12 +161,17 @@
         .console-actions { display: flex; gap: 10px; }
         #btn-console-toggle { background: #0f172a; }
         .cat-LAYOUT { color: #fbbf24; }
+
+        /* El atributo hidden debe significar oculto siempre, incluso cuando el elemento tiene
+           su propia regla de display (como .console-actions con display:flex, que le ganaba).
+           Este reset hace que hidden gane de raíz en toda la app. */
+        [hidden] { display: none !important; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header ovl ovl-header">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.32</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.33</h1>
             <div class="credits">Desarrollado con asistencia de IA</div>
         </div>
 
@@ -213,7 +218,10 @@
             </div>
             <div class="stage-controls">
                 <button class="btn btn-warning" id="btn-lock">🔓 Motor Automático</button>
-                <button class="btn" id="btn-c4">🎯 Centrar en Split</button>
+                <!-- Parqueado a propósito (incremento 5.2), no borrado: su hogar planeado es el
+                     menú tipo macOS o las opciones del motor. Se queda en el DOM porque el
+                     auto-centrado del teclado al cargar lo auto-clickea. -->
+                <button class="btn" id="btn-c4" hidden>🎯 Centrar en Split</button>
             </div>
             <div class="keyboard-wrapper" id="keyboard-wrapper">
                 <div class="keyboard" id="keyboard"></div>
@@ -699,7 +707,15 @@
 
             window.addEventListener('resize', () => UI.buildKeyboard());
             UI.buildUniverse(); UI.buildKeyboard(); MIDI.init();
-            setTimeout(() => document.getElementById('btn-c4').click(), 500);
+
+            // Incremento 5.2 (parqueo): "Centrar en Split" (btn-c4) queda oculto, pero su acción
+            // sigue viva porque el auto-centrado del teclado lo auto-clickea al cargar. Por eso el
+            // botón se deja en el DOM en vez de borrarlo.
+            SysLog('LAYOUT', 'Control parqueado y oculto: "Centrar en Split" (btn-c4). Su hogar planeado es el menú tipo macOS o las opciones del motor (5.2). "Motor Automático" sigue visible.');
+            setTimeout(() => {
+                document.getElementById('btn-c4').click();
+                SysLog('LAYOUT', 'Auto-centrado del teclado ejecutado: "Centrar en Split" está parqueado y oculto, pero su acción corrió igual.');
+            }, 500);
 
             // Fase 5, incremento 5.1: rastro del fondo único. Muchos mensajes, para verlo
             // suceder en la consola. Es solo disposición: el motor y renderKeyboard no cambian.

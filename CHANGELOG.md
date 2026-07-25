@@ -2,6 +2,18 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.33 — 2026-07-25
+
+### Fixed
+
+- `index.html`: el atributo `hidden` ahora oculta de verdad en toda la app, con un reset `[hidden] { display: none !important; }`. Antes una regla de autor con `display` le ganaba, por eso las acciones de la consola (Copiar, Exportar, Limpiar) se veían aunque su contenedor estuviera `hidden`. Se arregla la raíz, no el síntoma.
+
+### Changed
+
+- `index.html`: el botón "Centrar en Split" se parquea, oculto pero presente en el código, porque todavía no tiene hogar definitivo. Se lo deja en el DOM para no romper el auto-centrado del teclado que corre al cargar. Su lugar planeado es el menú tipo macOS o las opciones del motor del incremento 5.2. El botón "Motor Automático" sigue visible.
+- `index.html`: la versión mostrada sube de V11.32 a V11.33.
+- `docs/ROADMAP.md`: el incremento 5.2 documenta que además le dará hogar en el menú a los controles parqueados, "Centrar en Split" y el panel "Fijar Acordes" ya oculto, para que el plan quede escrito y no se pierda.
+
 ## v11.32 — 2026-07-25
 
 ### Changed
