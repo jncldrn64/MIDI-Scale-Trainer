@@ -163,26 +163,28 @@ las fixtures existentes lo confirman en los casos que apliquen.
 
 ---
 
-## FASE 5: Escala con rueda de quintas
+## FASE 5: Escala como característica sobre el fondo fijo (vista lineal)
 
 **Estado:** `pendiente`
 
-**Objetivo:** la escala como característica en una ranura, con dos vistas conmutables, lineal
-y rueda de quintas, sobre el fondo del teclado.
+**Objetivo:** reencuadrar la UI actual al modelo de paneles del ADR del 2026-07-24. El
+teclado pasa a ser el fondo fijo; la escala que hoy se muestra en lineal se vuelve un panel
+de característica en una ranura. Sin rueda y sin conmutador: con una sola vista no hay nada
+que conmutar.
 
-**Alcance:** es el primer incremento del ADR del 2026-07-24 (paneles sobre un fondo fijo) y
-estrena el sistema de ranuras que las progresiones reusarán después. No construye el gestor
-de paneles completo: una sola ranura, sin mover, sin opacidad, sin persistencia. El ADR del
-2026-07-24 ya explica por qué el gestor completo espera a la segunda característica. La rueda
-de quintas no es un sistema nuevo: es otra vista de lo que `MathEngine` ya calcula, la misma
-fórmula T-T-S-T-T-T-S aplicada 7 veces.
+**Alcance:** es presentación pura. El panel lee solo lo que el motor ya expone, las notas de
+la escala activa vía `scalePitches`; no cambia una línea del motor. Establece la estructura
+de fondo más overlay y la primera ranura. No construye el gestor de paneles completo (el ADR
+del 2026-07-24 dice por qué espera a la segunda característica) ni un sistema de barras de
+título. La presentación es sutil.
 
-**Criterio de aceptación:** la escala se ve en vista lineal y en rueda de quintas, el
-conmutador cambia entre las dos, y el teclado queda de fondo.
+**Criterio de aceptación:** el teclado queda de fondo fijo, la escala se ve como panel sobre
+él en vista lineal, el motor queda intacto y los 18 fixtures siguen pasando. El "se siente
+reorganizado" lo corrobora el autor en el navegador.
 
-**Bloquea:** Fase 9 (aporta el sistema de ranuras).
+**Bloquea:** Fase 9 (aporta la primera ranura y la estructura fondo-overlay).
 
-**Bloqueada por:** ninguna declarada; puede ir en paralelo con las fases de teoría.
+**Bloqueada por:** ninguna declarada.
 
 ---
 
@@ -258,6 +260,30 @@ motor que produce la Fase 8.
 **Criterio de aceptación:** por definir cuando exista la Fase 8 (detección de secuencia).
 
 **Bloqueada por:** Fase 8 (detección de secuencia) y Fase 5 (el sistema de ranuras).
+
+---
+
+## FASE 10: Rueda de quintas como vista alterna de la escala
+
+**Estado:** `pendiente`
+
+**Objetivo:** agregar la rueda de quintas como segunda vista dentro del panel de la escala,
+con el conmutador que alterna entre lineal y rueda. El conmutador nace acá, con la segunda
+vista.
+
+**Alcance:** la rueda deriva del motor (`scalePitches`), no hardcodea nada. Queda abierto si
+además muestra las calidades de acorde diatónicas (3 mayores, 3 menores, 1 disminuido): si
+las muestra, necesita la función tonal que expone la Fase 4, porque el motor no deriva
+calidad por grado hoy. La iluminación de posiciones es sutil.
+
+**Criterio de aceptación:** por definir cuando se decida el contenido (solo notas de la
+escala, o también calidades).
+
+**Bloquea:** ninguna declarada.
+
+**Bloqueada por:** Fase 5 (el panel de escala debe existir); y Fase 4 si muestra calidades de
+acorde. No depende de las fases de progresiones; su número es posterior por secuencia de
+decisión, no por dependencia.
 
 ---
 
