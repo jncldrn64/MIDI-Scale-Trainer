@@ -238,6 +238,17 @@ más cosmético, cada uno un PR de código que se puede ver y corroborar por sep
 La fase pasa a `en progreso` al completarse el incremento 5.1, y a `cerrada` cuando el 5.4 esté
 hecho y corroborado.
 
+**El gestor de paneles se parte, y la salida del motor tiene lugar.** El ADR del 2026-07-24
+reserva el gestor completo de paneles para la segunda característica. Esa reserva es del gestor
+completo, no de toda capacidad de manejo. Mover y persistir la posición de un overlay es de esta
+fase, sobre los overlays que el fondo único crea: el readout, el feedback, los subtítulos y los
+controles. Lo que espera a la Fase 9, la primera característica de verdad, es la competencia por
+las tres ranuras. Y el "dónde vive la salida del motor" que el incremento 5.1 deja abierto se
+resuelve así: las tres lecturas, notas activas, acorde detectado y análisis, se consolidan en
+una sola superficie permanente sobre el fondo, siempre encendida, sin ranura y sin conmutador.
+No es una característica; darle ranura sería hardcodearla. Colorea teclas y escribe en las
+superficies de feedback como cualquier consumidor del buffer del motor, no por ser widget.
+
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, el panel de pestañas existe como chrome
 permanente para opciones y logs, la salida del motor tiene un lugar visible definido o queda
@@ -328,6 +339,13 @@ motor que produce la Fase 8.
 **Criterio de aceptación:** por definir cuando exista la Fase 8 (detección de secuencia).
 
 **Bloqueada por:** Fase 8 (detección de secuencia) y Fase 5 (el sistema de ranuras).
+
+**Nota (2026-07-25): pregunta abierta, el contrato de salida.** Cuando esta fase construya la
+primera característica de verdad, se define qué puede escribir una característica hacia afuera:
+colorear teclas, escribir el subtítulo de feedback, o solo pintar su propio panel; y si ese
+reporte va en abanico, con todos leyendo el buffer del motor, o en cadena. Es una pregunta
+abierta que se resuelve acá, con el primer caso real. Sin una característica que lo fuerce,
+cualquier estándar sería adivinanza.
 
 ---
 
