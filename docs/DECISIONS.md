@@ -288,6 +288,39 @@ implementa.
 
 ---
 
+## 2026-07-24 — Arquitectura de UI: paneles sobre un fondo fijo, el motor como única fuente
+
+**Contexto.** Hoy la UI de `index.html` reparte espacio parejo entre elementos de distinta importancia: el teclado, los paneles de escala y acorde, y la consola de debug conviven al mismo nivel. Para el usuario objetivo, que lee nota por nota y quiere entender qué toca y por qué, eso tira para muchos lados y no deja claro qué mira primero. Además, las features que vienen (rueda de quintas como vista alterna de la escala, progresiones, notas que caen estilo Synthesia, entrenamientos) no tienen dónde acomodarse sin pegarse como parásitos, el mismo problema que los botones de "Fijar Acordes", que hoy hardcodean Do Mayor y Re m7 en vez de derivarlos del motor. El riesgo concreto es repetir la V3.0: crecer a miles de líneas de features acumuladas sin modelo y tener que reescribir todo de una.
+
+**Decisión.** Se adopta un modelo de UI de paneles sobre un fondo fijo, con estas reglas:
+
+1. **El fondo no se toca.** El teclado y el espacio superior reservado para las notas que caen son el fondo permanente. No se cierran, no se mueven, no ceden espacio. Todo lo demás es overlay.
+
+2. **Todo overlay es un panel; "característica" es un rol, no una clase.** Subtítulos, feedback de texto, guía de interfaz, escala, progresiones, y hasta el menú de opciones son el mismo tipo de objeto: un panel flotante con contenido. Lo único que los distingue es una propiedad: si compiten o no por las ranuras de característica.
+
+3. **Tres ranuras de característica, límite deliberado.** Las features (las que tienen contenido intercambiable) viven en un máximo de tres ranuras simultáneas. El límite no es estético: existe porque el aire superior está reservado para las notas que caen, que son fondo y no negocian espacio. Sin límite, el usuario tapa ese lugar y rompe el propósito. El número puede afinarse, el límite no se elimina.
+
+4. **El motor es la única fuente de verdad musical.** Ningún panel codifica a mano lo que `MathEngine` puede derivar. La UI es una proyección de lo que el motor calcula dado el estado. Toda fuente de notas (el piano, un MIDI cargado, un futuro track de notas que caen) entra por el mismo punto de evaluación. Los botones de acorde hardcodeados son la única violación actual de esta regla y se corrigen volviéndolos dinámicos (derivar I, IV, V de la escala activa).
+
+5. **Una característica puede ocupar hasta las tres ranuras a la vez.** Si tiene varias vistas de la misma estructura (la escala: lineal y rueda de quintas), puede mostrarse en más de una ranura a distinta opacidad, una de fondo y una de foco. Es el patrón de vistas sincronizadas del proyecto, ahora con jerarquía de atención por opacidad.
+
+6. **Default cerrado y correcto.** La app abre en un estado usable sin configurar nada: una ranura con la escala en vista lineal, feedback y subtítulos visibles, guía abierta la primera vez y cerrable. Mover, opacidad, segunda vista y apagar paneles son descubrimiento opcional, no configuración obligatoria. El usuario objetivo quiere abrir y que ya esté bien puesto, no armar su espacio antes de empezar.
+
+7. **Dos superficies de control, dos momentos distintos.** La config de layout (qué panel vive en qué ranura, opacidad, posición) se maneja en los paneles mismos, entre sesiones. La config de detección MIDI (cuánto espera para detectar un acorde, umbrales, delays) es avanzada, impacta en tiempo real y vive en el menú desplegable superior, separada. No se mezclan: cambiar detección mientras se toca es el error de tocar opciones en mitad de una carrera.
+
+8. **Persistencia de layout, mecanismo sin fijar.** El estado del layout (posición, opacidad, qué vive en cada ranura) persiste entre sesiones. El mecanismo se decide al construir; corriendo desde `file://` la vía disponible hoy es `localStorage`, que es donde el repo ya guarda config. No se compromete un `.ini` ni nada que la plataforma no dé gratis.
+
+**Consecuencias.**
+
+- El sistema de paneles es infraestructura de UI, no una feature, y todo lo que venga después se cuelga de él. Por eso se decide antes de construirse.
+- Construir el gestor de paneles completo cruzará el umbral del §7 de `ARCHITECTURE.md` (1000 líneas). Cuando pase, la respuesta ya está decidida ahí: modularizar con ES Modules nativos, no adoptar framework. Este ADR no cambia esa decisión, la anticipa.
+- **Este ADR fija la dirección, no un orden de construcción.** No se construye el gestor de paneles completo mientras solo exista una característica que lo llene: hacerlo es diseñar a ciegas contra un solo caso y rehacerlo al llegar el segundo, justo la refactorización masiva que este modelo busca evitar. El sistema de ranuras se diseña contra dos características reales, no una imaginada. El primer incremento de código es la escala con su vista alterna (lineal y rueda) sobre el fondo del teclado; el gestor de paneles nace cuando las progresiones aporten la segunda característica. El ROADMAP define ese secuenciado.
+- Las ranuras que nacen sin característica no muestran un hueco mudo: indican qué va a vivir ahí y que aún no existe.
+
+**Estado:** aceptada, sin construir. El primer incremento (escala con vista lineal y rueda) entra como fase en el ROADMAP.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
