@@ -180,7 +180,7 @@ mayor, y un acorde no diatónico no recibe función forzada.
 
 ## FASE 5: Reencuadre visual al modelo de paneles (el teclado como fondo)
 
-**Estado:** `pendiente`
+**Estado:** `en progreso`
 
 **Objetivo:** realinear la UI al modelo de capas del 2026-07-25, superando el primer intento
 apilado. El fondo es una sola capa de piano más notas que caen; las características flotan como
