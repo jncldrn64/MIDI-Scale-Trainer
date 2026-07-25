@@ -392,6 +392,62 @@ fija que, si se construye, va solo del lado de lo irreversible.
 
 ---
 
+## 2026-07-25 — Refinación del modelo: fondo único de piano y notas, widgets, y panel de pestañas
+
+**Contexto:** al construir la Fase 5 quedaron a la vista tres imprecisiones del modelo. Una:
+se trató la zona de notas que caen como una franja separada de las ranuras, apiladas, cuando
+el modelo real es una sola capa de fondo. Dos: faltaba una palabra para las características
+flotantes que se mueven y se comunican con el sistema. Tres: cosas como el panel de logs y las
+opciones no son ni característica ni fondo mudo, y no tenían categoría. Esta entrada corrige
+las tres.
+
+**Decisión:** cuatro reglas.
+
+1. **Fondo único.** El fondo es una sola capa: el teclado más la zona de notas que caen,
+   ocupando todo el ancho y todo el alto disponible. Las notas que caen no viven en una franja
+   aparte; usan todo el fondo y pasan por detrás de los widgets. Esto refina la regla 1 y la
+   regla 3 del ADR del 2026-07-24: el límite de tres ranuras se mantiene, pero su razón se
+   precisa. No protege una franja reservada, evita que los widgets tapen tanto que no se puedan
+   leer las notas que caen por detrás. Mismo límite, mismo propósito, mecanismo corregido.
+
+2. **Widget.** Se adopta la palabra "widget" para lo que el protocolo de clasificación del
+   2026-07-25 llamó "característica": un panel de contenido intercambiable que vive en una
+   ranura, se mueve, se oculta, y se comunica con el sistema a través de las superficies
+   compartidas, alterando o leyendo las notas, el teclado o el bus de feedback (el buffer del
+   motor), nunca con copias privadas. Widget y característica-en-ranura son el mismo rol; se
+   usa "widget" de acá en adelante. No cambia el protocolo, precisa su vocabulario.
+
+3. **Panel de pestañas.** Categoría nueva, la cuarta. Es chrome interactivo permanente donde
+   viven las cosas que no son widget ni fondo: las opciones y el panel de logs. No compite por
+   ranura, no es característica, está siempre presente como la barra de menú de macOS, y su
+   contenido cambia según lo que esté abierto. La analogía del proyecto: el teclado es la barra
+   de tareas, siempre abajo; el panel de pestañas es la barra de menú, siempre arriba. Nada se
+   abre en pantalla completa; cada widget tiene su propia rueda de opciones. Esto refina la
+   categoría "Fondo o chrome" del protocolo de clasificación del 2026-07-25, separando el fondo
+   mudo (teclado y notas) del chrome interactivo (panel de pestañas).
+
+4. **Teclado fijo.** El teclado visual es fijo de 88 teclas, a todo el ancho de la pantalla,
+   independiente del zoom. No se detecta el tamaño del controlador MIDI: el protocolo MIDI
+   manda números de nota de 0 a 127 sin importar cuántas teclas físicas tenga el controlador, y
+   cada nota ilumina la tecla visual que le corresponde. Una nota fuera del rango visible de 88
+   se ignora o se recorta al borde; el detalle se decide al construir. Esto cierra un hueco que
+   el ADR del 2026-07-24 no cubría.
+
+**Razón:** el modelo apilado que produjo la Fase 5 divergía de la intención, que son capas, no
+franjas. Y sin las palabras "widget" y "panel de pestañas" cada cosa nueva no tenía dónde caer.
+Estas cuatro reglas cierran esos huecos sin reabrir el motor ni contradecir el contrato: los
+widgets siguen consumiendo del buffer, el fondo sigue siendo superficie de feedback (refinación
+del contrato del 2026-07-25), y el límite de ranuras sigue vigente.
+
+**Consecuencia:** la Fase 5, cerrada apilada, queda desalineada con este modelo de capas y
+habrá que reabrirla. Eso se maneja en el ROADMAP, no acá. El glosario del 2026-07-25 queda
+refinado: "característica" se lee ahora como "widget", y "superficie de feedback" incluye al
+fondo, no solo a los paneles, algo que la refinación del contrato del 2026-07-25 ya anticipó.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

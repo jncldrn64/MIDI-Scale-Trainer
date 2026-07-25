@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.21 — 2026-07-25
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva que refina el modelo de UI con cuatro reglas. Fondo único: el teclado más las notas que caen son una sola capa que ocupa todo el ancho y alto, y las notas pasan por detrás de los widgets. Widget: la palabra para lo que el protocolo del 2026-07-25 llamó "característica", un panel en ranura que se mueve, se oculta y se comunica por las superficies compartidas. Panel de pestañas: cuarta categoría, el chrome interactivo permanente donde viven opciones y logs, separado del fondo mudo. Teclado fijo de 88 teclas independiente del controlador MIDI. Refina reglas del ADR del 2026-07-24 y del protocolo, el glosario y la refinación del contrato del 2026-07-25, sin contradecirlos. Deja anotado que la Fase 5, cerrada apilada, queda desalineada con el modelo de capas y habrá que reabrirla desde el ROADMAP.
+
 ## v11.20 — 2026-07-25
 
 ### Changed
