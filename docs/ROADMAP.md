@@ -312,6 +312,38 @@ secuencia de decisión, no por dependencia.
 
 ---
 
+## FASE 11: Intercambio modal
+
+**Estado:** `pendiente`
+
+**Objetivo:** que el motor reconozca y nombre los acordes de intercambio modal, los préstamos
+de otro modo. Es el tercer caso después del diatónico (que tiene función tonal, Fase 4) y de
+la dominante secundaria (que tiene relación, Fase 3): un acorde que no es ninguno de los dos.
+
+**Alcance:** es salida del motor, otra lente, no una característica; no lleva panel propio. El
+motor deriva la clasificación una vez escrita la teoría. Hoy estos acordes caen en "no
+diatónico" o "acorde no reconocido"; esta fase les da nombre. La teoría todavía no está
+escrita: qué acordes cuentan como intercambio modal, de qué modo se prestan y cómo se nombran,
+se escribe en el Track paralelo de teoría antes de tocar código, igual que se hizo con la
+función tonal.
+
+**Criterio de aceptación:** por definir. Requiere primero escribir la teoría del intercambio
+modal en el Track paralelo de teoría. Sin esa respuesta correcta escrita no hay fixture, y sin
+fixture el motor devolvería una adivinanza que nadie puede comprobar.
+
+**Nota (2026-07-25):** el disparador de esta fase es concreto. El día que toques una canción y
+el motor te marque un acorde "no diatónico" que tampoco sea dominante secundaria, esa es la
+señal de que falta esta fase. Ahí se escribe la teoría una vez, se le pone fixture, y el motor
+la deriva para todas las canciones.
+
+**Bloquea:** ninguna declarada.
+
+**Bloqueada por:** Fase 3 y Fase 4 (las dos lentes que lo definen por descarte deben existir),
+y la teoría escrita en el Track paralelo. El número la pone después de la Fase 10 por
+prioridad, no porque la rueda la bloquee.
+
+---
+
 ## BACKLOG (sin fecha, necesita más teoría antes de programarse)
 
 - Modos griegos (Dórico, Frigio, Mixolidio, Lidio): extensión directa de `SCALES`.

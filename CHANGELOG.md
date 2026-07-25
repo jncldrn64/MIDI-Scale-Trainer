@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.25 — 2026-07-25
+
+### Added
+
+- `docs/ROADMAP.md`: Fase 11, intercambio modal, después de la Fase 10 y antes del Track paralelo de teoría. Es salida del motor (otra lente, sin panel), el tercer caso después del diatónico (función tonal, Fase 4) y de la dominante secundaria (relación, Fase 3): un acorde que no es ninguno de los dos. Criterio por definir: primero hay que escribir la teoría del intercambio modal en el Track paralelo, sin eso no hay fixture. Bloqueada por las Fases 3 y 4 y por esa teoría, no por la rueda; su número es prioridad, no dependencia. La versión mostrada sigue en V11.24; el desfase lo cierra el próximo PR de código, la Fase 4.
+
 ## v11.24 — 2026-07-25
 
 ### Added
