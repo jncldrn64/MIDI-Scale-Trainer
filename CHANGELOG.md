@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.28 — 2026-07-25
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 5 suma una subsección de incrementos de entrega que corta la fase en cuatro PRs de código ordenados del más estructural al más cosmético: 5.1 fondo único, 5.2 panel de pestañas, 5.3 nomenclatura por forma, 5.4 análisis honesto (función tonal en pantalla más el relabel de "Intercambio Modal", juntos para no dejar un estado contradictorio). No cambia el Objetivo, el Alcance ni la Terminología; solo agrega el orden de entrega. La fase sigue en `pendiente` y pasa a `en progreso` con el 5.1. La versión mostrada sigue en V11.27; el desfase lo cierra el próximo PR de código, el incremento 5.1.
+
+### Added
+
+- `docs/ROADMAP.md`: sección "Direcciones sin fase" que captura tres ideas de dirección para que no se pierdan, sin volverlas fase: entrenamientos como datos y un posible taller, la guía reactiva a lo que está abierto, y el entrenamiento que propone layout. Cada una con su bloqueo anotado.
+
 ## v11.27 — 2026-07-25
 
 ### Added

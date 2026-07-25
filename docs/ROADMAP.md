@@ -216,6 +216,28 @@ panel de Análisis, junto al numeral y la relación, de forma consistente con el
 para un acorde no diatónico la función dice "por definir" y la relación dice "no clasificado",
 sin que una contradiga a la otra.
 
+**Incrementos de entrega.** La fase se entrega en cuatro incrementos, del más estructural al
+más cosmético, cada uno un PR de código que se puede ver y corroborar por separado.
+
+- Incremento 5.1, fondo único: el teclado y las notas ocupan todo el ancho y alto como una sola
+  capa de fondo, las notas pasan por detrás de los overlays, y la disposición apilada actual
+  pasa a fondo más overlays flotantes en posiciones por defecto fijas, sin gestor de paneles,
+  sin mover ni opacidad. Acá se decide dónde vive la salida del motor en el modelo de capas y
+  queda visible o cubierta por el log. Motor y coloreo intactos.
+- Incremento 5.2, panel de pestañas: el chrome permanente para opciones y logs, separado del
+  fondo mudo.
+- Incremento 5.3, nomenclatura por forma: las etiquetas del botón de nomenclatura pasan a
+  "Silábica" y "Alfabética", con valor por defecto, persistencia por `localStorage` y el botón
+  alcanzable en los menús nuevos. Es independiente de los demás.
+- Incremento 5.4, análisis honesto: la función tonal que la Fase 4 dejó en el buffer se muestra
+  en el panel de Análisis junto al numeral y la relación, y la etiqueta "Intercambio Modal" se
+  relabela a "no clasificado" o "por definir". Van juntos a propósito: separarlos dejaría un
+  estado intermedio donde la función dice "por definir" y la relación sigue diciendo "Intercambio
+  Modal", la contradicción que esta fase evita.
+
+La fase pasa a `en progreso` al completarse el incremento 5.1, y a `cerrada` cuando el 5.4 esté
+hecho y corroborado.
+
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, el panel de pestañas existe como chrome
 permanente para opciones y logs, la salida del motor tiene un lugar visible definido o queda
@@ -376,6 +398,26 @@ prioridad, no porque la rueda la bloquee.
 - Entrenamiento de oído puro (dictado de intervalos, identificar un acorde solo de oído).
   El informe de campo ya marcó esto como el objetivo final, y el software actual no lo
   cubre.
+
+---
+
+## Direcciones sin fase (capturadas, todavía no son fase)
+
+Ideas de dirección que quedaron dichas y no se pierden, pero que no son fase porque les falta
+infraestructura o teoría que todavía no existe. No se construyen hasta que su bloqueo caiga.
+
+- Entrenamientos como datos y un posible taller. Un formato de datos (JSON) para definir
+  entrenamientos, que a futuro abriría un taller donde se creen entrenamientos, y hasta widgets,
+  sin tocar el código base. Bloqueada por: el sistema de widgets y ranuras, que el ADR reserva
+  para después de la segunda característica, y un motor de notas que caen que hoy no existe.
+- La guía de interfaz reactiva a lo abierto. La guía no solo explica el entrenamiento activo,
+  también las opciones de cada widget abierto en las ranuras, lo abra el usuario o el
+  entrenamiento. Bloqueada por: que haya más de una característica a la que reaccionar (la Fase 9
+  aporta la segunda).
+- El entrenamiento que propone layout. Un entrenamiento puede proponer una disposición de
+  paneles y pedirle al usuario que la acepte o no; es consumidor que no impone, no cambia el
+  layout por su cuenta. Bloqueada por: que exista el sistema de entrenamientos, acoplada con
+  "entrenamientos como datos".
 
 ---
 
