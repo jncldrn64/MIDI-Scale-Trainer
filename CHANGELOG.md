@@ -2,6 +2,19 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.24 — 2026-07-25
+
+### Added
+
+- `src/engine.js`: `getRomanNumeral(chordObj, universeRoot, universeType)`, función pura que deriva el numeral romano del acorde. El grado sale de ubicar la raíz en la escala activa, la caja de la tercera del acorde, el sufijo de la quinta y el séptimo. Nada hardcodeado, ni notas ni tabla de grados. El objetivo de una dominante secundaria se calcula como cualquier grado y va en mayúscula, sin forzar minúscula.
+- `src/engine.js`: `isSecondaryDominantLeadingTone`, que reconoce el tono conductor de una dominante secundaria hacia un grado de tríada mayor, derivado y por tonalidad.
+- `tests/fixtures/grados-romanos.json`: casos de numeral en dos tonalidades (I, IV, V mayúscula; ii, iii, vi minúscula; vii disminuido; II7) y del tono conductor generalizado a Sol Mayor, con un contraste que prueba que no se acepta cualquier cromática. `tests/run.js` suma el tipo `roman` y las aserciones de numeral; el conteo sube de 18 a 30 casos.
+
+### Changed
+
+- `src/engine.js`: `evaluateMelodyStatus` acepta como `good` el tono conductor de una dominante secundaria aunque el acorde no suene. Cierra el gap de Oda (Fa# sobre Do Mayor deja de marcar error), sin tocar Re menor (Sol# sigue `bad`, Do# sigue `tension`).
+- `index.html`: el panel Análisis de Armonía muestra el numeral, y para la dominante secundaria "II7 (V del V)". `classifyChordRelation` y el veredicto nota por nota ahora emiten al log con `SysLog` (MATH el numeral, la relación y el objetivo; EVAL el veredicto con su porqué), cerrando el hueco que la decisión del log del 2026-07-25 dejó anotado. Versión mostrada de V11.19 a V11.24, cerrando el desfase con el CHANGELOG.
+
 ## v11.23 — 2026-07-25
 
 ### Changed

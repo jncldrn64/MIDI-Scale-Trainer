@@ -77,19 +77,56 @@ function runChordCase(fx, universePitches, c) {
                 `targetPC: esperaba ${pcName(exp.targetPC)}, obtuve ${pcName(rel.targetPC)}`);
         }
     }
+
+    // Fase 3: numeral romano del acorde, derivado contra la tonalidad de la fixture.
+    if ('numeral' in exp) {
+        const num = Engine.getRomanNumeral(chord, fx.universe.root, fx.universe.type);
+        assert.strictEqual(num, exp.numeral,
+            `numeral: esperaba '${exp.numeral}', obtuve '${num}'`);
+    }
+
+    // Fase 3: el objetivo de la dominante secundaria, también por getRomanNumeral, y la
+    // trampa de que nunca se fuerza a minúscula.
+    if ('targetNumeral' in exp) {
+        const rel = Engine.classifyChordRelation(chord, universePitches);
+        const targetChord = { rootPC: rel.targetPC, type: 'M', template: Engine.CHORD_TEMPLATES.M };
+        const tnum = Engine.getRomanNumeral(targetChord, fx.universe.root, fx.universe.type);
+        assert.strictEqual(tnum, exp.targetNumeral,
+            `targetNumeral: esperaba '${exp.targetNumeral}', obtuve '${tnum}'`);
+        assert.strictEqual(tnum, tnum.toUpperCase(),
+            `el objetivo de la dominante secundaria debe ir en mayúscula, obtuve '${tnum}'`);
+    }
 }
 
 function runMelodyCase(fx, universePitches, c) {
+    // Un caso puede fijar su propia tonalidad (c.universe) para probar la misma regla en
+    // otro tono; si no, usa la de la fixture.
+    const uni = c.universe || fx.universe;
+    const pitches = c.universe ? Engine.scalePitches(uni.root, uni.type) : universePitches;
     const chord = chordFromNotes(c.chordNotes);
     const status = Engine.evaluateMelodyStatus({
         pc: c.melodyNote % 12,
-        universePitchesSet: universePitches,
+        universePitchesSet: pitches,
         chordObj: chord,
-        universeType: fx.universe.type,
-        universeRoot: fx.universe.root
+        universeType: uni.type,
+        universeRoot: uni.root
     });
     assert.strictEqual(status, c.expected.status,
         `status: esperaba '${c.expected.status}', obtuve '${status}'`);
+}
+
+// Fase 3: numeral romano directo. El caso arma un acorde por rootPC y tipo, y afirma el
+// numeral que getRomanNumeral deriva contra la tonalidad (propia del caso o de la fixture).
+function runRomanCase(fx, c) {
+    const uni = c.universe || fx.universe;
+    const chord = {
+        rootPC: c.chord.rootPC,
+        type: c.chord.type,
+        template: Engine.CHORD_TEMPLATES[c.chord.type]
+    };
+    const num = Engine.getRomanNumeral(chord, uni.root, uni.type);
+    assert.strictEqual(num, c.expected.numeral,
+        `numeral: esperaba '${c.expected.numeral}', obtuve '${num}'`);
 }
 
 function runPassingCase(fx, universePitches, c) {
@@ -110,6 +147,7 @@ function runFixture(file) {
             if (c.kind === 'chord') runChordCase(fx, universePitches, c);
             else if (c.kind === 'melody') runMelodyCase(fx, universePitches, c);
             else if (c.kind === 'passing') runPassingCase(fx, universePitches, c);
+            else if (c.kind === 'roman') runRomanCase(fx, c);
             else throw new Error(`kind desconocido: '${c.kind}'`);
         });
         const last = failures.length && failures[failures.length - 1].label === c.label;
