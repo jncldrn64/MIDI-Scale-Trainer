@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.18 — 2026-07-25
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva que generaliza el contrato de salida del motor. La salida vive en el buffer y cualquier superficie la consume, sea panel o fondo; el teclado ya es una superficie de feedback que es fondo, no panel (`renderKeyboard` pinta `validPitches` y el veredicto por nota sin panel de por medio). Refina la definición de "superficie de feedback" del glosario del 2026-07-25, que queda como caso particular. De ahí cae que la visibilidad de un panel y su efecto son separables. Deja fijado que, si se construye una confirmación previa a una acción, va solo del lado de lo irreversible.
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 5 se reescribe como reencuadre visual puro. La escala no se extrae a un panel: se queda coloreando el teclado, que pasa a ser el fondo protagonista, con el resto de la UI en overlay, la consola detrás de un submenú y las ranuras reservadas dibujadas vacías. No toca el motor ni el coloreo de `renderKeyboard`. Se corrigen dos referencias desactualizadas: la Fase 9 ya no llama a la Fase 5 "la escala con rueda" sino "las ranuras reservadas", y la Fase 10 aclara en su Alcance que es ella la que mueve la escala del teclado a un panel y le suma la rueda, y su "Bloqueada por: Fase 5" pasa a citar "la estructura de fondo y ranuras" en vez del panel de escala.
+
 ## v11.17 — 2026-07-25
 
 ### Changed

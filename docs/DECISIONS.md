@@ -359,6 +359,39 @@ implementa.
 
 ---
 
+## 2026-07-25 — Refinación del contrato: la salida del motor la consume cualquier superficie, panel o fondo
+
+**Contexto:** el glosario del 2026-07-25 define "superficie de feedback" como un panel que
+muestra salida del motor. Esa definición quedó estrecha. Verificado contra `src/engine.js` e
+`index.html`: el teclado ya es una superficie de feedback y no es un panel, es fondo.
+`renderKeyboard` (`index.html:458`) pinta dos salidas del motor sobre las teclas, las notas de
+la escala activa (`validPitches`) y el veredicto nota por nota (`good`, `tension`, `passing`,
+`bad`). O sea, el teclado ya consume del estado del motor sin panel de por medio.
+
+**Decisión:** se generaliza el contrato. La salida del motor vive en el buffer del motor, y
+cualquier superficie la consume, sea panel o fondo. El teclado es fondo que consume del
+buffer. Un panel que muestre lo mismo es otro consumidor independiente. De ahí cae directo que
+la visibilidad de un panel y su efecto son separables, porque son dos lectores del mismo
+buffer: ocultar el panel de una característica no apaga el coloreo del teclado, y al revés
+tampoco. No es una feature a programar, es una propiedad que cae del contrato.
+
+**Razón:** sin esta generalización el glosario implica que solo los paneles muestran salida
+del motor, y el código ya demuestra lo contrario desde `renderKeyboard`. Esta entrada refina
+la definición de "superficie de feedback" del glosario del 2026-07-25, que queda como caso
+particular: un panel es una superficie, y el fondo también puede serlo.
+
+**Consecuencia:** qué superficies y qué efectos existan a futuro no se fija acá; una
+superficie nueva consume el buffer igual que las de hoy. Y una restricción para cuando eso
+llegue: cualquier confirmación previa a una acción, del tipo pedir permiso antes de cambiar
+algo, pertenece solo a lo irreversible, como resetear todos los layouts o un entrenamiento que
+sobrescribe la disposición del usuario. Nunca a un cambio de layout rutinario y reversible,
+que tiene que ser sin fricción y deshacible. Esto no autoriza a construir esa confirmación;
+fija que, si se construye, va solo del lado de lo irreversible.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

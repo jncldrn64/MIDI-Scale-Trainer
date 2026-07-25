@@ -163,24 +163,27 @@ las fixtures existentes lo confirman en los casos que apliquen.
 
 ---
 
-## FASE 5: Escala como característica sobre el fondo fijo (vista lineal)
+## FASE 5: Reencuadre visual al modelo de paneles (el teclado como fondo)
 
 **Estado:** `pendiente`
 
-**Objetivo:** reencuadrar la UI actual al modelo de paneles del ADR del 2026-07-24. El
-teclado pasa a ser el fondo fijo; la escala que hoy se muestra en lineal se vuelve un panel
-de característica en una ranura. Sin rueda y sin conmutador: con una sola vista no hay nada
-que conmutar.
+**Objetivo:** reencuadrar la UI actual al modelo de paneles del ADR del 2026-07-24, sin mover
+la escala a un panel. Es reencuadre visual puro: el teclado gana protagonismo como fondo fijo
+y el resto de la UI pasa a overlay. La escala se sigue mostrando coloreando el teclado, que es
+su superficie.
 
-**Alcance:** es presentación pura. El panel lee solo lo que el motor ya expone, las notas de
-la escala activa vía `scalePitches`; no cambia una línea del motor. Establece la estructura
-de fondo más overlay y la primera ranura. No construye el gestor de paneles completo (el ADR
-del 2026-07-24 dice por qué espera a la segunda característica) ni un sistema de barras de
-título. La presentación es sutil.
+**Alcance:** los cambios son de disposición, estructura y estilo, no de motor. El teclado
+queda como fondo fijo y protagonista; el resto de la UI pasa a overlay; la consola de debug se
+manda detrás de un submenú; se dibujan las ranuras reservadas, vacías, indicando qué va a
+vivir ahí, sin construir el gestor de paneles ni la mecánica de slots. La escala sigue
+coloreando el teclado, no se mueve a un panel. No se toca el motor ni la lógica de coloreo de
+`renderKeyboard`.
 
-**Criterio de aceptación:** el teclado queda de fondo fijo, la escala se ve como panel sobre
-él en vista lineal, el motor queda intacto y los 18 fixtures siguen pasando. El "se siente
-reorganizado" lo corrobora el autor en el navegador.
+**Criterio de aceptación:** el teclado queda como fondo fijo y protagonista, la escala se
+sigue viendo coloreada sobre el teclado, las ranuras reservadas se ven indicando su contenido
+futuro, la consola queda detrás de un submenú, el motor y el coloreo de notas quedan intactos,
+y los 18 fixtures siguen pasando. El "se siente reorganizado" lo corrobora el autor en el
+navegador.
 
 **Bloquea:** Fase 9 (aporta la primera ranura y la estructura fondo-overlay).
 
@@ -254,7 +257,7 @@ del estado, lista para que un panel la consuma.
 ejemplos en una ranura.
 
 **Alcance:** es una característica, un panel en una ranura. Reusa el sistema de ranuras que
-estrena la Fase 5 (la escala con rueda) y consume la secuencia de acordes del buffer del
+estrena la Fase 5 (las ranuras reservadas) y consume la secuencia de acordes del buffer del
 motor que produce la Fase 8.
 
 **Criterio de aceptación:** por definir cuando exista la Fase 8 (detección de secuencia).
@@ -271,19 +274,21 @@ motor que produce la Fase 8.
 con el conmutador que alterna entre lineal y rueda. El conmutador nace acá, con la segunda
 vista.
 
-**Alcance:** la rueda deriva del motor (`scalePitches`), no hardcodea nada. Queda abierto si
-además muestra las calidades de acorde diatónicas (3 mayores, 3 menores, 1 disminuido): si
-las muestra, necesita la función tonal que expone la Fase 4, porque el motor no deriva
-calidad por grado hoy. La iluminación de posiciones es sutil.
+**Alcance:** esta fase mueve la escala del teclado a un panel de característica en una ranura,
+primero en vista lineal, y le suma la rueda de quintas como vista alterna con su conmutador. La
+rueda deriva del motor (`scalePitches`), no hardcodea nada. Queda abierto si además muestra las
+calidades de acorde diatónicas (3 mayores, 3 menores, 1 disminuido): si las muestra, necesita
+la función tonal que expone la Fase 4, porque el motor no deriva calidad por grado hoy. La
+iluminación de posiciones es sutil.
 
 **Criterio de aceptación:** por definir cuando se decida el contenido (solo notas de la
 escala, o también calidades).
 
 **Bloquea:** ninguna declarada.
 
-**Bloqueada por:** Fase 5 (el panel de escala debe existir); y Fase 4 si muestra calidades de
-acorde. No depende de las fases de progresiones; su número es posterior por secuencia de
-decisión, no por dependencia.
+**Bloqueada por:** Fase 5 (la estructura de fondo y ranuras debe existir); y Fase 4 si muestra
+calidades de acorde. No depende de las fases de progresiones; su número es posterior por
+secuencia de decisión, no por dependencia.
 
 ---
 
