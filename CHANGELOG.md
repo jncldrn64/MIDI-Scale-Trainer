@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.15 — 2026-07-25
+
+### Changed
+
+- `docs/ROADMAP.md`: reestructurado con las fases del modelo de paneles, apoyado en las entradas de `DECISIONS.md` del 2026-07-24 (paneles) y 2026-07-25 (protocolo de clasificación y glosario). Fases nuevas: Función tonal (Fase 4, salida del motor al buffer, bloqueada por la Fase 3 de grados romanos), Escala con rueda de quintas (Fase 5, primer incremento del ADR de paneles, estrena el sistema de ranuras, puede ir en paralelo), y dos de progresiones (Fase 8, detección de secuencia como salida del motor; Fase 9, la característica en una ranura). Calidad de vida y Feedback sonoro se corren a Fases 6 y 7. Se sacó "Círculo de quintas" del BACKLOG porque ahora es parte de la Fase 5. El "Track paralelo de teoría" queda como material de apoyo, sin cambios.
+
 ## v11.14 — 2026-07-25
 
 ### Added
