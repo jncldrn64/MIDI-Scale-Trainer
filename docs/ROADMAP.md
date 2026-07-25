@@ -133,6 +133,8 @@ evaluación, no solo en la UI.
 la etiqueta equivalente correcta), y Fa# tocado en la melodía sobre ese acorde ya no marca
 error.
 
+**Bloquea:** Fase 4
+
 **Bloqueada por:** Fase 1
 
 ---
@@ -271,7 +273,7 @@ motor que produce la Fase 8.
 
 ---
 
-## Track paralelo de teoría (no bloquea código, informa las Fases 2 y 3)
+## Track paralelo de teoría (no bloquea código, informa las Fases 2, 3 y 4)
 
 - Círculo de quintas: ya lo derivaste vos aplicando T-T-S-T-T-T-S desde Re y sacando Do# y
   Fa#. Falta amarrar el nombre "círculo de quintas" a algo que ya sabés hacer, no aprender
