@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.16 — 2026-07-25
+
+### Changed
+
+- `docs/ROADMAP.md`: dos correcciones de coherencia, sin cambiar decisiones. La Fase 3 ahora declara "Bloquea: Fase 4", así la dependencia con la Fase 4 (que ya decía "Bloqueada por: Fase 3") queda declarada en los dos sentidos, como el resto del ROADMAP. El encabezado del "Track paralelo de teoría" pasa de "informa las Fases 2 y 3" a "informa las Fases 2, 3 y 4", porque la Función tonal (Fase 4) también sale de ese material.
+
 ## v11.15 — 2026-07-25
 
 ### Changed
