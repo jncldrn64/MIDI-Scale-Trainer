@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.23 — 2026-07-25
+
+### Changed
+
+- `docs/ROADMAP.md`: tres cambios apoyados en las entradas de `DECISIONS.md` del 2026-07-25. El encabezado suma una convención de log: el criterio de aceptación de toda fase incluye que el motor emita al log, etiquetado, lo que esa fase agrega. La Fase 3 suma un punto de Alcance (que `classifyChordRelation` registre su resultado, cerrando el hueco anotado) y la validación de tres vías en el Criterio. La Fase 5 se reabre: pasa de `cerrada (2026-07-25)` a `pendiente` y se reescribe hacia el modelo de capas del 2026-07-25 (fondo único de teclado y notas, características como widgets, panel de pestañas como chrome permanente, teclado fijo de 88 teclas); la nota de cierre pasa a nota de reapertura. El primer intento apilado quedó en V11.19 y no se borra hasta que la fase corra. La versión mostrada sigue en V11.19; el desfase lo cierra el próximo PR de código, la Fase 3.
+
 ## v11.22 — 2026-07-25
 
 ### Added

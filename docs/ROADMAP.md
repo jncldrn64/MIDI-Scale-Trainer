@@ -7,6 +7,10 @@
 
 **Valores de estado:** `pendiente`, `en progreso`, `cerrada (YYYY-MM-DD)`.
 
+**Convención de log (2026-07-25):** el criterio de aceptación de toda fase incluye que el
+motor emita al log, etiquetado, lo que esa fase agrega, para que una sesión humana sea
+auditable después. Ver DECISIONS, entrada del 2026-07-25.
+
 ---
 
 ## FASE 0: Infraestructura, antes de tocar una regla de teoría musical
@@ -128,10 +132,16 @@ evaluación, no solo en la UI.
    `updateStatus` (UI). Esto es lo que hace que tocar Fa# sobre un Re7 en Do Mayor deje de
    marcar error.
 3. UI: el panel "Análisis de Armonía" muestra el numeral.
+4. El motor emite al log, etiquetado, lo que esta fase agrega: el numeral romano derivado, la
+   relación del acorde y el objetivo de la dominante secundaria. `classifyChordRelation`, que
+   hoy no loguea (solo puebla la UI en `index.html:566`), pasa a registrar su resultado; esto
+   cierra el hueco que la decisión del log del 2026-07-25 dejó anotado.
 
 **Criterio de aceptación:** la fixture de Oda a la Alegría pasa mostrando `II7 (V del V)` (o
 la etiqueta equivalente correcta), y Fa# tocado en la melodía sobre ese acorde ya no marca
-error.
+error. Además, la validación es de tres vías a la vez: la fixture pasa desde los archivos, el
+autor lo ve en Chrome, y el log registra el numeral, la relación y el veredicto nota por nota,
+de modo que si la UI luego mueve el panel, la prueba ya quedó en el log.
 
 **Bloquea:** Fase 4
 
@@ -165,32 +175,35 @@ las fixtures existentes lo confirman en los casos que apliquen.
 
 ## FASE 5: Reencuadre visual al modelo de paneles (el teclado como fondo)
 
-**Estado:** `cerrada (2026-07-25)`
+**Estado:** `pendiente`
 
-**Objetivo:** reencuadrar la UI actual al modelo de paneles del ADR del 2026-07-24, sin mover
-la escala a un panel. Es reencuadre visual puro: el teclado gana protagonismo como fondo fijo
-y el resto de la UI pasa a overlay. La escala se sigue mostrando coloreando el teclado, que es
-su superficie.
+**Objetivo:** realinear la UI al modelo de capas del 2026-07-25, superando el primer intento
+apilado. El fondo es una sola capa de piano más notas que caen; las características flotan como
+widgets sobre ese fondo; y las opciones y los logs viven en un panel de pestañas, chrome
+permanente. Sigue sin tocar el motor.
 
-**Alcance:** los cambios son de disposición, estructura y estilo, no de motor. El teclado
-queda como fondo fijo y protagonista; el resto de la UI pasa a overlay; la consola de debug se
-manda detrás de un submenú; se dibujan las ranuras reservadas, vacías, indicando qué va a
-vivir ahí, sin construir el gestor de paneles ni la mecánica de slots. La escala sigue
-coloreando el teclado, no se mueve a un panel. No se toca el motor ni la lógica de coloreo de
-`renderKeyboard`.
+**Alcance:** los cambios son de disposición, estructura y estilo, no de motor. Fondo único: el
+teclado y las notas que caen ocupan todo el ancho y alto, y las notas pasan por detrás de los
+widgets, no en una franja aparte. Las características flotantes se tratan como widgets sobre el
+fondo, sin construir todavía el gestor completo de paneles, que el ADR del 2026-07-24 reserva
+para la segunda característica. El panel de pestañas se establece como chrome permanente para
+opciones y logs, separado del fondo mudo. Y se decide dónde vive la salida del motor en el
+modelo de capas, sobre el teclado, en una superficie de feedback permanente, o dentro del
+widget que la pidió, garantizando que siga habiendo una lectura visible o que el log la cargue.
+El teclado visual es fijo de 88 teclas a todo el ancho, independiente del zoom. No se toca el
+motor ni el coloreo de `renderKeyboard`.
 
-**Criterio de aceptación:** el teclado queda como fondo fijo y protagonista, la escala se
-sigue viendo coloreada sobre el teclado, las ranuras reservadas se ven indicando su contenido
-futuro, la consola queda detrás de un submenú, el motor y el coloreo de notas quedan intactos,
-y los 18 fixtures siguen pasando. El "se siente reorganizado" lo corrobora el autor en el
-navegador.
+**Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
+ancho, las notas pasan por detrás de los overlays, el panel de pestañas existe como chrome
+permanente para opciones y logs, la salida del motor tiene un lugar visible definido o queda
+cubierta por el log, el motor y el coloreo quedan intactos, los 18 fixtures siguen pasando, y
+el autor lo corrobora en el navegador.
 
-**Nota de cierre (2026-07-25):** la disposición quedó apilada a propósito. Ranuras
-reservadas, zona de notas que caen y teclado van en pila vertical, no superpuestos. El overlay
-real, las características flotando sobre el fondo del ADR del 2026-07-24, llega en la Fase 10,
-cuando la escala se vuelve un panel con contenido. Superponer ranuras vacías ahora sería
-resolver la estética de cajas sin contenido, y además arrancaría el gestor de paneles que el
-ADR reserva para la segunda característica. El apilado es decisión, no deuda olvidada.
+**Nota de reapertura (2026-07-25):** el primer intento, apilado, se construyó y quedó en
+V11.19. Sirvió para ver que el modelo real es de capas, no de pila. Se reabre la fase para
+realinear la disposición a capas según la refinación del modelo del 2026-07-25. El apilado
+queda superado, no se borra del código hasta que esta fase corra. La palabra "característica"
+de las fases anteriores se lee como "widget" según esa misma refinación.
 
 **Bloquea:** Fase 9 (aporta la primera ranura y la estructura fondo-overlay).
 
