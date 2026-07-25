@@ -81,6 +81,75 @@
       "melodyNote": 63,
       "chordNotes": null,
       "expected": { "status": "bad" }
+    },
+    {
+      "kind": "function",
+      "label": "I en Do Mayor (Do Mayor): función tónica",
+      "chord": { "rootPC": 0, "type": "M" },
+      "expected": { "function": "tonica" }
+    },
+    {
+      "kind": "function",
+      "label": "iii en Do Mayor (Mi menor): tónica",
+      "chord": { "rootPC": 4, "type": "m" },
+      "expected": { "function": "tonica" }
+    },
+    {
+      "kind": "function",
+      "label": "vi en Do Mayor (La menor): tónica",
+      "chord": { "rootPC": 9, "type": "m" },
+      "expected": { "function": "tonica" }
+    },
+    {
+      "kind": "function",
+      "label": "ii en Do Mayor (Re menor): subdominante",
+      "chord": { "rootPC": 2, "type": "m" },
+      "expected": { "function": "subdominante" }
+    },
+    {
+      "kind": "function",
+      "label": "IV en Do Mayor (Fa Mayor): subdominante",
+      "chord": { "rootPC": 5, "type": "M" },
+      "expected": { "function": "subdominante" }
+    },
+    {
+      "kind": "function",
+      "label": "V en Do Mayor (Sol Mayor): dominante",
+      "chord": { "rootPC": 7, "type": "M" },
+      "expected": { "function": "dominante" }
+    },
+    {
+      "kind": "function",
+      "label": "vii en Do Mayor (Si dim): dominante",
+      "chord": { "rootPC": 11, "type": "dim" },
+      "expected": { "function": "dominante" }
+    },
+    {
+      "kind": "function",
+      "label": "El mismo Sol Mayor es I en Sol Mayor: tónica, la función se deriva del tono",
+      "universe": { "root": 7, "type": "major" },
+      "chord": { "rootPC": 7, "type": "M" },
+      "expected": { "function": "tonica" }
+    },
+    {
+      "kind": "function",
+      "label": "Re Mayor es V en Sol Mayor: dominante en otra tonalidad, derivado por grado",
+      "universe": { "root": 7, "type": "major" },
+      "chord": { "rootPC": 2, "type": "M" },
+      "expected": { "function": "dominante" }
+    },
+    {
+      "kind": "function",
+      "label": "Re7 en Do Mayor no es diatónico: no recibe función diatónica -> no_diatonica",
+      "chord": { "rootPC": 2, "type": "7" },
+      "expected": { "function": "no_diatonica" }
+    },
+    {
+      "kind": "function",
+      "label": "En tonalidad menor la teoría no está escrita: La menor en La menor -> por_definir",
+      "universe": { "root": 9, "type": "minor" },
+      "chord": { "rootPC": 9, "type": "m" },
+      "expected": { "function": "por_definir" }
     }
   ]
 }

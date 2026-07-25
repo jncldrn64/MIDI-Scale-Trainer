@@ -116,7 +116,7 @@ antes de programarlo. Cumplido el 2026-07-23: la jerarquía de cinco pasos qued�
 
 ## FASE 3: Grados romanos y conectar la dominante secundaria a la evaluación real
 
-**Estado:** `pendiente`
+**Estado:** `cerrada (2026-07-25)`
 
 **Objetivo:** que el motor muestre el numeral romano del acorde y que una nota de la
 tonicización, por ejemplo Fa# sobre un Re7 en Do Mayor, deje de marcar error en la
@@ -151,7 +151,7 @@ de modo que si la UI luego mueve el panel, la prueba ya quedó en el log.
 
 ## FASE 4: Función tonal
 
-**Estado:** `pendiente`
+**Estado:** `cerrada (2026-07-25)`
 
 **Objetivo:** que el motor nombre la función de cualquier acorde (Tónica: I, vi, iii;
 Subdominante: IV, ii; Dominante: V, vii°) y la exponga en el buffer del motor para que
@@ -166,6 +166,11 @@ teoría" de este documento; el motor implementa eso: Tónica (I, vi, iii), Subdo
 
 **Criterio de aceptación:** dado un acorde y una tonalidad, el motor devuelve su función, y
 las fixtures existentes lo confirman en los casos que apliquen.
+
+**Nota de cierre (2026-07-25):** la función se calcula, se bufferea (`State.harmony.function`)
+y se loguea; su display en el panel de Análisis es alcance de la Fase 5, parqueado ahí, no se
+hizo acá. La menor devuelve "por definir", porque la teoría escrita cubre solo la agrupación
+mayor, y un acorde no diatónico no recibe función forzada.
 
 **Bloquea:** Fase 8.
 

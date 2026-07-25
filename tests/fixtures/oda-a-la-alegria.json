@@ -16,7 +16,8 @@
         "relation": "secondary_dominant",
         "targetPC": 7,
         "numeral": "II7",
-        "targetNumeral": "V"
+        "targetNumeral": "V",
+        "function": "no_diatonica"
       }
     },
     {
@@ -30,7 +31,8 @@
         "isDiatonic": true,
         "relation": "diatonic",
         "targetPC": null,
-        "numeral": "V"
+        "numeral": "V",
+        "function": "dominante"
       }
     },
     {
