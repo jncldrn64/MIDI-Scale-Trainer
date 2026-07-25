@@ -2,6 +2,21 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.32 — 2026-07-25
+
+### Changed
+
+- `index.html`: incremento 5.1 de la Fase 5, fondo único. El teclado y la zona reservada de notas pasan a ser una sola capa de fondo fija a viewport completo; los paneles de estado, la barra de universo y los ajustes pasan a overlays en posiciones por defecto fijas encima del fondo, sin mecánica de movimiento todavía. La disposición apilada anterior queda reemplazada por fondo más overlays. `renderKeyboard` y el coloreo de teclas quedan intactos; el motor no cambia.
+- `index.html`: la versión mostrada sube de V11.27 a V11.32, cerrando el desfase que los cuatro PR de documentación anteriores habían dejado entre el historial y la pantalla.
+
+### Removed
+
+- `index.html`: se retiran las tres cajas punteadas de ranura (`.slots-row`), que dibujaban la ranura como tres espacios en pantalla. En el modelo vigente la ranura es un límite de cuántos widgets compiten, no un lugar dibujado, así que el dibujo se elimina.
+
+### Docs
+
+- `docs/ROADMAP.md`: la Fase 5 pasa de `pendiente` a `en progreso` al entregarse el incremento 5.1.
+
 ## v11.31 — 2026-07-25
 
 ### Added

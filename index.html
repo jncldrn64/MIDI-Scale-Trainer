@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.27 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.32 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -14,7 +14,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 20px; overflow-x: hidden; }
+        body { background: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; }
         .container { max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
         
         .header { text-align: center; margin-bottom: 5px; }
@@ -115,32 +115,49 @@
         .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--text-muted); background: #0f172a; padding: 5px 10px; border-radius: 6px; }
         .l-box { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px;}
 
-        /* --- Fase 5: reencuadre visual al modelo de paneles ---
-           El teclado es el fondo fijo protagonista; el resto pasa a overlay. Esto es
-           disposición, estructura y estilo, no lógica: renderKeyboard y el motor no se tocan. */
+        /* --- Fase 5, incremento 5.1: fondo único mas overlays en posición por defecto ---
+           El teclado y la zona de notas que caen son una sola capa de fondo fija a viewport
+           completo; los paneles pasan a overlays quietos encima. Sin mecánica de widgets
+           todavía: mover, opacidad, apagar, reset y menú llegan en el incremento 5.3.
+           renderKeyboard y el coloreo de teclas no se tocan. */
 
-        /* Fondo fijo: el escenario del teclado, con la zona reservada para las notas que caen. */
-        .stage { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 14px; box-shadow: 0 12px 34px rgba(0,0,0,0.55); }
-        .falling-reserved {
-            height: 84px; border: 1px dashed #334155; border-radius: 10px; margin-bottom: 12px;
-            display: flex; align-items: center; justify-content: center;
-            background: repeating-linear-gradient(135deg, rgba(56,189,248,0.04) 0 12px, transparent 12px 24px);
+        /* Fondo único: capa fija que toma el viewport entero, detrás de todo (z-index en el
+           piso). El teclado va a la franja de abajo a todo el ancho; la zona de notas que caen
+           llena el alto entre el borde superior y el teclado, como notas que caen hacia él. */
+        .stage {
+            position: fixed; inset: 0; z-index: 0;
+            background: #020617;
+            display: flex; flex-direction: column;
+            padding: 12px; gap: 10px;
         }
-        .reserved-label { color: var(--text-muted); font-size: 0.78em; text-transform: uppercase; letter-spacing: 1.5px; }
-        .stage-controls { display: flex; gap: 10px; margin-bottom: 12px; }
+        .falling-reserved {
+            flex: 1 1 auto; min-height: 0;
+            display: flex; align-items: flex-start; justify-content: center; padding-top: 8px;
+            border-radius: 10px;
+            background: repeating-linear-gradient(135deg, rgba(56,189,248,0.03) 0 14px, transparent 14px 28px);
+        }
+        .reserved-label { color: var(--text-muted); font-size: 0.72em; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.6; }
+        .stage-controls { display: flex; gap: 10px; justify-content: center; }
 
-        /* Ranuras reservadas de característica: vacías, indican qué vivirá ahí. Todavía no
-           hay gestor de paneles ni mecánica de slots (ver ADR 2026-07-24). */
-        .slots-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .slot-reserved { border: 1px dashed #334155; border-radius: 10px; padding: 16px 14px; text-align: center; background: rgba(30,41,59,0.35); }
-        .slot-reserved .slot-title { display: block; color: var(--accent); font-weight: bold; font-size: 0.92em; margin-bottom: 4px; }
-        .slot-reserved .slot-note { color: var(--text-muted); font-size: 0.74em; text-transform: uppercase; letter-spacing: 1px; }
+        /* Overlays: quietos en su posición por defecto, encima del fondo. La posición por
+           defecto es solo dónde arranca cada panel; no se dibuja ningún recuadro fantasma que
+           la marque. No tapan la zona central de juego del teclado: van al borde superior y a
+           las esquinas. Mover y resetear a esa posición son del incremento 5.3. */
+        .overlay-panel { background: rgba(30,41,59,0.92); backdrop-filter: blur(4px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        .ovl { position: fixed; z-index: 10; }
+        .ovl-header   { top: 8px;  left: 50%; transform: translateX(-50%); z-index: 12; margin: 0; }
+        .ovl-header h1 { font-size: 1.05em; margin: 0; }
+        .ovl-header .credits { font-size: 0.68em; }
+        .ovl-universe { top: 150px; left: 50%; transform: translateX(-50%); width: min(680px, 94vw); }
+        .ovl-readout  { top: 8px;  left: 12px; }
+        .ovl-settings { top: 8px;  right: 12px; width: min(340px, 44vw); }
+        .ovl-console  { bottom: 12px; left: 12px; width: min(360px, 44vw); }
 
-        /* Overlay: los paneles flotan sobre el fondo. Translúcidos para que el fondo se lea. */
-        .overlay-panel { background: rgba(30,41,59,0.86); backdrop-filter: blur(3px); }
+        /* El readout de estado: los tres cards en fila, agrupados arriba a la izquierda. */
+        .top-row { display: flex; gap: 10px; }
+        .top-row .panel { padding: 12px 16px; }
+
         .advanced-badge { font-size: 0.55em; background: #334155; color: var(--text-muted); padding: 2px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: 1px; vertical-align: middle; }
-
-        /* Consola colapsable: colapsada por defecto detrás de un botón. */
         .console-actions { display: flex; gap: 10px; }
         #btn-console-toggle { background: #0f172a; }
         .cat-LAYOUT { color: #fbbf24; }
@@ -148,13 +165,13 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.27</h1>
+        <div class="header ovl ovl-header">
+            <h1>🎹 MIDI Scale Trainer Pro - V11.32</h1>
             <div class="credits">Desarrollado con asistencia de IA</div>
         </div>
 
-        <!-- OVERLAY: barra de universo, sobre el fondo del teclado (Fase 5). -->
-        <div class="universe-bar overlay-panel">
+        <!-- OVERLAY (posición por defecto: franja superior, centrada): barra de universo. -->
+        <div class="universe-bar overlay-panel ovl ovl-universe">
             <div style="display:flex; gap:10px; align-items:center;">
                 <strong>🌌 Universo:</strong>
                 <select id="root-select"></select>
@@ -168,9 +185,9 @@
             <button id="btn-toggle-nom">Nomenclatura: Anglosajona</button>
         </div>
 
-        <!-- OVERLAY: paneles de estado. Son salida del motor y el autor los mira mientras
-             toca, así que se quedan visibles. -->
-        <div class="top-row">
+        <!-- OVERLAY (posición por defecto: arriba a la izquierda): readout de estado. Son
+             salida del motor y el autor los mira mientras toca, así que quedan visibles. -->
+        <div class="top-row ovl ovl-readout">
             <div class="panel status-item overlay-panel">
                 <div class="status-label">Notas Activas (Izq/Der)</div>
                 <div class="status-value"><span id="bass-count">0</span> / <span id="mel-count">0</span></div>
@@ -186,26 +203,10 @@
             </div>
         </div>
 
-        <!-- OVERLAY: ranuras reservadas de característica. Vacías, indican qué vivirá ahí.
-             No hay gestor de paneles ni mecánica de slots todavía (ver ADR 2026-07-24). -->
-        <div class="slots-row">
-            <div class="slot-reserved">
-                <span class="slot-title">Escala</span>
-                <span class="slot-note">se ve sobre el teclado</span>
-            </div>
-            <div class="slot-reserved">
-                <span class="slot-title">Progresiones</span>
-                <span class="slot-note">reservado</span>
-            </div>
-            <div class="slot-reserved">
-                <span class="slot-title">Rueda de quintas</span>
-                <span class="slot-note">reservado</span>
-            </div>
-        </div>
-
-        <!-- FONDO FIJO: el teclado es el protagonista. Arriba, la zona reservada para las
-             notas que caen (vacía), parte del fondo. La escala se sigue coloreando sobre las
-             teclas: renderKeyboard queda intacto. -->
+        <!-- FONDO ÚNICO (capa fija a viewport completo, detrás de todo): el teclado en la
+             franja de abajo a todo el ancho, y encima la zona reservada de notas que caen,
+             vacía. El motor de notas que caen no existe todavía (backlog), no se crea acá.
+             La escala se sigue coloreando sobre las teclas: renderKeyboard queda intacto. -->
         <div class="stage">
             <div class="falling-reserved">
                 <span class="reserved-label">🎵 Zona de notas que caen · reservado</span>
@@ -227,11 +228,11 @@
             </div>
         </div>
 
-        <!-- OVERLAY AVANZADO: Ajustes del Motor. Visibles y alcanzables; el autor los usa
-             cuando una canción es muy rápida o muy lenta. Agrupados y rotulados como
-             avanzados. En esta fase solo se reubican: NO se les arma pestaña ni sliders en
-             vivo (eso es comportamiento, va en una fase posterior). -->
-        <div class="panel overlay-panel">
+        <!-- OVERLAY AVANZADO (posición por defecto: esquina superior derecha, replegado):
+             Ajustes del Motor. Visibles y alcanzables; el autor los usa cuando una canción es
+             muy rápida o muy lenta. En el 5.1 solo se reubican como overlay; su superficie de
+             control propia y la mecánica de mover llegan en los incrementos 5.2 y 5.3. -->
+        <div class="panel overlay-panel ovl ovl-settings">
             <h3>⚙️ Ajustes del Motor <span class="advanced-badge">avanzado</span></h3>
             <div class="settings-grid">
                 <div class="setting-row"><label>Acumulación (ms)</label><input type="number" id="cfg-accum" value="120"></div>
@@ -254,9 +255,10 @@
             </div>
         </div>
 
-        <!-- OVERLAY: consola de logs, colapsada por defecto detrás de un botón (Fase 5).
-             Al abrirse muestra el log en vivo como siempre, más copiar y descargar. -->
-        <div class="panel overlay-panel">
+        <!-- OVERLAY (posición por defecto: esquina inferior izquierda): consola de logs,
+             colapsada por defecto detrás de un botón. Al abrirse muestra el log en vivo como
+             siempre, más copiar y descargar. -->
+        <div class="panel overlay-panel ovl ovl-console">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <button class="btn" id="btn-console-toggle" aria-expanded="false">📋 Consola y Logs ▸</button>
                 <div class="console-actions" id="console-actions" hidden>
@@ -699,13 +701,18 @@
             UI.buildUniverse(); UI.buildKeyboard(); MIDI.init();
             setTimeout(() => document.getElementById('btn-c4').click(), 500);
 
-            // Fase 5: rastro del reencuadre. Muchos mensajes de debug, como es costumbre del repo.
-            SysLog('LAYOUT', 'Reencuadre Fase 5 aplicado: teclado como fondo, resto como overlay.');
-            SysLog('LAYOUT', 'Zona de notas que caen dibujada como reservada (vacía) sobre el teclado.');
-            SysLog('LAYOUT', 'Ranuras de característica reservadas: Escala (sobre el teclado), Progresiones, Rueda de quintas.');
-            SysLog('LAYOUT', 'Consola de logs colapsada por defecto detrás de su botón.');
-            SysLog('LAYOUT', 'Panel "Fijar Acordes" oculto a propósito (intacto en el código, UI.lockChord sin tocar).');
-            SysLog('LAYOUT', 'Ajustes del Motor reubicados como overlay avanzado, visibles y alcanzables.');
+            // Fase 5, incremento 5.1: rastro del fondo único. Muchos mensajes, para verlo
+            // suceder en la consola. Es solo disposición: el motor y renderKeyboard no cambian.
+            SysLog('LAYOUT', 'Incremento 5.1, fondo único activo: el teclado y la zona de notas que caen son una sola capa de fondo.');
+            SysLog('LAYOUT', `Fondo tomó el viewport completo: ${window.innerWidth} x ${window.innerHeight} px (ancho x alto).`);
+            SysLog('LAYOUT', 'Overlays en posición por defecto, sin recuadro fantasma y sin mecánica de movimiento (eso llega en el 5.3):');
+            SysLog('LAYOUT', '  readout de estado (Notas, Acorde, Análisis): arriba a la izquierda.');
+            SysLog('LAYOUT', '  barra de universo: franja superior, centrada.');
+            SysLog('LAYOUT', '  Ajustes del Motor: esquina superior derecha, replegado.');
+            SysLog('LAYOUT', '  consola y logs: esquina inferior izquierda, colapsada.');
+            SysLog('LAYOUT', 'Zona de notas que caen: reservada y vacía sobre el teclado; el motor de notas que caen es backlog, no se crea acá.');
+            SysLog('LAYOUT', 'Se retiraron las cajas punteadas de ranura: la ranura es un límite, no un lugar dibujado.');
+            SysLog('LAYOUT', 'renderKeyboard y el coloreo de teclas quedan intactos; el motor no cambia.');
         };
     </script>
 </body>
