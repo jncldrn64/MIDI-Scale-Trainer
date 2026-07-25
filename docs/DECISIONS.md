@@ -492,6 +492,68 @@ oculta, es el canal canónico de validación. Y extiende la refinación del cont
 
 ---
 
+## 2026-07-25 — Refinación del modelo: el readout es un widget que presenta, la ranura es un límite y no un espacio, el menú coloca
+
+**Contexto:** al dibujar el modelo completo quedaron tres cosas por precisar. Si la salida del
+motor puede vivir en un widget movible o solo en superficies fijas. Qué es exactamente una
+ranura. Y de dónde se colocan los widgets. Ninguna reabre el motor ni contradice el contrato;
+las tres afinan vocabulario y mecánica.
+
+**Decisión:** cinco puntos.
+
+1. La salida del motor se puede presentar en un widget. El motor calcula y escribe en el buffer;
+   un widget que la muestra solo lee lo que el buffer ya tiene, no recalcula ni guarda copia
+   propia. Presentar no es hardcodear, así que el protocolo de clasificación sigue en pie: la
+   salida del motor como dato vive en el buffer, está siempre disponible y no es característica.
+   Lo que se agrega es que un widget de presentación de esa salida, el readout de notas activas,
+   acorde y análisis, es un widget como cualquiera: se mueve tipo picture in picture, se le baja
+   la opacidad, se cierra, y ocupa una ranura contando contra el límite. Cerrar ese widget no
+   borra el dato: sigue en el buffer y en el log. Así se cierra la tensión aparente entre "la
+   salida del motor no se cierra", que habla del dato, y "el readout es un widget", que habla de
+   su presentación. Esto extiende la refinación del contrato del 2026-07-25: si cualquier
+   superficie consume el buffer, un widget movible que lo presenta es una superficie más, y
+   precisa el "darle panel propio sería hardcodearlo" del protocolo: hardcodear sería un panel
+   que recalcula; uno que solo presenta lo que el buffer ya tiene, no.
+
+2. La ranura es un límite, no un espacio. No hay tres cajas fijas en la pantalla. Hay un límite
+   de tres widgets abiertos a la vez entre los que compiten, ubicados libremente, movibles, como
+   el HUD configurable de un simulador de manejo, el HUD custom de Assetto Corsa es el ejemplo
+   que lo inspiró: cada overlay se pone donde uno quiera, se mueve, opacidad, se apaga, y la
+   misma información se puede repetir en más de una posición, algo que la regla 5 del ADR del
+   2026-07-24 ya permitía. Solo los widgets que compiten cuentan contra el límite de tres. El
+   número puede afinarse, el límite no se elimina, por la razón de siempre: que los widgets no
+   tapen las notas que caen del fondo. Esto precisa la regla 3 del ADR del 2026-07-24, que
+   nombraba "ranuras" y se leía como espacios; son un cupo, no una grilla.
+
+3. El menú es el colocador. El panel de pestañas, la barra tipo macOS decidida el 2026-07-25, es
+   de donde se abre, se cierra, se restaura y se manda a una ranura cualquier widget, sea de
+   característica o de sistema. Ahí viven también las opciones y el log. El log no tiene terminal
+   propia: solo se descarga o se copia al portapapeles.
+
+4. Widget de sistema. Se nombra la clase que el modelo ya distinguía sin nombre: un widget sin
+   contenido intercambiable ni vista alterna, propio del sistema, no una característica que el
+   usuario elija. La guía de interfaz, los subtítulos del entrenamiento, el feedback del sistema
+   y el readout de la salida del motor son widgets de sistema. Se mueven, se apagan, opacidad y
+   reset como cualquier widget; lo que los separa de las características es que no traen contenido
+   intercambiable. Esto refina el glosario del 2026-07-25.
+
+5. El feedback también trae avisos del sistema. La superficie de feedback, además del veredicto
+   nota por nota, muestra avisos simples del sistema: que las ranuras están completas, o que un
+   widget quedó oculto y se puede restaurar, sea de característica o de sistema. Vale aun cuando
+   el feedback esté en modo veredicto.
+
+**Razón:** sin estos cinco puntos, "widget", "ranura" y "salida del motor" se rediscuten cada
+vez que se dibuja la UI. Cierran el vocabulario del modelo de capas sin tocar el motor.
+
+**Consecuencia:** el protocolo, el glosario y el ADR quedan refinados, no reescritos. "Widget"
+incluye ahora a los de presentación de la salida del motor; "ranura" se lee como límite y no
+como espacio; "widget de sistema" nombra a los paneles que no compiten. El motor y el contrato
+siguen intactos: todo widget lee del buffer, nada recalcula ni hardcodea.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
