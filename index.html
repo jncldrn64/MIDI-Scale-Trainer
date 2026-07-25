@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.19 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.24 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -149,7 +149,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.19</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.24</h1>
             <div class="credits">Desarrollado con asistencia de IA</div>
         </div>
 
@@ -469,13 +469,26 @@
                 
                 State.evaluations.set(note, { status: evalStatus, timeout: timeoutId, startTime: Date.now() });
                 
-                let logMsg = evalStatus === 'good' ? 'OK ' : (evalStatus === 'tension' ? 'TENSIÓN ' : 'ERROR ');
-                SysLog('EVAL', logMsg + getNoteStr(note).name);
+                // Fase 3 / decisión del log (2026-07-25): el veredicto va al log con el
+                // porqué, para que una sesión quede auditable. La razón se deriva igual que
+                // en el motor: escala, acorde, tono conductor de dominante secundaria, sensible.
+                const pc = note % 12;
+                const c = State.harmony.chord;
+                const inChord = !!c && c.template.some(i => (c.rootPC + i) % 12 === pc);
+                let razon;
+                if (State.universe.validPitches.has(pc)) razon = 'en la escala';
+                else if (inChord) razon = 'en el acorde activo';
+                else if (MathEngine.isSecondaryDominantLeadingTone(pc, State.universe.validPitches)) razon = 'tono conductor de dominante secundaria';
+                else if (evalStatus === 'tension') razon = 'sensible menor';
+                else razon = 'fuera de escala, acorde y tonicización';
+                const etiqueta = evalStatus === 'good' ? 'OK' : (evalStatus === 'tension' ? 'TENSIÓN' : (evalStatus === 'passing' ? 'PASO' : 'ERROR'));
+                SysLog('EVAL', `${etiqueta} ${getNoteStr(note).name} (${razon}) -> ${evalStatus}`);
             }
         };
 
         // --- INTERFAZ DE USUARIO ---
         const UI = {
+            _lastAnalysisSig: null,
             buildUniverse() {
                 State.universe.root = parseInt(document.getElementById('root-select').value);
                 State.universe.type = document.getElementById('scale-select').value;
@@ -560,26 +573,44 @@
                     const c = State.harmony.chord;
                     document.getElementById('chord-display').innerText = `${getNoteStr(c.rootPC).name}${c.type==='M'?'':c.type}`;
                     document.getElementById('chord-inversion').innerText = c.inversion;
-                    
-                    // Relación acorde/universo (diatónico / dom. secundaria / intercambio
-                    // modal): lógica en src/engine.js, acá solo el texto y color de la UI.
-                    const rel = classifyChordRelation(c, State.universe.validPitches);
-                    const relEl = document.getElementById('chord-relation');
 
+                    // Relación acorde/universo (diatónico / dom. secundaria / intercambio
+                    // modal) y numeral romano: lógica en src/engine.js, acá el texto de la UI
+                    // y el log. Fase 3: el numeral sale de getRomanNumeral, derivado. El
+                    // objetivo de la V/V también sale de getRomanNumeral, en mayúscula.
+                    const rel = classifyChordRelation(c, State.universe.validPitches);
+                    const numeral = MathEngine.getRomanNumeral(c, State.universe.root, State.universe.type);
+                    const targetNumeral = rel.targetPC !== null
+                        ? MathEngine.getRomanNumeral({ rootPC: rel.targetPC, type: 'M', template: CHORD_TEMPLATES.M }, State.universe.root, State.universe.type)
+                        : null;
+
+                    // Decisión del log (2026-07-25): la relación y el numeral van al log, no
+                    // solo a la UI. classifyChordRelation dejaba de registrar; ahora sí. Se
+                    // loguea al cambiar el análisis, para no repetir la misma línea por nota.
+                    const sig = `${numeral}|${rel.relation}|${rel.targetPC}`;
+                    if (sig !== UI._lastAnalysisSig) {
+                        UI._lastAnalysisSig = sig;
+                        const objetivo = (rel.relation === 'secondary_dominant' && targetNumeral)
+                            ? `${targetNumeral} (${getNoteStr(rel.targetPC).name})` : 'ninguno';
+                        SysLog('MATH', `Análisis: ${getNoteStr(c.rootPC).name}${c.type==='M'?'':c.type} = ${numeral} · relación ${rel.relation} · objetivo ${objetivo}`);
+                    }
+
+                    const relEl = document.getElementById('chord-relation');
                     if (rel.relation === 'diatonic') {
-                        relEl.innerText = "✓ Diatónico";
+                        relEl.innerText = `✓ Diatónico · ${numeral}`;
                         relEl.style.color = "#22c55e";
                     } else if (rel.relation === 'secondary_dominant') {
-                        relEl.innerText = `💡 Dom. Secundaria (Empuja a ${getNoteStr(rel.targetPC).name})`;
+                        relEl.innerText = `💡 ${numeral} (V del ${targetNumeral}) → empuja a ${getNoteStr(rel.targetPC).name}`;
                         relEl.style.color = "#f97316";
                     } else {
-                        relEl.innerText = "⚠ Intercambio Modal";
+                        relEl.innerText = `⚠ Intercambio Modal · ${numeral}`;
                         relEl.style.color = "#ef4444";
                     }
                 } else {
-                    document.getElementById('chord-display').innerText = '-'; 
-                    document.getElementById('chord-inversion').innerText = '-'; 
+                    document.getElementById('chord-display').innerText = '-';
+                    document.getElementById('chord-inversion').innerText = '-';
                     document.getElementById('chord-relation').innerText = '-';
+                    UI._lastAnalysisSig = null;
                 }
             },
             clearEvaluations() { State.evaluations.forEach(v => clearTimeout(v.timeout)); State.evaluations.clear(); },

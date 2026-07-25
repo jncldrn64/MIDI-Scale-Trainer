@@ -6,7 +6,7 @@
   "cases": [
     {
       "kind": "chord",
-      "label": "Re7 sobre Do Mayor debe leerse como dominante secundaria que empuja a Sol (V/V)",
+      "label": "Re7 sobre Do Mayor debe leerse como dominante secundaria que empuja a Sol (V/V), numeral II7",
       "notesPlayed": [50, 54, 57, 60],
       "expected": {
         "detected": true,
@@ -14,12 +14,14 @@
         "type": "7",
         "isDiatonic": false,
         "relation": "secondary_dominant",
-        "targetPC": 7
+        "targetPC": 7,
+        "numeral": "II7",
+        "targetNumeral": "V"
       }
     },
     {
       "kind": "chord",
-      "label": "Sol Mayor (V) es diatónico en Do Mayor",
+      "label": "Sol Mayor (V) es diatónico en Do Mayor, numeral V",
       "notesPlayed": [55, 59, 62],
       "expected": {
         "detected": true,
@@ -27,7 +29,8 @@
         "type": "M",
         "isDiatonic": true,
         "relation": "diatonic",
-        "targetPC": null
+        "targetPC": null,
+        "numeral": "V"
       }
     },
     {
@@ -39,10 +42,10 @@
     },
     {
       "kind": "melody",
-      "label": "GAP conocido (Fase 3): Fa# sin el acorde Re7 activo marca error hoy. Cuando la Fase 3 conecte la dominante secundaria a evaluateMelody, este esperado pasa a 'good'.",
+      "label": "GAP cerrado (Fase 3): Fa# sin el acorde Re7 activo. Es el tono conductor de la V/V (empuja a Sol, tríada mayor), así que ahora es good, no error.",
       "melodyNote": 66,
       "chordNotes": null,
-      "expected": { "status": "bad" }
+      "expected": { "status": "good" }
     }
   ]
 }

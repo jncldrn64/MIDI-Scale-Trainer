@@ -118,6 +118,12 @@
         const isSensible = isMinor && pc === sensiblePC && !inScale && !inChord;
 
         if (inScale || inChord) return 'good';
+        // Fase 3: el tono conductor de una dominante secundaria hacia un grado de tríada
+        // mayor se acepta aunque el acorde no suene. Es lo que cierra el gap de Oda: Fa#
+        // sobre Do Mayor empuja a Sol (V) y deja de marcar error. Derivado, no hardcodeado
+        // (ver isSecondaryDominantLeadingTone); en Re menor Sol# empuja a La, tríada menor,
+        // así que sigue 'bad'.
+        if (isSecondaryDominantLeadingTone(pc, universePitchesSet)) return 'good';
         if (isSensible) return 'tension';
         return 'bad';
     }
@@ -132,6 +138,75 @@
         return status;
     }
 
+    // Grados de la escala activa en orden, uno por nota (7 pitch classes). Mismo recorrido
+    // de la fórmula interválica que scalePitches, pero conservando el orden para ubicar un
+    // acorde por su raíz y sacar su número de grado.
+    const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+    function scaleDegreesOrdered(root, type) {
+        const scaleDef = SCALES[type];
+        const degrees = [root % 12];
+        let current = root;
+        scaleDef.f.forEach(step => {
+            current += step;
+            if (current - root < 12) degrees.push(current % 12);
+        });
+        return degrees;
+    }
+
+    // Numeral romano del acorde contra la escala activa. Todo derivado: el grado sale de
+    // ubicar chordObj.rootPC en la escala, la caja (mayúscula o minúscula) de la tercera del
+    // acorde, y el sufijo de la quinta y el séptimo. No hay tabla fija de grados ni notas
+    // escritas a mano. TRAMPA evitada (Fase 3): el objetivo de una dominante secundaria se
+    // calcula como cualquier grado; pasándole una tríada mayor sale en mayúscula ('V'), no
+    // se fuerza a minúscula.
+    function getRomanNumeral(chordObj, universeRoot, universeType) {
+        const order = scaleDegreesOrdered(universeRoot, universeType);
+        let idx = order.indexOf(chordObj.rootPC);
+        let accidental = '';
+        for (let below = 1; below <= 11 && idx === -1; below++) {
+            idx = order.indexOf((chordObj.rootPC - below + 12) % 12);
+            if (idx !== -1) accidental = '#'.repeat(below);
+        }
+        if (idx === -1) return '?';
+
+        const tpl = chordObj.template || CHORD_TEMPLATES[chordObj.type] || [];
+        const has = i => tpl.includes(i);
+        const minorThird = has(3) && !has(4);
+        const dimFifth = has(6) && !has(7);
+        const augFifth = has(8) && !has(7);
+
+        let numeral = ROMAN[idx];
+        if (minorThird) numeral = numeral.toLowerCase();
+        numeral = accidental + numeral;
+
+        let suffix = '';
+        if (dimFifth && has(9) && !has(10)) suffix = '°7';
+        else if (dimFifth && has(10)) suffix = 'ø7';
+        else if (dimFifth) suffix = '°';
+        else if (augFifth) suffix = '+';
+        else if (has(11)) suffix = 'M7';
+        else if (has(10)) suffix = '7';
+
+        return numeral + suffix;
+    }
+
+    // Tono conductor de una dominante secundaria hacia un grado de tríada mayor. Derivado:
+    // la nota es cromática (no está en la escala), resuelve un semitono arriba a una nota de
+    // la escala, y ese destino tiene tercera mayor y quinta justa diatónicas, o sea arma una
+    // V/grado real. Funciona en cualquier tono. Es lo que separa Fa# sobre Do Mayor (empuja
+    // a Sol, tríada mayor: se acepta) de Sol# sobre Re menor (empuja a La, tríada menor: no).
+    function isSecondaryDominantLeadingTone(pc, universePitchesSet) {
+        if (universePitchesSet.has(pc)) return false;
+        const target = (pc + 1) % 12;
+        if (!universePitchesSet.has(target)) return false;
+        return universePitchesSet.has((target + 4) % 12) && universePitchesSet.has((target + 7) % 12);
+    }
+
+    // El ROADMAP habla de MathEngine.getRomanNumeral; se cuelga acá además de exportarse
+    // suelto, para las dos formas de llamarlo.
+    MathEngine.getRomanNumeral = getRomanNumeral;
+    MathEngine.isSecondaryDominantLeadingTone = isSecondaryDominantLeadingTone;
+
     return {
         SCALES,
         CHORD_TEMPLATES,
@@ -140,6 +215,9 @@
         classifyChordRelation,
         evaluateMelodyStatus,
         applyPassingTone,
+        getRomanNumeral,
+        isSecondaryDominantLeadingTone,
+        scaleDegreesOrdered,
         PASSING_TONE_MS
     };
 }));

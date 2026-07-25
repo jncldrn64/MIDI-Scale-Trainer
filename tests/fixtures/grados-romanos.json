@@ -1,0 +1,86 @@
+{
+  "name": "grados-romanos",
+  "title": "Grados romanos derivados y tono conductor de la dominante secundaria, en varias tonalidades",
+  "source": "Fase 3. Prueba getRomanNumeral en varios grados y en dos tonalidades para atrapar cualquier tabla de grados hardcodeada, y generaliza el caso de Oda (Fa# en Do Mayor) al tono conductor de la V/V en Sol Mayor.",
+  "universe": { "root": 0, "type": "major" },
+  "cases": [
+    {
+      "kind": "roman",
+      "label": "I en Do Mayor (Do Mayor)",
+      "chord": { "rootPC": 0, "type": "M" },
+      "expected": { "numeral": "I" }
+    },
+    {
+      "kind": "roman",
+      "label": "IV en Do Mayor (Fa Mayor)",
+      "chord": { "rootPC": 5, "type": "M" },
+      "expected": { "numeral": "IV" }
+    },
+    {
+      "kind": "roman",
+      "label": "V en Do Mayor (Sol Mayor)",
+      "chord": { "rootPC": 7, "type": "M" },
+      "expected": { "numeral": "V" }
+    },
+    {
+      "kind": "roman",
+      "label": "ii en Do Mayor (Re menor), minúscula",
+      "chord": { "rootPC": 2, "type": "m" },
+      "expected": { "numeral": "ii" }
+    },
+    {
+      "kind": "roman",
+      "label": "iii en Do Mayor (Mi menor), minúscula",
+      "chord": { "rootPC": 4, "type": "m" },
+      "expected": { "numeral": "iii" }
+    },
+    {
+      "kind": "roman",
+      "label": "vi en Do Mayor (La menor), minúscula",
+      "chord": { "rootPC": 9, "type": "m" },
+      "expected": { "numeral": "vi" }
+    },
+    {
+      "kind": "roman",
+      "label": "vii disminuido en Do Mayor (Si dim)",
+      "chord": { "rootPC": 11, "type": "dim" },
+      "expected": { "numeral": "vii°" }
+    },
+    {
+      "kind": "roman",
+      "label": "II7 en Do Mayor (Re7): la dominante secundaria de Oda, mayúscula, no se fuerza a minúscula",
+      "chord": { "rootPC": 2, "type": "7" },
+      "expected": { "numeral": "II7" }
+    },
+    {
+      "kind": "roman",
+      "label": "El mismo Re Mayor es V en Sol Mayor, no II: el grado se deriva de la tonalidad",
+      "universe": { "root": 7, "type": "major" },
+      "chord": { "rootPC": 2, "type": "M" },
+      "expected": { "numeral": "V" }
+    },
+    {
+      "kind": "roman",
+      "label": "I en Sol Mayor (Sol Mayor): el mismo acorde que era V en Do ahora es I",
+      "universe": { "root": 7, "type": "major" },
+      "chord": { "rootPC": 7, "type": "M" },
+      "expected": { "numeral": "I" }
+    },
+    {
+      "kind": "melody",
+      "label": "Do# en Sol Mayor sin acorde: tono conductor de la V/V (empuja a Re, tríada mayor) -> good. Mismo caso que Fa# en Do Mayor, otro tono.",
+      "universe": { "root": 7, "type": "major" },
+      "melodyNote": 61,
+      "chordNotes": null,
+      "expected": { "status": "good" }
+    },
+    {
+      "kind": "melody",
+      "label": "Re# en Sol Mayor sin acorde: empuja a Mi, que es tríada menor (vi), no arma una V/grado mayor -> sigue bad. Prueba que la regla no acepta cualquier cromática.",
+      "universe": { "root": 7, "type": "major" },
+      "melodyNote": 63,
+      "chordNotes": null,
+      "expected": { "status": "bad" }
+    }
+  ]
+}
