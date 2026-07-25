@@ -554,6 +554,46 @@ siguen intactos: todo widget lee del buffer, nada recalcula ni hardcodea.
 
 ---
 
+## 2026-07-25 — Precisiones del modelo de widgets: posición por defecto, categoría única por origen, y el cap cuenta solo a los que compiten
+
+**Contexto:** al ver el modelo final quedaron tres precisiones. Si con el cap de tres cada widget
+tiene igual una posición por defecto. Si un widget que viene de serie es de otra clase que uno
+que se agregue después o que traiga un entrenamiento. Y cuántos de los widgets planeados cuentan
+contra el cap.
+
+**Decisión:** tres puntos.
+
+1. Cada widget tiene una posición por defecto. El cap de tres limita cuántos compiten a la vez,
+   no de dónde arrancan. Cada widget nace en un lugar por defecto y desde ahí se mueve, se
+   persiste y se resetea. Coherente con la regla 6 del ADR del 2026-07-24, que abre la app bien
+   puesta sin configurar.
+
+2. Categoría única, no importa el origen. Un widget que viene de serie, uno que se agregue a
+   futuro y uno que traiga un entrenamiento son el mismo tipo de objeto y se tratan igual; no hay
+   una clase de fábrica aparte. Ata con la dirección parqueada de entrenamientos como datos: un
+   entrenamiento que aporte un widget aporta un widget común, no una especie distinta. Lo que
+   sigue distinguiendo un widget de otro es su contenido, característica o de sistema, y si
+   compite o no por el cap, no de dónde salió.
+
+3. El cap de tres cuenta solo a los que compiten. De los widgets planeados hoy son seis: tres
+   compiten por el cap, la escala, las progresiones y el readout de la salida del motor; y tres
+   no cuentan contra el cap, los subtítulos, el feedback y la guía, que tienen lugar propio pero
+   igual se mueven, se apagan, opacidad y reset como cualquiera. El total puede crecer con
+   widgets futuros o de entrenamiento; el cap de tres competidores no cambia, por la razón de
+   siempre, que no tapen las notas del fondo. Precisa el "solo los widgets que compiten cuentan
+   contra el límite" de la refinación anterior.
+
+**Razón:** sin estas tres precisiones, la posición por defecto, el origen de un widget y cuántos
+cuentan se rediscuten cada vez. Cierran el modelo de widgets.
+
+**Consecuencia:** refina la refinación del modelo del 2026-07-25 sin tocar el motor. Los widgets
+de sistema con lugar propio, subtítulos, feedback y guía, quedan explícitamente movibles y fuera
+del cap.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

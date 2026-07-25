@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.31 — 2026-07-25
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva con tres precisiones del modelo de widgets. Cada widget tiene posición por defecto aunque el cap sea de tres. Un widget de serie, uno futuro y uno de un entrenamiento son la misma categoría; lo que distingue es el contenido y si compite por el cap, no el origen. Y el cap de tres cuenta solo a los que compiten (escala, progresiones, readout); subtítulos, feedback y guía tienen lugar propio, se mueven pero no cuentan. Refina la refinación del modelo del 2026-07-25 sin tocar el motor.
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 5 se realinea al modelo de widgets. El coloreo del teclado que ya existe en `renderKeyboard` queda explícito en el Alcance como superficie de feedback de la que dependen los widgets, preservada en la fase, no diferida. Los incrementos de entrega pasan de cuatro a cinco: se agrega el 5.3, sistema de widgets (mover, opacidad, apagar, reset, persistir, cap de ranuras, el readout como primer widget), y nomenclatura y análisis se corren a 5.4 y 5.5. Y el párrafo del readout se corrige: la salida del motor se presenta en un widget de sistema que ocupa ranura y se cierra, no en una superficie permanente sin ranura, alineado con la refinación del 2026-07-25.
+
 ## v11.30 — 2026-07-25
 
 ### Added

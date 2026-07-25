@@ -195,8 +195,11 @@ para la segunda característica. El panel de pestañas se establece como chrome 
 opciones y logs, separado del fondo mudo. Y se decide dónde vive la salida del motor en el
 modelo de capas, sobre el teclado, en una superficie de feedback permanente, o dentro del
 widget que la pidió, garantizando que siga habiendo una lectura visible o que el log la cargue.
-El teclado visual es fijo de 88 teclas a todo el ancho, independiente del zoom. No se toca el
-motor ni el coloreo de `renderKeyboard`.
+El teclado visual es fijo de 88 teclas a todo el ancho, independiente del zoom. El coloreo del
+teclado que ya existe en `renderKeyboard`, la escala pintando sus notas y el veredicto nota por
+nota pintando lo que se toca, es una superficie de feedback de la que dependen los dos widgets
+planeados, y se preserva en esta fase: no se rehace, no se difiere y no se apaga, porque apagarlo
+es una idea de backlog y no de esta fase. No se toca el motor.
 
 **Terminología de pantalla.** La Fase 5 también corrige los nombres que ve el usuario, que son
 de display, no de motor. Primero, las etiquetas del botón de nomenclatura, hoy "Latina" y
@@ -216,26 +219,29 @@ panel de Análisis, junto al numeral y la relación, de forma consistente con el
 para un acorde no diatónico la función dice "por definir" y la relación dice "no clasificado",
 sin que una contradiga a la otra.
 
-**Incrementos de entrega.** La fase se entrega en cuatro incrementos, del más estructural al
-más cosmético, cada uno un PR de código que se puede ver y corroborar por separado.
+**Incrementos de entrega.** La fase se entrega en cinco incrementos, del más estructural al más
+cosmético, cada uno un PR de código que se puede ver y corroborar por separado.
 
 - Incremento 5.1, fondo único: el teclado y las notas ocupan todo el ancho y alto como una sola
-  capa de fondo, las notas pasan por detrás de los overlays, y la disposición apilada actual
-  pasa a fondo más overlays flotantes en posiciones por defecto fijas, sin gestor de paneles,
-  sin mover ni opacidad. Acá se decide dónde vive la salida del motor en el modelo de capas y
-  queda visible o cubierta por el log. Motor y coloreo intactos.
-- Incremento 5.2, panel de pestañas: el chrome permanente para opciones y logs, separado del
-  fondo mudo.
-- Incremento 5.3, nomenclatura por forma: las etiquetas del botón de nomenclatura pasan a
+  capa de fondo, las notas pasan por detrás de los overlays, y la disposición apilada actual pasa
+  a fondo más overlays en posiciones por defecto fijas, todavía sin mecánica de widgets. El
+  coloreo del teclado que ya existe queda intacto. Motor intacto.
+- Incremento 5.2, panel de pestañas y menú colocador: el chrome permanente tipo barra de macOS,
+  desde donde se abre, cierra, restaura y coloca cualquier widget en una ranura, y donde viven las
+  opciones y el log. El log no tiene terminal propia, solo se descarga o se copia.
+- Incremento 5.3, sistema de widgets: mover tipo picture in picture, opacidad, apagar, reset a
+  posición por defecto y persistir; el cap de tres ranuras para los que compiten; el readout de la
+  salida del motor se vuelve el primer widget de sistema en una ranura, el caso de prueba. El
+  feedback suma los avisos simples del sistema, ranuras completas y restaurar widget oculto.
+- Incremento 5.4, nomenclatura por forma: las etiquetas del botón de nomenclatura pasan a
   "Silábica" y "Alfabética", con valor por defecto, persistencia por `localStorage` y el botón
-  alcanzable en los menús nuevos. Es independiente de los demás.
-- Incremento 5.4, análisis honesto: la función tonal que la Fase 4 dejó en el buffer se muestra
-  en el panel de Análisis junto al numeral y la relación, y la etiqueta "Intercambio Modal" se
-  relabela a "no clasificado" o "por definir". Van juntos a propósito: separarlos dejaría un
-  estado intermedio donde la función dice "por definir" y la relación sigue diciendo "Intercambio
-  Modal", la contradicción que esta fase evita.
+  alcanzable.
+- Incremento 5.5, análisis honesto: la función tonal que la Fase 4 dejó en el buffer se muestra en
+  el panel de Análisis junto al numeral y la relación, y la etiqueta "Intercambio Modal" se
+  relabela a "no clasificado" o "por definir". Van juntos para no dejar un estado intermedio
+  contradictorio.
 
-La fase pasa a `en progreso` al completarse el incremento 5.1, y a `cerrada` cuando el 5.4 esté
+La fase pasa a `en progreso` al completarse el incremento 5.1, y a `cerrada` cuando el 5.5 esté
 hecho y corroborado.
 
 **El gestor de paneles se parte, y la salida del motor tiene lugar.** El ADR del 2026-07-24
@@ -243,11 +249,12 @@ reserva el gestor completo de paneles para la segunda característica. Esa reser
 completo, no de toda capacidad de manejo. Mover y persistir la posición de un overlay es de esta
 fase, sobre los overlays que el fondo único crea: el readout, el feedback, los subtítulos y los
 controles. Lo que espera a la Fase 9, la primera característica de verdad, es la competencia por
-las tres ranuras. Y el "dónde vive la salida del motor" que el incremento 5.1 deja abierto se
-resuelve así: las tres lecturas, notas activas, acorde detectado y análisis, se consolidan en
-una sola superficie permanente sobre el fondo, siempre encendida, sin ranura y sin conmutador.
-No es una característica; darle ranura sería hardcodearla. Colorea teclas y escribe en las
-superficies de feedback como cualquier consumidor del buffer del motor, no por ser widget.
+las tres ranuras. Y el "dónde vive la salida del motor" se
+resuelve según la refinación del readout como widget del 2026-07-25: las tres lecturas, notas
+activas, acorde detectado y análisis, se presentan en el readout, un widget de sistema que ocupa
+una ranura, se mueve, opacidad y se cierra, mientras el dato sigue siempre en el buffer y en el
+log. Presentar no hardcodea: el widget lee el buffer, no recalcula. El teclado sigue consumiendo
+el buffer aparte, coloreando sus teclas, como cualquier otro consumidor.
 
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, el panel de pestañas existe como chrome
