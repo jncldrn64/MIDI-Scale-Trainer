@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.19 — 2026-07-25
+
+### Changed
+
+- `index.html`: reencuadre visual de la Fase 5, sin tocar comportamiento ni motor. El teclado pasa a ser el fondo fijo protagonista, con una zona reservada y vacía arriba para las futuras notas que caen. El resto de la UI pasa a overlay: la barra de universo, los tres paneles de estado (salida del motor, siguen visibles porque el autor los mira mientras toca) y los Ajustes del Motor, ahora rotulados como avanzados pero visibles y alcanzables. Se dibujan tres ranuras de característica reservadas y vacías (Escala, Progresiones, Rueda de quintas), sin gestor de paneles ni mecánica de slots. La consola de logs queda colapsada detrás de un botón; al abrirla suma copiar al portapapeles a la descarga `.txt` que ya existía. El panel "Fijar Acordes" se oculta de la pantalla pero queda intacto en el código, con `UI.lockChord` sin tocar. No se toca `src/engine.js` ni el coloreo de `renderKeyboard`, y los 18 fixtures siguen pasando. Cierra el desfase de versión mostrada: `<title>` y `<h1>` pasan de V11.6 a V11.19.
+
 ## v11.18 — 2026-07-25
 
 ### Added
