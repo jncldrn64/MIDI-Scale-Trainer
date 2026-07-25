@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.6 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.19 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -114,16 +114,47 @@
         .legend-grid { display: flex; gap: 15px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
         .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--text-muted); background: #0f172a; padding: 5px 10px; border-radius: 6px; }
         .l-box { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px;}
+
+        /* --- Fase 5: reencuadre visual al modelo de paneles ---
+           El teclado es el fondo fijo protagonista; el resto pasa a overlay. Esto es
+           disposición, estructura y estilo, no lógica: renderKeyboard y el motor no se tocan. */
+
+        /* Fondo fijo: el escenario del teclado, con la zona reservada para las notas que caen. */
+        .stage { background: #020617; border: 1px solid #1e293b; border-radius: 14px; padding: 14px; box-shadow: 0 12px 34px rgba(0,0,0,0.55); }
+        .falling-reserved {
+            height: 84px; border: 1px dashed #334155; border-radius: 10px; margin-bottom: 12px;
+            display: flex; align-items: center; justify-content: center;
+            background: repeating-linear-gradient(135deg, rgba(56,189,248,0.04) 0 12px, transparent 12px 24px);
+        }
+        .reserved-label { color: var(--text-muted); font-size: 0.78em; text-transform: uppercase; letter-spacing: 1.5px; }
+        .stage-controls { display: flex; gap: 10px; margin-bottom: 12px; }
+
+        /* Ranuras reservadas de característica: vacías, indican qué vivirá ahí. Todavía no
+           hay gestor de paneles ni mecánica de slots (ver ADR 2026-07-24). */
+        .slots-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .slot-reserved { border: 1px dashed #334155; border-radius: 10px; padding: 16px 14px; text-align: center; background: rgba(30,41,59,0.35); }
+        .slot-reserved .slot-title { display: block; color: var(--accent); font-weight: bold; font-size: 0.92em; margin-bottom: 4px; }
+        .slot-reserved .slot-note { color: var(--text-muted); font-size: 0.74em; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Overlay: los paneles flotan sobre el fondo. Translúcidos para que el fondo se lea. */
+        .overlay-panel { background: rgba(30,41,59,0.86); backdrop-filter: blur(3px); }
+        .advanced-badge { font-size: 0.55em; background: #334155; color: var(--text-muted); padding: 2px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: 1px; vertical-align: middle; }
+
+        /* Consola colapsable: colapsada por defecto detrás de un botón. */
+        .console-actions { display: flex; gap: 10px; }
+        #btn-console-toggle { background: #0f172a; }
+        .cat-LAYOUT { color: #fbbf24; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.6</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.19</h1>
             <div class="credits">Desarrollado con asistencia de IA</div>
         </div>
-        
-        <div class="universe-bar">
+
+        <!-- OVERLAY: barra de universo, sobre el fondo del teclado (Fase 5). -->
+        <div class="universe-bar overlay-panel">
             <div style="display:flex; gap:10px; align-items:center;">
                 <strong>🌌 Universo:</strong>
                 <select id="root-select"></select>
@@ -136,29 +167,52 @@
             <div class="formula-display" id="formula-display"></div>
             <button id="btn-toggle-nom">Nomenclatura: Anglosajona</button>
         </div>
-        
+
+        <!-- OVERLAY: paneles de estado. Son salida del motor y el autor los mira mientras
+             toca, así que se quedan visibles. -->
         <div class="top-row">
-            <div class="panel status-item">
+            <div class="panel status-item overlay-panel">
                 <div class="status-label">Notas Activas (Izq/Der)</div>
                 <div class="status-value"><span id="bass-count">0</span> / <span id="mel-count">0</span></div>
             </div>
-            <div class="panel status-item">
+            <div class="panel status-item overlay-panel">
                 <div class="status-label">Acorde Detectado</div>
                 <div class="status-value" id="chord-display">-</div>
                 <div id="chord-inversion" style="font-size:11px; color:var(--text-muted);">-</div>
             </div>
-            <div class="panel status-item">
+            <div class="panel status-item overlay-panel">
                 <div class="status-label">Análisis de Armonía</div>
                 <div class="status-value" id="chord-relation" style="font-size:1.2em;">-</div>
             </div>
         </div>
 
-        <div class="panel">
-            <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
-                <div style="display:flex; gap:10px;">
-                    <button class="btn btn-warning" id="btn-lock">🔓 Motor Automático</button>
-                    <button class="btn" id="btn-c4">🎯 Centrar en Split</button>
-                </div>
+        <!-- OVERLAY: ranuras reservadas de característica. Vacías, indican qué vivirá ahí.
+             No hay gestor de paneles ni mecánica de slots todavía (ver ADR 2026-07-24). -->
+        <div class="slots-row">
+            <div class="slot-reserved">
+                <span class="slot-title">Escala</span>
+                <span class="slot-note">se ve sobre el teclado</span>
+            </div>
+            <div class="slot-reserved">
+                <span class="slot-title">Progresiones</span>
+                <span class="slot-note">reservado</span>
+            </div>
+            <div class="slot-reserved">
+                <span class="slot-title">Rueda de quintas</span>
+                <span class="slot-note">reservado</span>
+            </div>
+        </div>
+
+        <!-- FONDO FIJO: el teclado es el protagonista. Arriba, la zona reservada para las
+             notas que caen (vacía), parte del fondo. La escala se sigue coloreando sobre las
+             teclas: renderKeyboard queda intacto. -->
+        <div class="stage">
+            <div class="falling-reserved">
+                <span class="reserved-label">🎵 Zona de notas que caen · reservado</span>
+            </div>
+            <div class="stage-controls">
+                <button class="btn btn-warning" id="btn-lock">🔓 Motor Automático</button>
+                <button class="btn" id="btn-c4">🎯 Centrar en Split</button>
             </div>
             <div class="keyboard-wrapper" id="keyboard-wrapper">
                 <div class="keyboard" id="keyboard"></div>
@@ -173,35 +227,45 @@
             </div>
         </div>
 
-        <div class="bottom-row">
-            <div class="panel">
-                <h3>📚 Práctica: Fijar Acordes</h3>
-                <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <button class="btn btn-success" onclick="UI.lockChord([48,52,55],'M')">Do Mayor</button>
-                    <button class="btn btn-success" onclick="UI.lockChord([50,53,57,60],'m7')">Re Menor 7</button>
-                    <button class="btn btn-danger" onclick="UI.unlockChord()">✕ Liberar</button>
-                </div>
-            </div>
-            <div class="panel">
-                <h3>⚙️ Ajustes del Motor</h3>
-                <div class="settings-grid">
-                    <div class="setting-row"><label>Acumulación (ms)</label><input type="number" id="cfg-accum" value="120"></div>
-                    <div class="setting-row"><label>Retención (ms)</label><input type="number" id="cfg-hold" value="2000"></div>
-                    <div class="setting-row"><label>Error Vis. (ms)</label><input type="number" id="cfg-err" value="1000"></div>
-                    <div class="setting-row"><label>Split (MIDI)</label><input type="number" id="cfg-split" value="60"></div>
-                </div>
+        <!-- OVERLAY AVANZADO: Ajustes del Motor. Visibles y alcanzables; el autor los usa
+             cuando una canción es muy rápida o muy lenta. Agrupados y rotulados como
+             avanzados. En esta fase solo se reubican: NO se les arma pestaña ni sliders en
+             vivo (eso es comportamiento, va en una fase posterior). -->
+        <div class="panel overlay-panel">
+            <h3>⚙️ Ajustes del Motor <span class="advanced-badge">avanzado</span></h3>
+            <div class="settings-grid">
+                <div class="setting-row"><label>Acumulación (ms)</label><input type="number" id="cfg-accum" value="120"></div>
+                <div class="setting-row"><label>Retención (ms)</label><input type="number" id="cfg-hold" value="2000"></div>
+                <div class="setting-row"><label>Error Vis. (ms)</label><input type="number" id="cfg-err" value="1000"></div>
+                <div class="setting-row"><label>Split (MIDI)</label><input type="number" id="cfg-split" value="60"></div>
             </div>
         </div>
 
-        <div class="panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
-                <h3 style="margin:0;">📋 Consola y Logs Históricos</h3>
-                <div style="display:flex; gap:10px;">
+        <!-- OCULTO A PROPÓSITO EN LA FASE 5: el panel "Fijar Acordes" se esconde de la
+             pantalla pero queda intacto en el código (su markup, sus botones, sus id y la
+             función UI.lockChord). Va a tener su propio módulo en una fase posterior. No
+             borrar: solo está oculto por el atributo hidden sobre el contenedor. -->
+        <div class="panel" id="lock-chords-panel" hidden>
+            <h3>📚 Práctica: Fijar Acordes</h3>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn btn-success" onclick="UI.lockChord([48,52,55],'M')">Do Mayor</button>
+                <button class="btn btn-success" onclick="UI.lockChord([50,53,57,60],'m7')">Re Menor 7</button>
+                <button class="btn btn-danger" onclick="UI.unlockChord()">✕ Liberar</button>
+            </div>
+        </div>
+
+        <!-- OVERLAY: consola de logs, colapsada por defecto detrás de un botón (Fase 5).
+             Al abrirse muestra el log en vivo como siempre, más copiar y descargar. -->
+        <div class="panel overlay-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <button class="btn" id="btn-console-toggle" aria-expanded="false">📋 Consola y Logs ▸</button>
+                <div class="console-actions" id="console-actions" hidden>
+                    <button class="btn" id="btn-copy">Copiar</button>
                     <button class="btn btn-success" id="btn-export">Exportar .txt</button>
                     <button class="btn btn-danger" id="btn-clear">Limpiar</button>
                 </div>
             </div>
-            <div class="logs-wrapper" id="logs-container"></div>
+            <div class="logs-wrapper" id="logs-container" style="margin-top:10px;" hidden></div>
         </div>
     </div>
 
@@ -262,6 +326,20 @@
             const txt = State.logHistory.map(l => `[${l.time}] ${l.cat}: ${l.msg} ${l.data ? JSON.stringify(l.data) : ''}`).join('\n');
             const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], {type: 'text/plain'}));
             a.download = `midi-logs-${Date.now()}.txt`; a.click();
+            SysLog('LAYOUT', `Descarga .txt disparada (${State.logHistory.length} entradas)`);
+        }
+
+        // Fase 5: copiar el historial al portapapeles. Misma fuente que exportLogsTxt
+        // (State.logHistory). Es UI pura, no toca el motor.
+        function copyLogsClipboard() {
+            const txt = State.logHistory.map(l => `[${l.time}] ${l.cat}: ${l.msg} ${l.data ? JSON.stringify(l.data) : ''}`).join('\n');
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(txt)
+                    .then(() => SysLog('LAYOUT', `📋 Logs copiados al portapapeles (${State.logHistory.length} entradas)`))
+                    .catch(err => SysLog('LAYOUT', '⚠️ No se pudo copiar al portapapeles: ' + err));
+            } else {
+                SysLog('LAYOUT', '⚠️ navigator.clipboard no disponible en este contexto');
+            }
         }
 
         // --- MOTOR MATEMÁTICO ---
@@ -563,10 +641,33 @@
             };
             document.getElementById('btn-clear').onclick = () => document.getElementById('logs-container').innerHTML='';
             document.getElementById('btn-export').onclick = exportLogsTxt;
-            
+            document.getElementById('btn-copy').onclick = copyLogsClipboard;
+
+            // Fase 5: consola colapsada por defecto detrás de un botón. Al abrir muestra el
+            // log en vivo y las acciones (copiar, exportar, limpiar). Solo disposición, no motor.
+            const consoleToggle = document.getElementById('btn-console-toggle');
+            const consoleActions = document.getElementById('console-actions');
+            const logsContainer = document.getElementById('logs-container');
+            consoleToggle.onclick = () => {
+                const opening = logsContainer.hasAttribute('hidden');
+                if (opening) { logsContainer.removeAttribute('hidden'); consoleActions.removeAttribute('hidden'); }
+                else { logsContainer.setAttribute('hidden',''); consoleActions.setAttribute('hidden',''); }
+                consoleToggle.setAttribute('aria-expanded', String(opening));
+                consoleToggle.innerText = opening ? '📋 Consola y Logs ▾' : '📋 Consola y Logs ▸';
+                SysLog('LAYOUT', `Consola ${opening ? 'abierta' : 'colapsada'}`);
+            };
+
             window.addEventListener('resize', () => UI.buildKeyboard());
             UI.buildUniverse(); UI.buildKeyboard(); MIDI.init();
             setTimeout(() => document.getElementById('btn-c4').click(), 500);
+
+            // Fase 5: rastro del reencuadre. Muchos mensajes de debug, como es costumbre del repo.
+            SysLog('LAYOUT', 'Reencuadre Fase 5 aplicado: teclado como fondo, resto como overlay.');
+            SysLog('LAYOUT', 'Zona de notas que caen dibujada como reservada (vacía) sobre el teclado.');
+            SysLog('LAYOUT', 'Ranuras de característica reservadas: Escala (sobre el teclado), Progresiones, Rueda de quintas.');
+            SysLog('LAYOUT', 'Consola de logs colapsada por defecto detrás de su botón.');
+            SysLog('LAYOUT', 'Panel "Fijar Acordes" oculto a propósito (intacto en el código, UI.lockChord sin tocar).');
+            SysLog('LAYOUT', 'Ajustes del Motor reubicados como overlay avanzado, visibles y alcanzables.');
         };
     </script>
 </body>
