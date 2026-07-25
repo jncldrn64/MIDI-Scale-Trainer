@@ -228,7 +228,11 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   coloreo del teclado que ya existe queda intacto. Motor intacto.
 - Incremento 5.2, panel de pestañas y menú colocador: el chrome permanente tipo barra de macOS,
   desde donde se abre, cierra, restaura y coloca cualquier widget en una ranura, y donde viven las
-  opciones y el log. El log no tiene terminal propia, solo se descarga o se copia.
+  opciones y el log. El log no tiene terminal propia, solo se descarga o se copia. Además el 5.2 le
+  da hogar en ese menú, o en las opciones del motor, a los controles que hoy quedan parqueados: el
+  botón "Centrar en Split", que se oculta desde ya, y el panel "Fijar Acordes", que ya estaba
+  oculto en el código y se recupera desde ahí. Estos controles no se borran, solo esperan su lugar
+  en el menú.
 - Incremento 5.3, sistema de widgets: mover tipo picture in picture, opacidad, apagar, reset a
   posición por defecto y persistir; el cap de tres ranuras para los que compiten; el readout de la
   salida del motor se vuelve el primer widget de sistema en una ranura, el caso de prueba. El
