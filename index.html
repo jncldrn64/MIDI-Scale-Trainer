@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.24 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.27 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -149,7 +149,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.24</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.27</h1>
             <div class="credits">Desarrollado con asistencia de IA</div>
         </div>
 
@@ -584,15 +584,21 @@
                         ? MathEngine.getRomanNumeral({ rootPC: rel.targetPC, type: 'M', template: CHORD_TEMPLATES.M }, State.universe.root, State.universe.type)
                         : null;
 
-                    // Decisión del log (2026-07-25): la relación y el numeral van al log, no
-                    // solo a la UI. classifyChordRelation dejaba de registrar; ahora sí. Se
-                    // loguea al cambiar el análisis, para no repetir la misma línea por nota.
-                    const sig = `${numeral}|${rel.relation}|${rel.targetPC}`;
+                    // Fase 4: la función tonal es salida del motor. Se calcula y se guarda en
+                    // el buffer (State.harmony.function) para que la Fase 5 la muestre después.
+                    // Acá NO se muestra en ningún panel: solo buffer y log.
+                    const funcion = MathEngine.getTonalFunction(c, State.universe.root, State.universe.type);
+                    State.harmony.function = funcion;
+
+                    // Decisión del log (2026-07-25): la relación, el numeral y la función van
+                    // al log, no solo al buffer. Se loguea al cambiar el análisis, para no
+                    // repetir la misma línea por nota.
+                    const sig = `${numeral}|${rel.relation}|${rel.targetPC}|${funcion}`;
                     if (sig !== UI._lastAnalysisSig) {
                         UI._lastAnalysisSig = sig;
                         const objetivo = (rel.relation === 'secondary_dominant' && targetNumeral)
                             ? `${targetNumeral} (${getNoteStr(rel.targetPC).name})` : 'ninguno';
-                        SysLog('MATH', `Análisis: ${getNoteStr(c.rootPC).name}${c.type==='M'?'':c.type} = ${numeral} · relación ${rel.relation} · objetivo ${objetivo}`);
+                        SysLog('MATH', `Análisis: ${getNoteStr(c.rootPC).name}${c.type==='M'?'':c.type} = ${numeral} · relación ${rel.relation} · objetivo ${objetivo} · función ${funcion}`);
                     }
 
                     const relEl = document.getElementById('chord-relation');
@@ -610,6 +616,7 @@
                     document.getElementById('chord-display').innerText = '-';
                     document.getElementById('chord-inversion').innerText = '-';
                     document.getElementById('chord-relation').innerText = '-';
+                    State.harmony.function = null;
                     UI._lastAnalysisSig = null;
                 }
             },

@@ -96,6 +96,13 @@ function runChordCase(fx, universePitches, c) {
         assert.strictEqual(tnum, tnum.toUpperCase(),
             `el objetivo de la dominante secundaria debe ir en mayúscula, obtuve '${tnum}'`);
     }
+
+    // Fase 4: función tonal del acorde, derivada contra la tonalidad de la fixture.
+    if ('function' in exp) {
+        const fn = Engine.getTonalFunction(chord, fx.universe.root, fx.universe.type);
+        assert.strictEqual(fn, exp.function,
+            `function: esperaba '${exp.function}', obtuve '${fn}'`);
+    }
 }
 
 function runMelodyCase(fx, universePitches, c) {
@@ -129,6 +136,20 @@ function runRomanCase(fx, c) {
         `numeral: esperaba '${c.expected.numeral}', obtuve '${num}'`);
 }
 
+// Fase 4: función tonal directa. Arma el acorde por rootPC y tipo, y afirma la función que
+// getTonalFunction deriva contra la tonalidad (propia del caso o de la fixture).
+function runFunctionCase(fx, c) {
+    const uni = c.universe || fx.universe;
+    const chord = {
+        rootPC: c.chord.rootPC,
+        type: c.chord.type,
+        template: Engine.CHORD_TEMPLATES[c.chord.type]
+    };
+    const fn = Engine.getTonalFunction(chord, uni.root, uni.type);
+    assert.strictEqual(fn, c.expected.function,
+        `function: esperaba '${c.expected.function}', obtuve '${fn}'`);
+}
+
 function runPassingCase(fx, universePitches, c) {
     const status = Engine.applyPassingTone(c.status, c.durationMs);
     assert.strictEqual(status, c.expected.status,
@@ -148,6 +169,7 @@ function runFixture(file) {
             else if (c.kind === 'melody') runMelodyCase(fx, universePitches, c);
             else if (c.kind === 'passing') runPassingCase(fx, universePitches, c);
             else if (c.kind === 'roman') runRomanCase(fx, c);
+            else if (c.kind === 'function') runFunctionCase(fx, c);
             else throw new Error(`kind desconocido: '${c.kind}'`);
         });
         const last = failures.length && failures[failures.length - 1].label === c.label;

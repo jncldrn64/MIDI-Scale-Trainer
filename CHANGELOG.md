@@ -2,6 +2,19 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.27 — 2026-07-25
+
+### Added
+
+- `src/engine.js`: `getTonalFunction(chordObj, universeRoot, universeType)`, función pura que deriva la función tonal por índice de grado (Tónica I/iii/vi, Subdominante ii/IV, Dominante V/vii°), así que V es dominante en cualquier tonalidad mayor. Nada de nombres de nota ni de tono en la lógica. La menor devuelve `por_definir` (la teoría escrita cubre solo la agrupación mayor) y un acorde no diatónico devuelve `no_diatonica`, sin función forzada.
+- `tests/fixtures/grados-romanos.json`: casos `function` para cada grado diatónico mayor, una segunda tonalidad (el mismo Sol Mayor es I en Sol y V en Do), un acorde no diatónico y un caso menor. `tests/run.js` suma el tipo `function` y afirma `expected.function` en los casos de acorde. El conteo sube de 30 a 41.
+- `tests/fixtures/oda-a-la-alegria.json`: función esperada en los casos de acorde (Sol = dominante, Re7 = no_diatonica).
+
+### Changed
+
+- `index.html`: la función tonal se calcula en el análisis del acorde, se guarda en el buffer (`State.harmony.function`) y se suma a la línea de log MATH ("· función <valor>"). Sin display: no cambia ningún panel; la función queda en el buffer para que la Fase 5 la muestre después. Versión mostrada de V11.24 a V11.27, cerrando el desfase acumulado.
+- `docs/ROADMAP.md`: se cierran dos fases con la regla de que el PR de código que completa una fase la cierra. La Fase 4 pasa a `cerrada (2026-07-25)` con nota de cierre (función calculada, bufferada y logueada; display parqueado en la Fase 5). La Fase 3, hecha y validada en su PR pero con el Estado todavía en `pendiente` porque ese PR no tocó el ROADMAP, pasa también a `cerrada (2026-07-25)`.
+
 ## v11.26 — 2026-07-25
 
 ### Changed

@@ -202,10 +202,35 @@
         return universePitchesSet.has((target + 4) % 12) && universePitchesSet.has((target + 7) % 12);
     }
 
-    // El ROADMAP habla de MathEngine.getRomanNumeral; se cuelga acá además de exportarse
-    // suelto, para las dos formas de llamarlo.
+    // Función tonal del acorde en la tonalidad activa (Fase 4). Salida del motor, no
+    // característica: el buffer la consume, ningún panel la hardcodea. Deriva por índice de
+    // grado vía scaleDegreesOrdered, así que V es dominante en cualquier tonalidad mayor; no
+    // hay nombres de nota ni de tono en la lógica. La agrupación por grado es la teoría fija
+    // escrita en el Track paralelo del ROADMAP, no un hardcode de tono:
+    //   Tónica: I, iii, vi (índices 0, 2, 5)
+    //   Subdominante: ii, IV (índices 1, 3)
+    //   Dominante: V, vii° (índices 4, 6)
+    // La menor todavía no tiene teoría escrita: devuelve 'por_definir', no se inventa. Un
+    // acorde no diatónico no recibe función diatónica ('no_diatonica'): su carácter lo da la
+    // relación de la Fase 3, no una función forzada.
+    const TONAL_FUNCTION_BY_DEGREE = {
+        0: 'tonica', 2: 'tonica', 5: 'tonica',
+        1: 'subdominante', 3: 'subdominante',
+        4: 'dominante', 6: 'dominante'
+    };
+    function getTonalFunction(chordObj, universeRoot, universeType) {
+        if (universeType !== 'major') return 'por_definir';
+        const pitches = scalePitches(universeRoot, universeType);
+        if (!MathEngine.isDiatonic(chordObj, pitches)) return 'no_diatonica';
+        const idx = scaleDegreesOrdered(universeRoot, universeType).indexOf(chordObj.rootPC);
+        return TONAL_FUNCTION_BY_DEGREE[idx] || 'por_definir';
+    }
+
+    // El ROADMAP habla de MathEngine.getRomanNumeral; se cuelgan acá además de exportarse
+    // sueltos, para las dos formas de llamarlos.
     MathEngine.getRomanNumeral = getRomanNumeral;
     MathEngine.isSecondaryDominantLeadingTone = isSecondaryDominantLeadingTone;
+    MathEngine.getTonalFunction = getTonalFunction;
 
     return {
         SCALES,
@@ -217,6 +242,7 @@
         applyPassingTone,
         getRomanNumeral,
         isSecondaryDominantLeadingTone,
+        getTonalFunction,
         scaleDegreesOrdered,
         PASSING_TONE_MS
     };
