@@ -594,6 +594,56 @@ del cap.
 
 ---
 
+## 2026-07-26 — Una pestaña por widget: los controles viven en la pestaña, arrastrar es la única acción directa sobre la caja
+
+**Contexto:** faltaba resolver dónde viven los controles de un widget. Dos caminos. Una barrita
+de título sobre cada caja, con sus opciones ahí. O la barra de pestañas que el modelo ya preveía,
+una pestaña por widget, como un navegador. Y una pregunta atada: si el control de un widget es su
+pestaña y lo cerrás, desde dónde lo restaurás, si su pestaña ya no está.
+
+**Decisión:** el modelo de pestaña por widget. Cinco puntos.
+
+1. Cada widget que se coloca, lo ponga el usuario o un entrenamiento, abre su propia pestaña en la
+   barra tipo macOS, como una pestaña de navegador. Una pestaña por widget. Refuerza la categoría
+   única por origen: un widget de entrenamiento abre pestaña igual que uno que ponés vos, sin clase
+   de fábrica aparte.
+
+2. Los controles de un widget viven en el menú que despliega su pestaña. Nada de chrome sobre la
+   caja. El fondo y las cajas quedan limpios, que es lo que protege las notas del teclado que están
+   detrás.
+
+3. La única acción directa sobre la caja es moverla con el mouse, arrastrando. Todo lo demás,
+   opacidad, apagar, cambiar de vista como la escala de lineal a rueda, sale de la pestaña, no de
+   la caja.
+
+4. La barra tiene dos cosas distintas, como un navegador. Una pestaña por cada widget abierto. Y un
+   menú colocador que lista todos, abiertos y cerrados, para traer de vuelta uno oculto. Cerrar un
+   widget se lleva su pestaña, así que restaurarlo es desde el colocador, no desde la pestaña que
+   ya no existe. Es pestaña abierta contra nueva pestaña.
+
+5. Los widgets de sistema, subtítulos, feedback y guía, también abren pestaña, porque también se
+   mueven, opacidad y se cierran. Uniforme con el resto. La barra llega hasta seis pestañas más los
+   menús globales, como un navegador con seis pestañas, manejable.
+
+**Razón:** un solo lugar y una sola forma de encontrar los controles de cualquier widget, su
+pestaña, sin cazar un engranaje distinto en cada caja. Un widget a baja opacidad o medio salido de
+pantalla se controla igual, porque su pestaña está entera en la barra aunque la caja no se alcance.
+Y resuelve la pregunta del cierre sin vueltas.
+
+**Consecuencia:** desarrolla el "panel de pestañas" de la refinación del modelo del 2026-07-25, que
+hasta ahora solo alojaba las opciones globales y el log; ahora aloja además una pestaña por widget.
+Ubica el cambio de la escala de lineal a rueda en la pestaña de ese widget, no en la caja. Y deja
+una tensión anotada para cuando aparezca: hoy todos los widgets planeados son superficies de
+lectura, el readout, los subtítulos, el feedback, la guía, la escala mostrando notas, se miran y no
+se clickean por dentro, así que arrastrar la caja entera para moverla funciona sin conflicto. El
+día que una característica tenga contenido clickeable adentro, va a hacer falta una zona de agarre
+para distinguir mover de tocar, como la barra de título de una pestaña de navegador. No se decide
+acá; queda escrito que ahí aparece.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

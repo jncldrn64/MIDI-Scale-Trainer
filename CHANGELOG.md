@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.34 — 2026-07-26
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva que resuelve dónde viven los controles de un widget. Cada widget colocado, del usuario o de un entrenamiento, abre su propia pestaña en la barra tipo macOS, como un navegador; los controles del widget viven en el menú que despliega esa pestaña, y la única acción directa sobre la caja es moverla arrastrando. La barra tiene una pestaña por widget abierto más un menú colocador que lista todos y restaura los cerrados. Los widgets de sistema también abren pestaña. Queda anotada la tensión de que un widget con contenido clickeable a futuro necesitará una zona de agarre para separar mover de tocar.
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 5 detalla el modelo de pestañas. El incremento 5.2 deja escrito que cada widget colocado abre su propia pestaña y que los controles del widget viven en el menú de esa pestaña, con un menú colocador aparte que restaura los cerrados. El incremento 5.3 aclara que mover la caja arrastrando es la única acción directa sobre ella, y que opacidad, apagar y reset salen de la pestaña.
+
 ## v11.33 — 2026-07-25
 
 ### Fixed
