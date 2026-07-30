@@ -201,6 +201,15 @@ nota pintando lo que se toca, es una superficie de feedback de la que dependen l
 planeados, y se preserva en esta fase: no se rehace, no se difiere y no se apaga, porque apagarlo
 es una idea de backlog y no de esta fase. No se toca el motor.
 
+La animación es sutil y solo existe para dar feedback. No se busca el estilo de las interfaces de
+Apple, con transiciones largas y decorativas. Los cambios de estado son instantáneos, y las teclas
+del fondo no se mueven, no tiemblan ni rebotan: son la referencia estable contra la que el usuario
+lee. Esto aplica a todo lo que el sistema de widgets agregue, mover, opacidad y abrir o cerrar. Se
+escribe acá porque el incremento 5.3 introduce mover y opacidad, y sin regla escrita se agregan
+transiciones por costumbre. Es un requisito no funcional y su hogar definitivo es el documento de
+requisitos parqueado en "Deuda de método y documentación"; vive acá mientras ese documento no
+exista.
+
 **Terminología de pantalla.** La Fase 5 también corrige los nombres que ve el usuario, que son
 de display, no de motor. Primero, las etiquetas del botón de nomenclatura, hoy "Latina" y
 "Anglosajona", se reemplazan por etiquetas de forma: "Silábica" para Do-Re-Mi y "Alfabética"
@@ -245,7 +254,9 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   Motor que están "visibles y alcanzables" porque el autor los usa cuando una canción es muy rápida
   o muy lenta. El 5.2 puede darles hogar en un menú, pero tiene que seguir cumpliendo esa razón,
   así que los cuatro campos, acumulación, retención, error visual y split, quedan alcanzables sin
-  fricción mientras se toca, no enterrados a varios niveles de profundidad.
+  fricción mientras se toca, no enterrados a varios niveles de profundidad. Como techo de trabajo:
+  nada que alguien use mientras toca debería costar más de tres clics. El número es un techo
+  revisable y no un dogma; lo que no se negocia es que quien solo quiere tocar no pague fricción.
 - Incremento 5.3, sistema de widgets: mover la caja arrastrando con el mouse, que es la
   única acción directa sobre ella, y el resto desde la pestaña del widget, opacidad, apagar, reset
   a posición por defecto y persistir; el cap de tres ranuras para los que compiten; el readout de la
@@ -369,6 +380,12 @@ nombradas no dice nada, por eso depende de la función tonal.
 **Criterio de aceptación:** el motor expone en el buffer la secuencia de acordes detectada
 del estado, lista para que un panel la consuma.
 
+**Nota (2026-07-30): una capacidad vecina que no es esta fase.** La fase detecta la secuencia de
+acordes de lo que se toca en vivo. Queda pendiente, sin fase, un caso distinto: entregarle al motor
+una línea de acordes ajena, escrita o cargada, para que la descomponga y la explique. No es lo
+mismo que detectar en vivo, ni que el modo canción del backlog, que evalúa una melodía contra un
+MIDI cargado.
+
 **Bloquea:** Fase 9.
 
 **Bloqueada por:** Fase 4 (la función tonal).
@@ -413,6 +430,16 @@ rueda deriva del motor (`scalePitches`), no hardcodea nada. Queda abierto si ade
 calidades de acorde diatónicas (3 mayores, 3 menores, 1 disminuido): si las muestra, necesita
 la función tonal que expone la Fase 4, porque el motor no deriva calidad por grado hoy. La
 iluminación de posiciones es sutil.
+
+La rueda no son dos vistas sino tres acopladas que se mueven juntas: la rueda, la escala lineal y
+el teclado. Girar un paso de la rueda cambia una sola nota de la escala, y ese es el punto
+pedagógico, ver que las escalas vecinas se diferencian en una nota. La rueda muestra además el
+anillo de la menor relativa y los vecinos de acordes diatónicos. El cambio de estado es
+instantáneo, sin animación de giro. Queda como pregunta abierta si la rueda puede reemplazar al
+selector de escala como interfaz, dejando las escalas donde están, en el motor: sería cambiar el
+control por otro más expresivo, no mover lógica musical a la interfaz. Esto desarrolla el patrón de
+vistas sincronizadas de la regla 5 del ADR del 2026-07-24, no lo reemplaza: es la misma idea, con
+el detalle de qué se sincroniza con qué.
 
 **Criterio de aceptación:** por definir cuando se decida el contenido (solo notas de la
 escala, o también calidades).
@@ -466,6 +493,18 @@ prioridad, no porque la rueda la bloquee.
 - Entrenamiento de oído puro (dictado de intervalos, identificar un acorde solo de oído).
   El informe de campo ya marcó esto como el objetivo final, y el software actual no lo
   cubre.
+- Menor melódica como escala disponible, junto a los modos griegos y las pentatónicas ya
+  listados. Cobra sentido si el jazz entra como objetivo.
+- Calibración de tiempos por tapping. Hoy los cuatro campos del motor, acumulación, retención,
+  error visual y split, se ajustan a mano con números. La idea es fijarlos tocando una secuencia y
+  que el programa derive los valores de lo que midió. Arrastra dos cosas más: tempos, y que los
+  valores buenos probablemente dependan de la canción, lo que lo ata al modo canción de este mismo
+  backlog.
+- Reemplazar los emojis de la interfaz por SVG. Motivo técnico, no estético: un SVG se ve nítido a
+  cualquier tamaño y hereda el color del texto, así que acompaña el tema oscuro sin mantener dos
+  archivos. Es cosmético y no bloquea nada.
+- Lectura de partitura como vista futura. Está anotado para que sea una decisión y no un olvido:
+  se mencionó una vez, no está comprometido, y no tiene diseño ni alcance todavía.
 
 ---
 
@@ -476,7 +515,9 @@ infraestructura o teoría que todavía no existe. No se construyen hasta que su 
 
 - Entrenamientos como datos y un posible taller. Un formato de datos (JSON) para definir
   entrenamientos, que a futuro abriría un taller donde se creen entrenamientos, y hasta widgets,
-  sin tocar el código base. Bloqueada por: el sistema de widgets y ranuras, que el ADR reserva
+  sin tocar el código base. Un entrenamiento puede además empaquetar sus propios archivos MIDI,
+  uno o varios según el tipo de entrenamiento, junto con su definición en datos y el widget que
+  pueda traer. Bloqueada por: el sistema de widgets y ranuras, que el ADR reserva
   para después de la segunda característica, y un motor de notas que caen que hoy no existe.
 - La guía de interfaz reactiva a lo abierto. La guía no solo explica el entrenamiento activo,
   también las opciones de cada widget abierto en las ranuras, lo abra el usuario o el
@@ -610,6 +651,13 @@ El documento también debería incluir los lineamientos de qué puede usar o alt
 y qué puede usar o alterar un widget, y qué determina que algo sea uno, otro o ninguno. Eso se cruza
 con la nota de "contrato de salida" ya parqueada en la Fase 9, así que hay que atarlos a propósito,
 para no terminar con dos documentos que dicen lo mismo con sentidos distintos.
+
+Ese documento tiene que dejar escrito además por qué el layout se puede rearmar. La jerarquía de lo
+que el usuario necesita mirar cambia a medida que aprende: lo que hoy es lo primero que busca,
+cuando ya lo entiende pasa a segundo plano y libera atención para otra cosa. Por eso la app no fija
+una disposición correcta para siempre sino una por defecto que ya funciona y se puede rearmar. El
+mecanismo está construido en el modelo de widgets; el motivo pedagógico no está escrito en ninguna
+parte, y es de los primeros que se pierde cuando se comprime una conversación.
 
 Queda abierto si esto vive en un `README.md` nuevo o en un documento aparte dentro de `docs/`. El
 criterio para decidirlo es quién lo lee: el lector que más lo necesita es un modelo que grepea texto

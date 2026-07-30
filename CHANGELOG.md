@@ -2,6 +2,18 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.37 — 2026-07-30
+
+### Added
+
+- `docs/ROADMAP.md`: la Fase 10 enriquece la especificación de la rueda de quintas. Son tres vistas acopladas, rueda, escala lineal y teclado, moviéndose juntas, donde girar un paso cambia una sola nota; suma el anillo de la menor relativa y los vecinos diatónicos; el cambio es instantáneo; y queda abierto si la rueda reemplaza al selector de escala como interfaz. Desarrolla el patrón de vistas sincronizadas de la regla 5 del ADR del 2026-07-24.
+- `docs/ROADMAP.md`: la Fase 5 gana la regla de animación en su Alcance. Sutil y solo para dar feedback, cambios instantáneos, y las teclas del fondo no se mueven. Se escribe ahora porque el incremento 5.3 introduce mover y opacidad.
+- `docs/ROADMAP.md`: el incremento 5.2 suma el techo de tres clics para lo que se usa mientras se toca, como número revisable que vuelve verificable la restricción de fricción que ya estaba.
+- `docs/ROADMAP.md`: la Fase 8 registra que analizar una línea de acordes ajena es una capacidad distinta de detectar en vivo y del modo canción, y que hoy no tiene fase.
+- `docs/ROADMAP.md`: la dirección de entrenamientos como datos suma que un entrenamiento puede empaquetar sus propios archivos MIDI.
+- `docs/ROADMAP.md`: cuatro ítems nuevos en el BACKLOG. Menor melódica; calibración de tiempos por tapping, con sus colas de tempos y de valores por canción; reemplazar los emojis por SVG por nitidez y herencia de color; y lectura de partitura, anotada como mención sin compromiso para que sea decisión y no olvido.
+- `docs/ROADMAP.md`: el punto del documento de requisitos suma el motivo pedagógico de que el layout se pueda rearmar, que la jerarquía de atención del usuario cambia mientras aprende.
+
 ## v11.36 — 2026-07-30
 
 ### Added
