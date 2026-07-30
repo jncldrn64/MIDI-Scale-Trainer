@@ -693,6 +693,88 @@ vuelve a abrir.
 
 ---
 
+## 2026-07-30 — Presupuesto de superposición: las notas conservan todo el alto, los widgets cubren hasta tres octavos
+
+**Contexto:** faltaba el número. Estaba escrito que el fondo se reserva para las notas y que la
+ranura es un límite y no un espacio, pero nada decía cuánto de ese aire puede taparlo un widget.
+Con eso, tres widgets grandes podían dejar la reserva en nada sin violar ninguna regla escrita.
+
+**Decisión:** la zona de las notas es toda la altura entre el borde inferior de la barra de menú y
+el borde superior del piano. No se parte ni se le resta: es la altura completa.
+
+Los widgets no ocupan una banda que le quite alto a esa zona. Flotan encima, en una capa superior,
+y las notas pasan por detrás. Eso es lo que significa que se muevan como una imagen dentro de otra.
+
+La cobertura sí tiene tope: los widgets no tapan más de tres octavos del alto de esa zona. Ese es
+el presupuesto de superposición, y es el número que faltaba. En ancho, cada widget no pasa de dos
+octavos del ancho de la pantalla, así que los tres suman como máximo seis octavos y quedan dos
+octavos de aire repartidos entre ellos y los bordes. Sirve para dos cosas: impide widgets gigantes,
+y deja aire lateral para que se lean como piezas separadas y no como una sola barra.
+
+Cuando las notas importan, lo único que se ajusta es la opacidad de los widgets. No se corren ni se
+encogen solos.
+
+La posición es libre y la cobertura es lo acotado. Un widget se arrastra a donde el usuario quiera
+dentro de la pantalla; lo que no se negocia es el tope de cobertura. El motivo es funcional y no
+estético: si una canción usa solo un registro angosto del teclado, hay que poder despejar esa
+franja moviendo el widget que estorba, o directamente no abrirlo. Intercambiar dos widgets de lugar
+no es una operación aparte: con posición libre, es mover los dos.
+
+Los seis paneles se mueven, los tres que compiten por el cap y los tres de sistema, y los puede
+mover tanto el usuario como un entrenamiento cargado. Posiciones por defecto: los subtítulos del
+entrenamiento centrados, y el feedback del sistema centrado debajo de ellos.
+
+**Razón:** sin un tope de cobertura, la reserva del fondo era una intención sin número y cualquier
+layout la podía anular. Con el tope, la regla 3 del ADR del 2026-07-24 queda intacta y además
+verificable.
+
+**Consecuencia:** refina la entrada del 2026-07-25 sobre la ranura como límite y no como espacio.
+Sigue sin haber cajas dibujadas ni posiciones fijas, pero ahora hay un presupuesto: libre en
+posición, acotado en cobertura. Y queda escrito que el alto se le está reservando a un motor de
+notas que todavía no existe, que es una apuesta consciente.
+
+**Estado:** vigente.
+
+---
+
+## 2026-07-30 — Un solo menú de widgets en vez de una pestaña por widget, y estado por instancia
+
+**Contexto:** la entrada del 2026-07-26 resolvió que cada widget colocado abriera su propia pestaña
+en la barra. Al mirar dos cosas juntas, esa solución se cae. La regla 5 del ADR del 2026-07-24 ya
+permite que una misma característica ocupe hasta las tres ranuras a la vez, así que puede haber tres
+ruedas de quintas abiertas y "una pestaña por widget" se vuelve "una pestaña por instancia", con
+tres pestañas que dicen lo mismo. Y la regla 6 abre la app con la escala, el feedback, los
+subtítulos y la guía, así que la barra arrancaría con cuatro o cinco pestañas antes de que el
+usuario toque nada, lo contrario de presentarle lo mínimo.
+
+**Decisión:** la barra tiene un único menú de widgets. Desde ahí se coloca, se restaura uno cerrado,
+y se accede a los controles de cada instancia colocada. No hay una pestaña por widget.
+
+Los controles siguen fuera de la caja. La caja no lleva chrome encima, y arrastrar sigue siendo la
+única acción directa sobre ella. Eso no cambia.
+
+El menú lista instancias, no tipos. Si hay tres ruedas de quintas colocadas, aparecen las tres por
+separado. Cada instancia guarda su propio estado: ubicación, vista elegida, opacidad y sus
+opciones. El reset es por instancia, no por tipo. Dos ruedas comparten código y no comparten estado.
+
+Cuesta un nivel más de profundidad que una pestaña, y entra dentro del techo de tres clics que la
+Fase 5 ya fija.
+
+**Razón:** un solo lugar donde están los controles de todo, que no se multiplica cuando se abren
+varias instancias de lo mismo, y que deja la barra igual de corta con seis widgets que con uno. Es
+también el patrón del HUD configurable que inspiró el modelo: lo esencial visible por defecto, y lo
+demás se agrega entrando a un menú, no teniéndolo siempre delante.
+
+**Consecuencia:** supera la entrada del 2026-07-26 en dos puntos, el de la pestaña por widget y el
+del menú colocador aparte, que ahora son el mismo menú. Todo lo demás de esa entrada sigue vigente:
+controles fuera de la caja, arrastrar como única acción directa, y la tensión anotada de que un
+widget con contenido clickeable necesitará una zona de agarre. Mueve además trabajo de incremento:
+el menú de widgets se construye en el 5.3, con el sistema de widgets que va a listar, no en el 5.2.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
