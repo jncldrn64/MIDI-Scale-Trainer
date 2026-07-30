@@ -644,6 +644,55 @@ acá; queda escrito que ahí aparece.
 
 ---
 
+## 2026-07-30 — Arquitectura destino: el motor como API y los widgets como única superficie que crece
+
+**Contexto:** el repo documenta el estado actual en `ARCHITECTURE.md` y el porqué de cada decisión
+acá, pero en ningún archivo está escrito hacia dónde va la arquitectura, ni por qué existe el
+modelo de widgets. Eso vivía solo en conversación, que es donde se pierde.
+
+**Decisión:** se fija la arquitectura destino, que es el norte al que apuntan las fases, no una
+fase en sí.
+
+El destino es que el motor quede terminado y estable, y que a partir de ahí lo único que crezca
+sean widgets que lo consumen como una API. Agregar una característica nueva no debe requerir tocar
+el motor ni rehacer la capa visual. Si para sumar algo hay que abrir `src/engine.js`, o hay que
+reacomodar la pantalla entera, el destino no se alcanzó todavía.
+
+Los widgets de la primera serie funcionan además como referencia. Son dos ejemplos visuales que
+fijan cómo se consume el motor y cómo se comporta un widget, para que los que vengan después se
+escriban copiando el patrón en vez de inventándolo cada vez. Por eso importa que esos dos primeros
+queden bien: no son solo dos características, son la plantilla de todas las siguientes.
+
+Esa extensibilidad depende de un contrato explícito, y el contrato tiene tres partes: qué puede
+leer un widget, qué puede escribir hacia afuera, y qué no puede hacer nunca, empezando por
+recalcular lo que el motor ya deriva. El contrato todavía no está escrito. La pregunta abierta ya
+está registrada como "Nota: pregunta abierta, el contrato de salida" en la Fase 9 del ROADMAP, y
+ese es el lugar donde se resuelve, con la primera característica real en la mano.
+
+La misma regla vale para los entrenamientos. Un entrenamiento es datos. Puede traer o no un
+widget, y puede proponer cambios de disposición pidiendo permiso, pero no es una vía para
+modificar el motor. Un entrenamiento que necesite que el motor calcule algo nuevo es un pedido al
+motor, no una excepción del entrenamiento.
+
+La meta lejana que ordena todo esto es concreta: cargar archivos MIDI, y entrenamientos del
+sistema o propios definidos como datos, sin que ninguno de los dos obligue a abrir el motor.
+
+**Razón:** sin esta arquitectura destino escrita, cada sesión rediscute por qué existe el modelo de
+widgets, y el modelo se lee como una preferencia estética en vez de lo que es, la condición para
+que la app crezca sin reescribirse. Es también la respuesta concreta a la V3.0 que el ADR del
+2026-07-24 cita como riesgo, crecer a miles de líneas de features apiladas sin modelo y tener que
+reescribir todo de una.
+
+**Consecuencia:** refuerza la regla 4 del ADR del 2026-07-24, el motor como única fuente de verdad
+musical, dándole un objetivo además de una prohibición. No cambia ninguna fase ni ningún estado. Y
+deja explícito que el contrato pendiente de la Fase 9 no es un detalle tardío, es la pieza que
+habilita el destino: sin contrato, cada widget nuevo negocia sus permisos de cero y el motor se
+vuelve a abrir.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
