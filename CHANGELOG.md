@@ -2,6 +2,19 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.36 — 2026-07-30
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva con la arquitectura destino. El motor queda terminado y estable, y lo único que crece son widgets que lo consumen como API, sin abrir el motor ni rehacer lo visual; los widgets de la primera serie sirven de referencia del patrón; la extensibilidad depende del contrato que la Fase 9 tiene pendiente; los entrenamientos son datos y no una vía para modificar el motor; y la meta lejana es cargar MIDI y entrenamientos propios sin tocar el motor. Estaba solo en conversación y no en ningún archivo.
+- `docs/ROADMAP.md`: la Fase 5 gana una pregunta abierta sobre la reserva del fondo para las notas que caen. El límite de tres ranuras se justifica hoy por esa reserva, pero la característica no tiene motor ni fase y el incremento 5.1 dejó esa zona ocupando la mayor parte de la pantalla vacía. Se enuncian tres salidas posibles sin elegir ninguna y se deja dicho que conviene decidirlo antes del incremento 5.3, que es el que implementa el cap.
+
+### Changed
+
+- `docs/ROADMAP.md`: el incremento 5.2 deja escrita la restricción de que los cuatro campos de Ajustes del Motor sigan alcanzables sin fricción si se mudan a un menú, porque el código explica que están visibles a propósito.
+- `docs/ROADMAP.md`: el incremento 5.3 deja escrito que el widget de escala absorbe la vista lineal que ya existe y funciona en la barra de universo, en vez de construirla de nuevo.
+- `docs/ROADMAP.md`: la Terminología de pantalla suma la distinción entre Do fijo y Do móvil, y aclara que la app usa Do fijo, precisión que se había identificado antes y no estaba escrita.
+
 ## v11.35 — 2026-07-30
 
 ### Added

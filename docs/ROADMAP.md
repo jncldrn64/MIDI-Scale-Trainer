@@ -206,7 +206,12 @@ de display, no de motor. Primero, las etiquetas del botón de nomenclatura, hoy 
 "Anglosajona", se reemplazan por etiquetas de forma: "Silábica" para Do-Re-Mi y "Alfabética"
 para C-D-E. Do-Re-Mi es solfeo, de origen italiano medieval, no latinoamericano, y las letras
 no son propiamente anglosajonas; nombrarlas por su forma evita atribuir a una cultura algo que
-es de notación. Junto con eso, se define el valor por defecto de la nomenclatura, se persiste la
+es de notación. Falta una distinción que hasta ahora no había quedado escrita en ningún documento
+del repo, aunque ya se había identificado: el solfeo puede usarse con Do fijo, donde Do es siempre
+la misma altura, o con Do móvil, donde Do es la tónica de la escala activa y se corre con ella.
+Esta app usa Do fijo. Por eso nombrar la opción por su forma, silábica frente a alfabética, es
+correcto pero incompleto si alguien asume Do móvil: la etiqueta dice cómo se escriben las notas,
+no si la referencia se mueve. Junto con eso, se define el valor por defecto de la nomenclatura, se persiste la
 elección por `localStorage` con el mismo mecanismo que la persistencia de layout, y se deja el
 botón alcanzable en los menús nuevos. Segundo, la etiqueta "Intercambio Modal" que hoy muestra
 el panel de Análisis sale del caso else de `classifyChordRelation`, el fallback de "no diatónico
@@ -236,12 +241,21 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   da hogar en ese menú, o en las opciones del motor, a los controles que hoy quedan parqueados: el
   botón "Centrar en Split", que se oculta desde ya, y el panel "Fijar Acordes", que ya estaba
   oculto en el código y se recupera desde ahí. Estos controles no se borran, solo esperan su lugar
-  en el menú.
+  en el menú. Con una restricción verificada: el comentario de `index.html` dice de los Ajustes del
+  Motor que están "visibles y alcanzables" porque el autor los usa cuando una canción es muy rápida
+  o muy lenta. El 5.2 puede darles hogar en un menú, pero tiene que seguir cumpliendo esa razón,
+  así que los cuatro campos, acumulación, retención, error visual y split, quedan alcanzables sin
+  fricción mientras se toca, no enterrados a varios niveles de profundidad.
 - Incremento 5.3, sistema de widgets: mover la caja arrastrando con el mouse, que es la
   única acción directa sobre ella, y el resto desde la pestaña del widget, opacidad, apagar, reset
   a posición por defecto y persistir; el cap de tres ranuras para los que compiten; el readout de la
   salida del motor se vuelve el primer widget de sistema en una ranura, el caso de prueba. El
-  feedback suma los avisos simples del sistema, ranuras completas y restaurar widget oculto.
+  feedback suma los avisos simples del sistema, ranuras completas y restaurar widget oculto. El
+  widget de escala no se construye desde cero: la vista lineal ya existe y funciona hoy dentro de
+  la barra de universo, es el elemento identificado en el código como la vista de fórmula, y el
+  widget de escala la absorbe. Reescribirla de nuevo es un error a evitar. Este apunte existe
+  justamente porque nada en el repo nombraba qué era esa vista, y por eso se la pasaba por alto al
+  planear.
 - Incremento 5.4, nomenclatura por forma: las etiquetas del botón de nomenclatura pasan a
   "Silábica" y "Alfabética", con valor por defecto, persistencia por `localStorage` y el botón
   alcanzable.
@@ -264,6 +278,26 @@ activas, acorde detectado y análisis, se presentan en el readout, un widget de 
 una ranura, se mueve, opacidad y se cierra, mientras el dato sigue siempre en el buffer y en el
 log. Presentar no hardcodea: el widget lee el buffer, no recalcula. El teclado sigue consumiendo
 el buffer aparte, coloreando sus teclas, como cualquier otro consumidor.
+
+**Pregunta abierta: la reserva del fondo para las notas que caen.** El ADR del 2026-07-24 justifica
+el límite de tres ranuras porque el aire superior del fondo está reservado para las notas que caen,
+que son fondo y no negocian espacio. O sea la restricción más cargada del modelo de widgets se
+apoya entera en esa reserva. El problema es que hoy esa característica no tiene motor, no aparece
+en ninguna fase del roadmap, y el incremento 5.1 hizo que la zona reservada ocupe la mayor parte de
+la pantalla, permanentemente vacía. Un límite que protege algo que todavía no existe es un límite
+sin fundamento verificable.
+
+Hay además dos cosas que se confunden y conviene separar antes de decidir. Mostrar notas que bajan
+hacia el teclado como ayuda de lectura, al estilo Synthesia, no es lo mismo que un juego de ritmo
+con puntaje por precisión temporal. Lo segundo es otro eje de producto: mide tiempo y reflejos, no
+comprensión armónica, que es lo que esta app entrena.
+
+Las salidas posibles son tres, y ninguna está elegida. La reserva queda como está y las notas que
+caen se convierten en una fase con fecha, con lo que el cap recupera su fundamento. La reserva se
+reduce a una franja y el cap de tres se justifica por otra razón, que habría que escribir. O la
+reserva se levanta hasta que exista el motor de notas que caen, y el cap se justifica de nuevo
+mientras tanto. Conviene decidirlo antes del incremento 5.3, porque el 5.3 es el que implementa el
+cap, y hoy el cap no tiene un fundamento sostenible.
 
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, el panel de pestañas existe como chrome
