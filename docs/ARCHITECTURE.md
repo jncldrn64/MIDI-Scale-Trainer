@@ -123,20 +123,49 @@ Para los grados romanos esto importa: el numeral depende cien por ciento de qué
 quedó como raíz. Ahora la raíz sigue al bajo, la apuesta más probable, pero cuando la
 ambigüedad persiste el numeral la hereda.
 
-## 5. Evaluación armónica: seis reglas sin jerarquía escrita
+## 5. Evaluación armónica: jerarquía escrita y verificada
 
-Hoy conviven seis reglas y ninguna tiene un orden documentado:
+La jerarquía ya no es un accidente del orden del código: quedó fijada en la entrada del
+2026-07-23 de `DECISIONS.md` y está implementada en `evaluateMelodyStatus` más
+`applyPassingTone` (`src/engine.js`). La primera regla que matchea gana:
 
-1. Nota dentro de la escala activa (`inScale`).
-2. Nota dentro del acorde activo (`inChord`).
-3. Sensible en escala menor (`isSensible`).
-4. Paso cromático por duración: menos de 180ms al soltar.
-5. Dominante secundaria: solo actualiza la UI, no afecta `evaluateMelody`.
-6. Intercambio modal: fallback genérico cuando nada más aplica, también solo visual.
+1. El pitch class está en la escala activa o en el acorde que suena → `good`.
+2. Es el tono conductor de una dominante secundaria hacia un grado de tríada mayor
+   (`isSecondaryDominantLeadingTone`) → `good`, aunque el acorde no suene.
+3. Es la sensible en universo menor, `(root + 11) % 12` → `tension`.
+4. Al soltar, quedó no-`good` y duró menos de 180 ms → `passing`.
+5. Nada de lo anterior → `bad`.
 
-El orden en que se evalúan es un accidente del orden del código, no una decisión escrita.
-Antes de agregar grados romanos hay que fijar por escrito esa prioridad (ver `ROADMAP.md`,
-Fase 2), para que sumar una regla nueva no dependa de adivinar contra qué compite.
+La afirmación vieja de esta sección, que la dominante secundaria solo actualizaba la
+interfaz, dejó de ser cierta: la Fase 3 la conectó a la evaluación, y `evaluateMelodyStatus`
+devuelve `good` para su tono conductor. Verificado leyendo la función: el chequeo corre
+después de `inScale || inChord` y antes de la sensible.
+
+El intercambio modal sigue fuera de la evaluación de notas a propósito. Es una etiqueta de
+relación del acorde con el universo (`classifyChordRelation`), no un estado de nota.
+
+El umbral de 180 ms (`PASSING_TONE_MS`) está fijo en el código: no es uno de los cuatro
+ajustes que el usuario edita (acumulación, retención, error visual y split), y se calibró a
+mano contra Bad Apple. Límite conocido, decidido y no bug: una tensión de menos de 180 ms se
+colapsa en paso cromático, indistinguible de un error corto.
+
+## 5.1. La leyenda de colores: dos de contexto y cuatro de veredicto
+
+La interfaz pinta las teclas con seis categorías. Viven en `index.html` cerca de la línea
+230, como leyenda debajo del teclado, y mezclan dos cosas distintas que conviene no
+confundir.
+
+Dos son contexto, no veredicto. "Escala" (`#bae6fd`, símbolo `•`) pinta las notas del
+universo activo, y "Acorde" (`#f59e0b`, símbolo `♦`) pinta las del acorde detectado. Se
+pintan aunque el usuario no toque nada.
+
+Cuatro son el veredicto nota por nota y salen de la jerarquía de la sección anterior:
+"Correcto" (`#22c55e`, `✓`), "Tensión Legal" (`#f97316`, `!`), "Paso Cromático" (`#a855f7`,
+`~`) y "Error" (`#ef4444`, `✕`).
+
+La etiqueta "Tensión Legal" nombra un caso único, la sensible en universo menor, y no una
+familia de tensiones permitidas. El nombre promete más de lo que cubre; su renombre está
+anotado en la Terminología de pantalla de la Fase 5 (`ROADMAP.md`).
 
 ## 6. Gaps confirmados leyendo el código
 
