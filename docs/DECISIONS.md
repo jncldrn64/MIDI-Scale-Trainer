@@ -775,6 +775,40 @@ el menú de widgets se construye en el 5.3, con el sistema de widgets que va a l
 
 ---
 
+## 2026-07-30 — Estándar espacial de los widgets: franja de nacimiento, tamaño y separación uniformes
+
+**Contexto:** el presupuesto de superposición fijó cuánto pueden tapar los widgets, pero no dónde
+ni con qué forma. Con los overlays arriba por defecto y las notas naciendo arriba, una nota
+aparecería ya tapada, que es lo contrario de lo que se busca.
+
+**Decisión:** debajo de la barra de menús queda una franja de nacimiento que ningún widget ocupa,
+para que toda nota que cae sea visible cuando aparece. Los widgets tapan tramo medio, nunca el
+nacimiento.
+
+La oclusión parcial es una señal, no un defecto. Ver una nota y perderla detrás de un widget le
+dice al usuario que ahí viene algo puntual, y que si le importa, mueva el widget. Los widgets
+comparten el espacio con las notas de la forma menos intrusiva posible; no compiten por él.
+
+Tamaño y separación uniformes. Un widget nace con el mismo tamaño y la misma separación que los
+demás, aunque su contenido sea distinto. Es lo que hace que se lean como piezas de un mismo
+sistema, por proximidad y alineación, en vez de como recortes sueltos. Si un contenido no entra en
+ese molde, el problema es el contenido y no el molde. La rueda de quintas va a ser la primera
+prueba real de si el molde aguanta.
+
+La guía nace debajo del widget de la derecha. Ocupa más espacio del que le correspondería, y se
+acepta porque es temporal: existe mientras el usuario aprende los controles de cada widget.
+
+**Razón:** sin una regla de dónde, el presupuesto de cuánto no alcanza, y el atisbo de la nota
+queda librado a la suerte de dónde arrastró el usuario cada caja.
+
+**Consecuencia:** refina el presupuesto de superposición de la misma fecha. Las posiciones por
+defecto que dejó el incremento 5.1 no cumplen la franja de nacimiento, así que ajustarlas es
+trabajo del incremento en el que los widgets ganen posición, no una corrección de emergencia.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

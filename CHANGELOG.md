@@ -2,6 +2,24 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.41 — 2026-07-30
+
+### Fixed
+
+- `docs/ARCHITECTURE.md`: la sección 5 afirmaba que la jerarquía de evaluación no estaba escrita y que la dominante secundaria solo actualizaba la interfaz, dos cosas que dejaron de ser ciertas. La jerarquía quedó fijada en la entrada del 2026-07-23 de DECISIONS y está implementada, y la Fase 3 conectó la dominante secundaria a la evaluación: `evaluateMelodyStatus` devuelve correcto para su tono conductor, verificado leyendo la función. Se mantiene escrito que el intercambio modal queda fuera de la evaluación de notas a propósito, que el umbral de 180 ms está fijo en el código y no es uno de los cuatro ajustes editables, y el límite conocido de que una tensión corta se colapsa en paso cromático.
+
+### Added
+
+- `docs/ARCHITECTURE.md`: sección 5.1 nueva que documenta por primera vez la leyenda de colores de `index.html`, separando las dos categorías de contexto (Escala y Acorde, que se pintan sin tocar nada) de las cuatro de veredicto (Correcto, Tensión Legal, Paso Cromático y Error), con sus colores y símbolos reales, y anotando que "Tensión Legal" nombra un caso único y promete más de lo que cubre.
+- `docs/DECISIONS.md`: entrada nueva con el estándar espacial de los widgets. Franja de nacimiento debajo de la barra que ningún widget ocupa, para que toda nota sea visible al aparecer; la oclusión parcial como señal y no defecto; tamaño y separación uniformes para que los widgets se lean como piezas de un sistema; y la guía naciendo debajo del widget de la derecha, con más espacio del que le corresponde porque es temporal. Refina el presupuesto de superposición de la misma fecha; ajustar las posiciones del 5.1 es trabajo del incremento que dé posición a los widgets.
+- `docs/ROADMAP.md`: dos ítems de backlog. Metrónomo, porque el tiempo ya participa de la evaluación (el indulto de 180 ms y las cuatro ventanas del motor) y un tempo permitiría derivar esas ventanas en vez de fijarlas a mano. Y hundir el log cuando la barra crezca, devolviéndolo detrás de submenús como pide la decisión del 2026-07-25.
+
+### Changed
+
+- `docs/ROADMAP.md`: el incremento 5.2 deja escrita la desviación consciente del log. Queda visible como menú alcanzable porque la barra tiene un solo nivel y esconderlo sería inventar profundidad vacía; se corrige cuando la barra crezca.
+- `docs/ROADMAP.md`: la Terminología de pantalla suma dos renombres. "Universo" pasa a "Escala" en pantalla, con el nombre interno del motor (`universeType`, `universeRoot`, `universePitchesSet`) preservado a propósito, porque adentro nombra el conjunto de notas permitidas, que no siempre es una escala de siete notas. Y "Tensión Legal" entra a la lista por nombrar un caso único como si fuera una familia.
+- `docs/ROADMAP.md`: la Fase 5 deja escrito el reparto entre las dos superficies de salida del motor. El feedback muestra lo de nota por nota en paralelo con el coloreo de teclas; el readout muestra lo de nivel de acorde, el análisis de armonía y el intercambio modal incluidos. Es el rol que ya estaba implícito en el código.
+
 ## v11.40 — 2026-07-30
 
 ### Fixed

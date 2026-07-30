@@ -251,6 +251,19 @@ panel de Análisis, junto al numeral y la relación, de forma consistente con el
 para un acorde no diatónico la función dice "por definir" y la relación dice "no clasificado",
 sin que una contradiga a la otra.
 
+Cuarto, la etiqueta "Universo" que hoy encabeza el selector pasa a "Escala", que es lo que el
+usuario elige y la palabra que ya usa. Con una precisión que queda escrita para que una futura
+pasada de nomenclatura no la borre: el nombre interno del motor, `universeType`, `universeRoot` y
+`universePitchesSet`, se queda como está a propósito. "Universo" adentro nombra el conjunto de
+notas permitidas, que no siempre es una escala de siete notas: el backlog trata a las pentatónicas
+y al blues como universos propios justamente porque no lo son. Renombrar adentro aplanaría esa
+distinción. El renombre interno, si alguna vez se hace, es trabajo del punto de nomenclatura de
+"Deuda de método y documentación", con su propio PR y las fixtures en verde.
+
+Quinto, la etiqueta "Tensión Legal" de la leyenda entra a la lista de renombres. Nombra un caso
+único, la sensible en universo menor, y se lee como si nombrara una familia de tensiones
+permitidas. El nombre nuevo se decide junto con los otros de esta subsección.
+
 **Incrementos de entrega.** La fase se entrega en cinco incrementos, del más estructural al más
 cosmético, cada uno un PR de código que se puede ver y corroborar por separado.
 
@@ -273,6 +286,11 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   fricción mientras se toca, no enterrados a varios niveles de profundidad. Como techo de trabajo:
   nada que alguien use mientras toca debería costar más de tres clics. El número es un techo
   revisable y no un dogma; lo que no se negocia es que quien solo quiere tocar no pague fricción.
+  En esta entrega el log queda visible como menú u opción alcanzable, aunque la decisión del
+  2026-07-25 diga que la consola de debug se queda detrás de submenús, oculta para quien solo
+  toca. El motivo: hoy la barra tiene un solo nivel y no hay nada detrás de lo cual esconderlo,
+  así que esconderlo sería inventar profundidad vacía. Es una desviación consciente y temporal, no
+  un olvido, y se corrige cuando la barra crezca.
 - Incremento 5.3, sistema de widgets: mover la caja arrastrando con el mouse, que es la
   única acción directa sobre ella, y el resto desde el menú de widgets, opacidad, apagar, reset
   a posición por defecto y persistir; el cap de tres ranuras para los que compiten; el menú de
@@ -308,6 +326,12 @@ activas, acorde detectado y análisis, se presentan en el readout, un widget de 
 una ranura, se mueve, opacidad y se cierra, mientras el dato sigue siempre en el buffer y en el
 log. Presentar no hardcodea: el widget lee el buffer, no recalcula. El teclado sigue consumiendo
 el buffer aparte, coloreando sus teclas, como cualquier otro consumidor.
+
+El feedback del sistema muestra lo de nota por nota, correcto, tensión, paso cromático y error, en
+paralelo con el coloreo de las teclas, que consume el mismo buffer. El readout muestra lo de nivel
+de acorde: notas activas, acorde detectado y el análisis de armonía, que es donde vive la relación
+del acorde con el universo, el intercambio modal incluido. No es un rol nuevo, es el que ya está
+implícito en el código y no estaba escrito.
 
 **La reserva del fondo, resuelta con un presupuesto de superposición.** La reserva no se reduce. Las
 notas conservan toda la altura entre la barra de menú y el piano, y los widgets flotan encima con
@@ -545,6 +569,15 @@ prioridad, no porque la rueda la bloquee.
   existe, y el tope de tres octavos sale de mirar un boceto, no de medir contra algo que funcione.
   Va junto con la lectura de archivos MIDI, porque hasta cargar una canción real no se sabe cuánto
   alto pide de verdad.
+- Metrónomo. No existe en ninguna parte del proyecto hoy. Interesa porque el tiempo ya participa de
+  la evaluación: el indulto por paso cromático depende de una duración fija de 180 ms, y los cuatro
+  ajustes del motor son ventanas de tiempo. Un metrónomo abre la puerta a que esas ventanas se
+  deriven del tempo en vez de fijarse a mano. Va junto con la calibración por tapping y con los
+  tempos por canción que ese ítem ya arrastra.
+- Hundir el log cuando la barra crezca. Hoy queda alcanzable porque la barra tiene un solo nivel.
+  La decisión del 2026-07-25 pide que la consola de debug viva detrás de submenús, oculta para
+  quien solo toca. Cuando aparezcan menús que se ganen el espacio, como el de archivo para MIDI y
+  entrenamientos, el log baja al lugar que le corresponde.
 
 ---
 
