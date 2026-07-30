@@ -210,6 +210,13 @@ transiciones por costumbre. Es un requisito no funcional y su hogar definitivo e
 requisitos parqueado en "Deuda de método y documentación"; vive acá mientras ese documento no
 exista.
 
+El presupuesto visual también es una restricción, no una preferencia. El texto es la superficie
+barata, y por eso el feedback del sistema y los subtítulos del entrenamiento son texto y no
+efectos. El coloreo de las teclas que ya existe es el techo de lo que la pantalla gasta en pintar,
+no un piso desde el cual crecer: si algo nuevo necesita más que eso, primero hay que justificar por
+qué. Como la regla de animación, esto es un requisito no funcional y su hogar definitivo es el
+documento de requisitos parqueado en "Deuda de método y documentación".
+
 **Terminología de pantalla.** La Fase 5 también corrige los nombres que ve el usuario, que son
 de display, no de motor. Primero, las etiquetas del botón de nomenclatura, hoy "Latina" y
 "Anglosajona", se reemplazan por etiquetas de forma: "Silábica" para Do-Re-Mi y "Alfabética"
@@ -426,10 +433,23 @@ vista.
 
 **Alcance:** esta fase mueve la escala del teclado a un panel de característica en una ranura,
 primero en vista lineal, y le suma la rueda de quintas como vista alterna con su conmutador. La
-rueda deriva del motor (`scalePitches`), no hardcodea nada. Queda abierto si además muestra las
-calidades de acorde diatónicas (3 mayores, 3 menores, 1 disminuido): si las muestra, necesita
-la función tonal que expone la Fase 4, porque el motor no deriva calidad por grado hoy. La
-iluminación de posiciones es sutil.
+rueda deriva del motor (`scalePitches`), no hardcodea nada. La rueda muestra las calidades de
+acorde de cada grado del universo activo, porque saber qué acordes entran es justo lo que se busca
+al mirarla. Las calidades se derivan, no se enumeran a mano: se arma la tríada sobre cada grado con
+las notas que `scalePitches` ya entrega y se lee su calidad contra las plantillas de intervalos que
+el motor ya tiene, mayor, menor, disminuido y aumentado.
+
+Esto no depende de la función tonal de la Fase 4. `getTonalFunction` devuelve función tonal, tónica,
+subdominante o dominante, leída de una tabla por grado, y además exige un acorde ya detectado. La
+rueda necesita lo contrario: las calidades derivadas de la escala sola, sin que suene nada. Lo que
+hace falta es una función pura nueva de calidades por grado, y es trabajo de esta misma fase.
+
+La enumeración depende del universo, así que los números de abajo son ejemplos y no una constante.
+En mayor son 3 mayores, 3 menores y 1 disminuido. En menor natural son los mismos tres números,
+porque es una rotación de la mayor, aunque en otros grados. En menor armónica son 2 mayores, 2
+menores, 2 disminuidos y 1 aumentado. Por eso la vista deriva en vez de traer la lista escrita: el
+selector ya ofrece menor armónica hoy, y una lista fija sería falsa para ella. La iluminación de
+posiciones es sutil.
 
 La rueda no son dos vistas sino tres acopladas que se mueven juntas: la rueda, la escala lineal y
 el teclado. Girar un paso de la rueda cambia una sola nota de la escala, y ese es el punto
@@ -441,14 +461,17 @@ control por otro más expresivo, no mover lógica musical a la interfaz. Esto de
 vistas sincronizadas de la regla 5 del ADR del 2026-07-24, no lo reemplaza: es la misma idea, con
 el detalle de qué se sincroniza con qué.
 
-**Criterio de aceptación:** por definir cuando se decida el contenido (solo notas de la
-escala, o también calidades).
+**Criterio de aceptación:** la rueda se muestra como vista alterna de la escala con su conmutador;
+girar un paso cambia una sola nota y las tres vistas acopladas se actualizan juntas; y las
+calidades de cada grado se muestran derivadas del universo activo, verificado en los tres universos
+que el motor soporta hoy, comprobando que en menor armónica aparece el grado aumentado.
 
 **Bloquea:** ninguna declarada.
 
-**Bloqueada por:** Fase 5 (la estructura de fondo y ranuras debe existir); y Fase 4 si muestra
-calidades de acorde. No depende de las fases de progresiones; su número es posterior por
-secuencia de decisión, no por dependencia.
+**Bloqueada por:** Fase 5 (la estructura de fondo y ranuras debe existir). No depende de la Fase 4:
+las calidades por grado se derivan de la escala sola, sin acorde detectado y sin función tonal.
+Tampoco depende de las fases de progresiones; su número es posterior por secuencia de decisión, no
+por dependencia.
 
 ---
 
@@ -486,8 +509,14 @@ prioridad, no porque la rueda la bloquee.
 
 ## BACKLOG (sin fecha, necesita más teoría antes de programarse)
 
-- Modos griegos (Dórico, Frigio, Mixolidio, Lidio): extensión directa de `SCALES`.
-- Pentatónicas y Blues como universos propios, no como parches de excepción.
+- Modos griegos (Dórico, Frigio, Mixolidio, Lidio): extensión directa de `SCALES`. Son rotaciones
+  de la escala mayor, así que tienen siete notas y la misma colección de calidades de acorde por
+  grado, solo repartidas en otros grados. La vista de calidades de la rueda los cubre sin cambios.
+- Pentatónicas y Blues como universos propios, no como parches de excepción. Ojo con esto: no son
+  escalas de siete notas, así que no producen una escalera de siete tríadas por grado y la vista de
+  calidades de la rueda no se les extiende tal cual. Antes de programarlas hay que decidir qué
+  significa ahí un acorde por grado, o si en esos universos la vista muestra otra cosa. Eso es lo
+  que las vuelve universos propios y no una escala más en la lista.
 - Glosario in-app que crezca junto con lo aprendido.
 - Modo "canción": cargar un MIDI, reproducir el bajo, evaluar la melodía en vivo.
 - Entrenamiento de oído puro (dictado de intervalos, identificar un acorde solo de oído).
@@ -500,9 +529,11 @@ prioridad, no porque la rueda la bloquee.
   que el programa derive los valores de lo que midió. Arrastra dos cosas más: tempos, y que los
   valores buenos probablemente dependan de la canción, lo que lo ata al modo canción de este mismo
   backlog.
-- Reemplazar los emojis de la interfaz por SVG. Motivo técnico, no estético: un SVG se ve nítido a
-  cualquier tamaño y hereda el color del texto, así que acompaña el tema oscuro sin mantener dos
-  archivos. Es cosmético y no bloquea nada.
+- Coherencia visual del set de iconos. Los emojis que la interfaz usa hoy no forman un conjunto
+  coherente: cada uno viene de una familia distinta y se ven como piezas sueltas. Queda registrado
+  un hallazgo negativo para no repetir el intento: pasarlos a SVG se probó y da más carga, no menos,
+  así que el SVG no es la salida por rendimiento. La pregunta abierta es cómo conseguir un set
+  coherente sin sumar costo gráfico. Es cosmético y no bloquea nada.
 - Lectura de partitura como vista futura. Está anotado para que sea una decisión y no un olvido:
   se mencionó una vez, no está comprometido, y no tiene diseño ni alcance todavía.
 

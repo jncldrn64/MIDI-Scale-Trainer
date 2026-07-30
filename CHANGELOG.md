@@ -2,6 +2,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.38 — 2026-07-30
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 10 cierra la pregunta abierta de las calidades de acorde. La rueda las muestra, derivadas del universo activo armando la tríada sobre cada grado con `scalePitches` y las plantillas de intervalos del motor. Se corrige la dependencia declarada, en el Alcance y en la línea "Bloqueada por": no depende de la función tonal de la Fase 4, que devuelve función y no calidad y además exige un acorde detectado; lo que hace falta es una función pura de calidades por grado, y es trabajo de la propia Fase 10. Y se corrige la enumeración: era válida solo para mayor y menor natural; en menor armónica son 2 mayores, 2 menores, 2 disminuidos y 1 aumentado, así que la vista deriva en vez de traer una lista fija. Esto además resuelve la contradicción que había quedado en el Alcance, donde un párrafo dejaba las calidades abiertas y otro las daba por hechas.
+- `docs/ROADMAP.md`: el Criterio de aceptación de la Fase 10 pasa de "por definir" a concreto, incluida la comprobación en los tres universos que el motor soporta hoy y que en menor armónica aparezca el grado aumentado.
+- `docs/ROADMAP.md`: el ítem del backlog sobre los iconos se reescribe. El problema es la coherencia visual del conjunto, no la nitidez, y queda registrado el hallazgo negativo de que pasarlos a SVG da más carga y no menos, para que nadie repita el intento. La pregunta abierta es cómo lograr coherencia sin sumar costo gráfico.
+- `docs/ROADMAP.md`: los ítems de modos griegos y de pentatónicas y blues precisan en qué se diferencian. Los modos son rotaciones de la mayor, con siete notas y las mismas calidades en otros grados, así que la vista de calidades los cubre sin cambios. Las pentatónicas y el blues no tienen siete notas y no producen una escalera de tríadas por grado, así que antes de programarlas hay que decidir qué muestra la rueda en esos universos.
+- `docs/ROADMAP.md`: la Fase 5 suma el requisito no funcional del presupuesto visual. El texto es la superficie barata y por eso el feedback y los subtítulos son texto; el coloreo de teclas que ya existe es el techo de gasto en pintado, no un piso.
+
 ## v11.37 — 2026-07-30
 
 ### Added
