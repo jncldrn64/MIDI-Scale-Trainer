@@ -184,15 +184,16 @@ mayor, y un acorde no diatónico no recibe función forzada.
 
 **Objetivo:** realinear la UI al modelo de capas del 2026-07-25, superando el primer intento
 apilado. El fondo es una sola capa de piano más notas que caen; las características flotan como
-widgets sobre ese fondo; y las opciones y los logs viven en un panel de pestañas, chrome
-permanente. Sigue sin tocar el motor.
+widgets sobre ese fondo; y las opciones y los logs viven en una barra de menús permanente.
+Sigue sin tocar el motor.
 
 **Alcance:** los cambios son de disposición, estructura y estilo, no de motor. Fondo único: el
 teclado y las notas que caen ocupan todo el ancho y alto, y las notas pasan por detrás de los
 widgets, no en una franja aparte. Las características flotantes se tratan como widgets sobre el
 fondo, sin construir todavía el gestor completo de paneles, que el ADR del 2026-07-24 reserva
-para la segunda característica. El panel de pestañas se establece como chrome permanente para
-opciones y logs, separado del fondo mudo. Y se decide dónde vive la salida del motor en el
+para la segunda característica. La barra de menús permanente, que las entradas de decisiones
+anteriores llaman panel de pestañas, se establece como chrome para opciones y logs, separado del
+fondo mudo. Y se decide dónde vive la salida del motor en el
 modelo de capas, sobre el teclado, en una superficie de feedback permanente, o dentro del
 widget que la pidió, garantizando que siga habiendo una lectura visible o que el log la cargue.
 El teclado visual es fijo de 88 teclas a todo el ancho, independiente del zoom. El coloreo del
@@ -257,9 +258,9 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   capa de fondo, las notas pasan por detrás de los overlays, y la disposición apilada actual pasa
   a fondo más overlays en posiciones por defecto fijas, todavía sin mecánica de widgets. El
   coloreo del teclado que ya existe queda intacto. Motor intacto.
-- Incremento 5.2, panel de pestañas y menú colocador: el chrome permanente tipo barra de macOS,
-  desde donde se abre, cierra, restaura y coloca cualquier widget en una ranura, y donde viven las
-  opciones y el log. La barra trae los menús que ya tienen contenido real: opciones, donde viven los
+- Incremento 5.2, barra permanente y chrome global: la barra de menús permanente tipo macOS, que
+  las entradas de decisiones anteriores llaman panel de pestañas, y que aloja las opciones y el
+  log. La barra trae los menús que ya tienen contenido real: opciones, donde viven los
   cuatro ajustes del motor, y log, que se descarga o se copia y no tiene terminal propia. El menú de
   widgets no se construye acá sino en el 5.3, junto con los widgets que va a listar. El 5.2 le da
   hogar en el menú de opciones al botón "Centrar en Split", que hoy está parqueado y oculto. El
@@ -273,7 +274,7 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   nada que alguien use mientras toca debería costar más de tres clics. El número es un techo
   revisable y no un dogma; lo que no se negocia es que quien solo quiere tocar no pague fricción.
 - Incremento 5.3, sistema de widgets: mover la caja arrastrando con el mouse, que es la
-  única acción directa sobre ella, y el resto desde la pestaña del widget, opacidad, apagar, reset
+  única acción directa sobre ella, y el resto desde el menú de widgets, opacidad, apagar, reset
   a posición por defecto y persistir; el cap de tres ranuras para los que compiten; el menú de
   widgets en la barra, que coloca, restaura uno cerrado y da acceso a los controles de cada
   instancia colocada, listando instancias y no tipos; el estado por instancia, ubicación, vista,
@@ -321,8 +322,8 @@ reserva a un motor de notas que todavía no existe ni tiene fase, que es una apu
 conciencia.
 
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
-ancho, las notas pasan por detrás de los overlays, el panel de pestañas existe como chrome
-permanente para opciones y logs, la salida del motor tiene un lugar visible definido o queda
+ancho, las notas pasan por detrás de los overlays, la barra de menús permanente existe como
+chrome para opciones y logs, la salida del motor tiene un lugar visible definido o queda
 cubierta por el log, el motor y el coloreo quedan intactos, todos los fixtures existentes
 siguen pasando, y el autor lo corrobora en el navegador.
 

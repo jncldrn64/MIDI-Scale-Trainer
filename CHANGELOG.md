@@ -2,6 +2,17 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.40 — 2026-07-30
+
+### Fixed
+
+- `docs/ROADMAP.md`: el incremento 5.2 se contradecía consigo mismo. Su encabezado y su primera frase seguían prometiendo el menú colocador y colocar widgets en ranuras, mientras el cuerpo del mismo bullet ya decía que eso se construye en el 5.3. El encabezado pasa a "barra permanente y chrome global" y la frase inicial deja de prometer lo que el 5.2 no hace.
+- `docs/ROADMAP.md`: el incremento 5.3 decía que los controles de un widget salen de la pestaña del widget, que es el modelo reemplazado por el menú único. Ahora dice menú de widgets.
+
+### Changed
+
+- `docs/ROADMAP.md`: la barra deja de llamarse panel de pestañas y pasa a llamarse barra de menús permanente, porque el nombre viejo describe una solución que ya no existe y manda a buscar pestañas donde hay menús. La equivalencia con el nombre viejo queda escrita una vez para que las decisiones anteriores sigan siendo rastreables. Es el primer caso concreto de la deuda de nomenclatura parqueada en "Deuda de método y documentación".
+
 ## v11.39 — 2026-07-30
 
 ### Added
