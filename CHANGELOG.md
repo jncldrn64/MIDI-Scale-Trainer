@@ -2,6 +2,12 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.35 — 2026-07-30
+
+### Added
+
+- `docs/ROADMAP.md`: sección nueva "Deuda de método y documentación", que parquea seis puntos sobre cómo se documenta y se versiona el proyecto, sin ejecutar ninguno y sin tocar el estándar. Un esquema de versión de cuatro segmentos con dos preguntas abiertas registradas, los PR mixtos y qué cuenta el segundo segmento, más la posibilidad de que ese esquema elimine el desfase entre la versión mostrada y el CHANGELOG. La regla de criticar el diseño de una fase y documentar su impacto sobre lo ya implementado antes de planearla, con la prioridad de evaluar una fase intermedia en vez de colgar lo nuevo al final. Un documento de requisitos, propósito y público objetivo, que hoy no existe en ninguna forma, incluidos los requisitos no funcionales que ya gobiernan el diseño sin estar escritos como tales. La nomenclatura de los artefactos que ya existen en el código, que ningún documento nombra. Y dos sugerencias del revisor externo: que el glosario salga del flujo append-only para no quedar desactualizado, y que el destino visual acordado se describa en texto dentro del repo en vez de vivir solo en bocetos externos.
+
 ## v11.34 — 2026-07-26
 
 ### Added

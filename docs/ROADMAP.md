@@ -473,3 +473,158 @@ infraestructura o teoría que todavía no existe. No se construyen hasta que su 
 - Dominante secundaria: lo que llamás "una nota que empuja y vuelve" ya tiene nombre, V/V,
   V/ii. Fijar el vocabulario ayuda a leer `DECISIONS.md` y el código sin reinventar el
   concepto cada vez.
+
+---
+
+## Deuda de método y documentación (no es fase, y altera el estándar)
+
+Esta sección parquea trabajo sobre cómo se documenta y se versiona el proyecto, no sobre lo que
+hace la app. Nada de acá se ejecuta hasta terminar la Fase 5 completa, con sus cinco incrementos
+entregados y corroborados. Varios de estos puntos cambian el estándar compartido que vive en
+`CLAUDE.md`, así que no tocan solo este repo: tocan también los otros que siguen ese estándar. Por
+eso se parquean juntos y se ejecutan de a uno, con su propia discusión.
+
+El motivo de fondo es uno solo. Un modelo no lee la conversación completa: lee un resumen
+comprimido donde los matices se pierden, y lo que se perdió no vuelve. El repo, en cambio, lo lee
+en texto plano y lo puede grepear. Entonces el contexto que importa tiene que vivir en el repo, no
+en el chat. Cada punto de abajo es un pedazo de contexto que hoy vive en el chat o en la cabeza de
+alguien, y debería estar en un archivo.
+
+### Esquema de versión de cuatro segmentos
+
+La propuesta es un número de cuatro segmentos, del tipo 11.22.33.44, donde cada segmento cuenta
+una clase distinta de trabajo. El primero es la versión mayor y solo sube cuando termina un roadmap
+entero, con su última fase definida entregada; no sube por backlog pendiente, porque el backlog no
+tiene fecha ni compromiso. El segundo se mueve por trabajo sobre una característica que está en el
+roadmap como fase definida, cuando se introduce, se cambia, se altera o se remueve. El tercero se
+mueve por lo mismo, pero cuando la cosa está en el backlog, es un issue, o es una característica
+desarrollada fuera de la documentación y por lo tanto fuera del roadmap; también cubre el caso de
+descubrir más adelante que algo de una fase quedó mal implementado, que en vez de reabrir la fase o
+mover el segundo, mueve el tercero. El cuarto se mueve solo por cambios de documentación de
+cualquier tipo, reestructura o redocumentación.
+
+Los cuatro segmentos son independientes y no hay acarreo. 11.99.99.99 no se convierte en
+12.00.00.00, y mover un segmento no reinicia los de la derecha. Conviene dejarlo escrito con esas
+palabras porque el formato invita a leerlo como versionado semántico, y no lo es: son cuatro
+contadores concatenados, uno por clase de trabajo. Funciona porque acá la versión es una etiqueta
+de trabajo y no un contrato de dependencias; nadie instala este repo como paquete.
+
+Quedan dos preguntas abiertas, sin resolver. La primera son los PR mixtos. Casi todo PR de código
+toca también documentación, aunque sea el CHANGELOG, y falta decidir si eso mueve el cuarto
+segmento además del que corresponda por el código. La sugerencia registrada es que no, que el
+cuarto quede solo para PR cuya única sustancia es documentación, porque si se mueve en cada PR deja
+de significar algo. La segunda es qué cuenta exactamente el segundo segmento. Leído literal parece
+contar cambios a la definición de una fase, y entonces nada se movería al entregar el código de una
+fase ya definida, que es justo el trabajo más grande. La lectura sugerida es que el segundo cuente
+el trabajo sobre características que pertenecen a una fase definida, entregarla incluido, y que el
+tercero cuente lo mismo cuando la cosa está fuera del roadmap. Queda sin decidir.
+
+El premio de todo esto es concreto. Hoy un PR doc-only no puede tocar la versión que muestra el
+artefacto, así que la versión mostrada queda por detrás del CHANGELOG y ese desfase intencional se
+arrastra hasta el próximo PR de código. Con un segmento propio para documentación, ese desfase
+puede desaparecer, si se decide que editar únicamente el string de la versión mostrada sigue
+contando como doc-only. Eso también queda por decidir.
+
+Cuando esto se ejecute, el punto de partida 11.xx.xx.xx se infiere de lo que ya está escrito en el
+CHANGELOG y en el resto de la documentación, contando cuántos cambios de cada tipo hubo. No hace
+falta recorrer el historial de commits.
+
+### Crítica obligatoria del diseño de fase, y el impacto sobre lo ya implementado
+
+La regla propuesta es esta. Que una fase pueda estar bloqueada por otra ya está contemplado y
+funciona. Lo que falta es el paso anterior: antes de planear una fase hay que preguntar de forma
+explícita si los cambios previstos afectan características que ya están implementadas, y si las
+afectan, documentar cómo y dónde. Y cuando aparece algo nuevo, la prioridad no debe ser colgarlo al
+final del roadmap, ni como última fase ni como backlog, sino evaluar si merece ser una fase
+intermedia, incluso si eso obliga a reordenar el roadmap entero.
+
+Esto no sale de la teoría, sale de dos cosas que ya pasaron acá. La primera: el coloreo de teclas
+que ya existía casi queda diferido en el reencuadre visual, y hubo que rescatarlo a mano dentro de
+la definición de la Fase 5, agregando al Alcance que se preserva y no se rehace ni se apaga. Nadie
+lo había marcado como afectado porque nadie hizo la pregunta. La segunda: durante la planificación
+del incremento 5.2 se categorizó mal la barra de universo, tratándola como chrome de opciones,
+cuando contiene la vista lineal de la escala, que es material de widget. El error no fue de
+distracción, salió de que ningún documento del repo nombra qué es esa barra.
+
+Cuando esto se ejecute probablemente merezca una entrada propia en `DECISIONS.md` y no solo una
+línea de backlog, porque es una regla de método permanente y las reglas de método son exactamente
+lo que ese archivo guarda.
+
+### Documento de requisitos, propósito y público objetivo
+
+El faltante es concreto y se verifica en dos comandos: hoy no existe `README.md` en el repo, y los
+términos "público objetivo", "requisito", "requerimiento" y "no funcional" no aparecen en ningún
+documento. El repo documenta el plan en el ROADMAP y el porqué de cada decisión en DECISIONS, pero
+no documenta para quién es la app, cuál es su propósito, cuál es su alcance, ni qué tiene que ser
+verdad para que esté bien hecha.
+
+No es redundante con lo que ya hay, porque los tres documentos responden preguntas distintas. El
+ROADMAP dice qué sigue. DECISIONS dice por qué esta forma y no otra, y es historia append-only que
+no se reescribe. Un documento de requisitos dice qué tiene que ser verdad y para quién, sin fecha y
+sin orden de trabajo. Solo se volvería redundante si repitiera decisiones, y evitar eso es el
+trabajo principal cuando se escriba.
+
+Vale la pena y no es burocracia por una razón que ya se puede ver: varios requisitos no funcionales
+gobiernan el diseño hoy, pero están dispersos como justificación adentro de decisiones sueltas. El
+límite de tres ranuras existe porque las notas del fondo necesitan aire, o sea es un requisito no
+funcional disfrazado de regla de interfaz. Lo mismo pasa con abrir desde `file://` sin servidor, sin
+framework y sin build, con depender de Web MIDI en Chrome, con el repo privado, y con el teclado
+fijo de 88 teclas. Juntos son el piso sobre el que se apoya el modelo de widgets, y hoy hay que
+reconstruirlos leyendo entradas sueltas y sacando conclusiones.
+
+El documento también debería incluir los lineamientos de qué puede usar o alterar un entrenamiento
+y qué puede usar o alterar un widget, y qué determina que algo sea uno, otro o ninguno. Eso se cruza
+con la nota de "contrato de salida" ya parqueada en la Fase 9, así que hay que atarlos a propósito,
+para no terminar con dos documentos que dicen lo mismo con sentidos distintos.
+
+Queda abierto si esto vive en un `README.md` nuevo o en un documento aparte dentro de `docs/`. El
+criterio para decidirlo es quién lo lee: el lector que más lo necesita es un modelo que grepea texto
+plano, no una persona que quiere orientarse en treinta segundos. Esos dos lectores quieren
+documentos distintos, y eso puede empujar a que sean dos y no uno.
+
+### Nomenclatura de lo que ya existe
+
+El glosario que hay en DECISIONS declara de sí mismo que es solo vocabulario de arquitectura, y
+cumple: nombra el modelo nuevo, fondo, panel, ranura, característica, salida del motor, buffer del
+motor, superficie de feedback. Lo que no hace, porque no se lo propuso, es nombrar los artefactos
+que ya están en el código. No hay una línea en todo el repo que diga qué es la barra de universo, la
+vista de fórmula, el selector de escala, el split, ni el panel de fijar acordes. Por eso dos cosas
+que viven en la misma caja se pueden confundir con cosas distintas, que es exactamente lo que pasó
+al planear el incremento 5.2.
+
+Hay un segundo problema, el de los nombres internos. El incremento 5.4 de la Fase 5 arregla las
+etiquetas que ve el usuario, "Silábica" y "Alfabética" en vez de "Latina" y "Anglosajona", y el
+propio ROADMAP aclara que ese cambio es de display y no de motor. La consecuencia es que el nombre
+interno sigue diciendo latino en el código, y quien lea el código sigue leyendo una categoría
+cultural para algo que es una forma de nombrar notas. Este punto es sobre eso, nombres internos y de
+documentación, y es distinto del 5.4, que solo toca lo que se muestra en pantalla. No lo duplica.
+
+### Glosario vivo en vez de glosario congelado (sugerencia del revisor)
+
+Este punto es una sugerencia del revisor externo, no un pedido del autor, y se anota como tal.
+
+El hallazgo se verifica leyendo el archivo: DECISIONS es append-only, y el glosario está adentro
+como una entrada más. La definición de ranura en el glosario dice que es una de las tres posiciones
+donde vive una característica. Una entrada posterior del mismo día decidió que la ranura es un
+límite y no un espacio, y que no hay tres cajas fijas en la pantalla. Las dos líneas conviven en el
+mismo archivo, y la del glosario aparece primero cuando alguien busca la palabra.
+
+El mecanismo del problema es este: en un archivo append-only, un glosario se vuelve una mina. Su
+trabajo es decir qué significa una palabra ahora, y el formato lo obliga a decir qué significaba
+cuando se escribió. Los dos objetivos se pelean y gana el formato. La sugerencia es sacar el
+glosario del flujo append-only y volverlo un documento vivo y editable, dejando que DECISIONS siga
+siendo el historial de por qué cambió cada cosa. La alternativa es exigir que toda entrada que
+refine un término reescriba también la línea del glosario, pero es más frágil, porque depende de que
+nadie se olvide.
+
+### El material de referencia que vive fuera del repo (sugerencia del revisor)
+
+También es sugerencia del revisor externo.
+
+Durante la planificación del reencuadre visual se produjeron bocetos de la interfaz que sirvieron
+para acordar el destino, y funcionaron. El problema es que viven fuera del repo: no se pueden
+grepear y no sobreviven al cierre de una conversación. La idea parqueada es que el destino visual
+acordado quede descrito en texto adentro del repo, en el mismo documento de requisitos o en uno
+propio, con qué widget va por defecto en qué lugar, qué es permanente y qué no. La prueba de que
+está bien escrito es que un modelo pueda reconstruir la intención sin ver ninguna imagen. Queda por
+decidir si además conviene versionar algún boceto en el repo, o si la descripción en texto alcanza.
