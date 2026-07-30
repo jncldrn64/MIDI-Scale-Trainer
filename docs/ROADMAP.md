@@ -217,6 +217,16 @@ no un piso desde el cual crecer: si algo nuevo necesita más que eso, primero ha
 qué. Como la regla de animación, esto es un requisito no funcional y su hogar definitivo es el
 documento de requisitos parqueado en "Deuda de método y documentación".
 
+La legibilidad manda sobre el tamaño. Un widget chico que se lee sirve; uno grande que tapa las
+notas no, y si todo se hace grande no entra nada. El criterio es el de las interfaces que permiten
+escalar su tamaño: a cualquier escala, el texto y los iconos tienen que seguir siendo legibles, y
+si al reducir algo deja de leerse, el problema es el diseño de ese algo y no la escala. De ahí que
+la agrupación se resuelva por proximidad, alineación y contraste, las leyes de la percepción, en
+vez de por efectos, marcos y sombras. Minimalismo funcional: cada elemento que se agrega tiene que
+ganarse el espacio que tapa. Como la regla de animación y el presupuesto visual, esto es un
+requisito no funcional y su hogar definitivo es el documento de requisitos parqueado en "Deuda de
+método y documentación".
+
 **Terminología de pantalla.** La Fase 5 también corrige los nombres que ve el usuario, que son
 de display, no de motor. Primero, las etiquetas del botón de nomenclatura, hoy "Latina" y
 "Anglosajona", se reemplazan por etiquetas de forma: "Silábica" para Do-Re-Mi y "Alfabética"
@@ -249,15 +259,13 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   coloreo del teclado que ya existe queda intacto. Motor intacto.
 - Incremento 5.2, panel de pestañas y menú colocador: el chrome permanente tipo barra de macOS,
   desde donde se abre, cierra, restaura y coloca cualquier widget en una ranura, y donde viven las
-  opciones y el log. El log no tiene terminal propia, solo se descarga o se copia. Cada widget que se coloca, lo ponga el
-  usuario o un entrenamiento, abre su propia pestaña en esa barra, como en un navegador, y los
-  controles de ese widget viven en el menú que despliega su pestaña, no encima de la caja. La
-  barra tiene una pestaña por cada widget abierto y, aparte, un menú colocador que lista todos,
-  abiertos y cerrados, para restaurar uno que se cerró. Además el 5.2 le
-  da hogar en ese menú, o en las opciones del motor, a los controles que hoy quedan parqueados: el
-  botón "Centrar en Split", que se oculta desde ya, y el panel "Fijar Acordes", que ya estaba
-  oculto en el código y se recupera desde ahí. Estos controles no se borran, solo esperan su lugar
-  en el menú. Con una restricción verificada: el comentario de `index.html` dice de los Ajustes del
+  opciones y el log. La barra trae los menús que ya tienen contenido real: opciones, donde viven los
+  cuatro ajustes del motor, y log, que se descarga o se copia y no tiene terminal propia. El menú de
+  widgets no se construye acá sino en el 5.3, junto con los widgets que va a listar. El 5.2 le da
+  hogar en el menú de opciones al botón "Centrar en Split", que hoy está parqueado y oculto. El
+  panel "Fijar Acordes" sigue esperando: no está decidido si es un control, y entonces va a
+  opciones, o una característica de práctica, y entonces es candidato a widget y su lugar es el menú
+  de widgets del 5.3. Ninguno de los dos se borra. Con una restricción verificada: el comentario de `index.html` dice de los Ajustes del
   Motor que están "visibles y alcanzables" porque el autor los usa cuando una canción es muy rápida
   o muy lenta. El 5.2 puede darles hogar en un menú, pero tiene que seguir cumpliendo esa razón,
   así que los cuatro campos, acumulación, retención, error visual y split, quedan alcanzables sin
@@ -266,7 +274,10 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   revisable y no un dogma; lo que no se negocia es que quien solo quiere tocar no pague fricción.
 - Incremento 5.3, sistema de widgets: mover la caja arrastrando con el mouse, que es la
   única acción directa sobre ella, y el resto desde la pestaña del widget, opacidad, apagar, reset
-  a posición por defecto y persistir; el cap de tres ranuras para los que compiten; el readout de la
+  a posición por defecto y persistir; el cap de tres ranuras para los que compiten; el menú de
+  widgets en la barra, que coloca, restaura uno cerrado y da acceso a los controles de cada
+  instancia colocada, listando instancias y no tipos; el estado por instancia, ubicación, vista,
+  opacidad y opciones, con reset por instancia; el readout de la
   salida del motor se vuelve el primer widget de sistema en una ranura, el caso de prueba. El
   feedback suma los avisos simples del sistema, ranuras completas y restaurar widget oculto. El
   widget de escala no se construye desde cero: la vista lineal ya existe y funciona hoy dentro de
@@ -297,25 +308,17 @@ una ranura, se mueve, opacidad y se cierra, mientras el dato sigue siempre en el
 log. Presentar no hardcodea: el widget lee el buffer, no recalcula. El teclado sigue consumiendo
 el buffer aparte, coloreando sus teclas, como cualquier otro consumidor.
 
-**Pregunta abierta: la reserva del fondo para las notas que caen.** El ADR del 2026-07-24 justifica
-el límite de tres ranuras porque el aire superior del fondo está reservado para las notas que caen,
-que son fondo y no negocian espacio. O sea la restricción más cargada del modelo de widgets se
-apoya entera en esa reserva. El problema es que hoy esa característica no tiene motor, no aparece
-en ninguna fase del roadmap, y el incremento 5.1 hizo que la zona reservada ocupe la mayor parte de
-la pantalla, permanentemente vacía. Un límite que protege algo que todavía no existe es un límite
-sin fundamento verificable.
+**La reserva del fondo, resuelta con un presupuesto de superposición.** La reserva no se reduce. Las
+notas conservan toda la altura entre la barra de menú y el piano, y los widgets flotan encima con
+las notas pasando por detrás. Lo que se acota es cuánto pueden taparla: tres octavos del alto como
+tope, y dos octavos del ancho por widget como máximo, dejando dos octavos de aire lateral. Así la
+regla 3 del ADR del 2026-07-24 queda en pie y además se puede verificar con un número, en vez de
+ser una intención.
 
-Hay además dos cosas que se confunden y conviene separar antes de decidir. Mostrar notas que bajan
-hacia el teclado como ayuda de lectura, al estilo Synthesia, no es lo mismo que un juego de ritmo
-con puntaje por precisión temporal. Lo segundo es otro eje de producto: mide tiempo y reflejos, no
-comprensión armónica, que es lo que esta app entrena.
-
-Las salidas posibles son tres, y ninguna está elegida. La reserva queda como está y las notas que
-caen se convierten en una fase con fecha, con lo que el cap recupera su fundamento. La reserva se
-reduce a una franja y el cap de tres se justifica por otra razón, que habría que escribir. O la
-reserva se levanta hasta que exista el motor de notas que caen, y el cap se justifica de nuevo
-mientras tanto. Conviene decidirlo antes del incremento 5.3, porque el 5.3 es el que implementa el
-cap, y hoy el cap no tiene un fundamento sostenible.
+La distinción entre mostrar notas que bajan como ayuda de lectura y un juego de ritmo con puntaje
+sigue valiendo: lo segundo es otro eje de producto. Y queda dicho sin adornos que este alto se le
+reserva a un motor de notas que todavía no existe ni tiene fase, que es una apuesta tomada a
+conciencia.
 
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, el panel de pestañas existe como chrome
@@ -536,6 +539,11 @@ prioridad, no porque la rueda la bloquee.
   coherente sin sumar costo gráfico. Es cosmético y no bloquea nada.
 - Lectura de partitura como vista futura. Está anotado para que sea una decisión y no un olvido:
   se mencionó una vez, no está comprometido, y no tiene diseño ni alcance todavía.
+- Comparar cómo reparten el espacio los programas que ya explican canciones con notas que caen,
+  antes de dar por firme el presupuesto de superposición. Hoy se le reserva altura a un motor que no
+  existe, y el tope de tres octavos sale de mirar un boceto, no de medir contra algo que funcione.
+  Va junto con la lectura de archivos MIDI, porque hasta cargar una canción real no se sabe cuánto
+  alto pide de verdad.
 
 ---
 

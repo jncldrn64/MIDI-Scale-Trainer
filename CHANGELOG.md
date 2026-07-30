@@ -2,6 +2,20 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.39 — 2026-07-30
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva con el presupuesto de superposición. Las notas conservan toda la altura entre la barra y el piano; los widgets flotan encima con las notas pasando por detrás y no tapan más de tres octavos de ese alto, con dos octavos de ancho por widget como máximo y dos octavos de aire lateral. La posición es libre y la cobertura es lo acotado, por un motivo funcional: despejar el registro que una canción usa. Los seis paneles se mueven, los puede mover el usuario o un entrenamiento, y los subtítulos y el feedback quedan centrados por defecto, el feedback debajo.
+- `docs/DECISIONS.md`: entrada nueva que reemplaza la pestaña por widget por un único menú de widgets, porque con varias instancias de la misma característica las pestañas se multiplican y porque el estado por defecto abriría la barra con cuatro o cinco pestañas. El menú lista instancias y no tipos, y cada instancia guarda su ubicación, vista, opacidad y opciones, con reset propio.
+
+### Changed
+
+- `docs/ROADMAP.md`: la pregunta abierta de la reserva del fondo queda resuelta. No se reduce la reserva; se acota la cobertura de los widgets, así que la regla 3 del ADR del 2026-07-24 queda en pie y ahora es verificable con un número. Queda escrito que el alto se reserva para un motor que todavía no existe.
+- `docs/ROADMAP.md`: la Fase 5 suma el requisito no funcional de legibilidad. La legibilidad manda sobre el tamaño, la agrupación se resuelve por proximidad, alineación y contraste en vez de efectos, y cada elemento tiene que ganarse el espacio que tapa.
+- `docs/ROADMAP.md`: se corrige el límite entre los incrementos 5.2 y 5.3. El 5.2 construye la barra con opciones y log, y el hogar de "Centrar en Split"; el menú de widgets, el estado por instancia y el reset por instancia pasan al 5.3, junto con los widgets que ese menú lista. El 5.2 como estaba escrito no era construible: pedía una pestaña por widget cuando todavía no existe ninguno.
+- `docs/ROADMAP.md`: nuevo ítem de backlog para comparar el reparto de espacio contra programas que ya muestran notas cayendo, antes de dar por firme el tope de tres octavos.
+
 ## v11.38 — 2026-07-30
 
 ### Changed
