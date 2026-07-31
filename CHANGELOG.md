@@ -2,6 +2,24 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.43 — 2026-07-31
+
+### Added
+
+- `index.html`: incremento 5.2 de la Fase 5, la barra de menús permanente. Fija arriba, de borde a borde, de 30 px, por encima de los overlays y siempre visible, con cambios de estado instantáneos según la regla de animación. Trae el menú de Opciones, que despliega de arriba abajo: el preajuste, los cuatro campos del motor, "Centrar en Split" y la consola completa. Clic afuera o Escape lo cierran.
+- `index.html`: el preajuste de aprendizaje (`cfg-preset`), un solo control que mueve juntas las tres ventanas de tiempo. "Normal" son los valores de arranque, 120, 2000 y 1000 ms. "Aprendizaje" abre las tres para leer despacio: 400 ms de acumulación juntan las notas de un acorde arpegiado lento sin fusionar acordes distintos, 5000 ms de retención sostienen el contexto mientras se lee el análisis, y 2500 ms de error visual dejan ver qué tecla quedó marcada antes de que se borre. Elegir un preajuste escribe los tres campos, actualiza `State.config` y persiste con el `saveConfig` que ya existía; editar cualquier campo a mano pasa el select a "Personalizado" sin pisar lo escrito. Split no lo toca el preajuste: es la nota donde se separan las manos, no una tolerancia.
+
+### Changed
+
+- `index.html`: los cuatro campos del motor, "Centrar en Split" y la consola entera (desplegable, Copiar, Exportar, Limpiar y el contenedor de log) se reubicaron dentro del menú de Opciones, movidos y no recreados, con cada id intacto y su JS sin reescribir. "Centrar en Split" perdió el `hidden` del parqueo: este menú es el hogar que esperaba, y el auto-centrado al cargar sigue corriendo. El log queda a dos clics de abrirse y tres de accionarse, dentro del techo escrito en el ROADMAP.
+- `index.html`: el título y la versión se mudaron a la izquierda de la barra, con los créditos como texto secundario, y el overlay de encabezado se retiró junto con los de ajustes y consola, que quedaron vacíos. Se resuelve el solape del título con el card de análisis que quedó anotado en el 5.1.
+- `index.html`: convención de selección aplicada a la barra: con el menú abierto, el resto de la barra baja su opacidad a 0.35, sin marcos, colores nuevos ni subrayados.
+- `index.html`: la versión mostrada sube de V11.33 a V11.43, cerrando el desfase que dejaron los diez PR de documentación anteriores.
+
+### Fixed
+
+- `docs/ROADMAP.md`: el incremento 5.2 decía que los cuatro ajustes del motor son ventanas de tiempo. Split no lo es: escribe `State.config.splitNote`, la nota MIDI donde se separan las manos, y por eso queda fuera del preajuste. Las ventanas son tres, acumulación, retención y error visual. El ítem del metrónomo del backlog repetía el mismo error y se corrige con el ajuste mínimo.
+
 ## v11.42 — 2026-07-31
 
 ### Added

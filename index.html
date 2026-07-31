@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.33 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.43 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -17,10 +17,34 @@
         body { background: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; }
         .container { max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
         
-        .header { text-align: center; margin-bottom: 5px; }
-        .header h1 { font-size: 2em; font-weight: 800; color: var(--text-main); margin-bottom: 5px; }
-        .header .credits { font-size: 0.9em; color: var(--text-muted); letter-spacing: 1px; }
-        .header .credits span { color: var(--accent); font-weight: bold; }
+        /* --- Fase 5, incremento 5.2: barra de menús permanente ---
+           Fija arriba, de borde a borde, por encima de los overlays y siempre visible.
+           Cambios de estado instantáneos: sin transiciones decorativas (regla de animación). */
+        .menubar {
+            position: fixed; top: 0; left: 0; right: 0; height: 30px; z-index: 100;
+            display: flex; align-items: center; gap: 14px; padding: 0 12px;
+            background: #0b1120; border-bottom: 1px solid #1e293b;
+        }
+        .menubar h1 { font-size: 0.95em; font-weight: 800; margin: 0; white-space: nowrap; }
+        .menubar .credits { font-size: 0.68em; color: var(--text-muted); letter-spacing: 1px; white-space: nowrap; }
+        .menubar button { padding: 3px 12px; font-size: 12px; transition: none; }
+
+        /* Menú desplegable de la barra: cuelga debajo, estado instantáneo vía hidden. */
+        .menu-panel {
+            position: fixed; top: 30px; left: 12px; z-index: 100;
+            width: min(420px, 96vw); max-height: calc(100vh - 42px); overflow-y: auto;
+            background: rgba(11,17,32,0.97); border: 1px solid #334155; border-top: none;
+            border-radius: 0 0 10px 10px; padding: 12px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .menu-sep { border: 0; border-top: 1px solid #1e293b; margin: 2px 0; }
+        .preset-row { display: flex; align-items: center; gap: 10px; }
+        .preset-row label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: bold; }
+        .preset-row select { flex: 1 1 auto; }
+
+        /* Convención de selección (Fase 5): con un menú abierto, el resto de la barra baja
+           su opacidad. Sin marcos nuevos, sin colores nuevos, sin subrayados. */
+        .menubar.menu-open > :not(#btn-menu-opciones):not(.menu-panel) { opacity: 0.35; }
         
         /* Layout de Paneles */
         .top-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
@@ -125,7 +149,7 @@
            piso). El teclado va a la franja de abajo a todo el ancho; la zona de notas que caen
            llena el alto entre el borde superior y el teclado, como notas que caen hacia él. */
         .stage {
-            position: fixed; inset: 0; z-index: 0;
+            position: fixed; inset: 30px 0 0 0; z-index: 0;
             background: #020617;
             display: flex; flex-direction: column;
             padding: 12px; gap: 10px;
@@ -145,13 +169,8 @@
            las esquinas. Mover y resetear a esa posición son del incremento 5.3. */
         .overlay-panel { background: rgba(30,41,59,0.92); backdrop-filter: blur(4px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
         .ovl { position: fixed; z-index: 10; }
-        .ovl-header   { top: 8px;  left: 50%; transform: translateX(-50%); z-index: 12; margin: 0; }
-        .ovl-header h1 { font-size: 1.05em; margin: 0; }
-        .ovl-header .credits { font-size: 0.68em; }
         .ovl-universe { top: 150px; left: 50%; transform: translateX(-50%); width: min(680px, 94vw); }
-        .ovl-readout  { top: 8px;  left: 12px; }
-        .ovl-settings { top: 8px;  right: 12px; width: min(340px, 44vw); }
-        .ovl-console  { bottom: 12px; left: 12px; width: min(360px, 44vw); }
+        .ovl-readout  { top: 38px; left: 12px; }
 
         /* El readout de estado: los tres cards en fila, agrupados arriba a la izquierda. */
         .top-row { display: flex; gap: 10px; }
@@ -170,10 +189,54 @@
 </head>
 <body>
     <div class="container">
-        <div class="header ovl ovl-header">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.33</h1>
-            <div class="credits">Desarrollado con asistencia de IA</div>
-        </div>
+        <!-- BARRA DE MENÚS PERMANENTE (incremento 5.2): fija arriba, siempre visible. El
+             título vive acá, ya no flota como overlay, así que no se pisa con el readout.
+             Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
+        <nav class="menubar" id="menubar">
+            <h1>🎹 MIDI Scale Trainer Pro - V11.43</h1>
+            <span class="credits">Desarrollado con asistencia de IA</span>
+            <button id="btn-menu-opciones" aria-expanded="false">⚙️ Opciones</button>
+            <div class="menu-panel" id="menu-opciones" hidden>
+                <!-- 1. Preajuste de aprendizaje: un solo control que mueve las tres ventanas
+                     de tiempo (acumulación, retención, error visual). Split queda afuera:
+                     es la nota MIDI donde se separan las manos, no una tolerancia. -->
+                <div class="preset-row">
+                    <label for="cfg-preset">Preajuste</label>
+                    <select id="cfg-preset">
+                        <option value="aprendizaje">Aprendizaje</option>
+                        <option value="normal">Normal</option>
+                        <option value="personalizado">Personalizado</option>
+                    </select>
+                </div>
+                <!-- 2. Los cuatro campos, reubicados desde el overlay de ajustes con sus id
+                     intactos. El cableado por id sigue siendo el mismo. -->
+                <h3>⚙️ Ajustes del Motor <span class="advanced-badge">avanzado</span></h3>
+                <div class="settings-grid">
+                    <div class="setting-row"><label>Acumulación (ms)</label><input type="number" id="cfg-accum" value="120"></div>
+                    <div class="setting-row"><label>Retención (ms)</label><input type="number" id="cfg-hold" value="2000"></div>
+                    <div class="setting-row"><label>Error Vis. (ms)</label><input type="number" id="cfg-err" value="1000"></div>
+                    <div class="setting-row"><label>Split (MIDI)</label><input type="number" id="cfg-split" value="60"></div>
+                </div>
+                <hr class="menu-sep">
+                <!-- 3. "Centrar en Split", reubicado desde los controles del teclado y ya sin
+                     hidden: este menú es el hogar que esperaba desde el parqueo. El
+                     auto-centrado al cargar lo sigue auto-clickeando. -->
+                <button class="btn" id="btn-c4">🎯 Centrar en Split</button>
+                <hr class="menu-sep">
+                <!-- 4. La consola completa, reubicada entera desde su overlay: desplegable,
+                     acciones y contenedor de log, con su JS intacto. Abrirla cuesta dos
+                     clics y accionarla tres, dentro del techo escrito en el ROADMAP. -->
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <button class="btn" id="btn-console-toggle" aria-expanded="false">📋 Consola y Logs ▸</button>
+                    <div class="console-actions" id="console-actions" hidden>
+                        <button class="btn" id="btn-copy">Copiar</button>
+                        <button class="btn btn-success" id="btn-export">Exportar .txt</button>
+                        <button class="btn btn-danger" id="btn-clear">Limpiar</button>
+                    </div>
+                </div>
+                <div class="logs-wrapper" id="logs-container" style="margin-top:10px;" hidden></div>
+            </div>
+        </nav>
 
         <!-- OVERLAY (posición por defecto: franja superior, centrada): barra de universo. -->
         <div class="universe-bar overlay-panel ovl ovl-universe">
@@ -218,10 +281,8 @@
             </div>
             <div class="stage-controls">
                 <button class="btn btn-warning" id="btn-lock">🔓 Motor Automático</button>
-                <!-- Parqueado a propósito (incremento 5.2), no borrado: su hogar planeado es el
-                     menú tipo macOS o las opciones del motor. Se queda en el DOM porque el
-                     auto-centrado del teclado al cargar lo auto-clickea. -->
-                <button class="btn" id="btn-c4" hidden>🎯 Centrar en Split</button>
+                <!-- "Centrar en Split" (btn-c4) vivía acá parqueado; en el 5.2 se mudó al
+                     menú de Opciones de la barra, que era su hogar planeado. -->
             </div>
             <div class="keyboard-wrapper" id="keyboard-wrapper">
                 <div class="keyboard" id="keyboard"></div>
@@ -236,19 +297,9 @@
             </div>
         </div>
 
-        <!-- OVERLAY AVANZADO (posición por defecto: esquina superior derecha, replegado):
-             Ajustes del Motor. Visibles y alcanzables; el autor los usa cuando una canción es
-             muy rápida o muy lenta. En el 5.1 solo se reubican como overlay; su superficie de
-             control propia y la mecánica de mover llegan en los incrementos 5.2 y 5.3. -->
-        <div class="panel overlay-panel ovl ovl-settings">
-            <h3>⚙️ Ajustes del Motor <span class="advanced-badge">avanzado</span></h3>
-            <div class="settings-grid">
-                <div class="setting-row"><label>Acumulación (ms)</label><input type="number" id="cfg-accum" value="120"></div>
-                <div class="setting-row"><label>Retención (ms)</label><input type="number" id="cfg-hold" value="2000"></div>
-                <div class="setting-row"><label>Error Vis. (ms)</label><input type="number" id="cfg-err" value="1000"></div>
-                <div class="setting-row"><label>Split (MIDI)</label><input type="number" id="cfg-split" value="60"></div>
-            </div>
-        </div>
+        <!-- Los Ajustes del Motor vivían acá como overlay (5.1); en el 5.2 se mudaron al
+             menú de Opciones de la barra, con sus id intactos. Siguen alcanzables mientras
+             se toca: abrir el menú es un clic y cada campo queda a la vista. -->
 
         <!-- OCULTO A PROPÓSITO EN LA FASE 5: el panel "Fijar Acordes" se esconde de la
              pantalla pero queda intacto en el código (su markup, sus botones, sus id y la
@@ -263,20 +314,8 @@
             </div>
         </div>
 
-        <!-- OVERLAY (posición por defecto: esquina inferior izquierda): consola de logs,
-             colapsada por defecto detrás de un botón. Al abrirse muestra el log en vivo como
-             siempre, más copiar y descargar. -->
-        <div class="panel overlay-panel ovl ovl-console">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <button class="btn" id="btn-console-toggle" aria-expanded="false">📋 Consola y Logs ▸</button>
-                <div class="console-actions" id="console-actions" hidden>
-                    <button class="btn" id="btn-copy">Copiar</button>
-                    <button class="btn btn-success" id="btn-export">Exportar .txt</button>
-                    <button class="btn btn-danger" id="btn-clear">Limpiar</button>
-                </div>
-            </div>
-            <div class="logs-wrapper" id="logs-container" style="margin-top:10px;" hidden></div>
-        </div>
+        <!-- La consola vivía acá como overlay (5.1); en el 5.2 se mudó entera al final del
+             menú de Opciones, desplegable incluido, con su JS sin tocar. -->
     </div>
 
     <!-- Núcleo puro de teoría musical (fuente única de verdad, ver src/engine.js).
@@ -649,6 +688,23 @@
         function saveConfig() { localStorage.setItem('midiTrainerCfg', JSON.stringify(State.config)); }
         function loadConfig() { const saved = localStorage.getItem('midiTrainerCfg'); if (saved) State.config = { ...State.config, ...JSON.parse(saved) }; }
 
+        // Incremento 5.2: preajustes de las tres ventanas de tiempo. "Normal" son los valores
+        // de arranque de State.config. "Aprendizaje" las abre para leer despacio: 400 ms de
+        // acumulación junta las notas de un acorde arpegiado lento sin fusionar acordes
+        // distintos, 5000 ms de retención sostiene el contexto mientras se lee el análisis, y
+        // 2500 ms de error visual deja ver qué tecla quedó marcada antes de que se borre.
+        // Split no está acá a propósito: es la nota donde se separan las manos, no una ventana.
+        const CFG_PRESETS = {
+            aprendizaje: { accumMs: 400, holdMs: 5000, errMs: 2500 },
+            normal:      { accumMs: 120, holdMs: 2000, errMs: 1000 }
+        };
+        function detectPreset() {
+            for (const [nombre, p] of Object.entries(CFG_PRESETS)) {
+                if (State.config.accumMs === p.accumMs && State.config.holdMs === p.holdMs && State.config.errMs === p.errMs) return nombre;
+            }
+            return 'personalizado';
+        }
+
         window.onload = () => {
             loadConfig(); 
 
@@ -672,6 +728,48 @@
             document.getElementById('cfg-hold').onchange = (e) => { State.config.holdMs = parseInt(e.target.value); saveConfig(); };
             document.getElementById('cfg-err').onchange = (e) => { State.config.errMs = parseInt(e.target.value); saveConfig(); };
             document.getElementById('cfg-split').onchange = (e) => { State.config.splitNote = parseInt(e.target.value); saveConfig(); };
+
+            // Incremento 5.2: el preajuste escribe las tres ventanas de tiempo y persiste con
+            // el saveConfig que ya existe. Editar cualquier campo a mano pasa el select a
+            // Personalizado sin pisar lo escrito. Split nunca lo toca el preajuste.
+            const presetSel = document.getElementById('cfg-preset');
+            presetSel.value = detectPreset();
+            SysLog('LAYOUT', `Preajuste inicial detectado desde la config guardada: "${presetSel.value}".`);
+            presetSel.onchange = () => {
+                const p = CFG_PRESETS[presetSel.value];
+                if (!p) { SysLog('LAYOUT', 'Preajuste "Personalizado" elegido a mano: los campos no se tocan.'); return; }
+                State.config.accumMs = p.accumMs; State.config.holdMs = p.holdMs; State.config.errMs = p.errMs;
+                document.getElementById('cfg-accum').value = p.accumMs;
+                document.getElementById('cfg-hold').value = p.holdMs;
+                document.getElementById('cfg-err').value = p.errMs;
+                saveConfig();
+                SysLog('LAYOUT', `Preajuste "${presetSel.value}" aplicado: acumulación ${p.accumMs} ms, retención ${p.holdMs} ms, error visual ${p.errMs} ms. Split queda en ${State.config.splitNote}, fuera del preajuste.`);
+            };
+            ['cfg-accum', 'cfg-hold', 'cfg-err', 'cfg-split'].forEach(id => {
+                document.getElementById(id).addEventListener('change', () => {
+                    if (presetSel.value !== 'personalizado') {
+                        presetSel.value = 'personalizado';
+                        SysLog('LAYOUT', `Campo ${id} editado a mano: el preajuste pasa a "Personalizado" sin pisar el valor.`);
+                    }
+                });
+            });
+
+            // Incremento 5.2: apertura y cierre del menú de Opciones. Estado instantáneo vía
+            // hidden; con el menú abierto el resto de la barra baja su opacidad (convención de
+            // selección de la Fase 5). Clic afuera o Escape lo cierran.
+            const menubar = document.getElementById('menubar');
+            const btnOpciones = document.getElementById('btn-menu-opciones');
+            const menuOpciones = document.getElementById('menu-opciones');
+            function setMenuOpciones(abierto) {
+                if (abierto) { menuOpciones.removeAttribute('hidden'); menubar.classList.add('menu-open'); }
+                else { menuOpciones.setAttribute('hidden', ''); menubar.classList.remove('menu-open'); }
+                btnOpciones.setAttribute('aria-expanded', String(abierto));
+                SysLog('LAYOUT', `Menú Opciones ${abierto ? 'abierto' : 'cerrado'}.`);
+            }
+            btnOpciones.onclick = (e) => { e.stopPropagation(); setMenuOpciones(menuOpciones.hasAttribute('hidden')); };
+            menuOpciones.addEventListener('click', (e) => e.stopPropagation());
+            document.addEventListener('click', () => { if (!menuOpciones.hasAttribute('hidden')) setMenuOpciones(false); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menuOpciones.hasAttribute('hidden')) setMenuOpciones(false); });
             
             btnNom.onclick = (e) => {
                 State.config.latino = !State.config.latino;
@@ -708,26 +806,25 @@
             window.addEventListener('resize', () => UI.buildKeyboard());
             UI.buildUniverse(); UI.buildKeyboard(); MIDI.init();
 
-            // Incremento 5.2 (parqueo): "Centrar en Split" (btn-c4) queda oculto, pero su acción
-            // sigue viva porque el auto-centrado del teclado lo auto-clickea al cargar. Por eso el
-            // botón se deja en el DOM en vez de borrarlo.
-            SysLog('LAYOUT', 'Control parqueado y oculto: "Centrar en Split" (btn-c4). Su hogar planeado es el menú tipo macOS o las opciones del motor (5.2). "Motor Automático" sigue visible.');
+            // Incremento 5.2: "Centrar en Split" (btn-c4) vive ahora en el menú de Opciones,
+            // ya sin hidden. El auto-centrado al cargar lo sigue auto-clickeando: el handler
+            // dispara aunque el menú esté cerrado.
             setTimeout(() => {
                 document.getElementById('btn-c4').click();
-                SysLog('LAYOUT', 'Auto-centrado del teclado ejecutado: "Centrar en Split" está parqueado y oculto, pero su acción corrió igual.');
+                SysLog('LAYOUT', 'Auto-centrado del teclado ejecutado: "Centrar en Split" corrió desde su nuevo hogar en el menú de Opciones.');
             }, 500);
 
-            // Fase 5, incremento 5.1: rastro del fondo único. Muchos mensajes, para verlo
-            // suceder en la consola. Es solo disposición: el motor y renderKeyboard no cambian.
+            // Fase 5, incrementos 5.1 y 5.2: rastro del layout al cargar. Muchos mensajes,
+            // para verlo suceder en la consola. El motor y renderKeyboard no cambian.
             SysLog('LAYOUT', 'Incremento 5.1, fondo único activo: el teclado y la zona de notas que caen son una sola capa de fondo.');
-            SysLog('LAYOUT', `Fondo tomó el viewport completo: ${window.innerWidth} x ${window.innerHeight} px (ancho x alto).`);
-            SysLog('LAYOUT', 'Overlays en posición por defecto, sin recuadro fantasma y sin mecánica de movimiento (eso llega en el 5.3):');
-            SysLog('LAYOUT', '  readout de estado (Notas, Acorde, Análisis): arriba a la izquierda.');
-            SysLog('LAYOUT', '  barra de universo: franja superior, centrada.');
-            SysLog('LAYOUT', '  Ajustes del Motor: esquina superior derecha, replegado.');
-            SysLog('LAYOUT', '  consola y logs: esquina inferior izquierda, colapsada.');
+            SysLog('LAYOUT', `Fondo debajo de la barra: ${window.innerWidth} x ${window.innerHeight - 30} px (la barra ocupa los 30 px de arriba).`);
+            SysLog('LAYOUT', 'Incremento 5.2, barra de menús permanente montada: título y versión a la izquierda, menú Opciones al lado.');
+            SysLog('LAYOUT', 'Menú Opciones armado, de arriba abajo: preajuste, los cuatro campos del motor, "Centrar en Split", y la consola completa.');
+            SysLog('LAYOUT', 'Reubicados sin recrear, con sus id intactos: los cuatro cfg-* desde el overlay de ajustes, btn-c4 desde los controles del teclado, y btn-console-toggle mas console-actions mas logs-container desde el overlay de consola.');
+            SysLog('LAYOUT', 'Los overlays de ajustes y de consola se retiraron del escenario: quedaron vacíos al mudarse su contenido.');
+            SysLog('LAYOUT', 'El título dejó de flotar como overlay: se mudó a la barra y ya no se pisa con el readout.');
+            SysLog('LAYOUT', 'Overlays que quedan quietos en su posición por defecto (mover llega en el 5.3): readout arriba a la izquierda, barra de universo en la franja superior.');
             SysLog('LAYOUT', 'Zona de notas que caen: reservada y vacía sobre el teclado; el motor de notas que caen es backlog, no se crea acá.');
-            SysLog('LAYOUT', 'Se retiraron las cajas punteadas de ranura: la ranura es un límite, no un lugar dibujado.');
             SysLog('LAYOUT', 'renderKeyboard y el coloreo de teclas quedan intactos; el motor no cambia.');
         };
     </script>
