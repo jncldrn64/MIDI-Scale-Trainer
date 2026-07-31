@@ -298,11 +298,13 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   toca. El motivo: hoy la barra tiene un solo nivel y no hay nada detrás de lo cual esconderlo,
   así que esconderlo sería inventar profundidad vacía. Es una desviación consciente y temporal, no
   un olvido, y se corrige cuando la barra crezca. El menú de opciones se ordena con un preajuste
-  arriba y los números abajo. Los cuatro ajustes del motor, acumulación, retención, error visual y
-  split, son ventanas de tiempo, y hoy quien quiere leer más despacio tiene que entender y tocar
-  cuatro números. Encima de ellos va un preajuste de aprendizaje, un solo control que los mueve
-  juntos a valores tolerantes, y los cuatro campos quedan abajo para quien quiera afinar. Es la
-  misma regla de fricción escrita más arriba: el que solo quiere tocar no debería pagar cuatro
+  arriba y los números abajo. Las ventanas de tiempo del motor son tres, acumulación, retención y
+  error visual, y hoy quien quiere leer más despacio tiene que entender y tocar esos números.
+  Encima de ellos va un preajuste de aprendizaje, un solo control que mueve esas tres juntas a
+  valores tolerantes. Split queda fuera del preajuste: escribe `State.config.splitNote`, el número
+  de nota MIDI donde se separan las manos, y es una preferencia de manos del usuario, no una
+  tolerancia de lectura. Los cuatro campos siguen viviendo juntos abajo para quien quiera afinar.
+  Es la misma regla de fricción escrita más arriba: el que solo quiere tocar no debería pagar
   decisiones numéricas para que la lectura le siga el pulso. Esta forma del menú se fija ahora
   aunque los valores concretos del preajuste se decidan al implementar, para no construir el menú
   dos veces.
@@ -585,8 +587,8 @@ prioridad, no porque la rueda la bloquee.
   Va junto con la lectura de archivos MIDI, porque hasta cargar una canción real no se sabe cuánto
   alto pide de verdad.
 - Metrónomo. No existe en ninguna parte del proyecto hoy. Interesa porque el tiempo ya participa de
-  la evaluación: el indulto por paso cromático depende de una duración fija de 180 ms, y los cuatro
-  ajustes del motor son ventanas de tiempo. Un metrónomo abre la puerta a que esas ventanas se
+  la evaluación: el indulto por paso cromático depende de una duración fija de 180 ms, y tres de
+  los cuatro ajustes del motor son ventanas de tiempo. Un metrónomo abre la puerta a que esas ventanas se
   deriven del tempo en vez de fijarse a mano. Va junto con la calibración por tapping y con los
   tempos por canción que ese ítem ya arrastra.
 - Hundir el log cuando la barra crezca. Hoy queda alcanzable porque la barra tiene un solo nivel.
