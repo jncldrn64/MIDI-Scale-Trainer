@@ -2,6 +2,14 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.42 — 2026-07-31
+
+### Added
+
+- `docs/ROADMAP.md`: el incremento 5.2 fija la forma del menú de opciones. Arriba un preajuste de aprendizaje que mueve juntas las cuatro ventanas de tiempo del motor, abajo los cuatro campos para afinar. Se escribe antes de implementar para no construir el menú dos veces.
+- `docs/ROADMAP.md`: la Fase 5 suma la convención de que lo activo se señala bajando la opacidad de lo demás, sin marcos ni colores nuevos, coherente con la opacidad como jerarquía de atención y con el presupuesto visual.
+- `docs/ROADMAP.md`: nuevo ítem de backlog, la tabla histórica como widget candidato. Muestra qué se tocó, en qué orden, con qué acorde detectado y qué veredicto, sin pedir motor nuevo, y cubre una pregunta que ni la Fase 8 ni el modo canción responden.
+
 ## v11.41 — 2026-07-30
 
 ### Fixed

@@ -228,6 +228,13 @@ ganarse el espacio que tapa. Como la regla de animación y el presupuesto visual
 requisito no funcional y su hogar definitivo es el documento de requisitos parqueado en "Deuda de
 método y documentación".
 
+Qué está activo se señala bajando la opacidad de lo demás, no agregando marcos, colores nuevos ni
+subrayados. Vale para elegir entre vistas de un mismo widget y para cualquier control con estados
+excluyentes. Es coherente con dos cosas ya escritas: la opacidad ya es la jerarquía de atención
+entre vistas simultáneas, y el presupuesto visual pide que nada nuevo gaste pintado si se puede
+resolver con lo que ya existe. Como sus hermanas, esta convención es un requisito no funcional y su
+hogar definitivo es el documento de requisitos parqueado en "Deuda de método y documentación".
+
 **Terminología de pantalla.** La Fase 5 también corrige los nombres que ve el usuario, que son
 de display, no de motor. Primero, las etiquetas del botón de nomenclatura, hoy "Latina" y
 "Anglosajona", se reemplazan por etiquetas de forma: "Silábica" para Do-Re-Mi y "Alfabética"
@@ -290,7 +297,15 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   2026-07-25 diga que la consola de debug se queda detrás de submenús, oculta para quien solo
   toca. El motivo: hoy la barra tiene un solo nivel y no hay nada detrás de lo cual esconderlo,
   así que esconderlo sería inventar profundidad vacía. Es una desviación consciente y temporal, no
-  un olvido, y se corrige cuando la barra crezca.
+  un olvido, y se corrige cuando la barra crezca. El menú de opciones se ordena con un preajuste
+  arriba y los números abajo. Los cuatro ajustes del motor, acumulación, retención, error visual y
+  split, son ventanas de tiempo, y hoy quien quiere leer más despacio tiene que entender y tocar
+  cuatro números. Encima de ellos va un preajuste de aprendizaje, un solo control que los mueve
+  juntos a valores tolerantes, y los cuatro campos quedan abajo para quien quiera afinar. Es la
+  misma regla de fricción escrita más arriba: el que solo quiere tocar no debería pagar cuatro
+  decisiones numéricas para que la lectura le siga el pulso. Esta forma del menú se fija ahora
+  aunque los valores concretos del preajuste se decidan al implementar, para no construir el menú
+  dos veces.
 - Incremento 5.3, sistema de widgets: mover la caja arrastrando con el mouse, que es la
   única acción directa sobre ella, y el resto desde el menú de widgets, opacidad, apagar, reset
   a posición por defecto y persistir; el cap de tres ranuras para los que compiten; el menú de
@@ -578,6 +593,17 @@ prioridad, no porque la rueda la bloquee.
   La decisión del 2026-07-25 pide que la consola de debug viva detrás de submenús, oculta para
   quien solo toca. Cuando aparezcan menús que se ganen el espacio, como el de archivo para MIDI y
   entrenamientos, el log baja al lugar que le corresponde.
+- Tabla histórica como widget candidato. Una vista tabular de lo que se tocó en orden, con el
+  acorde detectado y el veredicto que el motor le dio a cada nota. No pide motor nuevo: el buffer y
+  el log ya tienen esos datos, así que sería un widget que presenta, como el readout. Cubre una
+  pregunta que hoy no cubre nada: qué acabo de tocar y por qué me lo marcó así. Es distinta de la
+  Fase 8, que detecta la progresión de lo que suena en vivo, y del modo canción de este mismo
+  backlog, que evalúa una melodía contra un archivo cargado. Antes de programarla hay que decidir
+  cuánto histórico guarda y si se limpia sola. Con ella llega una pregunta que hoy no está
+  decidida: si además de listar, la vista cuenta aciertos y errores de la sesión. Contar no es
+  puntuar precisión temporal, que es el eje de juego de ritmo que el proyecto dejó afuera, pero se
+  le acerca lo suficiente como para no resolverlo de paso. Se decide cuando esta vista se diseñe,
+  no antes.
 
 ---
 
