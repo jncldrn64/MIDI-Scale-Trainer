@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.43 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.44 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -156,7 +156,8 @@
         }
         .falling-reserved {
             flex: 1 1 auto; min-height: 0;
-            display: flex; align-items: flex-start; justify-content: center; padding-top: 8px;
+            display: flex; align-items: flex-end; justify-content: flex-end;
+            padding: 0 14px 8px 0;
             border-radius: 10px;
             background: repeating-linear-gradient(135deg, rgba(56,189,248,0.03) 0 14px, transparent 14px 28px);
         }
@@ -169,12 +170,48 @@
            las esquinas. Mover y resetear a esa posición son del incremento 5.3. */
         .overlay-panel { background: rgba(30,41,59,0.92); backdrop-filter: blur(4px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
         .ovl { position: fixed; z-index: 10; }
-        .ovl-universe { top: 150px; left: 50%; transform: translateX(-50%); width: min(680px, 94vw); }
-        .ovl-readout  { top: 38px; left: 12px; }
 
-        /* El readout de estado: los tres cards en fila, agrupados arriba a la izquierda. */
-        .top-row { display: flex; gap: 10px; }
-        .top-row .panel { padding: 12px 16px; }
+        /* --- Incremento 5.3, primera parte: el molde uniforme de widgets ---
+           Cajas iguales en tamaño y separación, quietas en su posición por defecto, debajo
+           de la franja de nacimiento. El chasis (arrastrar, opacidad, cerrar, reset,
+           persistir y el menú de widgets) es el segundo PR del 5.3. Sin transiciones:
+           los estados cambian instantáneo, según la regla de animación de la Fase 5. */
+        .widgets-row {
+            position: fixed; top: 86px; /* 30 px de barra + 56 px de franja de nacimiento */
+            left: 0; right: 0; z-index: 10;
+            display: flex; justify-content: center; align-items: flex-start; gap: 16px;
+            pointer-events: none;
+        }
+        .widget {
+            pointer-events: auto;
+            width: 23vw; height: 150px; overflow: hidden;
+            border: 1px solid #334155; border-radius: 12px;
+            padding: 8px 12px;
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .widget-tag { font-size: 0.62em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .widget-row-line { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+        .widget .status-label { margin-bottom: 0; }
+        .widget .status-value { font-size: 1.05em; }
+        .widget.universe-bar { flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 8px 12px; }
+        .widget .formula-display { font-size: 11px; padding: 4px 8px; flex-wrap: wrap; }
+        .widget select, .widget button { padding: 4px 10px; font-size: 12px; }
+        .widget-reserved {
+            border-style: dashed; background: rgba(30,41,59,0.35);
+            align-items: center; justify-content: center; text-align: center;
+            color: var(--text-muted); font-size: 0.72em; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* Cajas de sistema (subtítulos y feedback): píldoras de texto, no paneles, para que
+           se distingan de los widgets que compiten. Sin lógica y sin cablear todavía. */
+        .syswidget {
+            position: fixed; left: 50%; transform: translateX(-50%); z-index: 10;
+            padding: 5px 16px; border-radius: 999px;
+            background: rgba(11,17,32,0.72); border: 1px solid #1e293b;
+            color: var(--text-muted); font-size: 12px; white-space: nowrap;
+        }
+        #sys-subtitles { top: 46vh; }
+        #sys-feedback  { top: 51vh; }
 
         .advanced-badge { font-size: 0.55em; background: #334155; color: var(--text-muted); padding: 2px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: 1px; vertical-align: middle; }
         .console-actions { display: flex; gap: 10px; }
@@ -193,7 +230,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.43</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.44</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">⚙️ Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -238,38 +275,53 @@
             </div>
         </nav>
 
-        <!-- OVERLAY (posición por defecto: franja superior, centrada): barra de universo. -->
-        <div class="universe-bar overlay-panel ovl ovl-universe">
-            <div style="display:flex; gap:10px; align-items:center;">
-                <strong>🌌 Universo:</strong>
-                <select id="root-select"></select>
-                <select id="scale-select">
-                    <option value="major">Mayor (Natural)</option>
-                    <option value="minor">Menor (Natural)</option>
-                    <option value="harmonic_minor">Menor Armónica</option>
-                </select>
+        <!-- FILA DE WIDGETS (incremento 5.3, primera parte): tres cajas del mismo molde,
+             quietas en su posición por defecto, debajo de la franja de nacimiento. Markup
+             movido, no recreado: cada id sigue siendo el mismo. El chasis (arrastrar,
+             opacidad, cerrar, reset, persistir, menú de widgets) es el segundo PR del 5.3. -->
+        <div class="widgets-row">
+            <!-- Widget de escala: la barra de universo entera, ahora en el molde, con la
+                 vista de fórmula adentro. Contenido apilado para entrar en la caja. -->
+            <div class="widget universe-bar overlay-panel">
+                <div class="widget-tag">Escala</div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <strong>🌌 Universo:</strong>
+                    <select id="root-select"></select>
+                    <select id="scale-select">
+                        <option value="major">Mayor (Natural)</option>
+                        <option value="minor">Menor (Natural)</option>
+                        <option value="harmonic_minor">Menor Armónica</option>
+                    </select>
+                </div>
+                <div class="formula-display" id="formula-display"></div>
+                <button id="btn-toggle-nom">Nomenclatura: Anglosajona</button>
             </div>
-            <div class="formula-display" id="formula-display"></div>
-            <button id="btn-toggle-nom">Nomenclatura: Anglosajona</button>
+            <!-- Widget readout: las tres lecturas del motor apiladas en una sola caja. -->
+            <div class="widget overlay-panel" id="widget-readout">
+                <div class="widget-tag">Readout del motor</div>
+                <div class="widget-row-line">
+                    <span class="status-label">Notas Activas (Izq/Der)</span>
+                    <span class="status-value"><span id="bass-count">0</span> / <span id="mel-count">0</span></span>
+                </div>
+                <div class="widget-row-line">
+                    <span class="status-label">Acorde Detectado</span>
+                    <span class="status-value" id="chord-display">-</span>
+                </div>
+                <div id="chord-inversion" style="font-size:11px; color:var(--text-muted);">-</div>
+                <div class="widget-row-line">
+                    <span class="status-label">Análisis de Armonía</span>
+                    <span class="status-value" id="chord-relation" style="font-size:1.2em;">-</span>
+                </div>
+            </div>
+            <!-- Lugar reservado y visible del tercer widget: todavía no está construido. -->
+            <div class="widget widget-reserved overlay-panel">Tercer widget · por construir<br>(progresiones, cuando exista)</div>
         </div>
 
-        <!-- OVERLAY (posición por defecto: arriba a la izquierda): readout de estado. Son
-             salida del motor y el autor los mira mientras toca, así que quedan visibles. -->
-        <div class="top-row ovl ovl-readout">
-            <div class="panel status-item overlay-panel">
-                <div class="status-label">Notas Activas (Izq/Der)</div>
-                <div class="status-value"><span id="bass-count">0</span> / <span id="mel-count">0</span></div>
-            </div>
-            <div class="panel status-item overlay-panel">
-                <div class="status-label">Acorde Detectado</div>
-                <div class="status-value" id="chord-display">-</div>
-                <div id="chord-inversion" style="font-size:11px; color:var(--text-muted);">-</div>
-            </div>
-            <div class="panel status-item overlay-panel">
-                <div class="status-label">Análisis de Armonía</div>
-                <div class="status-value" id="chord-relation" style="font-size:1.2em;">-</div>
-            </div>
-        </div>
+        <!-- CAJAS DE SISTEMA (incremento 5.3, primera parte): subtítulos centrados y feedback
+             centrado debajo, como fija el estándar espacial. Marcadores de posición sin
+             lógica: cablearlas al motor es trabajo posterior. -->
+        <div class="syswidget" id="sys-subtitles">Subtítulos del entrenamiento · por cablear</div>
+        <div class="syswidget" id="sys-feedback">Feedback del sistema · por cablear</div>
 
         <!-- FONDO ÚNICO (capa fija a viewport completo, detrás de todo): el teclado en la
              franja de abajo a todo el ancho, y encima la zona reservada de notas que caen,
@@ -823,9 +875,44 @@
             SysLog('LAYOUT', 'Reubicados sin recrear, con sus id intactos: los cuatro cfg-* desde el overlay de ajustes, btn-c4 desde los controles del teclado, y btn-console-toggle mas console-actions mas logs-container desde el overlay de consola.');
             SysLog('LAYOUT', 'Los overlays de ajustes y de consola se retiraron del escenario: quedaron vacíos al mudarse su contenido.');
             SysLog('LAYOUT', 'El título dejó de flotar como overlay: se mudó a la barra y ya no se pisa con el readout.');
-            SysLog('LAYOUT', 'Overlays que quedan quietos en su posición por defecto (mover llega en el 5.3): readout arriba a la izquierda, barra de universo en la franja superior.');
+            SysLog('LAYOUT', 'La escala y el readout ya no son overlays sueltos: viven en la fila de widgets del molde uniforme, quietos (mover llega con el chasis del 5.3).');
             SysLog('LAYOUT', 'Zona de notas que caen: reservada y vacía sobre el teclado; el motor de notas que caen es backlog, no se crea acá.');
             SysLog('LAYOUT', 'renderKeyboard y el coloreo de teclas quedan intactos; el motor no cambia.');
+
+            // Incremento 5.3, primera parte: la forma, medida al cargar para poder comprobar
+            // el presupuesto de superposición contra números reales. Cajas quietas; el chasis
+            // (arrastrar, opacidad, cerrar, reset, persistir, menú de widgets) es el otro PR.
+            (function logForma() {
+                const zonaTop = document.getElementById('menubar').getBoundingClientRect().bottom;
+                const zonaBottom = document.getElementById('keyboard-wrapper').getBoundingClientRect().top;
+                const zonaH = zonaBottom - zonaTop;
+                const fila = document.querySelector('.widgets-row').getBoundingClientRect();
+                SysLog('LAYOUT', `Incremento 5.3 (forma): zona de notas de y=${Math.round(zonaTop)} a y=${Math.round(zonaBottom)}, ${Math.round(zonaH)} px de alto.`);
+                SysLog('LAYOUT', `Franja de nacimiento libre: ${Math.round(fila.top - zonaTop)} px entre la barra y la fila de widgets; ningún widget ni rótulo la ocupa.`);
+                const molde = document.querySelector('.widget').getBoundingClientRect();
+                SysLog('LAYOUT', `Molde uniforme aplicado: ${Math.round(molde.width)} x ${Math.round(molde.height)} px por widget, separación de 16 px entre cajas.`);
+                document.querySelectorAll('.widget').forEach(el => {
+                    const r = el.getBoundingClientRect();
+                    const tag = el.querySelector('.widget-tag');
+                    SysLog('LAYOUT', `  widget "${(tag ? tag.innerText : el.innerText.split('\n')[0]).trim()}": x=${Math.round(r.left)}, y=${Math.round(r.top)}.`);
+                });
+                document.querySelectorAll('.syswidget').forEach(el => {
+                    const r = el.getBoundingClientRect();
+                    SysLog('LAYOUT', `  caja de sistema ${el.id}: centrada, y=${Math.round(r.top)}.`);
+                });
+                const bandas = Array.from(document.querySelectorAll('.widget, .syswidget'))
+                    .map(el => { const r = el.getBoundingClientRect(); return [Math.max(r.top, zonaTop), Math.min(r.bottom, zonaBottom)]; })
+                    .filter(([a, b]) => b > a)
+                    .sort((p, q) => p[0] - q[0]);
+                let cubierto = 0, s = null, e = null;
+                for (const [a, b] of bandas) {
+                    if (e === null) { s = a; e = b; }
+                    else if (a <= e) { e = Math.max(e, b); }
+                    else { cubierto += e - s; s = a; e = b; }
+                }
+                if (e !== null) cubierto += e - s;
+                SysLog('LAYOUT', `Cobertura vertical de la zona de notas: ${Math.round(cubierto)} px de ${Math.round(zonaH)}, ${((cubierto / zonaH) * 100).toFixed(1)}% (tope del presupuesto: tres octavos, 37.5%).`);
+            })();
         };
     </script>
 </body>

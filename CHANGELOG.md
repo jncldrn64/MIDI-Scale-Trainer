@@ -2,6 +2,21 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.44 — 2026-08-01
+
+### Added
+
+- `index.html`: incremento 5.3 de la Fase 5, primera parte, la forma. El molde uniforme de widget: cajas de 23vw de ancho (331 px en una ventana de 1440, debajo del tope de dos octavos que son 360) por 150 px de alto, con 16 px de separación uniforme entre ellas y contra la fila. Un widget nace con ese tamaño aunque su contenido sea distinto; si el contenido no entra, se recorta o se apila, la caja no se agranda. Tres cajas en el molde: la escala, el readout y el lugar reservado y visible del tercer widget, rotulado como por construir. Todas quietas: el chasis, arrastrar, opacidad, cerrar, reset, persistir y el menú de widgets, es el segundo PR del 5.3.
+- `index.html`: la franja de nacimiento, 56 px libres entre la barra y la fila de widgets, para que toda nota que caiga sea visible al aparecer; ningún widget ni rótulo la ocupa. Con la zona de notas midiendo 540 px en la ventana de referencia de 900 de alto, las cajas tapan 202 px, el 37.4%, debajo del tope de tres octavos (37.5%) del presupuesto de superposición. El cálculo no es de fe: la página lo mide al cargar y lo escribe en el log, con la franja, el molde y la posición de cada caja.
+- `index.html`: los subtítulos del entrenamiento y el feedback del sistema creados como cajas de sistema, píldoras de texto centradas, el feedback debajo de los subtítulos, como fija el estándar espacial. Son marcadores de posición sin lógica: cablearlos al motor es trabajo posterior.
+
+### Changed
+
+- `index.html`: el readout dejó de ser tres cards sueltos y pasó a una sola caja de widget con las tres lecturas apiladas, notas activas, acorde detectado y análisis de armonía, con markup movido y cada id intacto. La barra de universo entró al mismo molde como widget de escala, con la vista de fórmula adentro y el contenido apilado para entrar en la caja.
+- `index.html`: el rótulo de la zona de notas se corrió del centro superior a la esquina inferior derecha, porque ocupaba justo la franja de nacimiento que este PR deja libre.
+- `index.html`: la versión mostrada sube de V11.43 a V11.44.
+- `docs/ROADMAP.md`: el incremento 5.3 deja escrito que se entrega en dos PR de código, primero la forma y después el chasis, porque la disposición por defecto tiene que ser verificable antes de que exista el arrastre.
+
 ## v11.43 — 2026-07-31
 
 ### Added
