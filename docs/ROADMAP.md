@@ -235,6 +235,13 @@ entre vistas simultáneas, y el presupuesto visual pide que nada nuevo gaste pin
 resolver con lo que ya existe. Como sus hermanas, esta convención es un requisito no funcional y su
 hogar definitivo es el documento de requisitos parqueado en "Deuda de método y documentación".
 
+Los tres widgets que compiten nacen con el mismo molde, y el molde tiene número: alto de 170 px y
+ancho de veinte píxeles más que el ancho anterior de 23vw, sin pasar nunca de dos octavos del ancho
+de la ventana. Nacen repartidos en tres puntos, con la misma separación entre ellos, debajo de la
+franja de nacimiento. Entre los tres no tapan más de tres octavos del alto de la zona de notas; las
+cajas de sistema no cuentan contra ese tope y se miden aparte. Si el molde entra en conflicto con el
+tope en alguna resolución, manda el tope, y la app lo reporta al cargar.
+
 **Terminología de pantalla.** La Fase 5 también corrige los nombres que ve el usuario, que son
 de display, no de motor. Primero, las etiquetas del botón de nomenclatura, hoy "Latina" y
 "Anglosajona", se reemplazan por etiquetas de forma: "Silábica" para Do-Re-Mi y "Alfabética"
@@ -324,7 +331,9 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   posición por defecto, todas quietas; el segundo el chasis, arrastrar, opacidad, cerrar, reset,
   persistir y el menú de widgets. El orden es a propósito: la disposición por defecto tiene que
   ser verificable antes de que exista el arrastre, porque con arrastre cualquier caja mal puesta
-  se excusa con moverla.
+  se excusa con moverla. El segundo PR, además de arrastrar, opacidad, cerrar, reset, persistir y
+  el menú de widgets, respeta los límites del área, el piano abajo y la barra arriba, y emite por
+  el feedback el aviso de cada cierre con la forma de restaurarlo.
 - Incremento 5.4, nomenclatura por forma: las etiquetas del botón de nomenclatura pasan a
   "Silábica" y "Alfabética", con valor por defecto, persistencia por `localStorage` y el botón
   alcanzable.
@@ -610,6 +619,22 @@ prioridad, no porque la rueda la bloquee.
   puntuar precisión temporal, que es el eje de juego de ritmo que el proyecto dejó afuera, pero se
   le acerca lo suficiente como para no resolverlo de paso. Se decide cuando esta vista se diseñe,
   no antes.
+- Redimensionar un widget en tiempo real. Hoy el molde es fijo a propósito, porque el tamaño
+  uniforme es lo que hace que las cajas se lean como un sistema. Dejar que el usuario las estire
+  abre preguntas que hoy no tienen respuesta: qué pasa con el tope de cobertura, qué pasa con el
+  contenido que se recorta, y si el tamaño se persiste por instancia. Queda anotado como idea, no
+  como decisión.
+- Lineamientos para partir una fase. La Fase 5 tiene cinco incrementos y uno de ellos se entrega en
+  dos PR de código, y esa estructura creció sin regla: no hay escrito cuándo un incremento se parte
+  ni hasta qué profundidad. Sin lineamiento, el trabajo se subdivide tarde, cuando ya se empezó a
+  construir. Va junto con la crítica obligatoria del diseño de fase, que ya está parqueada, porque
+  es el mismo problema visto desde el otro lado.
+- Describir el destino visual en texto dentro del repo, con números. Ya está parqueado en "Deuda de
+  método y documentación" como sugerencia, y quedó demostrado por qué hace falta: una instrucción en
+  prosa sobre dónde van las cajas se puede cumplir de varias maneras y la que sale es la que se
+  parece a lo que ya había. Los números del molde y de las posiciones viajaron intactos; lo que
+  quedó en palabras, no. Este ítem eleva aquella sugerencia a trabajo concreto: las reglas de
+  posición se escriben con medidas, no con adjetivos.
 
 ---
 

@@ -809,6 +809,61 @@ trabajo del incremento en el que los widgets ganen posición, no una corrección
 
 ---
 
+## 2026-08-01 — Nacimiento discreto y movimiento libre: puntos de nacimiento, límites del área y qué cuenta contra el presupuesto
+
+**Contexto:** quedaba sin precisar de dónde nace un widget, hasta dónde se puede mover, y si las
+cajas de sistema consumen el mismo presupuesto de cobertura que los widgets que compiten por el cap.
+
+**Decisión:** siete puntos.
+
+1. Tres puntos de nacimiento, no tres secciones. Un widget nace en uno de tres puntos por defecto y
+   el reset lo devuelve ahí. No son celdas, ni cajas, ni zonas reservadas: son coordenadas de
+   arranque. Esto precisa la entrada del 2026-07-25 sobre la ranura como límite y no como espacio:
+   sigue sin haber cajas dibujadas ni secciones en la pantalla, y ahora queda dicho que sí hay
+   posiciones de nacimiento.
+
+2. El movimiento es absolutamente libre. Un widget se arrastra a cualquier parte del área
+   permitida, y dos widgets pueden intercambiar lugar sin que eso sea una operación aparte. El
+   sistema identifica cada widget por identidad y no por dónde está parado, así que puede quedar el
+   del centro a la izquierda y el de la izquierda al centro sin que nada se confunda.
+
+3. El nacimiento es discreto aunque el movimiento sea libre, y esa mezcla no es una contradicción,
+   es la que enseña la regla. Si los widgets nacen espaciados y con el mismo tamaño, el usuario
+   deduce solo que hay tres lugares y que el límite es tres, sin que haya que dibujar nada ni
+   explicárselo.
+
+4. Límites del área de movimiento. El piano es el límite de abajo y no se invade. La barra de menús
+   es el límite de arriba. Ese segundo límite queda anotado como discutible: si más adelante conviene
+   que un widget pueda solaparse con la barra, se decide entonces.
+
+5. Qué cuenta contra el presupuesto de superposición. El tope de tres octavos del alto de la zona de
+   notas aplica a los widgets que compiten por el cap. Las cajas de sistema, subtítulos, feedback y
+   guía, quedan fuera de ese tope, con su propia regla: son delgadas, y el usuario las cierra cuando
+   quiere la pantalla limpia. La app mide y reporta las dos cifras por separado, la de los que
+   compiten contra el tope y el total de todo lo que tapa, para que la diferencia quede a la vista y
+   se pueda revisar. Esto precisa el presupuesto de superposición del 2026-07-30, que fijaba el tope
+   sin decir a quiénes alcanzaba.
+
+6. La guía es la excepción al molde uniforme. Crece en vertical para acomodar el texto que muestre,
+   incluido el que cargue un entrenamiento. Estorba a propósito mientras el usuario aprende los
+   controles, y es la primera caja que va a querer cerrar. Esto precisa el estándar espacial del
+   2026-07-30, que fija tamaño uniforme para el resto.
+
+7. Todo panel se puede cerrar, incluidos los de sistema. Cerrados todos, queda el piano de extremo a
+   extremo y nada más. Cada cierre lo avisa el feedback, diciendo qué se cerró y que se restaura
+   desde el menú, que es el aviso del sistema ya previsto. El feedback también se usa para avisos que
+   valen la pena interrumpir, como que un entrenamiento terminó.
+
+**Razón:** sin estas precisiones, "libre" y "por defecto" se leían como contradictorias, y no estaba
+claro si una caja de sistema delgada consumía el mismo presupuesto que un widget entero.
+
+**Consecuencia:** refina las tres entradas nombradas sin invalidarlas. El chasis del incremento 5.3,
+arrastrar, reset y cerrar, se construye contra estas reglas.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
