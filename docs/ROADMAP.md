@@ -320,7 +320,11 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   la barra de universo, es el elemento identificado en el código como la vista de fórmula, y el
   widget de escala la absorbe. Reescribirla de nuevo es un error a evitar. Este apunte existe
   justamente porque nada en el repo nombraba qué era esa vista, y por eso se la pasaba por alto al
-  planear.
+  planear. El 5.3 se entrega en dos PR de código: el primero la forma, las cajas en su molde y su
+  posición por defecto, todas quietas; el segundo el chasis, arrastrar, opacidad, cerrar, reset,
+  persistir y el menú de widgets. El orden es a propósito: la disposición por defecto tiene que
+  ser verificable antes de que exista el arrastre, porque con arrastre cualquier caja mal puesta
+  se excusa con moverla.
 - Incremento 5.4, nomenclatura por forma: las etiquetas del botón de nomenclatura pasan a
   "Silábica" y "Alfabética", con valor por defecto, persistencia por `localStorage` y el botón
   alcanzable.
