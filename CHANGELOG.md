@@ -2,6 +2,20 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.45 — 2026-08-01
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva con el nacimiento discreto y el movimiento libre. Un widget nace en uno de tres puntos por defecto y el reset lo devuelve ahí, pero esos puntos son coordenadas de arranque y no celdas: el movimiento es libre y dos widgets intercambian lugar sin que sea una operación aparte, porque el sistema identifica cada uno por identidad y no por posición. El nacimiento espaciado y con tamaño uniforme es lo que le enseña al usuario que hay tres lugares, sin dibujar nada. El área de movimiento tiene el piano como límite de abajo y la barra de menús como límite de arriba, este último anotado como discutible. El tope de tres octavos aplica solo a los widgets que compiten: las cajas de sistema quedan fuera y se miden aparte, y la app reporta las dos cifras por separado. La guía es la excepción al molde uniforme y crece en vertical. Y todo panel se puede cerrar, incluidos los de sistema, hasta dejar el piano solo, con el feedback avisando qué se cerró y cómo restaurarlo. Precisa la entrada del 2026-07-25 sobre la ranura como límite, y las dos del 2026-07-30, el presupuesto de superposición y el estándar espacial, sin invalidarlas.
+- `docs/ROADMAP.md`: tres ítems de backlog. Redimensionar un widget en tiempo real, anotado como idea y no como decisión, con las preguntas que abre. Lineamientos para partir una fase, porque la estructura de cinco incrementos con uno partido en dos PR creció sin regla escrita. Y describir el destino visual con medidas y no con adjetivos, que eleva a trabajo concreto una sugerencia ya parqueada.
+
+### Changed
+
+- `docs/ROADMAP.md`: el Alcance de la Fase 5 fija el molde con números. Alto de 170 px y ancho de veinte píxeles más que el 23vw anterior, sin pasar de dos octavos del ancho de la ventana, con los tres puntos de nacimiento debajo de la franja y la misma separación entre cajas. Si el molde entra en conflicto con el tope de cobertura en alguna resolución, manda el tope y la app lo reporta al cargar.
+- `docs/ROADMAP.md`: el segundo PR del incremento 5.3, el del chasis, suma respetar los límites del área, el piano abajo y la barra arriba, y emitir por el feedback el aviso de cada cierre con la forma de restaurarlo.
+
+La versión mostrada sigue en V11.44; el desfase lo cierra el próximo PR de código, el chasis del incremento 5.3.
+
 ## v11.44 — 2026-08-01
 
 ### Added
