@@ -2,6 +2,22 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.46 — 2026-08-01
+
+### Added
+
+- `index.html`: incremento 5.3 de la Fase 5, segunda parte, el movimiento. Las cinco cajas se arrastran con el mouse, con Pointer Events y sin una sola librería: `pointerdown`, `pointermove`, `pointerup` y `setPointerCapture`, y la posición se escribe con `transform: translate()` para no forzar reflow. El arrastre no roba el clic a los controles de adentro: si el `pointerdown` sale de un select, botón, input, textarea, option o enlace, la caja no se mueve. Verificado: con el widget de escala en su nacimiento (177, 86), cambiar `#scale-select` a menor cambió `State.universe.type` y la caja no se movió un píxel.
+- `index.html`: los límites del área. Una caja no pasa del piano por abajo, no se mete debajo de la barra de menús por arriba y no se sale por los costados. El área en la ventana de referencia va de 30 a 570 px de alto. Los cuatro frenos se verificaron uno por uno: borde inferior en 570 contra el fondo del área, `x + ancho` sin pasar de 1440, `y` sin bajar de 30 y `x` sin bajar de 0. Cuando el arrastre frena contra un borde, el log lo dice.
+- `index.html`: los puntos de nacimiento y el reset. Los tres widgets nacen en fila debajo de la franja, en (177, 86), (544, 86) y (912, 86), y las dos cajas de sistema centradas debajo, en (591, 414) y (609, 459). "↺ Restablecer posiciones" vive dentro del menú de Opciones y devuelve todo ahí; es provisorio y se muda al menú de widgets cuando ese menú exista, en el tercer PR del 5.3. Verificado: readout arrastrado a (744, 286), reset, readout de vuelta en (544, 86).
+- `index.html`: persistencia por identidad en `localStorage`, clave `midiTrainerLayout`, con el mismo patrón de `saveConfig` y `loadConfig` que ya existía. Se guarda la posición contra el id de cada caja, nunca contra un índice ni un lugar, que es lo que permite que dos widgets intercambien lugar sin que el sistema se confunda. Lo que se lee y cae fuera del área se reubica en su punto de nacimiento en vez de quedar inalcanzable, y un JSON roto se descarta con aviso en el log y todo vuelve a los nacimientos. Verificado con recarga real, un widget y una caja de sistema.
+
+### Changed
+
+- `index.html`: el molde de widget pasa a 170 px de alto por 23vw más 20 px de ancho, con tope de dos octavos del ancho de la ventana. En la ventana de referencia de 1440 la caja mide 351 por 170, debajo del tope de 360. El tope no es decorativo: manda sobre el molde, y por debajo de los 1000 px de ancho es el que recorta.
+- `index.html`: la medición de cobertura se separa en dos cifras, como fija la entrada del 2026-08-01 de `DECISIONS.md`. Contra el tope de tres octavos se mide solo lo que compite, los tres widgets, y da 31.5% sobre los 540 px de la zona de notas: entra. Aparte, informativa y sin tope, la unión de todas las cajas incluidas las de sistema, que da 41.1%. Con una sola cifra el molde de 170 px no habría pasado, y por eso el molde y la medición separada van en el mismo commit. El veredicto del log además distingue de quién es el exceso cuando lo hay: si las cajas están en su nacimiento, el molde se pasó y es un defecto; si el usuario las movió, es su decisión.
+- `index.html`: la versión mostrada sube de V11.44 a V11.46.
+- `docs/ROADMAP.md`: el incremento 5.3 va en tres PR y no en dos. El primero la forma, el segundo el movimiento con el molde y la medición separada, el tercero cerrar con el menú de widgets y el cap. El motivo del corte nuevo: cerrar sin un menú que restaure deja una caja cerrada sin forma de recuperarla salvo recargando la página.
+
 ## v11.45 — 2026-08-01
 
 ### Added
