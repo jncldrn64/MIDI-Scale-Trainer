@@ -2,6 +2,27 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.50 — 2026-08-09
+
+### Fixed
+
+- `CLAUDE.md`: la regla 4 mandaba borrar paréntesis que llevan información. Los de `docs/ARCHITECTURE.md` dicen "confirmada en código" y "verificado", y `tests/README.md` lleva el umbral de 180 ms. Ahora la regla los conserva y apunta solo al paréntesis sin dato.
+- `CLAUDE.md`: la regla 4 ya no manda corregir "los de archivos editables". Dice cuáles se quedan y por qué, archivo por archivo: 3 en ARCHITECTURE, 2 en tests, 4 congelados por append-only y 8 candidatos en ROADMAP.
+- `CLAUDE.md`: los 8 del ROADMAP no se tocan por su cuenta. Ese archivo es del que un modelo saca qué hacer al ejecutar una fase, y renombrar un encabezado mueve anclajes que un prompt puede citar literal.
+
+### Added
+
+- `CLAUDE.md`: cada número de las cinco reglas viaja con el comando que lo produce. Cinco comandos de shell, corribles desde la raíz, para que una sesión sin el historial pueda recalcular en vez de creer.
+- `CLAUDE.md`: queda escrito que el conteo de la regla 2 depende de su expresión regular. Cambiarla rompe la comparación con la línea base, así que se recalculan los tres archivos juntos.
+- `CLAUDE.md`: la sección "CHANGELOG" apunta al techo de 60 palabras por viñeta, que vive en "Prosa". Antes había que leer la otra sección para enterarse.
+
+### Changed
+
+- `CLAUDE.md`: las mediciones se rehicieron después del merge del PR #52 y `CLAUDE.md` sale del corpus. Paralelismos: `docs/DECISIONS.md` en uno cada 419, `docs/ROADMAP.md` en uno cada 546, `docs/ARCHITECTURE.md` en uno cada 784.
+- `CLAUDE.md`: la regla 3 suma cuánto falta. De 142 viñetas del CHANGELOG, 66 se pasan de 60 palabras y la más larga tiene 204. El promedio de las quince más nuevas bajó de 102 a 63.
+
+La versión mostrada sigue en V11.46; el desfase lo cierra el próximo PR de código.
+
 ## v11.49 — 2026-08-09
 
 ### Fixed
