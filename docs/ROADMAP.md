@@ -338,6 +338,11 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   mal puesta se excusa con moverla. Y cerrar va con el menú en el mismo PR, no antes: cerrar sin
   un menú que restaure deja una caja cerrada sin forma de recuperarla salvo recargando la página.
   Ese tercer PR emite además por el feedback el aviso de cada cierre con la forma de restaurarlo.
+  **Las tres partes están entregadas.** La tercera corrigió además el clamp de abajo: el área de
+  arrastre llega al borde de la ventana, según la corrección del 2026-08-09, y un widget puede
+  quedar sobre el piano. El punto de nacimiento de un widget que se abre desde el menú quedó
+  decidido acá: el primero libre de izquierda a derecha, contando por asignación y no por dónde
+  esté la caja en pantalla, y con los tres tomados la apertura se bloquea y el feedback lo avisa.
 - Incremento 5.4, nomenclatura por forma: las etiquetas del botón de nomenclatura pasan a
   "Silábica" y "Alfabética", con valor por defecto, persistencia por `localStorage` y el botón
   alcanzable.
@@ -393,13 +398,10 @@ conciencia.
   escrita de dónde debe vivir, y hay tensión: el incremento 5.1 dice que se queda asociada al teclado
   dentro del fondo, y la guía existe para explicar qué significa cada cosa. Queda como pregunta
   abierta, a decidir cuando la guía se construya.
-- La guía no existe todavía, mientras que el tercer widget sí tiene una caja visible. La asimetría es
-  de andamiaje, no de diseño.
-- La caja punteada del tercer widget contradice el modelo: no hay cajas dibujadas ni espacios
-  reservados a la vista. El espacio libre se percibe al abrir widgets, no anunciándolo con un
-  recuadro. Esa caja se retira cuando el menú de widgets exista.
-- No está decidido en qué punto de nacimiento aparece un widget que se abre desde el menú, ni qué
-  pasa si el punto está ocupado. Hace falta antes de la tercera parte del incremento 5.3.
+- Dos widgets existen solo como andamiaje y no tienen contenido: el tercer widget, rotulado por
+  construir, y el widget de prueba. El segundo se creó porque el cap es de tres y sin un cuarto
+  candidato la rama que bloquea una apertura no se puede ejercer desde la interfaz. Los dos nacen
+  cerrados, así que no se dibuja nada, y se retiran cuando existan los widgets de verdad.
 
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, la barra de menús permanente existe como

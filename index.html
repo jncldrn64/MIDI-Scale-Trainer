@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.46 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.53 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -44,7 +44,7 @@
 
         /* Convención de selección (Fase 5): con un menú abierto, el resto de la barra baja
            su opacidad. Sin marcos nuevos, sin colores nuevos, sin subrayados. */
-        .menubar.menu-open > :not(#btn-menu-opciones):not(.menu-panel) { opacity: 0.35; }
+        .menubar.menu-open > :not([aria-expanded="true"]):not(.menu-panel) { opacity: 0.35; }
         
         /* Layout de Paneles */
         .top-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
@@ -171,13 +171,13 @@
         .overlay-panel { background: rgba(30,41,59,0.92); backdrop-filter: blur(4px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
         .ovl { position: fixed; z-index: 10; }
 
-        /* --- Incremento 5.3, segunda parte: el molde nuevo y el movimiento ---
+        /* --- Incremento 5.3, partes segunda y tercera: el molde, el movimiento y el chasis ---
            Cada caja se ubica sola por transform: translate(), así que el contenedor deja de
            posicionar. El molde sale del Alcance de la Fase 5: alto de 170 px y ancho de 23vw
            más 20 px, sin pasar de dos octavos del ancho de la ventana, que es lo que hace el
            min(). Sin transiciones: la caja sigue al puntero, no lo persigue (regla de
-           animación de la Fase 5). Cerrar, el menú de widgets y el cap por código son el
-           tercer PR del 5.3. */
+           animación de la Fase 5). La tercera parte suma cerrar, restaurar, el menú de
+           widgets, el cap de tres y la opacidad por instancia. */
         .widgets-row { display: contents; }
         .box {
             position: fixed; left: 0; top: 0; z-index: 10;
@@ -197,19 +197,33 @@
         .widget.universe-bar { flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 8px 12px; }
         .widget .formula-display { font-size: 11px; padding: 4px 8px; flex-wrap: wrap; }
         .widget select, .widget button { padding: 4px 10px; font-size: 12px; }
-        .widget-reserved {
-            border-style: dashed; background: rgba(30,41,59,0.35);
+        /* Andamiaje: los dos widgets sin contenido real. Ya no llevan recuadro punteado,
+           porque el modelo no dibuja espacios reservados a la vista, y nacen cerrados. Se
+           retiran cuando existan los widgets de verdad (ver deuda en el ROADMAP). */
+        .widget-vacio {
             align-items: center; justify-content: center; text-align: center;
             color: var(--text-muted); font-size: 0.72em; text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* Cajas de sistema (subtítulos y feedback): píldoras de texto, no paneles, para que
-           se distingan de los widgets que compiten. Sin lógica y sin cablear todavía. */
+        /* Cajas de sistema (subtítulos, feedback y guía): píldoras de texto, no paneles, para
+           que se distingan de los widgets que compiten. Sin cablear al motor todavía. */
         .syswidget {
             padding: 5px 16px; border-radius: 999px;
             background: rgba(11,17,32,0.72); border: 1px solid #1e293b;
             color: var(--text-muted); font-size: 12px; white-space: nowrap;
         }
+        /* La guía es la excepción escrita al molde uniforme: crece en vertical para acomodar
+           su texto en vez de recortarlo (DECISIONS, 2026-08-01). */
+        .syswidget.guia {
+            white-space: normal; border-radius: 12px; padding: 10px 14px;
+            width: min(calc(23vw + 20px), 25vw); height: auto; line-height: 1.5;
+        }
+
+        /* Menú de widgets: una fila por instancia, con abrir o cerrar, opacidad y reset. */
+        .wm-fila { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+        .wm-fila > .wm-nombre { flex: 1; font-size: 12px; }
+        .wm-fila input[type=range] { width: 78px; }
+        .wm-cerrada > .wm-nombre { color: var(--text-muted); }
 
         .advanced-badge { font-size: 0.55em; background: #334155; color: var(--text-muted); padding: 2px 9px; border-radius: 999px; text-transform: uppercase; letter-spacing: 1px; vertical-align: middle; }
         .console-actions { display: flex; gap: 10px; }
@@ -228,7 +242,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.46</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.53</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">⚙️ Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -257,9 +271,8 @@
                      hidden: este menú es el hogar que esperaba desde el parqueo. El
                      auto-centrado al cargar lo sigue auto-clickeando. -->
                 <button class="btn" id="btn-c4">🎯 Centrar en Split</button>
-                <!-- Reset de posiciones. Vive acá porque el menú de widgets todavía no
-                     existe: cuando llegue, el reset por instancia se muda ahí. -->
-                <button class="btn" id="btn-reset-layout">↺ Restablecer posiciones</button>
+                <!-- El reset de posiciones vivía acá de forma provisoria, mientras el menú de
+                     widgets no existía. Ya existe, así que el reset se mudó ahí. -->
                 <hr class="menu-sep">
                 <!-- 4. La consola completa, reubicada entera desde su overlay: desplegable,
                      acciones y contenedor de log, con su JS intacto. Abrirla cuesta dos
@@ -273,6 +286,18 @@
                     </div>
                 </div>
                 <div class="logs-wrapper" id="logs-container" style="margin-top:10px;" hidden></div>
+            </div>
+            <!-- MENÚ DE WIDGETS (incremento 5.3, tercera parte): lista las cajas por
+                 instancia y no por tipo, abiertas y cerradas. Cada fila trae abrir o cerrar,
+                 opacidad y reset de esa instancia. Las filas las arma Widgets.pintar(), para
+                 que el menú y el estado no se puedan desincronizar. -->
+            <button id="btn-menu-widgets" aria-expanded="false">🧩 Widgets</button>
+            <div class="menu-panel" id="menu-widgets" hidden>
+                <div id="wm-compiten"></div>
+                <hr class="menu-sep">
+                <div id="wm-sistema"></div>
+                <hr class="menu-sep">
+                <button class="btn" id="btn-reset-layout">↺ Restablecer todas las posiciones</button>
             </div>
         </nav>
 
@@ -314,15 +339,24 @@
                     <span class="status-value" id="chord-relation" style="font-size:1.2em;">-</span>
                 </div>
             </div>
-            <!-- Lugar reservado y visible del tercer widget: todavía no está construido. -->
-            <div class="box widget widget-reserved overlay-panel" id="widget-reservado">Tercer widget · por construir<br>(progresiones, cuando exista)</div>
+            <!-- Andamiaje. El tercer widget ya no se dibuja como recuadro punteado: nace
+                 cerrado y su punto de nacimiento queda solo como coordenada. Sigue existiendo
+                 como instancia para que el menú tenga qué abrir. El widget de prueba existe
+                 únicamente para poder ejercer el cap de tres desde la interfaz: con tres
+                 candidatos nunca habría un cuarto que bloquear. Los dos se retiran cuando
+                 existan los widgets de verdad. -->
+            <div class="box widget widget-vacio overlay-panel" id="widget-reservado" hidden>Tercer widget · por construir<br>(progresiones, cuando exista)</div>
+            <div class="box widget widget-vacio overlay-panel" id="widget-prueba" hidden>Widget de prueba · andamiaje<br>(solo para ejercer el cap)</div>
         </div>
 
-        <!-- CAJAS DE SISTEMA (incremento 5.3, primera parte): subtítulos centrados y feedback
-             centrado debajo, como fija el estándar espacial. Marcadores de posición sin
-             lógica: cablearlas al motor es trabajo posterior. -->
+        <!-- CAJAS DE SISTEMA (incremento 5.3): subtítulos centrados y feedback centrado
+             debajo, como fija el estándar espacial. La guía nace bajo el tercer punto de
+             nacimiento y crece en vertical. Marcadores de posición sin lógica: cablearlas al
+             motor es trabajo posterior. El feedback sí muestra los avisos que genera el
+             chasis, que no vienen del motor. -->
         <div class="box syswidget" id="sys-subtitles">Subtítulos del entrenamiento · por cablear</div>
         <div class="box syswidget" id="sys-feedback">Feedback del sistema · por cablear</div>
+        <div class="box syswidget guia" id="sys-guia">Guía · por construir. Va a explicar qué significa cada color de tecla y cada lectura del readout. Se cierra desde el menú de Widgets como cualquier otra caja, y desde ahí se restaura.</div>
 
         <!-- FONDO ÚNICO (capa fija a viewport completo, detrás de todo): el teclado en la
              franja de abajo a todo el ancho, y encima la zona reservada de notas que caen,
@@ -741,31 +775,65 @@
         function saveConfig() { localStorage.setItem('midiTrainerCfg', JSON.stringify(State.config)); }
         function loadConfig() { const saved = localStorage.getItem('midiTrainerCfg'); if (saved) State.config = { ...State.config, ...JSON.parse(saved) }; }
 
-        // --- LAYOUT DE CAJAS (incremento 5.3, segunda parte: el movimiento) ---
+        // --- LAYOUT Y CHASIS DE CAJAS (incremento 5.3, partes segunda y tercera) ---
         // Cada caja se ubica por transform: translate(), así que mover no dispara reflow.
         // El estado se guarda por identidad de caja, nunca por índice ni por posición: el
         // orden en que queden ubicadas no cambia a quién le corresponde cada estado.
-        // Cerrar, el menú de widgets y el cap por código son el tercer PR del 5.3.
-        function saveLayout() { localStorage.setItem('midiTrainerLayout', JSON.stringify(Layout.pos)); }
+        // Cerrar oculta, no destruye: la caja conserva su posición, su opacidad y su punto.
+
+        // Registro de instancias. El menú lista esto, no tipos. "compite" es lo único que
+        // decide el cap de tres: las cajas de sistema quedan fuera (DECISIONS, 2026-08-01).
+        const CAJAS = [
+            { id: 'widget-escala',    nombre: 'Escala',                compite: true,  abierto: true  },
+            { id: 'widget-readout',   nombre: 'Readout del motor',     compite: true,  abierto: true  },
+            { id: 'widget-reservado', nombre: 'Tercer widget · andamiaje', compite: true, abierto: false },
+            { id: 'widget-prueba',    nombre: 'Widget de prueba · andamiaje', compite: true, abierto: false },
+            { id: 'sys-subtitles',    nombre: 'Subtítulos',            compite: false, abierto: true  },
+            { id: 'sys-feedback',     nombre: 'Feedback del sistema',  compite: false, abierto: true  },
+            { id: 'sys-guia',         nombre: 'Guía',                  compite: false, abierto: true  }
+        ];
+        const CAP = 3;   // widgets que compiten, abiertos a la vez
+
+        function saveLayout() { localStorage.setItem('midiTrainerLayout', JSON.stringify(Layout.estado)); }
         function loadLayout() {
             const guardado = localStorage.getItem('midiTrainerLayout');
             if (!guardado) return null;
-            try { return JSON.parse(guardado); } catch (e) { SysLog('LAYOUT', '⚠️ Layout guardado ilegible, se usan los puntos de nacimiento: ' + e); return null; }
+            let dato;
+            try { dato = JSON.parse(guardado); }
+            catch (e) { SysLog('LAYOUT', '⚠️ Layout guardado ilegible, se descarta y se vuelve al estado por defecto: ' + e); return null; }
+            // Coherencia: más de CAP widgets que compiten marcados como abiertos deja un
+            // estado que el propio cap prohíbe, así que no se restaura a medias.
+            const abiertos = CAJAS.filter(c => c.compite && dato[c.id] && dato[c.id].abierto).length;
+            if (abiertos > CAP) {
+                SysLog('LAYOUT', `⚠️ Layout guardado inconsistente: ${abiertos} widgets que compiten marcados como abiertos, y el cap es ${CAP}. Se descarta entero y se vuelve al estado por defecto.`);
+                return null;
+            }
+            return dato;
         }
 
         const Layout = {
             GAP: 16,       // separación uniforme entre cajas, la misma contra la que nacen
             FRANJA: 56,    // franja de nacimiento libre debajo de la barra
-            pos: {},       // identidad de caja -> {x, y}
+            estado: {},    // identidad de caja -> {x, y, abierto, opacidad, punto}
 
-            cajas() { return Array.from(document.querySelectorAll('.box')); },
+            reg(id) { return CAJAS.find(c => c.id === id); },
+            el(id) { return document.getElementById(id); },
+            cajas() { return CAJAS.map(c => this.el(c.id)).filter(Boolean); },
 
-            // El área permitida: la barra es el límite de arriba, el piano el de abajo, y
-            // los bordes de la ventana los de los costados.
+            // El área de arrastre es toda la ventana debajo de la barra. El piano dejó de ser
+            // el límite de abajo: los widgets flotan sobre el fondo entero, y el fondo no se
+            // reordena para hacerles lugar (DECISIONS, 2026-08-09).
             area() {
-                const barra = document.getElementById('menubar').getBoundingClientRect();
-                const piano = document.getElementById('keyboard-wrapper').getBoundingClientRect();
-                return { top: barra.bottom, bottom: piano.top, left: 0, right: window.innerWidth };
+                const barra = this.el('menubar').getBoundingClientRect();
+                return { top: barra.bottom, bottom: window.innerHeight, left: 0, right: window.innerWidth };
+            },
+
+            // La zona de notas es otra cosa que el área: va de la barra al piano, y es contra
+            // ella que se mide el presupuesto de superposición.
+            zonaNotas() {
+                const barra = this.el('menubar').getBoundingClientRect();
+                const piano = this.el('keyboard-wrapper').getBoundingClientRect();
+                return { top: barra.bottom, bottom: piano.top };
             },
 
             clamp(el, x, y) {
@@ -780,39 +848,105 @@
             colocar(el, x, y) {
                 const p = { x: Math.round(x), y: Math.round(y) };
                 el.style.transform = `translate(${p.x}px, ${p.y}px)`;
-                this.pos[el.id] = p;
+                const e = this.estado[el.id];
+                e.x = p.x; e.y = p.y;
                 return p;
             },
 
             // Los tres puntos de nacimiento son coordenadas de arranque, no celdas: nada se
-            // dibuja, y una vez movida la caja queda donde el usuario la dejó.
-            nacimientos() {
+            // dibuja, y una vez movida la caja queda donde el usuario la dejó. Devuelve un
+            // array de tres, indexado igual que el campo "punto" del estado.
+            puntosCompeten() {
                 const a = this.area();
-                const compiten = ['widget-escala', 'widget-readout', 'widget-reservado'];
-                const w = document.getElementById(compiten[0]).getBoundingClientRect().width;
-                const total = w * 3 + this.GAP * 2;
+                const ref = this.el('widget-escala').getBoundingClientRect();
+                const w = ref.width || Math.min(window.innerWidth * 0.23 + 20, window.innerWidth * 0.25);
+                const total = w * CAP + this.GAP * (CAP - 1);
                 const x0 = Math.max(a.left, (window.innerWidth - total) / 2);
                 const y = a.top + this.FRANJA;
-                const puntos = {};
-                compiten.forEach((id, i) => { puntos[id] = { x: x0 + i * (w + this.GAP), y }; });
-                ['sys-subtitles', 'sys-feedback'].forEach((id, i) => {
-                    const el = document.getElementById(id);
-                    if (!el) return;
-                    const r = el.getBoundingClientRect();
-                    puntos[id] = { x: (window.innerWidth - r.width) / 2, y: window.innerHeight * (i === 0 ? 0.46 : 0.51) };
-                });
-                return puntos;
+                return Array.from({ length: CAP }, (_, i) => ({ x: x0 + i * (w + this.GAP), y, w }));
             },
 
-            resetear(motivo) {
-                const puntos = this.nacimientos();
-                this.cajas().forEach(el => {
-                    if (!puntos[el.id]) return;
-                    const c = this.clamp(el, puntos[el.id].x, puntos[el.id].y);
-                    this.colocar(el, c.x, c.y);
+            // Los nacimientos de las cajas de sistema: subtítulos y feedback centrados, uno
+            // debajo del otro, como fija el estándar espacial. La guía nace bajo el tercer
+            // punto de nacimiento, alineada con el widget de la derecha.
+            nacimientoSistema(id) {
+                const el = this.el(id), r = el.getBoundingClientRect();
+                if (id === 'sys-guia') {
+                    const p = this.puntosCompeten()[CAP - 1];
+                    return { x: p.x, y: p.y + 170 + this.GAP };
+                }
+                const fila = id === 'sys-subtitles' ? 0.46 : 0.51;
+                return { x: (window.innerWidth - r.width) / 2, y: window.innerHeight * fila };
+            },
+
+            nacimiento(id) {
+                const c = this.reg(id);
+                if (!c.compite) return this.nacimientoSistema(id);
+                const punto = this.estado[id].punto;
+                return this.puntosCompeten()[punto === null ? 0 : punto];
+            },
+
+            // Un punto está ocupado si hay un widget abierto que lo tiene asignado, no por
+            // dónde quedó en pantalla: el usuario pudo haberlo arrastrado a cualquier parte.
+            puntoLibre() {
+                const tomados = CAJAS.filter(c => c.compite && this.estado[c.id].abierto)
+                                     .map(c => this.estado[c.id].punto);
+                for (let i = 0; i < CAP; i++) if (!tomados.includes(i)) return i;
+                return null;
+            },
+
+            abrir(id, motivo) {
+                const c = this.reg(id), e = this.estado[id];
+                if (e.abierto) return true;
+                let punto = null;
+                if (c.compite) {
+                    punto = this.puntoLibre();
+                    if (punto === null) {
+                        const ocupados = CAJAS.filter(x => x.compite && this.estado[x.id].abierto).map(x => x.nombre);
+                        Feedback.avisar(`No entra "${c.nombre}": el límite de ${CAP} widgets a la vez está completo. Cerrá uno para abrirlo.`);
+                        SysLog('LAYOUT', `⚠️ Apertura bloqueada por el cap: "${id}" no se abre, hay ${ocupados.length} de ${CAP} ocupados (${ocupados.join(', ')}).`);
+                        return false;
+                    }
+                    e.punto = punto;
+                }
+                e.abierto = true;
+                this.el(id).hidden = false;
+                const n = this.nacimiento(id);
+                const cl = this.clamp(this.el(id), n.x, n.y);
+                this.colocar(this.el(id), cl.x, cl.y);
+                this.aplicarOpacidad(id);
+                const libres = c.compite ? CAP - CAJAS.filter(x => x.compite && this.estado[x.id].abierto).length : null;
+                SysLog('LAYOUT', `Apertura de "${id}" (${motivo}): ${c.compite ? `punto de nacimiento ${punto} en (${Math.round(cl.x)}, ${Math.round(cl.y)}), ${libres === 1 ? "queda 1 libre" : `quedan ${libres} libres`} de ${CAP}` : `caja de sistema, fuera del cap, en (${Math.round(cl.x)}, ${Math.round(cl.y)})`}.`);
+                return true;
+            },
+
+            cerrar(id, motivo) {
+                const c = this.reg(id), e = this.estado[id];
+                if (!e.abierto) return;
+                e.abierto = false;
+                this.el(id).hidden = true;
+                Feedback.avisar(`Se cerró "${c.nombre}". Se restaura desde el menú de Widgets.`);
+                SysLog('LAYOUT', `Cierre de "${id}" (${motivo}): oculta, no destruida. Conserva posición (${e.x}, ${e.y}), opacidad ${e.opacidad} y punto ${e.punto}.`);
+            },
+
+            aplicarOpacidad(id) { this.el(id).style.opacity = this.estado[id].opacidad; },
+
+            setOpacidad(id, v) {
+                this.estado[id].opacidad = v;
+                this.aplicarOpacidad(id);
+                SysLog('LAYOUT', `Opacidad de "${id}": ${v}.`);
+            },
+
+            resetear(id, motivo) {
+                const ids = id ? [id] : CAJAS.map(c => c.id);
+                ids.forEach(x => {
+                    if (!this.estado[x].abierto) return;
+                    const n = this.nacimiento(x);
+                    const c = this.clamp(this.el(x), n.x, n.y);
+                    this.colocar(this.el(x), c.x, c.y);
                 });
                 saveLayout();
-                SysLog('LAYOUT', `Posiciones restablecidas a los puntos de nacimiento (${motivo}).`);
+                SysLog('LAYOUT', `Posiciones restablecidas a los puntos de nacimiento (${motivo}): ${ids.join(', ')}.`);
             },
 
             // Cobertura de la zona de notas, en dos cifras separadas: la de los widgets que
@@ -820,10 +954,10 @@
             // todo lo que tapa, que es informativo. Las cajas de sistema no cuentan contra
             // el tope (ver DECISIONS, 2026-08-01).
             cobertura() {
-                const a = this.area(), zona = a.bottom - a.top;
+                const z = this.zonaNotas(), zona = z.bottom - z.top;
                 const union = sel => {
                     const bandas = Array.from(document.querySelectorAll(sel))
-                        .map(el => { const r = el.getBoundingClientRect(); return [Math.max(r.top, a.top), Math.min(r.bottom, a.bottom)]; })
+                        .map(el => { const r = el.getBoundingClientRect(); return [Math.max(r.top, z.top), Math.min(r.bottom, z.bottom)]; })
                         .filter(([s, e]) => e > s).sort((p, q) => p[0] - q[0]);
                     let total = 0, s = null, e = null;
                     for (const [bs, be] of bandas) {
@@ -842,7 +976,7 @@
                     // Un clic sobre un control opera el control y no mueve la caja.
                     if (e.target.closest('select, button, input, option, textarea, a')) return;
                     e.preventDefault();
-                    const desde = this.pos[el.id] || { x: 0, y: 0 };
+                    const desde = { x: this.estado[el.id].x, y: this.estado[el.id].y };
                     const offX = e.clientX - desde.x, offY = e.clientY - desde.y;
                     let frenado = false;
                     el.setPointerCapture(e.pointerId);
@@ -859,7 +993,7 @@
                         el.removeEventListener('pointermove', mover);
                         el.removeEventListener('pointerup', soltar);
                         el.removeEventListener('pointercancel', soltar);
-                        const hasta = this.pos[el.id];
+                        const hasta = this.estado[el.id];
                         saveLayout();
                         SysLog('LAYOUT', `Arrastre de "${el.id}": de (${desde.x}, ${desde.y}) a (${hasta.x}, ${hasta.y})${frenado ? ', frenado contra un límite del área' : ''}.`);
                     };
@@ -870,38 +1004,136 @@
             },
 
             init() {
-                const puntos = this.nacimientos();
                 const guardado = loadLayout() || {};
-                const molde = document.getElementById('widget-escala').getBoundingClientRect();
-                const a = this.area();
-                SysLog('LAYOUT', `Incremento 5.3 (movimiento): molde aplicado de ${Math.round(molde.width)} x ${Math.round(molde.height)} px por widget, tope de ancho dos octavos = ${Math.round(window.innerWidth / 4)} px.`);
-                SysLog('LAYOUT', `Área de movimiento: de y=${Math.round(a.top)} (barra) a y=${Math.round(a.bottom)} (piano), ancho ${Math.round(window.innerWidth)} px. Ninguna caja los invade.`);
-                Object.entries(puntos).forEach(([id, p]) => SysLog('LAYOUT', `  punto de nacimiento de "${id}": (${Math.round(p.x)}, ${Math.round(p.y)}).`));
+                // Estado por defecto, después lo pisa lo guardado si es coherente.
+                let puntoDefecto = 0;
+                CAJAS.forEach(c => {
+                    const g = guardado[c.id] || {};
+                    const abierto = typeof g.abierto === 'boolean' ? g.abierto : c.abierto;
+                    let punto = null;
+                    if (c.compite) {
+                        punto = Number.isInteger(g.punto) && g.punto >= 0 && g.punto < CAP ? g.punto
+                              : (abierto ? puntoDefecto++ : null);
+                    }
+                    this.estado[c.id] = {
+                        x: Number.isFinite(g.x) ? g.x : 0,
+                        y: Number.isFinite(g.y) ? g.y : 0,
+                        abierto, punto,
+                        opacidad: Number.isFinite(g.opacidad) ? g.opacidad : 1
+                    };
+                    this.el(c.id).hidden = !abierto;
+                });
 
-                this.cajas().forEach(el => {
-                    const g = guardado[el.id];
-                    const base = g || puntos[el.id];
-                    if (!base) return;
-                    const c = this.clamp(el, base.x, base.y);
-                    this.colocar(el, c.x, c.y);
-                    if (g && c.frenado) SysLog('LAYOUT', `  "${el.id}": la posición guardada (${g.x}, ${g.y}) caía fuera del área y se reubicó en (${c.x}, ${c.y}).`);
-                    else if (g) SysLog('LAYOUT', `  "${el.id}": posición restaurada desde localStorage en (${c.x}, ${c.y}).`);
-                    else SysLog('LAYOUT', `  "${el.id}": sin posición guardada, nace en (${c.x}, ${c.y}).`);
+                const a = this.area(), z = this.zonaNotas();
+                const molde = this.el('widget-escala').getBoundingClientRect();
+                SysLog('LAYOUT', `Incremento 5.3 (chasis): molde de ${Math.round(molde.width)} x ${Math.round(molde.height)} px por widget, tope de ancho dos octavos = ${Math.round(window.innerWidth / 4)} px.`);
+                SysLog('LAYOUT', `Área de arrastre: de y=${Math.round(a.top)} (barra) a y=${Math.round(a.bottom)} (borde de la ventana). El piano dejó de ser límite: los widgets flotan sobre el fondo entero.`);
+                SysLog('LAYOUT', `Zona de notas, contra la que se mide el presupuesto: de y=${Math.round(z.top)} a y=${Math.round(z.bottom)}, ${Math.round(z.bottom - z.top)} px.`);
+                this.puntosCompeten().forEach((p, i) => SysLog('LAYOUT', `  punto de nacimiento ${i}: (${Math.round(p.x)}, ${Math.round(p.y)}).`));
+
+                CAJAS.forEach(c => {
+                    const el = this.el(c.id), e = this.estado[c.id];
+                    this.aplicarOpacidad(c.id);
+                    if (!e.abierto) {
+                        SysLog('LAYOUT', `  "${c.id}": cerrada al cargar. Se restaura desde el menú de Widgets.`);
+                        this.arrastrable(el);
+                        return;
+                    }
+                    const tenia = guardado[c.id] && Number.isFinite(guardado[c.id].x);
+                    const base = tenia ? { x: e.x, y: e.y } : this.nacimiento(c.id);
+                    const cl = this.clamp(el, base.x, base.y);
+                    this.colocar(el, cl.x, cl.y);
+                    if (tenia && cl.frenado) SysLog('LAYOUT', `  "${c.id}": abierta, la posición guardada (${base.x}, ${base.y}) caía fuera del área y se reubicó en (${Math.round(cl.x)}, ${Math.round(cl.y)}), opacidad ${e.opacidad}.`);
+                    else if (tenia) SysLog('LAYOUT', `  "${c.id}": abierta, posición restaurada en (${Math.round(cl.x)}, ${Math.round(cl.y)}), opacidad ${e.opacidad}${c.compite ? `, punto ${e.punto}` : ''}.`);
+                    else SysLog('LAYOUT', `  "${c.id}": abierta, nace en (${Math.round(cl.x)}, ${Math.round(cl.y)}), opacidad ${e.opacidad}${c.compite ? `, punto ${e.punto}` : ''}.`);
                     this.arrastrable(el);
                 });
+
+                const ocupados = CAJAS.filter(c => c.compite && this.estado[c.id].abierto).length;
+                SysLog('LAYOUT', `Cap de widgets que compiten: ${ocupados} de ${CAP} ocupados, ${CAP - ocupados === 1 ? "1 libre" : `${CAP - ocupados} libres`}. Las cajas de sistema no cuentan.`);
 
                 const cob = this.cobertura();
                 const pct = v => ((v / cob.zona) * 100).toFixed(1) + '%';
                 // El tope de tres octavos es una restricción del molde por defecto. Si el
                 // usuario movió las cajas, tapar más es decisión suya y no un defecto, así
                 // que el reporte dice contra cuál de los dos layouts se está midiendo.
-                const porDefecto = Object.entries(puntos).every(([id, pn]) => {
-                    const a = this.pos[id];
-                    return a && Math.abs(a.x - pn.x) <= 1 && Math.abs(a.y - pn.y) <= 1;
+                const puntos = this.puntosCompeten();
+                const porDefecto = CAJAS.every(c => {
+                    const e = this.estado[c.id];
+                    if (!e.abierto) return true;
+                    const n = c.compite ? puntos[e.punto] : this.nacimientoSistema(c.id);
+                    return Math.abs(e.x - Math.round(n.x)) <= 1 && Math.abs(e.y - Math.round(n.y)) <= 1;
                 });
                 const veredicto = cob.compiten / cob.zona <= 0.375 ? 'Entra.' : (porDefecto ? '⚠️ El molde por defecto se pasó del tope.' : 'Por encima del tope, con las cajas movidas por el usuario: es su decisión, no un defecto del molde.');
                 SysLog('LAYOUT', `Cobertura de los widgets que compiten: ${Math.round(cob.compiten)} px de ${Math.round(cob.zona)} = ${pct(cob.compiten)}. Tope: tres octavos, 37.5%. Layout ${porDefecto ? 'por defecto' : 'movido por el usuario'}. ${veredicto}`);
                 SysLog('LAYOUT', `Cobertura total incluyendo las cajas de sistema: ${Math.round(cob.todo)} px = ${pct(cob.todo)}. Cifra informativa: las de sistema no cuentan contra el tope.`);
+            }
+        };
+
+        // El feedback del sistema muestra los avisos que genera el chasis. No viene del
+        // motor: cablearlo a la salida del motor es trabajo posterior. Si la propia caja de
+        // feedback está cerrada, el aviso igual queda en el log.
+        const Feedback = {
+            avisar(texto) {
+                const el = document.getElementById('sys-feedback');
+                if (el) el.textContent = texto;
+                SysLog('LAYOUT', `Feedback: ${texto}`);
+            }
+        };
+
+        // Menú de widgets: una fila por instancia, abiertas y cerradas. Se repinta entero
+        // después de cada acción, así que el menú no se puede desincronizar del estado.
+        const Widgets = {
+            fila(c) {
+                const e = Layout.estado[c.id];
+                const f = document.createElement('div');
+                f.className = 'wm-fila' + (e.abierto ? '' : ' wm-cerrada');
+                const nombre = document.createElement('span');
+                nombre.className = 'wm-nombre';
+                nombre.textContent = (e.abierto ? '' : '· ') + c.nombre;
+                f.appendChild(nombre);
+
+                const toggle = document.createElement('button');
+                toggle.className = 'btn';
+                toggle.textContent = e.abierto ? 'Cerrar' : 'Abrir';
+                toggle.onclick = () => {
+                    if (e.abierto) Layout.cerrar(c.id, 'menú de widgets');
+                    else Layout.abrir(c.id, 'menú de widgets');
+                    saveLayout();
+                    this.pintar();
+                };
+                f.appendChild(toggle);
+
+                const op = document.createElement('input');
+                op.type = 'range'; op.min = '0.2'; op.max = '1'; op.step = '0.05';
+                op.value = e.opacidad; op.title = 'Opacidad';
+                op.oninput = () => { Layout.setOpacidad(c.id, parseFloat(op.value)); saveLayout(); };
+                f.appendChild(op);
+
+                const reset = document.createElement('button');
+                reset.className = 'btn';
+                reset.textContent = '↺';
+                reset.title = 'Reset de posición de esta instancia';
+                reset.onclick = () => Layout.resetear(c.id, 'reset por instancia');
+                f.appendChild(reset);
+                return f;
+            },
+            pintar() {
+                const compiten = document.getElementById('wm-compiten');
+                const sistema = document.getElementById('wm-sistema');
+                if (!compiten || !sistema) return;
+                compiten.textContent = ''; sistema.textContent = '';
+                const ocupados = CAJAS.filter(c => c.compite && Layout.estado[c.id].abierto).length;
+                const cab = document.createElement('div');
+                cab.className = 'widget-tag';
+                cab.textContent = `Widgets · ${ocupados} de ${CAP} lugares`;
+                compiten.appendChild(cab);
+                CAJAS.filter(c => c.compite).forEach(c => compiten.appendChild(this.fila(c)));
+                const cab2 = document.createElement('div');
+                cab2.className = 'widget-tag';
+                cab2.textContent = 'Sistema · fuera del cap';
+                sistema.appendChild(cab2);
+                CAJAS.filter(c => !c.compite).forEach(c => sistema.appendChild(this.fila(c)));
             }
         };
 
@@ -974,19 +1206,28 @@
             // Incremento 5.2: apertura y cierre del menú de Opciones. Estado instantáneo vía
             // hidden; con el menú abierto el resto de la barra baja su opacidad (convención de
             // selección de la Fase 5). Clic afuera o Escape lo cierran.
+            // El incremento 5.3 suma el menú de Widgets al lado de Opciones, así que la
+            // apertura se generaliza a los dos: abrir uno cierra el otro, y la convención de
+            // selección atenúa el resto de la barra igual que antes.
             const menubar = document.getElementById('menubar');
-            const btnOpciones = document.getElementById('btn-menu-opciones');
-            const menuOpciones = document.getElementById('menu-opciones');
-            function setMenuOpciones(abierto) {
-                if (abierto) { menuOpciones.removeAttribute('hidden'); menubar.classList.add('menu-open'); }
-                else { menuOpciones.setAttribute('hidden', ''); menubar.classList.remove('menu-open'); }
-                btnOpciones.setAttribute('aria-expanded', String(abierto));
-                SysLog('LAYOUT', `Menú Opciones ${abierto ? 'abierto' : 'cerrado'}.`);
+            const MENUS = [
+                { nombre: 'Opciones', btn: document.getElementById('btn-menu-opciones'), panel: document.getElementById('menu-opciones') },
+                { nombre: 'Widgets', btn: document.getElementById('btn-menu-widgets'), panel: document.getElementById('menu-widgets') }
+            ];
+            function setMenu(m, abierto) {
+                if (abierto) MENUS.forEach(o => { if (o !== m) setMenu(o, false); });
+                if (abierto) { m.panel.removeAttribute('hidden'); menubar.classList.add('menu-open'); }
+                else m.panel.setAttribute('hidden', '');
+                m.btn.setAttribute('aria-expanded', String(abierto));
+                if (!MENUS.some(o => !o.panel.hasAttribute('hidden'))) menubar.classList.remove('menu-open');
+                SysLog('LAYOUT', `Menú ${m.nombre} ${abierto ? 'abierto' : 'cerrado'}.`);
             }
-            btnOpciones.onclick = (e) => { e.stopPropagation(); setMenuOpciones(menuOpciones.hasAttribute('hidden')); };
-            menuOpciones.addEventListener('click', (e) => e.stopPropagation());
-            document.addEventListener('click', () => { if (!menuOpciones.hasAttribute('hidden')) setMenuOpciones(false); });
-            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menuOpciones.hasAttribute('hidden')) setMenuOpciones(false); });
+            MENUS.forEach(m => {
+                m.btn.onclick = (e) => { e.stopPropagation(); setMenu(m, m.panel.hasAttribute('hidden')); };
+                m.panel.addEventListener('click', (e) => e.stopPropagation());
+            });
+            document.addEventListener('click', () => MENUS.forEach(m => { if (!m.panel.hasAttribute('hidden')) setMenu(m, false); }));
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape') MENUS.forEach(m => { if (!m.panel.hasAttribute('hidden')) setMenu(m, false); }); });
             
             btnNom.onclick = (e) => {
                 State.config.latino = !State.config.latino;
@@ -1005,7 +1246,7 @@
             document.getElementById('btn-clear').onclick = () => document.getElementById('logs-container').innerHTML='';
             document.getElementById('btn-export').onclick = exportLogsTxt;
             document.getElementById('btn-copy').onclick = copyLogsClipboard;
-            document.getElementById('btn-reset-layout').onclick = () => Layout.resetear('pedido desde el menú de Opciones');
+            document.getElementById('btn-reset-layout').onclick = () => Layout.resetear(null, 'reset global desde el menú de Widgets');
 
             // Fase 5: consola colapsada por defecto detrás de un botón. Al abrir muestra el
             // log en vivo y las acciones (copiar, exportar, limpiar). Solo disposición, no motor.
@@ -1041,14 +1282,15 @@
             SysLog('LAYOUT', 'Reubicados sin recrear, con sus id intactos: los cuatro cfg-* desde el overlay de ajustes, btn-c4 desde los controles del teclado, y btn-console-toggle mas console-actions mas logs-container desde el overlay de consola.');
             SysLog('LAYOUT', 'Los overlays de ajustes y de consola se retiraron del escenario: quedaron vacíos al mudarse su contenido.');
             SysLog('LAYOUT', 'El título dejó de flotar como overlay: se mudó a la barra y ya no se pisa con el readout.');
-            SysLog('LAYOUT', 'La escala y el readout viven en el molde uniforme y ya se arrastran; cerrar y el menú de widgets llegan en el tercer PR del 5.3.');
+            SysLog('LAYOUT', 'Las cajas viven en el molde uniforme, se arrastran, se cierran y se restauran desde el menú de Widgets. El incremento 5.3 queda entregado en sus tres partes.');
             SysLog('LAYOUT', 'Zona de notas que caen: reservada y vacía sobre el teclado; el motor de notas que caen es backlog, no se crea acá.');
             SysLog('LAYOUT', 'renderKeyboard y el coloreo de teclas quedan intactos; el motor no cambia.');
 
-            // Incremento 5.3, segunda parte: el chasis del movimiento. Ubica cada caja
-            // (posición guardada o punto de nacimiento), la vuelve arrastrable, y mide la
-            // cobertura en dos cifras separadas contra el tope de tres octavos.
+            // Incremento 5.3, chasis completo. Restaura el estado por instancia, ubica cada
+            // caja abierta, la vuelve arrastrable, mide la cobertura en dos cifras separadas
+            // contra el tope de tres octavos, y arma el menú de widgets contra ese estado.
             Layout.init();
+            Widgets.pintar();
         };
     </script>
 </body>

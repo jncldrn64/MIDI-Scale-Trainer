@@ -2,6 +2,34 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.53 — 2026-08-09
+
+### Added
+
+- `index.html`: incremento 5.3, tercera parte. Toda caja se cierra y se restaura desde el menú de Widgets. Cerrar oculta y no destruye: la instancia conserva posición, opacidad y punto de nacimiento. Con todas cerradas queda el fondo solo, teclado y zona de notas, más la barra.
+- `index.html`: menú de Widgets en la barra, al lado de Opciones. Lista siete instancias por identidad y no por tipo, abiertas y cerradas, cada una con abrir o cerrar, opacidad y reset de su posición. Abrir un menú cierra el otro.
+- `index.html`: cap de tres widgets que compiten. Al abrir uno va al primer punto de nacimiento libre de izquierda a derecha. Un punto se considera ocupado por asignación, no por dónde quedó la caja en pantalla.
+- `index.html`: con los tres lugares tomados, la apertura se bloquea y el feedback lo dice con el nombre de la caja. Verificado: el cuarto candidato no se abre y el log nombra los tres ocupados.
+- `index.html`: la guía, tercera caja de sistema. Nace bajo el tercer punto de nacimiento y crece en vertical en vez de recortar su texto, que es la excepción escrita al molde uniforme. Sin cablear al motor.
+- `index.html`: el feedback del sistema muestra los avisos que genera el chasis, cierres y bloqueos del cap. No viene del motor: cablearlo sigue pendiente.
+- `index.html`: persistencia extendida. Además de la posición se guardan por instancia el estado de abierto, la opacidad y el punto asignado, siempre contra la identidad de la caja.
+- `index.html`: si lo guardado es incoherente, por ejemplo cuatro widgets que compiten marcados como abiertos contra un cap de tres, se descarta entero y se vuelve al estado por defecto con aviso en el log. Un JSON roto hace lo mismo.
+
+### Changed
+
+- `index.html`: el clamp de abajo se levantó. El área de arrastre llega al borde de la ventana y un widget puede quedar sobre el piano, según la corrección del 2026-08-09. Verificado: el readout arrastrado queda con su borde inferior en 900 y el piano empieza en 570.
+- `index.html`: la cobertura se mide contra la zona de notas, de la barra al piano, que dejó de coincidir con el área de arrastre. Los widgets que compiten dan 31.5% de 540 px, debajo del tope de tres octavos.
+- `index.html`: el tercer widget perdió el recuadro punteado y nace cerrado. El modelo no dibuja espacios reservados a la vista: el lugar libre se percibe al abrir, no anunciándolo.
+- `index.html`: el reset global se mudó del menú de Opciones al de Widgets, que era su hogar planeado, y ahí convive con el reset por instancia.
+- `index.html`: la versión mostrada sube de V11.46 a V11.53, cerrando el desfase de los siete PR de documentación anteriores.
+- `docs/ROADMAP.md`: el incremento 5.3 queda con sus tres partes entregadas, y con el punto de nacimiento de un widget abierto desde el menú ya decidido.
+
+### Removed
+
+- `docs/ROADMAP.md`: de la deuda verificada salen tres puntos que este PR resuelve, la caja punteada, la guía que faltaba y el punto de nacimiento sin decidir. Entra uno nuevo: los dos widgets de andamiaje sin contenido.
+
+Andamiaje declarado: el tercer widget y el widget de prueba existen sin contenido real. El segundo se creó porque con tres candidatos el bloqueo del cap no se puede ejercer desde la interfaz. Los dos nacen cerrados y se retiran cuando existan los widgets de verdad.
+
 ## v11.52 — 2026-08-09
 
 ### Added
