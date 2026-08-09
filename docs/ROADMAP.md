@@ -134,8 +134,9 @@ evaluación, no solo en la UI.
 3. UI: el panel "Análisis de Armonía" muestra el numeral.
 4. El motor emite al log, etiquetado, lo que esta fase agrega: el numeral romano derivado, la
    relación del acorde y el objetivo de la dominante secundaria. `classifyChordRelation`, que
-   hoy no loguea (solo puebla la UI en `index.html:566`), pasa a registrar su resultado; esto
-   cierra el hueco que la decisión del log del 2026-07-25 dejó anotado.
+   cuando se escribió esta fase solo poblaba la UI, pasa a registrar su resultado; esto
+   cierra el hueco que la decisión del log del 2026-07-25 dejó anotado. Cumplido: hoy la llamada
+   vive en `UI.updateStatus` y escribe la línea "Análisis:" con la etiqueta MATH.
 
 **Criterio de aceptación:** la fixture de Oda a la Alegría pasa mostrando `II7 (V del V)` (o
 la etiqueta equivalente correcta), y Fa# tocado en la melodía sobre ese acorde ya no marca
@@ -418,6 +419,43 @@ de las fases anteriores se lee como "widget" según esa misma refinación.
 
 ---
 
+## FASE 5B: Modularizar `index.html` con ES Modules nativos
+
+**Estado:** `pendiente`
+
+**Objetivo:** cumplir el umbral que `ARCHITECTURE.md` §7 fija desde el principio y que ya se
+cruzó. Esa sección dice que si `index.html` pasa las 1000 líneas el siguiente paso es
+modularizar con ES Modules nativos, sin adoptar framework. Medido el 2026-08-09: `index.html`
+tiene 1055 líneas y `src/engine.js` 249.
+
+**Por qué 5B y no un número nuevo:** insertar una Fase 6 nueva obligaría a correr las seis fases
+siguientes, y los encabezados de este archivo son anclajes de los que un modelo saca qué hacer al
+ejecutar una fase. Tampoco puede llamarse 5.5, porque ese nombre ya lo usa el quinto incremento
+de la Fase 5. La letra evita las dos colisiones y deja el orden de ejecución claro: va después de
+la Fase 5 completa y antes de la Fase 6.
+
+**Alcance:** partir `index.html` en módulos por responsabilidad, siguiendo la separación que
+`ARCHITECTURE.md` §2 ya documenta: `State`, `MIDI`, `UI` y `SysLog`. Se carga con
+`<script type="module">`, sin build step, sin bundler y sin framework, que es lo que la decisión
+del 2026-07-03 descarta. `src/engine.js` se queda como está: ya es el motor puro y corre en Node
+contra las fixtures. La app tiene que seguir abriendo desde `file://`.
+
+**Criterio de aceptación:** las 41 fixtures siguen pasando, la app abre desde `file://` sin
+servidor, el autor la corrobora en Chrome con el piano físico, y ningún archivo de código pasa las
+1000 líneas. El motor y `renderKeyboard` no cambian de comportamiento.
+
+**Bloquea:** Fase 6.
+
+**Bloqueada por:** Fase 5 completa, con sus cinco incrementos cerrados.
+
+**Excepción de método, anotada a propósito:** esta fase nace de un umbral que se disparó a mitad
+de otra fase, y el repo no tenía escrito qué hacer en ese caso. Se decidió terminar la Fase 5
+antes de atacarlo, en vez de frenar el trabajo visual en curso. La decisión y su razón viven en
+`DECISIONS.md`, entrada del 2026-08-09. Que las reglas para estos casos falten está anotado en el
+BACKLOG.
+
+---
+
 ## FASE 6: Calidad de vida
 
 **Estado:** `pendiente`
@@ -665,6 +703,23 @@ prioridad, no porque la rueda la bloquee.
   se muestran las 88 teclas, que es lo escrito.
 - Barra de menús que se oculta sola cuando no se usa, como una barra de tareas. Devolvería el alto de
   la barra al fondo y eliminaría la única zona vedada al movimiento de widgets.
+- Reglas para cuando un umbral escrito se dispara a mitad de otra fase. Pasó el 2026-08-09 con las
+  1000 líneas de `index.html` de `ARCHITECTURE.md` §7: el gatillo se cumplió durante la Fase 5 y no
+  había escrito si se frena lo que está en curso, si se abre una fase nueva ahí mismo, o si se
+  termina primero. Se resolvió caso por caso, con una excepción documentada, y esa es justamente la
+  forma de decidir que este repo evita. Falta también cómo se nombra una fase que se inserta entre
+  dos existentes sin correr la numeración de las que siguen.
+- Reglas para promover un ítem del BACKLOG a fase. Hoy no hay ninguna, así que una idea suelta se
+  queda suelta aunque esté madura, y no por falta de mérito sino por falta de criterio escrito de
+  qué la hace fase: si es tener alcance cerrado, criterio de aceptación verificable, o alguien que
+  la pida. Sin ese criterio el BACKLOG crece y no drena.
+- Reglas para reabrir una fase cerrada y para agregarle trabajo. La Fase 5 se cerró, se reabrió y
+  después creció a cinco incrementos, con uno partido en tres PR, sin que nada escrito dijera si eso
+  se puede ni hasta dónde. Va con el ítem de lineamientos para partir una fase, que ya está en esta
+  lista: son dos caras del mismo hueco.
+- Levantar los requisitos y requerimientos antes de seguir programando. Ya está parqueado en "Deuda
+  de método y documentación" como documento de requisitos, y los tres ítems de arriba son la
+  consecuencia de no tenerlo: cada regla de método aparece cuando ya se rompió.
 
 ---
 

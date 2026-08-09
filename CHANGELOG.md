@@ -2,6 +2,24 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.52 — 2026-08-09
+
+### Added
+
+- `docs/ROADMAP.md`: Fase 5B, modularizar `index.html` con ES Modules nativos, entre la Fase 5 y la Fase 6. Estado `pendiente`, bloqueada por la Fase 5 completa. Sin bundler, sin build step, y la app tiene que seguir abriendo desde `file://`.
+- `docs/DECISIONS.md`: entrada con por qué la 5B se atiende después de cerrar la Fase 5 y por qué lleva letra en vez de número. Correr la numeración movería los anclajes de seis fases, y "5.5" ya es el quinto incremento de la Fase 5.
+- `docs/ROADMAP.md`: cuatro ítems de backlog sobre reglas de método que faltan. Qué hacer cuando un umbral se dispara a mitad de fase, cómo se promueve un ítem del backlog a fase, cómo se reabre una fase cerrada, y levantar los requisitos antes de seguir programando.
+- `CLAUDE.md`: regla 6 de "Prosa". Una afirmación sobre el código se ancla en el nombre de la función o en una cita grepeable, nunca en un número de línea. De las cuatro referencias `archivo:línea` que había en `docs/`, tres apuntaban a otra cosa.
+
+### Fixed
+
+- `docs/ARCHITECTURE.md`: el umbral de las 1000 líneas de §7 ya se cruzó y el documento no lo sabía. Declaraba 573 líneas de `index.html`; `wc -l` da 1055, y `src/engine.js` pasó de 145 a 249. Los conteos se reemplazan por el comando que los recalcula.
+- `docs/ARCHITECTURE.md`: el modelo de `State` de §1 no incluía `harmony.function`, que la Fase 4 escribe en cada análisis.
+- `docs/ARCHITECTURE.md`: §2 hablaba de "las tres reglas puras" de `src/engine.js`. Son ocho desde las Fases 3 y 4, y la lista viva es el bloque de exports del archivo.
+- `docs/ROADMAP.md`: la Fase 3 apuntaba a `index.html:566` para decir que `classifyChordRelation` no logueaba. Esa línea está vacía. Ahora ancla en `UI.updateStatus` y en la línea "Análisis:" con etiqueta MATH, que sí existe.
+
+La versión mostrada sigue en V11.46; el desfase lo cierra el próximo PR de código.
+
 ## v11.51 — 2026-08-09
 
 ### Fixed

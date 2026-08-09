@@ -88,7 +88,7 @@ una línea de código, una fecha, un pitch class.
 Lo que sigue es el mínimo para escribir acá sin el plugin instalado. Son reglas propias,
 escritas con los números que salieron de medir este repo el 2026-08-09, no una copia del
 plugin: el texto de ese proyecto no se copia porque no trae licencia. Con el plugin instalado
-manda igual todo lo que dice; estas cinco son el piso.
+manda igual todo lo que dice; estas seis son el piso.
 
 1. Las listas de palabras vetadas del plugin están en inglés y acá se escribe en español, así
    que atrapan poco. No traducirlas. Lo que sí se busca antes de entregar: "muy",
@@ -120,6 +120,12 @@ manda igual todo lo que dice; estas cinco son el piso.
 5. Decir "no se verificó" sobre el estado del código es obligatorio y se queda (ver
    "Honestidad de estado"). Lo que no va es narrar qué se buscó y no se encontró mientras se
    redacta.
+6. Una afirmación sobre el código se ancla en algo que sobreviva a un refactor: el nombre de la
+   función, o una cita textual que se pueda grepear. Nunca en un número de línea. Medido el
+   2026-08-09: de las cuatro referencias `archivo:línea` que había en `docs/`, tres apuntaban a
+   otra cosa. Las dos de `docs/DECISIONS.md` quedan por append-only y son deuda tolerada. Lo
+   mismo vale para un número que describe el código, como un conteo de líneas: va con el comando
+   que lo recalcula, o no va.
 
 Los números de arriba son de la prosa que ya está escrita y sirven de línea base. Se recalculan
 con estos comandos, desde la raíz del repo, para que una sesión que no tenga este historial pueda

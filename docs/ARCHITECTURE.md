@@ -27,7 +27,7 @@ State = {
   config: { latino, accumMs, holdMs, errMs, splitNote },  // persistido en localStorage
   universe: { root, type, validPitches: Set },             // NO persistido (bug conocido)
   midi: { access, activeBasses: Set, activeMelodies: Set, keysDown: Set, sustainActive },
-  harmony: { chord, isLocked },
+  harmony: { chord, isLocked, function },                  // function la escribe la Fase 4
   evaluations: Map<midiNote, {status, timeout, startTime}>,
   timers: { accumulation, contextHold },
   logHistory: []
@@ -50,8 +50,11 @@ de dedos humanos, no un loop de animación a 60 fps.
 
 `MathEngine.detectChord` y `MathEngine.isDiatonic` no leen `State` ni el DOM. Reciben
 argumentos y devuelven datos. Desde la extracción del 2026-07-04 (ver `DECISIONS.md`),
-`MathEngine` y las tres reglas puras `classifyChordRelation`, `evaluateMelodyStatus` y
-`applyPassingTone` viven en `src/engine.js`, que `index.html` carga con `<script src>`. El
+`MathEngine` y las reglas puras viven en `src/engine.js`, que `index.html` carga con
+`<script src>`. Empezaron siendo tres, `classifyChordRelation`, `evaluateMelodyStatus` y
+`applyPassingTone`; las Fases 3 y 4 sumaron `getRomanNumeral`,
+`isSecondaryDominantLeadingTone`, `getTonalFunction` y `scaleDegreesOrdered`, y `scalePitches`
+ya estaba. Son ocho, y la lista viva es el bloque de exports al final del archivo. El
 resto (`State`, `MIDI`, `UI`, `SysLog`) sigue en `index.html`. Cualquier lógica nueva de
 teoría musical (grados romanos, prioridad de reglas armónicas) va en `src/engine.js`, no en
 `UI` ni en `MIDI`. Esa es la línea que mantiene las fixtures corriendo en Node contra el
@@ -105,8 +108,8 @@ detectChord(notesArray) {
 ```
 
 Desde la v11.6 (Fase 1), el algoritmo prueba el pitch class del bajo real como raíz antes
-que el orden ascendente. `src/engine.js:54` calcula `bassPC`; `:60` arma `candidateRoots`
-con el bajo al frente. Si el bajo forma un template, gana esa lectura; si no, cae al orden
+que el orden ascendente. Dentro de `detectChord`, en `src/engine.js`, la línea que empieza con
+`const bassPC =` lo calcula, y la de `const candidateRoots =` lo pone al frente. Si el bajo forma un template, gana esa lectura; si no, cae al orden
 ascendente, que es la inversión real.
 
 El caso Do-Mi-Sol-La sigue de ejemplo, pitch classes 0, 4, 7, 9. Con el bajo en La el motor
@@ -176,8 +179,8 @@ anotado en la Terminología de pantalla de la Fase 5 (`ROADMAP.md`).
 
 ## 7. No framework, por ahora
 
-Hoy el código son dos archivos: `index.html` (573 líneas: `State`, `MIDI`, `UI`, `SysLog`)
-y `src/engine.js` (145 líneas: `MathEngine` y las tres reglas puras). Los objetos-módulo ya
+Hoy el código son dos archivos: `index.html` (`State`, `MIDI`, `UI`, `SysLog`) y `src/engine.js`
+(`MathEngine` y las funciones puras de teoría). Los objetos-módulo ya
 separan responsabilidades. Los colapsos que se documentan del historial (freeze del hilo
 principal, fuga de memoria por `innerHTML +=`) fueron problemas de patrones DOM y async, no
 del lenguaje. Migrar a React o Vue no arregla el bug de raíz ambigua ni ningún problema de
@@ -189,3 +192,14 @@ vuelve difícil de razonar, el siguiente paso es modularizar con ES Modules nati
 (`<script type="module">`), no adoptar un framework. Un framework se reconsidera solo si
 aparece una necesidad real de UI reactiva compleja, tipo múltiples vistas o routing, que
 hoy no existe.
+
+**El umbral ya se cruzó.** Medido con `wc -l` el 2026-08-09: `index.html` tiene 1055 líneas y
+`src/engine.js` 249. El gatillo se cumplió durante la Fase 5, con el trabajo visual en curso, y
+se decidió terminar esa fase antes de tocarlo. La modularización es la Fase 5B del `ROADMAP.md`,
+entre la Fase 5 y la Fase 6. La decisión y su razón viven en `DECISIONS.md`, entrada del
+2026-08-09. Este párrafo se borra cuando la 5B cierre.
+
+Los conteos de líneas de esta sección se recalculan con `wc -l index.html src/engine.js`. La
+versión anterior de este texto declaraba 573 y 145 líneas, números de la v11.0 que envejecieron
+tres incrementos sin que nadie los volviera a correr, y por eso el umbral se cruzó sin que se
+notara.
