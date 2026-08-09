@@ -40,6 +40,8 @@ fecha real del cambio en ISO 8601, nunca la de una versión anterior. Un PR doc-
 dejar la última versión del CHANGELOG por delante de la versión que muestra el artefacto;
 ese desfase es intencional y lo cierra el próximo PR de código (ver "Versión mostrada").
 
+Una viñeta no pasa de 60 palabras: es la regla 3 de "Prosa", con su medición y su comando.
+
 ## DECISIONS
 
 `docs/DECISIONS.md` es append-only, estilo ADR. No se borra una entrada vieja aunque quede
@@ -85,25 +87,59 @@ plugin: el texto de ese proyecto no se copia porque no trae licencia. Con el plu
 manda igual todo lo que dice; estas cinco son el piso.
 
 1. Las listas de palabras vetadas del plugin están en inglés y acá se escribe en español, así
-   que atrapan poco: "delve", "leverage" y "robust" dan cero, y los equivalentes castellanos
-   dieron 5 casos en 32.588 palabras de prosa. No traducirlas. Lo que sí se busca antes de
-   entregar: "muy", "absolutamente", "claramente", "simplemente", "probablemente".
+   que atrapan poco: "delve", "leverage" y "robust" dan cero. No traducirlas. Lo que sí se
+   busca antes de entregar: "muy", "absolutamente", "claramente", "simplemente",
+   "probablemente". Medido el 2026-08-09 sobre 32.079 palabras de prosa: tres hits, y uno solo
+   es prosa viva, `docs/DECISIONS.md:825`, que por append-only se queda. Los otros dos son
+   citas dentro del CHANGELOG.
 2. El paralelismo contrastivo, el "no es X, es Y", se usa como máximo una vez cada 500
-   palabras. Medido el 2026-08-09: `docs/DECISIONS.md` va en uno cada 402 y se pasa del techo;
-   `docs/ROADMAP.md` va en uno cada 517 y lo cumple, con un 3% de margen.
+   palabras. Medido el 2026-08-09: `docs/DECISIONS.md` va en uno cada 419 y se pasa del techo;
+   `docs/ROADMAP.md` en uno cada 546 y `docs/ARCHITECTURE.md` en uno cada 784 lo cumplen.
 3. Una viñeta del CHANGELOG no pasa de 60 palabras. Si el cambio no entra, son dos viñetas.
-   Medido: las quince viñetas más viejas promedian 42 palabras, las quince más nuevas 102, y
-   la más larga tiene 204.
-4. Ningún encabezado lleva aclaración entre paréntesis. Medido: 17 casos, 8 de ellos en
-   `docs/ROADMAP.md`. Los que están en archivos editables se corrigen en la pasada de prosa;
-   los de `docs/DECISIONS.md` y los del CHANGELOG ya publicado quedan como están, igual que
-   el guion largo viejo.
+   Medido el 2026-08-09: 66 viñetas de 142 se pasan, la más larga tiene 204 palabras, y el
+   promedio de las quince más nuevas bajó de 102 a 63. Las secciones ya publicadas no se
+   reescriben; el techo rige de la próxima sección en adelante.
+4. Un encabezado no lleva aclaración entre paréntesis cuando ese paréntesis no aporta un dato.
+   Sí se queda cuando lleva el estado de verificación de la sección o un número: sacarlo
+   empobrece el documento y choca con "Honestidad de estado". Medido el 2026-08-09: 17 casos.
+   Los 3 de `docs/ARCHITECTURE.md` y los 2 de `tests/README.md` se quedan, porque llevan
+   "confirmada en código", "verificado", un identificador de código y el umbral de 180 ms. Los
+   4 de `docs/DECISIONS.md` no se tocan por append-only. Los 8 de `docs/ROADMAP.md` son los
+   únicos candidatos, y ese archivo es del que un modelo saca qué hacer al ejecutar una fase:
+   renombrar un encabezado ahí mueve anclajes, así que se corrige junto con todo lo que los
+   cite, nunca por su cuenta.
 5. Decir "no se verificó" sobre el estado del código es obligatorio y se queda (ver
    "Honestidad de estado"). Lo que no va es narrar qué se buscó y no se encontró mientras se
    redacta.
 
-Los cuatro números medidos son de la prosa que ya está escrita, así que sirven de línea base:
-la próxima pasada compara contra ellos y se ve si bajaron.
+Los números de arriba son de la prosa que ya está escrita y sirven de línea base. Se recalculan
+con estos comandos, desde la raíz del repo, para que una sesión que no tenga este historial pueda
+comparar en vez de creer:
+
+```sh
+# Palabras de prosa, el total de la regla 1.
+wc -w CHANGELOG.md docs/*.md tests/README.md
+
+# Léxico de la regla 1. Descontar los de este archivo, que son la lista de la regla.
+grep -rniE "\b(muy |absolutamente|claramente|simplemente|probablemente)\b" \
+  CHANGELOG.md docs/*.md tests/README.md
+
+# Paralelismos de la regla 2, por archivo. Dividir wc -w por este conteo.
+grep -cE "no (es|son|era|fue) [^,.;]{2,45}[,;] (es|sino|son)|[a-zá-úñ]+, no (un|una|el|la|de|por|lo|a|con) [a-zá-úñ]" docs/ROADMAP.md
+
+# Palabras por viñeta del CHANGELOG, de la más corta a la más larga, regla 3.
+grep -E "^- \`" CHANGELOG.md | awk '{print NF}' | sort -n
+
+# Encabezados con paréntesis, por archivo, regla 4.
+grep -rcE "^#{1,4} .*\(.*\)" CHANGELOG.md docs/*.md tests/README.md
+```
+
+`CLAUDE.md` queda fuera del corpus a propósito: es el archivo del estándar, y cada vez que se
+lo edita movería los números que él mismo declara.
+
+El conteo de la regla 2 depende de su expresión regular: cambiarla cambia el número y rompe la
+comparación con la línea base. Si hace falta afinarla, se recalculan los tres archivos de una
+y se reescribe la regla con los valores nuevos y su fecha.
 
 ## Guion largo
 
