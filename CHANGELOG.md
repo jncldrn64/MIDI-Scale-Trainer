@@ -2,6 +2,28 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.54 — 2026-08-09
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva con dónde vive la leyenda de colores. El teclado da el veredicto nota por nota con color; los subtítulos dan lo que el color no alcanza; la explicación de qué significa cada color vive en la guía, que es su primer contenido real.
+- `docs/DECISIONS.md`: la misma entrada asume la consecuencia. La guía se cierra como cualquier caja, así que el usuario puede cerrar la explicación de los colores. Se prefiere eso a convertir la guía en otra excepción.
+- `docs/DECISIONS.md`: entrada nueva con dos precisiones de nomenclatura. La guía nace en la columna derecha, bajo el tercer punto de nacimiento, y quedan válidos dos sinónimos: "los tres del sistema" y "los tres intercambiables del cap".
+- `docs/DECISIONS.md`: queda escrita la regla que evita que esa lista crezca sola. Un sinónimo vale solo si el mapa de términos lo registra; cualquier otra forma de nombrar un grupo de cajas no se usa.
+- `docs/ROADMAP.md`: el incremento 5.4 suma dos trabajos. La mudanza física de la leyenda a la guía, que la decisión de hoy resolvió en el papel, y decidir la regla de iconos y emojis de la interfaz.
+- `docs/ROADMAP.md`: ítem de backlog nuevo, subtítulos de feedback parcialmente coloreables. Anotado como idea y sin fase: primero hay que cablear los subtítulos a la salida del motor.
+
+### Changed
+
+- `docs/ROADMAP.md`: el ítem de coherencia visual del set de iconos deja de estar sin fase. Lo toma el incremento 5.4, así que el mismo trabajo no queda anotado en dos lugares.
+
+### Fixed
+
+- `docs/ROADMAP.md`: la deuda verificada decía que el incremento 5.1 dejaba la leyenda asociada al teclado. Esa atribución no resuelve contra ningún texto: el Alcance del 5.1 no nombra la leyenda. El punto entero sale, porque la decisión de hoy lo cierra.
+- `docs/DECISIONS.md`: la entrada nueva registra de dónde salió el error. Se confundió `ARCHITECTURE.md` §5.1, que describe dónde vive hoy la leyenda como hecho verificado, con el incremento 5.1 del ROADMAP.
+
+La versión mostrada sigue en V11.53; el desfase lo cierra el próximo PR de código.
+
 ## v11.53 — 2026-08-09
 
 ### Added

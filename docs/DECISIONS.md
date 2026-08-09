@@ -1015,6 +1015,72 @@ que lo produce, o no va.
 
 ---
 
+## 2026-08-09 — Dónde vive la leyenda de colores: el teclado da el veredicto y la guía da la explicación
+
+**Contexto:** el `ROADMAP.md` tenía anotado como deuda que la leyenda de colores no tiene hogar
+escrito, y que se decide cuando la guía se construya. La guía se construyó en la tercera parte del
+incremento 5.3, así que la pregunta ya se puede cerrar.
+
+**Decisión:**
+
+1. Hay dos espacios de feedback al usuario y cada uno tiene un trabajo distinto. El teclado
+   coloreable da el veredicto nota por nota, con color, sobre la tecla que se tocó. Los subtítulos
+   dan lo que el color no alcanza: lo que no entra en las seis categorías, y lo que necesita ser
+   descriptivo en vez de categórico.
+2. La leyenda que explica qué significa cada color vive en la guía. La guía es donde vive la
+   explicación de las funciones y de lo que se ve en pantalla, así que la leyenda es su primer
+   contenido real.
+3. La mudanza física de la leyenda es trabajo del incremento 5.4. Esta entrada decide dónde va, no
+   la mueve.
+4. Consecuencia asumida: la guía se cierra como cualquier otra caja, así que el usuario puede
+   cerrar la explicación de los colores. Es coherente con que toda caja se pueda cerrar y con que
+   el feedback avise cómo restaurarla, y se prefiere eso a hacer de la guía una excepción más.
+
+**Razón:** las seis categorías de color son un vocabulario cerrado y la leyenda es su diccionario.
+Un diccionario vive con la explicación, no pegado al instrumento. Dejarla al pie del teclado la
+mantiene visible a costa de ocupar alto del fondo de forma permanente, y ese alto es el que el
+presupuesto de superposición protege.
+
+**Corrección de una atribución:** la deuda del `ROADMAP.md` decía que el incremento 5.1 dejaba la
+leyenda asociada al teclado dentro del fondo. Esa atribución no resuelve contra ningún texto: el
+Alcance del incremento 5.1 no nombra la leyenda. Lo que sí existe es `ARCHITECTURE.md` §5.1, que
+describe dónde vive hoy, como hecho verificado y no como decisión. La confusión fue entre un número
+de sección y un número de incremento. Así que esta entrada no supera una decisión anterior: decide
+algo que nunca se había decidido.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-09 — Dónde nace la guía, y los dos únicos sinónimos que valen
+
+**Contexto:** el mapa de términos del 2026-08-09 registra qué palabra manda hoy para cada cosa. Es
+append-only, así que se amplía desde afuera con entradas nuevas y no editándolo. Faltan dos
+precisiones que la tercera parte del incremento 5.3 dejó en el código sin registrar en la prosa.
+
+**Decisión:**
+
+1. La guía nace en la columna derecha de la ventana, bajo el tercer punto de nacimiento. Su
+   excepción al molde uniforme ya estaba escrita en la entrada del 2026-08-01, que la deja crecer
+   en vertical en vez de recortar su texto. Lo que se agrega acá es solo dónde nace.
+2. Quedan declarados válidos dos sinónimos, y solo estos dos. "Los tres del sistema" nombra a los
+   subtítulos, el feedback y la guía. "Los tres intercambiables del cap" nombra a los que compiten
+   por el cap de tres.
+3. Un sinónimo es válido únicamente si el mapa de términos lo registra. Cualquier otra forma de
+   nombrar a un grupo de cajas no se usa en la documentación de este repo.
+
+**Razón:** los dos grupos se nombraban con perífrasis distintas en cada documento, y una perífrasis
+que cambia de forma en cada uso obliga a releer para saber si habla de lo mismo. Dos nombres fijos
+cuestan menos que seis variantes. La regla del punto 3 es lo que evita que la lista vuelva a
+crecer sola.
+
+**Consecuencia:** amplía el mapa de términos del 2026-08-09 sin tocarlo. Una entrada futura que
+refine un término agrega su línea de la misma forma.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

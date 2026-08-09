@@ -345,7 +345,11 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   esté la caja en pantalla, y con los tres tomados la apertura se bloquea y el feedback lo avisa.
 - Incremento 5.4, nomenclatura por forma: las etiquetas del botón de nomenclatura pasan a
   "Silábica" y "Alfabética", con valor por defecto, persistencia por `localStorage` y el botón
-  alcanzable.
+  alcanzable. Suma dos trabajos más de nombres y símbolos. Uno es la mudanza física de la leyenda
+  de colores a la guía, que la entrada de decisiones del 2026-08-09 ya resolvió en el papel y este
+  incremento ejecuta. El otro es decidir la regla de iconos y emojis de la interfaz, que hoy no
+  existe escrita; el ítem de coherencia visual del set de iconos del BACKLOG es el material de
+  partida y se cierra acá, en vez de quedar dos veces anotado.
 - Incremento 5.5, análisis honesto: la función tonal que la Fase 4 dejó en el buffer se muestra en
   el panel de Análisis junto al numeral y la relación, y la etiqueta "Intercambio Modal" se
   relabela a "no clasificado" o "por definir". Van juntos para no dejar un estado intermedio
@@ -394,10 +398,6 @@ conciencia.
   así que no es un incumplimiento sino un hueco: queda como pregunta abierta cuánto alto merece el
   teclado y si va pegado al borde inferior. Se decide junto con las 88 teclas, porque a más teclas
   cada una sale más angosta y el alto necesario cambia.
-- La leyenda de colores vive al pie, pegada al teclado y fuera de todo widget. No hay decisión
-  escrita de dónde debe vivir, y hay tensión: el incremento 5.1 dice que se queda asociada al teclado
-  dentro del fondo, y la guía existe para explicar qué significa cada cosa. Queda como pregunta
-  abierta, a decidir cuando la guía se construya.
 - Dos widgets existen solo como andamiaje y no tienen contenido: el tercer widget, rotulado por
   construir, y el widget de prueba. El segundo se creó porque el cap es de tres y sin un cuarto
   candidato la rama que bloquea una apertura no se puede ejercer desde la interfaz. Los dos nacen
@@ -656,7 +656,8 @@ prioridad, no porque la rueda la bloquee.
   coherente: cada uno viene de una familia distinta y se ven como piezas sueltas. Queda registrado
   un hallazgo negativo para no repetir el intento: pasarlos a SVG se probó y da más carga, no menos,
   así que el SVG no es la salida por rendimiento. La pregunta abierta es cómo conseguir un set
-  coherente sin sumar costo gráfico. Es cosmético y no bloquea nada.
+  coherente sin sumar costo gráfico. Es cosmético y no bloquea nada. Este ítem dejó de estar sin
+  fase: el incremento 5.4 lo toma y ahí se decide la regla.
 - Lectura de partitura como vista futura. Está anotado para que sea una decisión y no un olvido:
   se mencionó una vez, no está comprometido, y no tiene diseño ni alcance todavía.
 - Comparar cómo reparten el espacio los programas que ya explican canciones con notas que caen,
@@ -722,6 +723,10 @@ prioridad, no porque la rueda la bloquee.
 - Levantar los requisitos y requerimientos antes de seguir programando. Ya está parqueado en "Deuda
   de método y documentación" como documento de requisitos, y los tres ítems de arriba son la
   consecuencia de no tenerlo: cada regla de método aparece cuando ya se rompió.
+- Subtítulos de feedback parcialmente coloreables. La idea es que el subtítulo pueda teñir la parte
+  de su texto que corresponde a una categoría de la leyenda, para que el color y la palabra digan lo
+  mismo sin repetirlo. Queda anotada como idea y sin fase: primero hay que cablear los subtítulos a
+  la salida del motor, que hoy siguen siendo un marcador de posición.
 
 ---
 
