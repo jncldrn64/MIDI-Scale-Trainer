@@ -2,6 +2,25 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.51 — 2026-08-09
+
+### Fixed
+
+- `docs/ROADMAP.md`: el ítem del incremento 5.2 citaba un comentario de `index.html` que decía "visibles y alcanzables". `grep -c` sobre el archivo da 0: esa línea murió en el 5.1. Ahora cita el comentario vivo, `index.html:354`.
+- `CLAUDE.md`: la regla 3 declaraba "66 de 142 viñetas". El total ya era 150 al mergear, porque el propio PR agrega una sección. Pasa a declarar solo las 66 históricas por encima del techo, que es un número que no crece salvo que alguien lo rompa.
+- `CLAUDE.md`: la regla 1 declaraba un total de 32.079 palabras de prosa que quedó viejo en el mismo commit. Se saca: no aportaba nada operativo.
+- `CLAUDE.md`: la regla 4 justificaba cinco paréntesis con cuatro razones. El del título de `tests/README.md` queda por ser un README que documenta su propia carpeta, no por la excepción de estado o número.
+- `CLAUDE.md`: la regla 1 aclara que los hits de "delve", "leverage" y "robust" caen en viñetas del CHANGELOG que citan estas reglas, y se descuentan.
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva con por qué las reglas de prosa viven escritas en el repo y no en una dependencia externa. Seis puntos: el piso sin plugin, no copiar texto sin licencia, cada número con su comando, ninguna regla borra información, los encabezados del ROADMAP son anclajes, y nada de totales sobre el CHANGELOG.
+- `CLAUDE.md`: el título del Pull Request usa el mismo formato que el commit. Estuvo vigente de hecho hasta el PR #48 y se cortó en el #49 por no estar escrito.
+
+Los números concretos viven en `CLAUDE.md`, que es editable. En `docs/DECISIONS.md` vive por qué existen esas reglas.
+
+La versión mostrada sigue en V11.46; el desfase lo cierra el próximo PR de código.
+
 ## v11.50 — 2026-08-09
 
 ### Fixed

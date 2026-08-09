@@ -293,9 +293,10 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   hogar en el menú de opciones al botón "Centrar en Split", que hoy está parqueado y oculto. El
   panel "Fijar Acordes" sigue esperando: no está decidido si es un control, y entonces va a
   opciones, o una característica de práctica, y entonces es candidato a widget y su lugar es el menú
-  de widgets del 5.3. Ninguno de los dos se borra. Con una restricción verificada: el comentario de `index.html` dice de los Ajustes del
-  Motor que están "visibles y alcanzables" porque el autor los usa según el tempo de la canción,
-  en los dos extremos. El 5.2 puede darles hogar en un menú, pero tiene que seguir cumpliendo esa razón,
+  de widgets del 5.3. Ninguno de los dos se borra. Con una restricción verificada contra el
+  comentario que hoy tiene `index.html` en su línea 354, el que quedó después de la mudanza del
+  5.2: los Ajustes del Motor "siguen alcanzables mientras se toca: abrir el menú es un clic y cada
+  campo queda a la vista". El 5.2 puede darles hogar en un menú, pero tiene que seguir cumpliendo esa razón,
   así que los cuatro campos, acumulación, retención, error visual y split, quedan alcanzables sin
   fricción mientras se toca, no enterrados a varios niveles de profundidad. Como techo de trabajo:
   nada que alguien use mientras toca debería costar más de tres clics. El número es un techo

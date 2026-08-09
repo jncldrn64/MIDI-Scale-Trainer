@@ -935,6 +935,47 @@ respuesta corta; las entradas fechadas siguen siendo la explicación larga.
 
 ---
 
+## 2026-08-09 — Las reglas de prosa viven escritas en el repo, con su método, y no en una dependencia externa
+
+**Contexto:** la sección "Prosa" de `CLAUDE.md` nombraba dos skills de un plugin de terceros por
+referencia. Esas rutas no resuelven hasta instalar el plugin por sesión, así que una sesión que no
+lo instalaba se quedaba con tres reglas escritas literales de veinticuatro. El resultado se puede
+medir: el guion largo, que sí estaba escrito, sobrevivió intacto, y `docs/DECISIONS.md` llegó a un
+paralelismo contrastivo cada 419 palabras mientras las reglas se aplicaban de memoria. Ese archivo
+es append-only, así que esa degradación ya no se puede revertir.
+
+**Decisión:**
+
+1. El mínimo para escribir acá vive escrito en `CLAUDE.md`, en cinco reglas propias, y no depende
+   de instalar nada. Con el plugin instalado manda todo lo que el plugin dice; las cinco son el
+   piso.
+2. No se copia texto del plugin. No trae LICENSE y este repo es público, así que las reglas están
+   redactadas de cero contra mediciones de esta prosa. La referencia al proyecto de origen queda
+   como fuente.
+3. Cada número que una regla declara viaja con el comando de shell que lo produce. Un número sin
+   método no se puede recalcular, y entonces una sesión futura no sabe si mejoró o empeoró.
+4. Una regla no manda borrar información. Un paréntesis en un encabezado que lleva el estado de
+   verificación de la sección o un número se queda, porque sacarlo choca con "Honestidad de
+   estado".
+5. Los encabezados de `docs/ROADMAP.md` no se renombran por su cuenta. Ese archivo es del que un
+   modelo saca qué hacer al ejecutar una fase, así que un encabezado ahí es un anclaje y se
+   cambia junto con todo lo que lo cite.
+6. No se declaran totales sobre el CHANGELOG. Todo PR le agrega una sección, así que un total
+   queda viejo antes de mergear. Se declara lo que no crece solo, como la cantidad de viñetas
+   históricas por encima del techo.
+
+**Razón:** la documentación del proyecto tiene que sostener el contexto entera, aunque el chat
+muera y aunque el plugin no esté. Un modelo que llega nuevo lee el repo y greps; si la regla vive
+afuera, no la lee, y si el número no trae su comando, no lo puede comprobar.
+
+**Consecuencia:** los números concretos viven en `CLAUDE.md`, que es editable, y no en esta
+entrada, que es append-only y quedaría desactualizada sin poder corregirse. Acá vive por qué esas
+reglas existen; allá, cuánto dan hoy.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

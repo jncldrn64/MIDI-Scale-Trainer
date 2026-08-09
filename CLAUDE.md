@@ -68,6 +68,10 @@ El cuerpo del commit no vuelve a narrar el cambio: máximo 1 o 2 líneas y una r
 la sección del CHANGELOG. El qué vive en el CHANGELOG, el porqué en DECISIONS, no en el
 mensaje del commit.
 
+El título del Pull Request usa el mismo formato que el commit, con el mismo tipo. Así la lista
+de PR del repo se lee igual que el `git log` y se puede filtrar por tipo desde los dos lados.
+Estuvo vigente de hecho hasta el PR #48 y se cortó sin motivo en el #49, por no estar escrito.
+
 ## Prosa
 
 Docs y comentarios en español, en mi voz, aplicando dos skills:
@@ -87,23 +91,28 @@ plugin: el texto de ese proyecto no se copia porque no trae licencia. Con el plu
 manda igual todo lo que dice; estas cinco son el piso.
 
 1. Las listas de palabras vetadas del plugin están en inglés y acá se escribe en español, así
-   que atrapan poco: "delve", "leverage" y "robust" dan cero. No traducirlas. Lo que sí se
-   busca antes de entregar: "muy", "absolutamente", "claramente", "simplemente",
-   "probablemente". Medido el 2026-08-09 sobre 32.079 palabras de prosa: tres hits, y uno solo
-   es prosa viva, `docs/DECISIONS.md:825`, que por append-only se queda. Los otros dos son
-   citas dentro del CHANGELOG.
+   que atrapan poco. No traducirlas. Lo que sí se busca antes de entregar: "muy",
+   "absolutamente", "claramente", "simplemente", "probablemente". Medido el 2026-08-09: un solo
+   caso de prosa viva, `docs/DECISIONS.md:825`, que por append-only se queda. Los demás hits de
+   este grep, y los de "delve", "leverage" y "robust", caen todos en viñetas del CHANGELOG que
+   citan estas mismas reglas. Se descuentan al contar.
 2. El paralelismo contrastivo, el "no es X, es Y", se usa como máximo una vez cada 500
    palabras. Medido el 2026-08-09: `docs/DECISIONS.md` va en uno cada 419 y se pasa del techo;
    `docs/ROADMAP.md` en uno cada 546 y `docs/ARCHITECTURE.md` en uno cada 784 lo cumplen.
 3. Una viñeta del CHANGELOG no pasa de 60 palabras. Si el cambio no entra, son dos viñetas.
-   Medido el 2026-08-09: 66 viñetas de 142 se pasan, la más larga tiene 204 palabras, y el
-   promedio de las quince más nuevas bajó de 102 a 63. Las secciones ya publicadas no se
-   reescriben; el techo rige de la próxima sección en adelante.
+   Medido el 2026-08-09: **66 viñetas por encima del techo**, la más larga con 204 palabras. Las
+   secciones publicadas no se reescriben, así que esas 66 son historia congelada y el número no
+   debe subir. Si sube, lo subió la sección que se está escribiendo. No se declara un total de
+   viñetas ni de palabras: el CHANGELOG crece en cada PR y cualquier total queda viejo antes de
+   mergear.
 4. Un encabezado no lleva aclaración entre paréntesis cuando ese paréntesis no aporta un dato.
    Sí se queda cuando lleva el estado de verificación de la sección o un número: sacarlo
    empobrece el documento y choca con "Honestidad de estado". Medido el 2026-08-09: 17 casos.
-   Los 3 de `docs/ARCHITECTURE.md` y los 2 de `tests/README.md` se quedan, porque llevan
-   "confirmada en código", "verificado", un identificador de código y el umbral de 180 ms. Los
+   Los 3 de `docs/ARCHITECTURE.md` se quedan: dos llevan el estado, "confirmada en código" y
+   "verificado", y el tercero es el identificador `State`. De los 2 de `tests/README.md`, el del
+   umbral de 180 ms se queda por el número, y el "(Fase 0)" del título se queda por otro motivo,
+   que conviene decir en vez de forzarlo dentro de la excepción: es un puntero a la fase que creó
+   esa carpeta y ese README documenta su propia carpeta. Los
    4 de `docs/DECISIONS.md` no se tocan por append-only. Los 8 de `docs/ROADMAP.md` son los
    únicos candidatos, y ese archivo es del que un modelo saca qué hacer al ejecutar una fase:
    renombrar un encabezado ahí mueve anclajes, así que se corrige junto con todo lo que los
