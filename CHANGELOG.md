@@ -2,6 +2,24 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.48 — 2026-08-09
+
+### Added
+
+- `CLAUDE.md`: la sección "Prosa" suma cinco reglas propias, el mínimo para escribir acá sin el plugin instalado. Cada una lleva el número que salió de medir el repo el 2026-08-09.
+- `CLAUDE.md`: techo de paralelismo contrastivo. El "no es X, es Y" se usa una vez cada 500 palabras como máximo. Hoy `docs/DECISIONS.md` va en uno cada 402 y `docs/ROADMAP.md` en uno cada 517.
+- `CLAUDE.md`: techo de 60 palabras por viñeta del CHANGELOG. Las quince viñetas más viejas promedian 42 palabras; las quince más nuevas, 102, y la más larga tiene 204.
+- `CLAUDE.md`: prohibición de aclaraciones entre paréntesis en encabezados, con los 17 casos que hay hoy, 8 de ellos en `docs/ROADMAP.md`.
+- `CLAUDE.md`: queda escrito cuál manda entre honestidad de estado y no narrar el proceso. Decir "no se verificó" sobre el código sigue siendo obligatorio. Queda prohibido narrar qué se buscó y no se encontró mientras se redacta.
+
+### Changed
+
+- `CLAUDE.md`: la nota sobre las listas de palabras vetadas. Están en inglés y acá se escribe en español: "delve", "leverage" y "robust" dan cero, y los equivalentes castellanos dieron 5 casos en 32.588 palabras. No se traducen.
+
+Las referencias al plugin `no-ai-slop-writing-rules` se quedan como fuente y como lectura ampliada. No se copió su texto al repo: sigue sin traer licencia.
+
+La versión mostrada sigue en V11.46; el desfase lo cierra el próximo PR de código.
+
 ## v11.47 — 2026-08-09
 
 ### Added

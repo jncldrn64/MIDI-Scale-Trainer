@@ -79,6 +79,32 @@ sesión con `/plugin marketplace add realrossmanngroup/no_ai_slop_writing_rules`
 IA, sin guion largo en la prosa. Cada afirmación cierra sobre un dato concreto: un número,
 una línea de código, una fecha, un pitch class.
 
+Lo que sigue es el mínimo para escribir acá sin el plugin instalado. Son reglas propias,
+escritas con los números que salieron de medir este repo el 2026-08-09, no una copia del
+plugin: el texto de ese proyecto no se copia porque no trae licencia. Con el plugin instalado
+manda igual todo lo que dice; estas cinco son el piso.
+
+1. Las listas de palabras vetadas del plugin están en inglés y acá se escribe en español, así
+   que atrapan poco: "delve", "leverage" y "robust" dan cero, y los equivalentes castellanos
+   dieron 5 casos en 32.588 palabras de prosa. No traducirlas. Lo que sí se busca antes de
+   entregar: "muy", "absolutamente", "claramente", "simplemente", "probablemente".
+2. El paralelismo contrastivo, el "no es X, es Y", se usa como máximo una vez cada 500
+   palabras. Medido el 2026-08-09: `docs/DECISIONS.md` va en uno cada 402 y `docs/ROADMAP.md`
+   en uno cada 517, los dos por encima del techo.
+3. Una viñeta del CHANGELOG no pasa de 60 palabras. Si el cambio no entra, son dos viñetas.
+   Medido: las quince viñetas más viejas promedian 42 palabras, las quince más nuevas 102, y
+   la más larga tiene 204.
+4. Ningún encabezado lleva aclaración entre paréntesis. Medido: 17 casos, 8 de ellos en
+   `docs/ROADMAP.md`. Los que están en archivos editables se corrigen en la pasada de prosa;
+   los de `docs/DECISIONS.md` y los del CHANGELOG ya publicado quedan como están, igual que
+   el guion largo viejo.
+5. Decir "no se verificó" sobre el estado del código es obligatorio y se queda (ver
+   "Honestidad de estado"). Lo que no va es narrar qué se buscó y no se encontró mientras se
+   redacta.
+
+Los cuatro números medidos son de la prosa que ya está escrita, así que sirven de línea base:
+la próxima pasada compara contra ellos y se ve si bajaron.
+
 ## Guion largo
 
 Guion largo (`—`): prohibido en toda la prosa (regla 1 de no-ai-slop). Se permite únicamente
