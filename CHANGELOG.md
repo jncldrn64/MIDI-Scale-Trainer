@@ -2,6 +2,22 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.49 — 2026-08-09
+
+### Fixed
+
+- `CLAUDE.md`: la regla 2 leía mal su propia medición. Un paralelismo cada 517 palabras es menos frecuente que uno cada 500, así que `docs/ROADMAP.md` cumple el techo con un 3% de margen. El que se pasa es `docs/DECISIONS.md`, con uno cada 402.
+- `docs/ROADMAP.md`: cinco correcciones de prosa contra las reglas de la sección "Prosa". Dos "muy" en el ítem del incremento 5.2, dos hedges con "probablemente" y un "vale la pena" en la deuda de método.
+- `docs/ROADMAP.md`: los cuatro campos del motor quedan descritos por el tempo de la canción en sus dos extremos, en vez de "muy rápida o muy lenta". El requisito no cambia: siguen alcanzables sin fricción.
+
+### Changed
+
+- `docs/ROADMAP.md`: la pasada de prosa no toca un solo encabezado. Los 8 con paréntesis quedan para un PR aparte, porque renombrarlos mueve los anclajes del archivo del que un modelo saca qué hacer al ejecutar una fase.
+
+Ningún Estado, Alcance, Criterio de aceptación ni relación de bloqueo cambió. El diff son 5 líneas.
+
+La versión mostrada sigue en V11.46; el desfase lo cierra el próximo PR de código.
+
 ## v11.48 — 2026-08-09
 
 ### Added

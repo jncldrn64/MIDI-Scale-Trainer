@@ -89,8 +89,8 @@ manda igual todo lo que dice; estas cinco son el piso.
    dieron 5 casos en 32.588 palabras de prosa. No traducirlas. Lo que sí se busca antes de
    entregar: "muy", "absolutamente", "claramente", "simplemente", "probablemente".
 2. El paralelismo contrastivo, el "no es X, es Y", se usa como máximo una vez cada 500
-   palabras. Medido el 2026-08-09: `docs/DECISIONS.md` va en uno cada 402 y `docs/ROADMAP.md`
-   en uno cada 517, los dos por encima del techo.
+   palabras. Medido el 2026-08-09: `docs/DECISIONS.md` va en uno cada 402 y se pasa del techo;
+   `docs/ROADMAP.md` va en uno cada 517 y lo cumple, con un 3% de margen.
 3. Una viñeta del CHANGELOG no pasa de 60 palabras. Si el cambio no entra, son dos viñetas.
    Medido: las quince viñetas más viejas promedian 42 palabras, las quince más nuevas 102, y
    la más larga tiene 204.
