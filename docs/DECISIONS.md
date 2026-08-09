@@ -976,6 +976,45 @@ reglas existen; allá, cuánto dan hoy.
 
 ---
 
+## 2026-08-09 — El umbral de las 1000 líneas se cruzó durante la Fase 5, y se atiende después de cerrarla
+
+**Contexto:** `ARCHITECTURE.md` §7 fija desde el principio que si `index.html` pasa las 1000
+líneas, el paso siguiente es modularizar con ES Modules nativos, sin framework. La misma sección
+declaraba 573 líneas, un número de la v11.0 que nadie volvió a correr. Medido con `wc -l` el
+2026-08-09: `index.html` tiene 1055 líneas y `src/engine.js` 249. El gatillo se cumplió en algún
+punto de la Fase 5 y pasó desapercibido porque el documento seguía declarando el número viejo.
+
+**Decisión:**
+
+1. La modularización se hace, y se hace después de que la Fase 5 cierre con sus cinco incrementos.
+   Frenar el trabajo visual a mitad de camino para partir el archivo dejaría las dos cosas por la
+   mitad, y la Fase 5 todavía va a mover mucho de `index.html`.
+2. Entra al `ROADMAP.md` como Fase 5B, entre la Fase 5 y la Fase 6. Se usa una letra y no un
+   número para no correr la numeración de las seis fases siguientes, porque sus encabezados son
+   anclajes de los que un modelo saca qué hacer al ejecutar una fase. Tampoco puede ser 5.5: ese
+   nombre ya es el quinto incremento de la Fase 5.
+3. El alcance es partir por la separación que `ARCHITECTURE.md` §2 ya documenta, `State`, `MIDI`,
+   `UI` y `SysLog`, con `<script type="module">`, sin bundler y sin build step. La app tiene que
+   seguir abriendo desde `file://`. La decisión del 2026-07-03 de no migrar a framework sigue
+   vigente y esto la respeta: modularizar no es adoptar un framework.
+4. Esto es una excepción de método tomada a conciencia. El repo no tiene escrito qué hacer cuando
+   un umbral se dispara a mitad de otra fase, así que se resolvió caso por caso. Que esas reglas
+   falten queda anotado en el BACKLOG, junto con las de promover un ítem del BACKLOG a fase y las
+   de reabrir una fase cerrada.
+
+**Razón:** el umbral es una regla escrita del propio repo y llevaba tiempo incumplida sin que
+nadie lo supiera. Ignorarla porque incomoda sería peor que la deuda técnica: dejaría demostrado
+que un número escrito acá no obliga a nada.
+
+**Consecuencia:** `ARCHITECTURE.md` §7 pierde los conteos viejos y gana el comando que los
+recalcula, más un párrafo que dice que el umbral se cruzó y que se borra cuando la 5B cierre. La
+regla 6 de "Prosa" en `CLAUDE.md` sale de acá: un número que describe el código va con el comando
+que lo produce, o no va.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
