@@ -2,6 +2,21 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.47 — 2026-08-09
+
+### Added
+
+- `docs/DECISIONS.md`: entrada nueva con el mapa de términos. Para cada palabra del proyecto, el nombre vigente, el nombre viejo y qué cambió: widget (antes "característica" y "panel"), widget de sistema, ranura (posición, después límite, y finalmente tres puntos de nacimiento que son coordenadas y no celdas), barra de menús permanente (antes "panel de pestañas"), overlay (hoy nombra solo el estado del incremento 5.1), universo (la etiqueta pasa a "Escala" en pantalla, pero `universeType`, `universeRoot` y `universePitchesSet` se quedan porque nombran el conjunto de notas permitidas y no siempre es una escala de siete), salida del motor y "Tensión Legal". El archivo es append-only, así que las palabras viejas siguen escritas y siguen siendo válidas en su fecha; este mapa dice cuál manda hoy sin tener que leer doce entradas en orden.
+- `docs/ROADMAP.md`: la Fase 5 suma la deuda verificada contra el código, seis puntos comprobados uno por uno contra `index.html`. El teclado dibuja 61 teclas, de la nota MIDI 36 a la 96 con `KEYBOARD_START` y `KEYBOARD_END`, contra las 88 que la documentación fija en cuatro lugares, y un piano de 88 va de la 21 a la 108. El alto del teclado no lo fija ningún documento, así que no es incumplimiento sino hueco, y se decide junto con las 88 teclas porque a más teclas cada una sale más angosta. La leyenda de colores vive al pie y no tiene hogar escrito, con tensión entre quedarse asociada al teclado y mudarse a la guía. La guía todavía no existe mientras el tercer widget sí tiene caja. Esa caja punteada contradice el modelo, porque no hay espacios reservados a la vista, y se retira cuando exista el menú de widgets. Y falta decidir en qué punto nace un widget abierto desde el menú, y qué pasa si el punto está ocupado.
+- `docs/ROADMAP.md`: dos ítems de backlog. Detectar el rango real del teclado MIDI conectado en vez de asumirlo, sabiendo que el protocolo no lo informa directamente. Y una barra de menús que se oculte sola cuando no se usa, como una barra de tareas, que devolvería su alto al fondo.
+
+### Changed
+
+- `docs/DECISIONS.md`: entrada nueva que corrige el área de movimiento de los widgets. El fondo es el piano más las notas que caen, y los widgets flotan por encima de ese fondo entero, así que el área es toda la ventana por debajo de la barra de menús. "Intocable" quiere decir que el fondo no se reordena ni se recorta para hacerle lugar a un widget, no que un widget no pueda taparlo. La única zona vedada es la barra. El tope de tres octavos y la franja de nacimiento siguen vigentes: son reglas de dónde nacen y cuánto tapan por defecto, no un cerco al arrastre. Corrige el punto 4 de la entrada del 2026-08-01, que ponía el piano como límite de abajo, y deja la deuda escrita: la segunda parte del incremento 5.3 implementó ese límite, así que el clamp inferior debe levantarse hasta el borde de la ventana.
+- `docs/ROADMAP.md`: el punto del material de referencia que vive fuera del repo suma que los bocetos de la interfaz son una secuencia cronológica y no una especificación paralela. Cada uno refina al anterior y el último es el del modelo vigente; los primeros traen ideas superadas a conciencia, cajas de tamaños distintos, botones dentro de cada caja y una barra centrada. Leerlos fuera de orden hace restaurar cosas descartadas creyendo que se recupera el diseño original. Lo que se fijó con números sobrevivió intacto a cada relevo; lo que quedó en adjetivos se reinterpretó cada vez contra lo que ya existía en el código.
+
+La versión mostrada sigue en V11.46; el desfase lo cierra el próximo PR de código.
+
 ## v11.46 — 2026-08-01
 
 ### Added

@@ -864,6 +864,77 @@ arrastrar, reset y cerrar, se construye contra estas reglas.
 
 ---
 
+## 2026-08-09 — Los widgets flotan sobre el fondo entero: el piano y las notas son intocables por debajo, no por delante
+
+**Contexto:** una entrada anterior fijó que el piano era el límite de abajo del área de movimiento.
+Eso no era lo decidido. El fondo es el piano más las notas que caen, y los widgets siempre están por
+encima de ese fondo, como una imagen dentro de otra. Con el piano de límite, media pantalla queda
+vedada al arrastre sin que ninguna regla lo pida.
+
+**Decisión:**
+
+1. El área de movimiento de un widget es toda la ventana por debajo de la barra de menús. Un widget
+   puede quedar sobre el piano y sobre la zona de notas, porque vive en una capa superior.
+2. "Intocable" significa que el fondo no se reordena ni se recorta para hacerle lugar a un widget,
+   no que un widget no pueda taparlo. El piano sigue fijo y a todo el ancho pase lo que pase.
+3. La única zona vedada es la barra de menús, que se queda arriba y no se solapa. Queda anotada como
+   idea sin decidir la de que la barra se oculte sola cuando no se usa, como una barra de tareas, y
+   entonces esa veda desaparecería.
+4. El tope de cobertura de tres octavos y la franja de nacimiento siguen vigentes: son reglas de
+   dónde nacen y cuánto tapan por defecto, no un cerco al arrastre.
+
+**Razón:** el tope de cobertura ya protege la lectura de las notas por defecto. Un cerco además del
+tope le quita al usuario lo único que se le pide que haga, mover la caja que estorba.
+
+**Consecuencia:** corrige el punto 4 de la entrada del 2026-08-01, que ponía el piano como límite. El
+código de la segunda parte del incremento 5.3 implementó ese límite, así que queda deuda: el clamp
+inferior debe levantarse hasta el borde de la ventana.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-09 — Mapa de términos: qué se llamaba antes de una forma y ahora de otra
+
+**Contexto:** los términos del proyecto se refinaron varias veces y este archivo es append-only, así
+que las palabras viejas siguen escritas en entradas viejas y siguen siendo válidas en su fecha. Sin
+un mapa, alguien que llega y busca una palabra encuentra dos sentidos y no sabe cuál manda.
+
+**Decisión:** se registra el mapa de términos. Para cada uno, el nombre vigente, el nombre viejo y
+qué cambió.
+
+- **Widget.** Antes "característica" y también "panel". Es una caja de contenido intercambiable que
+  se coloca, se mueve y presenta datos del buffer.
+- **Widget de sistema.** Los subtítulos, el feedback y la guía. Se mueven y se cierran como
+  cualquiera, pero no compiten por el cap de tres.
+- **Ranura.** Empezó siendo una de tres posiciones donde vive algo, después pasó a ser un límite de
+  cuántos widgets compiten a la vez y no un espacio, y finalmente el nacimiento se resolvió con tres
+  puntos por defecto que son coordenadas de arranque y no celdas. El glosario del 2026-07-25
+  conserva la definición vieja y está superada por esas dos entradas posteriores.
+- **Barra de menús permanente.** Antes "panel de pestañas". Chrome permanente arriba con los menús
+  globales. El modelo de una pestaña por widget fue reemplazado por un único menú de widgets.
+- **Overlay.** Se usó como sinónimo de widget durante la primera parte del reencuadre. Hoy nombra
+  solo el estado del incremento 5.1, paneles quietos en posición fija, y lo que se mueve se llama
+  widget.
+- **Universo.** En pantalla la etiqueta pasa a "Escala" en el incremento 5.4. Adentro del motor los
+  nombres `universeType`, `universeRoot` y `universePitchesSet` se quedan a propósito, porque nombran
+  el conjunto de notas permitidas, que no siempre es una escala de siete notas.
+- **Salida del motor.** El dato que el motor deriva y deja en el buffer. Lo consume cualquier
+  superficie, el teclado incluido. El readout es el widget que lo presenta, y presentar no es
+  recalcular.
+- **Tensión Legal.** Etiqueta de la leyenda que nombra un caso único, la sensible en universo menor.
+  El incremento 5.4 la renombra.
+
+**Razón:** sin este mapa hay que reconstruir la historia leyendo doce entradas en orden para saber
+qué palabra manda hoy.
+
+**Consecuencia:** cuando una entrada futura refine un término, agrega su línea acá. Este mapa es la
+respuesta corta; las entradas fechadas siguen siendo la explicación larga.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
