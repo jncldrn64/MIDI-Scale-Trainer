@@ -377,6 +377,28 @@ sigue valiendo: lo segundo es otro eje de producto. Y queda dicho sin adornos qu
 reserva a un motor de notas que todavía no existe ni tiene fase, que es una apuesta tomada a
 conciencia.
 
+**Deuda verificada contra el código.** Lo que sigue no es impresión: cada punto se comprobó contra
+`index.html`.
+
+- El teclado dibuja 61 teclas, de la nota MIDI 36 a la 96, con las constantes `KEYBOARD_START` y
+  `KEYBOARD_END`. La documentación fija 88 teclas en cuatro lugares. Un piano de 88 va de la nota 21
+  a la 108. El código incumple lo escrito y hay que corregirlo.
+- El teclado ocupa demasiado alto para lo que aporta. Ningún documento fija su altura ni su posición,
+  así que no es un incumplimiento sino un hueco: queda como pregunta abierta cuánto alto merece el
+  teclado y si va pegado al borde inferior. Se decide junto con las 88 teclas, porque a más teclas
+  cada una sale más angosta y el alto necesario cambia.
+- La leyenda de colores vive al pie, pegada al teclado y fuera de todo widget. No hay decisión
+  escrita de dónde debe vivir, y hay tensión: el incremento 5.1 dice que se queda asociada al teclado
+  dentro del fondo, y la guía existe para explicar qué significa cada cosa. Queda como pregunta
+  abierta, a decidir cuando la guía se construya.
+- La guía no existe todavía, mientras que el tercer widget sí tiene una caja visible. La asimetría es
+  de andamiaje, no de diseño.
+- La caja punteada del tercer widget contradice el modelo: no hay cajas dibujadas ni espacios
+  reservados a la vista. El espacio libre se percibe al abrir widgets, no anunciándolo con un
+  recuadro. Esa caja se retira cuando el menú de widgets exista.
+- No está decidido en qué punto de nacimiento aparece un widget que se abre desde el menú, ni qué
+  pasa si el punto está ocupado. Hace falta antes de la tercera parte del incremento 5.3.
+
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, la barra de menús permanente existe como
 chrome para opciones y logs, la salida del motor tiene un lugar visible definido o queda
@@ -637,6 +659,11 @@ prioridad, no porque la rueda la bloquee.
   parece a lo que ya había. Los números del molde y de las posiciones viajaron intactos; lo que
   quedó en palabras, no. Este ítem eleva aquella sugerencia a trabajo concreto: las reglas de
   posición se escriben con medidas, no con adjetivos.
+- Detectar el rango real del teclado conectado por MIDI, en vez de asumirlo. El protocolo no lo
+  informa directamente, así que habría que inferirlo o dejar que el usuario lo declare. Por defecto
+  se muestran las 88 teclas, que es lo escrito.
+- Barra de menús que se oculta sola cuando no se usa, como una barra de tareas. Devolvería el alto de
+  la barra al fondo y eliminaría la única zona vedada al movimiento de widgets.
 
 ---
 
@@ -842,3 +869,14 @@ acordado quede descrito en texto adentro del repo, en el mismo documento de requ
 propio, con qué widget va por defecto en qué lugar, qué es permanente y qué no. La prueba de que
 está bien escrito es que un modelo pueda reconstruir la intención sin ver ninguna imagen. Queda por
 decidir si además conviene versionar algún boceto en el repo, o si la descripción en texto alcanza.
+
+Los bocetos de la interfaz son una secuencia cronológica, no una fuente paralela de autoridad: cada
+uno refina al anterior, y el último es el que corresponde al modelo vigente. Los primeros contienen
+ideas que se superaron a conciencia, cajas de tamaños distintos que el molde uniforme reemplazó,
+botones dentro de cada caja que los controles en el menú reemplazaron, y una barra de menús centrada
+que quedó con el título a la izquierda. Quien los mire después tiene que leerlos en ese orden y no
+tomar el primero como destino, o va a restaurar cosas descartadas creyendo que recupera el diseño
+original. Frente a una duda, mandan las entradas fechadas de decisiones, no un dibujo. La conclusión
+práctica para lo que se escriba de acá en más: lo que se fijó con números sobrevivió intacto a cada
+relevo, y lo que quedó en adjetivos se reinterpretó cada vez contra lo que ya existía en el código,
+que es la razón por la que este punto pide medidas y no descripciones.
