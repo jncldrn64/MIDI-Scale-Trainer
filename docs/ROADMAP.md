@@ -294,8 +294,8 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   panel "Fijar Acordes" sigue esperando: no está decidido si es un control, y entonces va a
   opciones, o una característica de práctica, y entonces es candidato a widget y su lugar es el menú
   de widgets del 5.3. Ninguno de los dos se borra. Con una restricción verificada: el comentario de `index.html` dice de los Ajustes del
-  Motor que están "visibles y alcanzables" porque el autor los usa cuando una canción es muy rápida
-  o muy lenta. El 5.2 puede darles hogar en un menú, pero tiene que seguir cumpliendo esa razón,
+  Motor que están "visibles y alcanzables" porque el autor los usa según el tempo de la canción,
+  en los dos extremos. El 5.2 puede darles hogar en un menú, pero tiene que seguir cumpliendo esa razón,
   así que los cuatro campos, acumulación, retención, error visual y split, quedan alcanzables sin
   fricción mientras se toca, no enterrados a varios niveles de profundidad. Como techo de trabajo:
   nada que alguien use mientras toca debería costar más de tres clics. El número es un techo
@@ -609,7 +609,7 @@ prioridad, no porque la rueda la bloquee.
 - Calibración de tiempos por tapping. Hoy los cuatro campos del motor, acumulación, retención,
   error visual y split, se ajustan a mano con números. La idea es fijarlos tocando una secuencia y
   que el programa derive los valores de lo que midió. Arrastra dos cosas más: tempos, y que los
-  valores buenos probablemente dependan de la canción, lo que lo ata al modo canción de este mismo
+  valores buenos dependen del tempo de la canción, lo que lo ata al modo canción de este mismo
   backlog.
 - Coherencia visual del set de iconos. Los emojis que la interfaz usa hoy no forman un conjunto
   coherente: cada uno viene de una familia distinta y se ven como piezas sueltas. Queda registrado
@@ -780,7 +780,7 @@ del incremento 5.2 se categorizó mal la barra de universo, tratándola como chr
 cuando contiene la vista lineal de la escala, que es material de widget. El error no fue de
 distracción, salió de que ningún documento del repo nombra qué es esa barra.
 
-Cuando esto se ejecute probablemente merezca una entrada propia en `DECISIONS.md` y no solo una
+Cuando esto se ejecute va a necesitar una entrada propia en `DECISIONS.md` y no solo una
 línea de backlog, porque es una regla de método permanente y las reglas de método son exactamente
 lo que ese archivo guarda.
 
@@ -798,7 +798,7 @@ no se reescribe. Un documento de requisitos dice qué tiene que ser verdad y par
 sin orden de trabajo. Solo se volvería redundante si repitiera decisiones, y evitar eso es el
 trabajo principal cuando se escriba.
 
-Vale la pena y no es burocracia por una razón que ya se puede ver: varios requisitos no funcionales
+Esto no es burocracia. La razón ya está a la vista: varios requisitos no funcionales
 gobiernan el diseño hoy, pero están dispersos como justificación adentro de decisiones sueltas. El
 límite de tres ranuras existe porque las notas del fondo necesitan aire, o sea es un requisito no
 funcional disfrazado de regla de interfaz. Lo mismo pasa con abrir desde `file://` sin servidor, sin
