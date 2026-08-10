@@ -3,7 +3,8 @@
 > Este archivo dice **qué significa** un término hoy. `DECISIONS.md` dice **por qué** cambió, y es
 > append-only, así que una definición vieja se queda escrita ahí para siempre. Acá se corrige.
 >
-> Cada término apunta a la entrada de `DECISIONS.md` que lo decidió, citada por fecha y título.
+> Cada término apunta a dónde se decidió: la entrada de `DECISIONS.md` citada por fecha y título, o
+> la sección del `CHANGELOG.md` cuando la corrección se registró ahí y no generó entrada propia.
 > Nunca por número de línea: un número de línea se pudre con el primer refactor (regla 6 de "Prosa"
 > en `CLAUDE.md`).
 >
@@ -66,6 +67,12 @@
 
 ## Medidas y geometría
 
+- **capa**: cada uno de los tres planos en que se apila la interfaz. **Capa 0**, el fondo: el
+  teclado y la grilla de notas que caen, alineados 1 a 1 de modo que cada columna cae sobre su
+  tecla. La capa 0 no lleva ningún control interactivo, y esa es su parte operativa: un botón ahí es
+  deuda. **Capa 1**, los widgets, que flotan sobre la capa 0 con las notas pasando por detrás.
+  **Capa 2**, el chrome: la barra de menús permanente, única zona vedada al movimiento de widgets.
+  Fuente: 2026-08-10, *Lienzo de referencia y modelo de capas*.
 - **lienzo de referencia**: el marco de diseño de 1280 x 720 contra el que se escriben todas las
   medidas de la interfaz. Fuente: 2026-08-10, *Lienzo de referencia y modelo de capas*.
 - **escala del lienzo**: el factor único por el que se multiplica todo el contenido para llenar la
