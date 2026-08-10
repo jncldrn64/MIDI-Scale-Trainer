@@ -33,9 +33,11 @@
 - **franja de nacimiento**: los 56 px libres debajo de la barra de menús donde no nace ninguna caja,
   para que toda nota que caiga sea visible al aparecer. Fuente: 2026-07-30, *Estándar espacial de
   los widgets*.
-- **molde**: el tamaño uniforme de las cajas, 170 px de alto por 23vw más 20 px de ancho, con tope
-  de dos octavos del ancho de la ventana. La guía es la única excepción escrita. Fuente: 2026-07-30,
-  *Estándar espacial de los widgets*.
+- **molde**: el tamaño uniforme de las cajas, 170 por 314.4 px de lienzo. El ancho sale de 23% de
+  1280 más 20, debajo del tope de dos octavos que son 320, y vive en la variable CSS `--w-widget`
+  desde que el incremento 5.6 eliminó las unidades `vw`. La guía es la única excepción escrita.
+  Fuentes: 2026-07-30, *Estándar espacial de los widgets*, y 2026-08-10, *La migración al lienzo se
+  parte en dos*.
 - **ranura**: término superado. Empezó nombrando una de tres posiciones donde vive algo, después
   pasó a ser un límite y no un espacio, y finalmente el nacimiento se resolvió con tres puntos que
   son coordenadas. Hoy se dice "cap" para el límite y "punto de nacimiento" para la coordenada. La
@@ -93,10 +95,45 @@
 
 ## Motor
 
-- **universo**: el conjunto de notas permitidas. En pantalla la etiqueta pasa a "Escala" en el
-  incremento 5.4, pero los nombres `universeType`, `universeRoot` y `universePitchesSet` se quedan
-  en el motor, porque ese conjunto no siempre es una escala de siete notas. Fuente: 2026-08-09,
-  *Mapa de términos*.
+- **universo**: el conjunto de notas permitidas. Es el término primario también en pantalla, con
+  "escala" como aclaración entre paréntesis: toda escala es un universo, no todo universo es una
+  escala. Los nombres del motor, `universeType`, `universeRoot` y `universePitchesSet`, se quedan
+  como están, porque ese conjunto no siempre es una escala de siete notas. Fuentes: 2026-08-09,
+  *Mapa de términos*, y 2026-08-10, *Universo es el término primario, y escala la aclaración que se
+  retira sola*, que corrige la parte de aquella que daba por hecho el renombre en pantalla.
 - **split**: la nota MIDI que separa mano izquierda de derecha, para que el motor sepa qué es bajo y
   qué es melodía. Es una sola nota, la 60 por defecto. No es una ventana de tiempo y no es un rango.
-  Fuente: CHANGELOG v11.43, que corrigió el error de tratarlo como ventana.
+  En el código, el campo `State.config.splitNote` guarda el valor y el control que lo edita es
+  `cfg-split`, dentro del menú de Opciones. Fuente: CHANGELOG v11.43, que corrigió el error de
+  tratarlo como ventana.
+
+## Artefactos del código
+
+Lo que ya existe en `index.html` y hasta ahora no tenía nombre en ningún documento. Cada uno se
+verificó con `grep` contra el archivo antes de escribirse acá.
+
+- **widget de escala**: la caja que contiene los dos selectores y la vista de fórmula. Es un widget
+  que compite por el cap, `widget-escala` en el código. No es chrome de opciones: tratarla como tal
+  al planear el incremento 5.2 es el error que la subsección "Nomenclatura de lo que ya existe" del
+  `ROADMAP.md` registra. Su clase `universe-bar` es el nombre viejo, de cuando era una barra y no un
+  widget. Fuente: 2026-07-30, *Estándar espacial de los widgets*.
+- **vista de fórmula**: la fila que muestra los grados del universo activo con sus separadores de
+  tono y semitono. Es `formula-display`, y vive adentro del widget de escala. Existía y funcionaba
+  antes del incremento 5.3, así que el widget de escala la absorbió en vez de reescribirla. Fuente:
+  ROADMAP, alcance del incremento 5.3.
+- **selector de tónica**: el desplegable que elige la nota raíz del universo, `root-select`. Sus
+  opciones cambian de nombre con la nomenclatura elegida.
+- **selector de tipo**: el desplegable que elige mayor, menor natural o menor armónica,
+  `scale-select`. Escribe `State.universe.type`.
+- **panel de fijar acordes**: `lock-chords-panel`, oculto a propósito desde la Fase 5 con el
+  atributo `hidden` y un comentario que pide no borrarlo. Ofrece dos acordes fijos, Do Mayor y
+  Re m7, para practicar sobre ellos.
+- **botón de bloqueo del motor**: `btn-lock`, rotulado "Motor Automático". Bloquea el acorde
+  detectado para que el motor deje de redetectarlo mientras se practica encima, y al hacerlo cambia
+  su rótulo a "Motor Pausado". Junto con el panel de fijar acordes es la misma característica
+  partida en dos controles; juntarlos en un widget está en el BACKLOG. El incremento 5.6 lo ocultó
+  porque vivía en la capa 0.
+- **contenedor de controles del escenario**: la caja que aloja al botón de bloqueo, oculta desde el
+  incremento 5.6. **No tiene identificador estable en el código**: se la ubica solo por su clase
+  `stage-controls`. No se le inventa un id acá; nombrarlo es trabajo del PR que decida el destino de
+  esa característica.
