@@ -1236,6 +1236,47 @@ esta entrada es el lugar donde se ve qué se está negociando.
 
 ---
 
+## 2026-08-10 — La migración al lienzo sale de la Fase 5 y pasa a la Fase 5B
+
+**Contexto:** la entrada de hoy "Criterio de entrada de un ítem parqueado a una fase en curso" fijó
+que un ítem entra a una fase que ya arrancó solo si dejarlo afuera bloquea un incremento pendiente
+o si obliga a rehacer trabajo entregado. En su propia sección de aplicación inmediata declaró en
+voz alta que el incremento 5.6, la migración de medidas al lienzo, no cumplía ese criterio y entraba
+igual. Esta entrada resuelve esa tensión en el otro sentido.
+
+**Decisión:** la migración de las medidas al lienzo de referencia deja de ser el incremento 5.6 de
+la Fase 5. Pasa a ser el primer trabajo declarado de la Fase 5B, la que modulariza `index.html` con
+ES Modules nativos. La Fase 5 vuelve a cerrar con el incremento 5.5.
+
+**Razón**, en tres partes:
+
+1. El criterio de entrada tiene un PR de vida y su primera aplicación era una excepción a sí mismo.
+   Una regla cuyo estreno es una excepción no gobierna después: la siguiente vez que alguien quiera
+   meter algo a una fase en curso, el precedente que va a encontrar es el de saltearla.
+2. El argumento de que dejarla afuera volvería al lienzo una decisión sin ejecución no se sostiene.
+   La decisión queda escrita con su base, su fórmula y su razón, y tiene ejecución agendada, solo
+   que en otra fase. Lo que se perdió con la v11.5 fue una implementación sin decisión escrita, o
+   sea el caso opuesto.
+3. La Fase 5B va a reescribir las mismas funciones que la migración tiene que tocar: las que
+   calculan el área de arrastre, la zona de notas, los puntos de nacimiento y la cobertura, más el
+   molde que hoy usa unidades `vw`. Dos pasadas separadas sobre el mismo código es trabajo doble.
+
+**Qué queda superado:** de la entrada "Criterio de entrada de un ítem parqueado a una fase en curso"
+queda superado solo el párrafo de tensión declarada, el que justificaba la entrada del 5.6 a la
+Fase 5. El criterio en sí queda intacto y sin excepciones, que es justamente lo que esta entrada
+busca. Las dos entradas que sí entraron a la Fase 5 por ese criterio, "Nomenclatura de lo que ya
+existe" y "Glosario vivo en vez de glosario congelado", se quedan donde están: las dos cumplen la
+prueba de bloquear al incremento 5.4.
+
+**Consecuencia:** `ROADMAP.md` pierde el incremento 5.6 de la lista de la Fase 5, su línea de cierre
+vuelve a nombrar al 5.5, y la Fase 5B suma la migración como primer trabajo declarado. La entrada
+del lienzo del 2026-08-10 no se toca: sigue diciendo qué se decidió, y ahora la ejecución vive en
+otra fase.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

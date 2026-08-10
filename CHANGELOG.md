@@ -2,6 +2,24 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.56 — 2026-08-10
+
+### Fixed
+
+- `docs/GLOSARIO.md`: faltaba el término "capa". La entrada del lienzo introduce tres niveles con definición propia, y la regla de glosario que ese mismo PR escribió obliga a darles línea. Entra como un término único con los tres adentro.
+- `docs/GLOSARIO.md`: la línea de "capa" incluye la parte operativa, que la capa 0 no lleva controles interactivos. De ahí salen los dos puntos de deuda sobre "Motor Automático" y "Fijar Acordes".
+- `docs/GLOSARIO.md`: el encabezado prometía que todo término cita una entrada de `DECISIONS.md`. "Split" cita una sección del CHANGELOG, que es la cita correcta. Se corrigió el encabezado para admitir las dos fuentes, sin tocar esa línea.
+
+### Changed
+
+- `docs/DECISIONS.md`: entrada nueva que saca la migración al lienzo de la Fase 5 y la pasa a la Fase 5B, como su primer trabajo declarado. El criterio de entrada a una fase en curso queda sin excepciones.
+- `docs/DECISIONS.md`: la misma entrada dice qué queda superado y qué no. Cae solo el párrafo de tensión declarada que justificaba al 5.6; el criterio queda intacto, y los dos ítems que sí entraron a la Fase 5 se quedan.
+- `docs/ROADMAP.md`: el incremento 5.6 sale de la lista de la Fase 5 y la línea de cierre vuelve a nombrar al 5.5. La Fase 5B suma la migración con su razón: reescribe las mismas funciones que la migración toca.
+
+La razón de fondo, en una línea: una regla cuyo estreno es una excepción no gobierna después.
+
+La versión mostrada sigue en V11.53; el desfase lo cierra el próximo PR de código.
+
 ## v11.55 — 2026-08-10
 
 ### Added
