@@ -1378,6 +1378,50 @@ su estado, que ya está en coordenadas de lienzo.
 
 ---
 
+## 2026-08-10 — Universo es el término primario, y escala la aclaración que se retira sola
+
+**Contexto:** el cuarto punto del incremento 5.4 en el `ROADMAP.md` manda que la etiqueta "Universo"
+del selector pase a "Escala", con el argumento de que es la palabra que el usuario ya usa. Tres
+líneas después, el mismo párrafo defiende que el nombre interno del motor no se renombre, y lo hace
+con este argumento: "Universo" adentro nombra el conjunto de notas permitidas, que no siempre es una
+escala de siete notas, y renombrar aplanaría esa distinción.
+
+Ese argumento vale igual afuera. Si renombrar adentro aplana la distinción, renombrar en pantalla la
+aplana también, y encima donde la ve el usuario. La prueba de que muerde ya está en el BACKLOG: las
+pentatónicas y el blues están planeados como universos propios, y el día que entren el selector
+diría "Escala: Blues", que es justo lo que el documento dice que no es.
+
+**Hay además un dato de código que nadie decidió.** El widget de escala tiene hoy dos rótulos para
+la misma cosa: el título de la caja dice "Escala" y la línea de abajo dice "🌌 Universo:". Verificado
+con `grep` sobre `index.html`. Quedó de arrastre, no de una decisión.
+
+**Decisión:**
+
+1. El término primario en pantalla es **Universo**. Es el técnicamente correcto: un universo es el
+   conjunto de notas permitidas, y no siempre es una escala de siete notas. El jazz trabaja con
+   grupos de notas que no se dejan describir como escala.
+2. Se acompaña con **escala** como aclaración entre paréntesis, para el usuario que todavía no tiene
+   el término. Es una aclaración y no un sinónimo: toda escala es un universo, no todo universo es
+   una escala.
+3. La duplicación actual se elimina. Queda un solo rótulo en la caja.
+4. **Condición de salida del paréntesis**, para que no viva para siempre: cae el día que un universo
+   que no es una escala entre al selector, o sea cuando entren las pentatónicas o el blues, que ya
+   están en el BACKLOG. Ese día la aclaración pasa a ser falsa para al menos una opción de la lista.
+   Es una condición verificable, no una promesa.
+5. El nombre interno del motor se queda como está, por la razón que el ROADMAP ya da.
+
+**Las dos alternativas que se descartaron.** Dejar "Universo" solo era lo más consistente y deja
+afuera a quien recién empieza, que abre la app sin el término. Pasar todo a "Escala" gana
+familiaridad y pierde exactitud justo donde el BACKLOG ya tiene planeado contradecirla, así que
+compra comodidad hoy a cambio de un renombre forzado después.
+
+**Consecuencia:** el cuarto punto del incremento 5.4 deja de mandar el renombre y pasa a mandar la
+deduplicación del rótulo más la aclaración. Este PR decide el nombre; el 5.4 lo aplica en pantalla.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

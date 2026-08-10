@@ -2,6 +2,26 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.59 — 2026-08-10
+
+### Added
+
+- `docs/GLOSARIO.md`: sección nueva "Artefactos del código" con lo que ya existe en `index.html` y no tenía nombre en ningún documento. Cada uno verificado con `grep` contra el archivo antes de escribirse.
+- `docs/GLOSARIO.md`: entran el widget de escala, la vista de fórmula, los dos selectores, el panel de fijar acordes y el botón de bloqueo del motor, cada uno con su identificador real. "Split" suma dónde vive su valor y su control.
+- `docs/GLOSARIO.md`: el contenedor de controles del escenario queda nombrado como lo que es, sin identificador estable, en vez de inventarle uno. Solo tiene la clase `stage-controls`.
+- `docs/DECISIONS.md`: entrada que resuelve "Universo" contra "Escala". Universo es el término primario en pantalla y escala la aclaración entre paréntesis, con la condición que la retira sola.
+- `docs/ROADMAP.md`: ítem nuevo en "Direcciones sin fase". El entrenamiento escribe sus instrucciones en los subtítulos, que hoy son una superficie sin autor declarado, con la pregunta abierta de qué pasa cuando el motor quiere escribir ahí también.
+
+### Fixed
+
+- `docs/ROADMAP.md`: el cuarto punto del incremento 5.4 se contradecía. Mandaba renombrar "Universo" a "Escala" en pantalla y tres líneas después defendía el nombre interno con un argumento que vale igual afuera.
+- `docs/ROADMAP.md`: ese punto pasa a mandar la deduplicación del rótulo. La caja dice hoy "Escala" en su título y "Universo:" abajo, dos palabras para la misma cosa sin relación declarada.
+- `docs/ROADMAP.md`: la subsección de nomenclatura registra que los artefactos ya están nombrados y qué le queda pendiente, que son los nombres internos del código.
+
+La prueba de que la contradicción mordía está en el BACKLOG: las pentatónicas y el blues están planeados como universos propios, y el día que entren el selector diría "Escala: Blues".
+
+La versión mostrada sigue en V11.58; el desfase lo cierra el próximo PR de código.
+
 ## v11.58 — 2026-08-10
 
 ### Added

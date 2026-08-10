@@ -266,9 +266,14 @@ panel de Análisis, junto al numeral y la relación, de forma consistente con el
 para un acorde no diatónico la función dice "por definir" y la relación dice "no clasificado",
 sin que una contradiga a la otra.
 
-Cuarto, la etiqueta "Universo" que hoy encabeza el selector pasa a "Escala", que es lo que el
-usuario elige y la palabra que ya usa. Con una precisión que queda escrita para que una futura
-pasada de nomenclatura no la borre: el nombre interno del motor, `universeType`, `universeRoot` y
+Cuarto, el rótulo del widget de escala se deduplica. Hoy la caja dice "Escala" en su título y
+"Universo:" en la línea de abajo, dos palabras para la misma cosa sin relación declarada. Queda un
+solo rótulo, con "Universo" como término primario y "escala" como aclaración entre paréntesis, según
+`DECISIONS.md`, entrada del 2026-08-10 "Universo es el término primario, y escala la aclaración que
+se retira sola". Esa entrada trae además la condición que retira el paréntesis: el día que entre al
+selector un universo que no es una escala, o sea las pentatónicas o el blues del BACKLOG. Con una
+precisión que queda escrita para que una futura pasada de nomenclatura no la borre: el nombre
+interno del motor, `universeType`, `universeRoot` y
 `universePitchesSet`, se queda como está a propósito. "Universo" adentro nombra el conjunto de
 notas permitidas, que no siempre es una escala de siete notas: el backlog trata a las pentatónicas
 y al blues como universos propios justamente porque no lo son. Renombrar adentro aplanaría esa
@@ -803,6 +808,12 @@ infraestructura o teoría que todavía no existe. No se construyen hasta que su 
   también las opciones de cada widget abierto en las ranuras, lo abra el usuario o el
   entrenamiento. Bloqueada por: que haya más de una característica a la que reaccionar (la Fase 9
   aporta la segunda).
+- El entrenamiento escribe sus instrucciones en los subtítulos del entrenamiento. Hoy los
+  subtítulos están definidos como directrices en tiempo real, pero ningún documento dice quién las
+  produce: la superficie existe y no tiene autor. Bloqueada por: que exista el sistema de
+  entrenamientos. Pregunta abierta que trae, contra la regla de dueño de superficie del 2026-08-10:
+  si el entrenamiento escribe ahí, es un autor más, y hay que decidir qué pasa cuando el
+  entrenamiento y el motor quieren escribir en la misma superficie.
 - El entrenamiento que propone layout. Un entrenamiento puede proponer una disposición de
   paneles y pedirle al usuario que la acepte o no; es consumidor que no impone, no cambia el
   layout por su cuenta. Bloqueada por: que exista el sistema de entrenamientos, acoplada con
@@ -953,6 +964,12 @@ que ya están en el código. No hay una línea en todo el repo que diga qué es 
 vista de fórmula, el selector de escala, el split, ni el panel de fijar acordes. Por eso dos cosas
 que viven en la misma caja se pueden confundir con cosas distintas, que es exactamente lo que pasó
 al planear el incremento 5.2.
+
+Los artefactos ya están nombrados: el PR del 2026-08-10 abrió la sección "Artefactos del código"
+en `docs/GLOSARIO.md` con el widget de escala, la vista de fórmula, los dos selectores, el split, el
+panel de fijar acordes y el botón de bloqueo del motor. El contenedor de controles del escenario
+quedó nombrado como lo que es, sin identificador estable, en vez de inventarle uno. Lo que sigue
+pendiente de este punto es lo otro.
 
 Hay un segundo problema, el de los nombres internos. El incremento 5.4 de la Fase 5 arregla las
 etiquetas que ve el usuario, "Silábica" y "Alfabética" en vez de "Latina" y "Anglosajona", y el
