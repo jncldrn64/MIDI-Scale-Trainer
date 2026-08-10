@@ -2,6 +2,35 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.57 — 2026-08-10
+
+### Changed
+
+- `index.html`: el teclado pasa de 61 teclas a 88. `KEYBOARD_START` va de 36 a 21 y `KEYBOARD_END` de 96 a 108, que son las 52 blancas de un piano completo. El código alcanza a lo que la documentación fijaba en cuatro lugares.
+- `index.html`: el teclado llega de borde a borde. El ancho de la blanca se deriva del ancho disponible dividido 52, sin medida fija. Se eliminan `W_WIDTH`, el `transform: scale()`, la variable de escala y el `min-height` que la multiplicaba.
+- `index.html`: el alto de la blanca son 140 px de lienzo, calculados con la fórmula del lienzo aplicada a ese único número. No es la migración al lienzo, que es de la Fase 5B: es la fórmula usada por adelantado donde hoy hace falta.
+- `index.html`: el teclado va pegado al borde inferior. La leyenda salió del escenario y el relleno de abajo quedó en cero, porque la capa 0 es solo teclado y grilla.
+- `index.html`: las negras dejan de llevar nombre y conservan color y símbolo. A 24.6 px de blanca la negra mide 15.3 px, donde no entra texto de tres caracteres legible. Las blancas conservan el nombre, con la fuente derivada del ancho.
+- `index.html`: la leyenda de colores se mudó adentro de la guía, seis filas con color, símbolo, categoría y widget dueño. Contenido escrito a mano; filtrarla según qué widgets estén abiertos es backlog.
+- `index.html`: la guía deja de nacer alineada con el tercer punto de nacimiento. Nace anclada al borde derecho con 16 px de margen y a la mitad vertical de la zona de notas, para que no se lea como cuarta caja de la fila.
+- `index.html`: "Centrar en Split" pasa a marcar la nota de split sobre el teclado en vez de desplazar el contenedor. Con 88 teclas que entran completas no hay desbordamiento que centrar. Conserva su id y su hogar en Opciones.
+- `index.html`: se retira el auto-clic de ese botón al cargar. Existía para auto-centrar; dejarlo encendería la marca del split sola, que es una decisión que nadie tomó.
+- `index.html`: la versión mostrada sube de V11.53 a V11.57, cerrando el desfase de los cuatro PR de documentación anteriores.
+- `docs/ARCHITECTURE.md`: la sección de la leyenda decía que vive debajo del teclado y apuntaba a un número de línea. Ahora dice que vive adentro de la guía y ancla en el bloque `legend-grid`.
+
+### Added
+
+- `docs/DECISIONS.md`: entrada con la geometría del teclado. Alto de 140 px de lienzo sobre un rango considerado de 120 a 160, negra en 0.62 de ancho y alto, y sin nombre.
+- `docs/DECISIONS.md`: la misma entrada calcula el techo real del alto del teclado, 236 px de lienzo y no un tercio de 720. Los 170 px del molde se pasan del tope de tres octavos cuando la zona de notas baja de 453.3 px.
+- `docs/DECISIONS.md`: refinación de la capa 2. La barra contiene comandos y no presenta lecturas: con una lectura ahí, cerrar las seis cajas deja de dejar el fondo solo, que es un objetivo entregado en la v11.53.
+- `docs/ROADMAP.md`: el incremento 5.4 suma el interruptor de nombres de tecla, junto al selector de nomenclatura. La alfabética usa un carácter donde la silábica usa dos, y esa diferencia pesa en pantalla chica.
+- `docs/ROADMAP.md`: dos ítems de backlog, el alto del teclado configurable con su techo de 236 px escrito, y el ancho de la negra configurable con sus dos extremos medidos.
+- `docs/GLOSARIO.md`: "guía" actualiza su nacimiento y "capa" suma que la capa 2 no presenta lecturas, según la regla de glosario.
+
+### Removed
+
+- `docs/ROADMAP.md`: de la deuda verificada salen los dos puntos que este PR cierra, el de las 61 teclas contra las 88 y el del alto sin decidir.
+
 ## v11.56 — 2026-08-10
 
 ### Fixed

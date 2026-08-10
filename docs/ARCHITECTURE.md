@@ -154,9 +154,9 @@ colapsa en paso cromático, indistinguible de un error corto.
 
 ## 5.1. La leyenda de colores: dos de contexto y cuatro de veredicto
 
-La interfaz pinta las teclas con seis categorías. Viven en `index.html` cerca de la línea
-230, como leyenda debajo del teclado, y mezclan dos cosas distintas que conviene no
-confundir.
+La interfaz pinta las teclas con seis categorías. Su leyenda vive adentro del widget de la
+guía, en el bloque `legend-grid` de `index.html`, y cada fila nombra además al widget dueño
+de esa categoría. Las seis mezclan dos cosas distintas que conviene no confundir.
 
 Dos son contexto, no veredicto. "Escala" (`#bae6fd`, símbolo `•`) pinta las notas del
 universo activo, y "Acorde" (`#f59e0b`, símbolo `♦`) pinta las del acorde detectado. Se

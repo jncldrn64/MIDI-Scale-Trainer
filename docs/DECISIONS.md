@@ -1277,6 +1277,61 @@ otra fase.
 
 ---
 
+## 2026-08-10 — Geometría del teclado de 88 teclas, y la barra no presenta lecturas
+
+**Contexto:** el `ROADMAP.md` tenía dos puntos de deuda verificada sobre el teclado. Uno era
+incumplimiento: el código dibujaba 61 teclas mientras la documentación fija 88 en cuatro lugares.
+El otro era hueco: ningún archivo decía cuánto alto merece el teclado ni si va pegado al borde
+inferior. Esta entrada cierra los dos y agrega una refinación al modelo de capas.
+
+**Alto de la tecla blanca: 140 px de lienzo**, o sea el 19.4% de los 720 del lienzo de referencia
+del 2026-08-10. El método fue mirar un boceto a 1280 x 720 con las 52 blancas reales. El rango que
+se consideró aceptable fue de 120 a 160, y 140 es el punto medio. El alto se calcula con la fórmula
+del lienzo aplicada a ese único número, así que la proporción diseñada se mantiene en cualquier
+ventana. Eso no es la migración al lienzo, que es el primer trabajo declarado de la Fase 5B: es la
+fórmula usada por adelantado para el único número que hoy la necesita.
+
+**El techo real del alto del teclado son 236 px de lienzo, no un tercio de 720.** La cuenta: los
+widgets que compiten cubren 170 px, que es el alto del molde, y el tope de tres octavos se alcanza
+cuando la zona de notas baja a 453.3 px. Con la barra ocupando 30, la zona mide `690 - altoTeclado`,
+así que el teclado no puede pasar de 236.7 sin romper el presupuesto. Un tercio de 720 son 240 y se
+pasa. Para llegar a 240 tendría que ceder el molde o el cap.
+
+**La negra va en 0.62 del ancho y del alto de la blanca, y sin nombre.** Con la blanca en 24.6 px
+de lienzo, a 0.62 la negra mide 15.3 px y deja 9.4 px de blanco visible entre dos negras; a 0.80
+ese blanco cae a 4.9 px y el teclado deja de leerse como teclado. Un piano real va en 0.58, así que
+0.62 ya es generoso. Y en 15.3 px no entra ningún texto de tres caracteres legible: la negra
+conserva su color y su símbolo de veredicto, que es la información que importa. Las blancas sí
+llevan nombre, con el tamaño de fuente derivado del ancho de la tecla.
+
+**El teclado va pegado al borde inferior y de borde a borde.** Sale de la capa 0 del modelo de
+capas del 2026-08-10, que es solo teclado y grilla de notas alineados 1 a 1. La leyenda de colores
+no es capa 0 y por eso se mudó adentro de la guía. El ancho de la blanca se deriva del ancho
+disponible dividido las 52 blancas, sin medida fija y sin `transform: scale()`, que dibujaba más
+chico sin achicar la caja de layout y dejaba una franja muerta debajo.
+
+**El nacimiento de la guía cambia de lugar.** Nace anclada al borde derecho con 16 px de margen, y
+a la mitad vertical de la zona de notas. Su `x` deja de derivarse del tercer punto de nacimiento.
+Razón: alineada bajo la fila comunicaba que es parte de esa fila, y no lo es. La guía es algo que
+se aprende y se apaga; los que compiten son la fila permanente. Esto supera la entrada del
+2026-08-09 "Dónde nace la guía, y los dos únicos sinónimos que valen" en su parte de nacimiento.
+Los dos sinónimos que esa entrada declara siguen vigentes.
+
+**La barra de menús no presenta lecturas.** Refinación de la definición de capa 2: el chrome
+contiene comandos, no salida del motor ni estado de widgets. Si la tonalidad activa tiene que
+verse, la muestra el widget de salida del motor, que es su lector. El motivo es operativo y no
+estético: con una lectura en la barra, cerrar las seis cajas deja de dejar el fondo solo, y eso es
+un objetivo que la v11.53 entregó.
+
+**Consecuencia sobre "Centrar en Split":** con 88 teclas que entran completas a lo ancho no hay
+desbordamiento que centrar, así que el botón pasa a marcar la nota de split sobre el teclado,
+encendiendo y apagando. Conserva su identificador y su hogar en el menú de Opciones. El split sigue
+siendo una sola nota MIDI, la 60 por defecto.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

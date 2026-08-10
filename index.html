@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.53 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.57 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -65,33 +65,38 @@
         .status-value { font-size: 1.6em; font-weight: 800; color: #facc15; }
 
         /* Teclado Full Width */
-        .keyboard-wrapper { 
-            background: #000; border-radius: 8px; padding: 30px 20px; 
-            box-shadow: inset 0 10px 20px rgba(0,0,0,0.5); 
-            display: flex; justify-content: center; overflow: hidden;
-            border-top: 15px solid #0f172a; margin: 10px 0;
+        /* El teclado llega de borde a borde: sin relleno lateral, sin centrado y sin
+           transform: scale(). El ancho de la blanca se deriva del ancho disponible en
+           buildKeyboard, así que el contenedor no fija medidas propias. Va pegado al borde
+           inferior, que es lo que pide la capa 0 del modelo de capas: solo teclado y grilla. */
+        .keyboard-wrapper {
+            background: #000; padding: 0;
+            box-shadow: inset 0 10px 20px rgba(0,0,0,0.5);
+            display: flex; overflow: hidden;
+            border-top: 15px solid #0f172a; margin: 10px 0 0 0;
             position: relative;
-            --kb-scale: 1;
-            min-height: calc(240px * var(--kb-scale)); 
-            transition: min-height 0.2s ease;
         }
-        .keyboard { display: flex; position: relative; height: 180px; transform-origin: top center; }
-        
-        .key { 
-            border-radius: 0 0 5px 5px; position: absolute; user-select: none; 
-            border: 1px solid rgba(0,0,0,0.3); display: flex; justify-content: center; 
-            align-items: flex-end; padding-bottom: 10px; font-weight: 700; font-size: 11px; 
+        .keyboard { display: flex; position: relative; }
+
+        .key {
+            border-radius: 0 0 5px 5px; position: absolute; user-select: none;
+            border: 1px solid rgba(0,0,0,0.3); display: flex; justify-content: center;
+            align-items: flex-end; padding-bottom: 6px; font-weight: 700;
             transition: background 0.1s, transform 0.1s;
         }
+        /* Marca del split: un borde vertical sobre la tecla, sin color de veredicto propio,
+           para no competir con las seis categorías. */
+        .key.split-mark { box-shadow: inset 3px 0 0 0 #94a3b8, inset -3px 0 0 0 #94a3b8; }
         .key.white { background: #f8fafc; color: #475569; z-index: 1; }
         .key.black { background: #1e293b; color: #f8fafc; z-index: 2; border-color: #000;}
 
-        /* Accesibilidad: Símbolos */
+        /* Accesibilidad: Símbolos. El tamaño sigue al ancho de la tecla, que buildKeyboard
+           escribe en --sym, para que no desborden cuando hay 52 blancas. */
         .key::before {
-            position: absolute; top: 15px; width: 100%; text-align: center;
-            font-size: 22px; font-weight: bold; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+            position: absolute; top: 12%; width: 100%; text-align: center;
+            font-size: var(--sym, 22px); font-weight: bold; text-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
-        .key.black::before { top: 8px; font-size: 18px; }
+        .key.black::before { top: 6%; font-size: calc(var(--sym, 22px) * 0.82); }
 
         /* Colores de Evaluación Armónica */
         .color-scale.white { background: #bae6fd; border-color: #0284c7; }
@@ -135,9 +140,12 @@
         .log-entry { margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px dotted #1e293b; color: #cbd5e1;}
         .cat-MIDI { color: var(--accent); } .cat-MATH { color: #f472b6; } .cat-SYS { color: #22c55e; } .cat-EVAL { color: #a855f7; }
         
-        .legend-grid { display: flex; gap: 15px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
-        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85em; color: var(--text-muted); background: #0f172a; padding: 5px 10px; border-radius: 6px; }
-        .l-box { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px;}
+        /* La leyenda dejó de vivir al pie del teclado y vive adentro de la guía: la capa 0 es
+           solo teclado y grilla. Es una lista vertical, una fila por categoría. */
+        .legend-grid { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-muted); }
+        .legend-item .duenio { margin-left: auto; font-size: 10px; opacity: 0.75; }
+        .l-box { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; flex: 0 0 auto; }
 
         /* --- Fase 5, incremento 5.1: fondo único mas overlays en posición por defecto ---
            El teclado y la zona de notas que caen son una sola capa de fondo fija a viewport
@@ -148,12 +156,16 @@
         /* Fondo único: capa fija que toma el viewport entero, detrás de todo (z-index en el
            piso). El teclado va a la franja de abajo a todo el ancho; la zona de notas que caen
            llena el alto entre el borde superior y el teclado, como notas que caen hacia él. */
+        /* El relleno del escenario no llega al teclado: la capa 0 es teclado más grilla, y el
+           teclado va de borde a borde y pegado al borde inferior. Por eso el relleno se
+           reparte y el de abajo queda en cero. */
         .stage {
             position: fixed; inset: 30px 0 0 0; z-index: 0;
             background: #020617;
             display: flex; flex-direction: column;
-            padding: 12px; gap: 10px;
+            padding: 12px 12px 0 12px; gap: 10px;
         }
+        .stage > .keyboard-wrapper { margin-left: -12px; margin-right: -12px; }
         .falling-reserved {
             flex: 1 1 auto; min-height: 0;
             display: flex; align-items: flex-end; justify-content: flex-end;
@@ -242,7 +254,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.53</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.57</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">⚙️ Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -270,7 +282,7 @@
                 <!-- 3. "Centrar en Split", reubicado desde los controles del teclado y ya sin
                      hidden: este menú es el hogar que esperaba desde el parqueo. El
                      auto-centrado al cargar lo sigue auto-clickeando. -->
-                <button class="btn" id="btn-c4">🎯 Centrar en Split</button>
+                <button class="btn" id="btn-c4">🎯 Marcar el Split</button>
                 <!-- El reset de posiciones vivía acá de forma provisoria, mientras el menú de
                      widgets no existía. Ya existe, así que el reset se mudó ahí. -->
                 <hr class="menu-sep">
@@ -356,7 +368,22 @@
              chasis, que no vienen del motor. -->
         <div class="box syswidget" id="sys-subtitles">Subtítulos del entrenamiento · por cablear</div>
         <div class="box syswidget" id="sys-feedback">Feedback del sistema · por cablear</div>
-        <div class="box syswidget guia" id="sys-guia">Guía · por construir. Va a explicar qué significa cada color de tecla y cada lectura del readout. Se cierra desde el menú de Widgets como cualquier otra caja, y desde ahí se restaura.</div>
+        <!-- La guía. La leyenda de colores se mudó acá desde el pie del teclado, según la
+             entrada de decisiones del 2026-08-09 "Dónde vive la leyenda de colores". Cada fila
+             lleva su color, su símbolo de accesibilidad, la categoría y el widget dueño, según
+             el reparto del 2026-08-10 "Dueño de superficie". Contenido escrito a mano: que se
+             filtre según qué widgets estén abiertos es backlog y no entra acá. -->
+        <div class="box syswidget guia" id="sys-guia">
+            <div class="widget-tag">Guía · qué significa cada color</div>
+            <div class="legend-grid">
+                <div class="legend-item"><div class="l-box" style="background:#bae6fd; color:black">•</div> Escala <span class="duenio">widget de escala</span></div>
+                <div class="legend-item"><div class="l-box" style="background:#f59e0b; color:black">♦</div> Acorde <span class="duenio">salida del motor</span></div>
+                <div class="legend-item"><div class="l-box" style="background:#22c55e">✓</div> Correcto <span class="duenio">salida del motor</span></div>
+                <div class="legend-item"><div class="l-box" style="background:#f97316; color:white">!</div> Tensión Legal <span class="duenio">salida del motor</span></div>
+                <div class="legend-item"><div class="l-box" style="background:#a855f7; color:white">~</div> Paso Cromático <span class="duenio">salida del motor</span></div>
+                <div class="legend-item"><div class="l-box" style="background:#ef4444">✕</div> Error <span class="duenio">salida del motor</span></div>
+            </div>
+        </div>
 
         <!-- FONDO ÚNICO (capa fija a viewport completo, detrás de todo): el teclado en la
              franja de abajo a todo el ancho, y encima la zona reservada de notas que caen,
@@ -373,14 +400,6 @@
             </div>
             <div class="keyboard-wrapper" id="keyboard-wrapper">
                 <div class="keyboard" id="keyboard"></div>
-            </div>
-            <div class="legend-grid">
-                <div class="legend-item"><div class="l-box" style="background:#bae6fd; color:black">•</div> Escala</div>
-                <div class="legend-item"><div class="l-box" style="background:#f59e0b; color:black">♦</div> Acorde</div>
-                <div class="legend-item"><div class="l-box" style="background:#22c55e">✓</div> Correcto</div>
-                <div class="legend-item"><div class="l-box" style="background:#f97316; color:white">!</div> Tensión Legal</div>
-                <div class="legend-item"><div class="l-box" style="background:#a855f7; color:white">~</div> Paso Cromático</div>
-                <div class="legend-item"><div class="l-box" style="background:#ef4444">✕</div> Error</div>
             </div>
         </div>
 
@@ -415,7 +434,7 @@
         const NOTES_EN = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         const NOTES_ES = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
         const BLACK_KEYS = [1, 3, 6, 8, 10];
-        const KEYBOARD_START = 36; const KEYBOARD_END = 96;
+        const KEYBOARD_START = 21; const KEYBOARD_END = 108;   // 88 teclas, 52 blancas: un piano completo
 
         // SCALES, CHORD_TEMPLATES y MathEngine viven ahora en src/engine.js
         // (cargado arriba). Se exponen como globales para el código de abajo.
@@ -429,6 +448,7 @@
             harmony: { chord: null, isLocked: false },
             evaluations: new Map(),
             timers: { accumulation: null, contextHold: null },
+            ui: { marcaSplit: false },   // la marca del split sobre el teclado, no persiste
             logHistory: []
         };
 
@@ -649,37 +669,55 @@
                 this.renderKeyboard(); 
                 this.updateStatus();
             },
+            // El teclado de 88 teclas, de borde a borde. El ancho de la blanca se deriva del
+            // ancho disponible dividido las 52 blancas, así que no hay medida fija ni
+            // transform: scale(), que dibujaba más chico sin achicar la caja de layout y
+            // dejaba una franja muerta debajo.
+            //
+            // El alto sale de la fórmula del lienzo aplicada a un solo número, los 140 px de
+            // lienzo que fija la entrada de decisiones del 2026-08-10 "Alto de la tecla
+            // blanca". Esto NO es la migración al lienzo, que es el primer trabajo declarado
+            // de la Fase 5B: es la fórmula usada por adelantado para el único número que hoy
+            // la necesita. El resto de las medidas sigue como está.
             buildKeyboard() {
-                const kb = document.getElementById('keyboard'); 
+                const kb = document.getElementById('keyboard');
+                const wrapper = document.getElementById('keyboard-wrapper');
                 kb.innerHTML = '';
-                const W_WIDTH = 36; 
-                let whites = [];
-                
+                const whites = [];
                 for(let i=KEYBOARD_START; i<=KEYBOARD_END; i++) {
                     if(!BLACK_KEYS.includes(i%12)) whites.push(i);
                 }
 
-                const wrapper = document.getElementById('keyboard-wrapper');
-                const scale = Math.min(1, (wrapper.clientWidth - 40) / (whites.length * W_WIDTH));
-                
-                kb.style.width = `${whites.length * W_WIDTH}px`;
-                kb.style.transform = `scale(${scale})`; 
-                kb.style.transformOrigin = 'top center';
-                wrapper.style.setProperty('--kb-scale', scale);
+                const anchoBlanca = wrapper.clientWidth / whites.length;
+                const escala = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+                const altoBlanca = Math.round(140 * escala);
+                // La negra conserva su proporción: 0.62 del ancho y del alto de la blanca. A
+                // 0.80 el blanco visible entre dos negras cae de 9.4 px a 4.9 px y el teclado
+                // deja de leerse como teclado. Un piano real va en 0.58.
+                const anchoNegra = anchoBlanca * 0.62, altoNegra = altoBlanca * 0.62;
+                const fuente = Math.max(6, Math.round(anchoBlanca * 0.34));
+
+                kb.style.width = `${wrapper.clientWidth}px`;
+                kb.style.height = `${altoBlanca}px`;
+                kb.style.setProperty('--sym', `${Math.round(anchoBlanca * 0.72)}px`);
 
                 whites.forEach((m, idx) => {
                     const d = document.createElement('div'); d.className='key white'; d.id=`k-${m}`;
-                    d.style.width=`${W_WIDTH}px`; d.style.height='180px'; d.style.left=`${idx*W_WIDTH}px`;
+                    d.style.width=`${anchoBlanca}px`; d.style.height=`${altoBlanca}px`;
+                    d.style.left=`${idx*anchoBlanca}px`; d.style.fontSize=`${fuente}px`;
                     kb.appendChild(d);
                 });
                 for(let m=KEYBOARD_START; m<=KEYBOARD_END; m++) {
                     if(BLACK_KEYS.includes(m%12)) {
                         const d = document.createElement('div'); d.className='key black'; d.id=`k-${m}`;
-                        d.style.width='24px'; d.style.height='110px';
+                        d.style.width=`${anchoNegra}px`; d.style.height=`${altoNegra}px`;
                         const prevW = whites.filter(w=>w<m).length;
-                        d.style.left=`${(prevW*W_WIDTH)-12}px`; kb.appendChild(d);
+                        d.style.left=`${(prevW*anchoBlanca)-(anchoNegra/2)}px`; kb.appendChild(d);
                     }
                 }
+                SysLog('LAYOUT', `Teclado de ${KEYBOARD_END - KEYBOARD_START + 1} teclas (MIDI ${KEYBOARD_START} a ${KEYBOARD_END}), ${whites.length} blancas, de borde a borde en ${Math.round(wrapper.clientWidth)} px.`);
+                SysLog('LAYOUT', `Ancho de blanca ${anchoBlanca.toFixed(2)} px; negra ${anchoNegra.toFixed(2)} px al 0.62, deja ${(anchoBlanca - anchoNegra).toFixed(1)} px de blanco visible entre negras.`);
+                SysLog('LAYOUT', `Escala del lienzo min(${window.innerWidth}/1280, ${window.innerHeight}/720) = ${escala.toFixed(3)}; alto de blanca 140 de lienzo = ${altoBlanca} px reales, negra ${Math.round(altoNegra)} px.`);
                 this.renderKeyboard();
             },
             renderKeyboard() {
@@ -698,8 +736,14 @@
                         color = 'color-scale';
                     }
                     
-                    key.className = `key ${BLACK_KEYS.includes(pc)?'black':'white'} ${color}`;
-                    key.innerHTML = `<span>${getNoteStr(i).name}</span>`;
+                    // Las negras dejan de llevar nombre: a 24.6 px de blanca la negra mide
+                    // 15.3 px y ningún texto de tres caracteres entra ahí legible. Conservan
+                    // color y símbolo de veredicto, que es la información que importa. El
+                    // interruptor para apagar los nombres es del incremento 5.4.
+                    const esNegra = BLACK_KEYS.includes(pc);
+                    const marca = (State.ui.marcaSplit && i === State.config.splitNote) ? ' split-mark' : '';
+                    key.className = `key ${esNegra?'black':'white'} ${color}${marca}`;
+                    key.innerHTML = esNegra ? '' : `<span>${getNoteStr(i).name}</span>`;
                 }
             },
             updateStatus() {
@@ -871,9 +915,13 @@
             // punto de nacimiento, alineada con el widget de la derecha.
             nacimientoSistema(id) {
                 const el = this.el(id), r = el.getBoundingClientRect();
+                // La guía deja de nacer alineada con el tercer punto de nacimiento. Esa
+                // alineación la hacía leer como cuarta caja de la fila, y no lo es: es algo
+                // que se aprende y se apaga. Nace anclada al borde derecho, con 16 px de
+                // margen, y a la mitad vertical de la zona de notas.
                 if (id === 'sys-guia') {
-                    const p = this.puntosCompeten()[CAP - 1];
-                    return { x: p.x, y: p.y + 170 + this.GAP };
+                    const z = this.zonaNotas();
+                    return { x: window.innerWidth - this.GAP - r.width, y: z.top + (z.bottom - z.top) / 2 };
                 }
                 const fila = id === 'sys-subtitles' ? 0.46 : 0.51;
                 return { x: (window.innerWidth - r.width) / 2, y: window.innerHeight * fila };
@@ -1239,9 +1287,14 @@
             };
 
             document.getElementById('btn-lock').onclick = () => UI.unlockChord();
+            // Con 88 teclas que entran completas a lo ancho no hay desbordamiento, así que
+            // desplazar el contenedor no hacía nada. El botón pasa a marcar la nota de split
+            // sobre el teclado, encendiendo y apagando en cada clic. El split es una sola
+            // nota MIDI, la 60 por defecto, que separa mano izquierda de derecha.
             document.getElementById('btn-c4').onclick = () => {
-                const w = document.getElementById('keyboard-wrapper'); const c4 = document.getElementById(`k-${State.config.splitNote}`);
-                if(w && c4) w.scrollLeft = c4.offsetLeft - (w.clientWidth/2);
+                State.ui.marcaSplit = !State.ui.marcaSplit;
+                UI.renderKeyboard();
+                SysLog('LAYOUT', `Marca del split ${State.ui.marcaSplit ? 'encendida' : 'apagada'} sobre la nota MIDI ${State.config.splitNote}.`);
             };
             document.getElementById('btn-clear').onclick = () => document.getElementById('logs-container').innerHTML='';
             document.getElementById('btn-export').onclick = exportLogsTxt;
@@ -1265,13 +1318,11 @@
             window.addEventListener('resize', () => UI.buildKeyboard());
             UI.buildUniverse(); UI.buildKeyboard(); MIDI.init();
 
-            // Incremento 5.2: "Centrar en Split" (btn-c4) vive ahora en el menú de Opciones,
-            // ya sin hidden. El auto-centrado al cargar lo sigue auto-clickeando: el handler
-            // dispara aunque el menú esté cerrado.
-            setTimeout(() => {
-                document.getElementById('btn-c4').click();
-                SysLog('LAYOUT', 'Auto-centrado del teclado ejecutado: "Centrar en Split" corrió desde su nuevo hogar en el menú de Opciones.');
-            }, 500);
+            // El auto-clic de btn-c4 al cargar se retira. Existía para auto-centrar el
+            // teclado desbordado; con 88 teclas que entran completas no hay nada que centrar,
+            // y dejarlo encendería la marca del split sola, que es una decisión que nadie
+            // tomó. El botón sigue en el menú de Opciones, con su id intacto.
+            SysLog('LAYOUT', 'Auto-centrado retirado: el teclado entra completo a lo ancho, así que no hay desbordamiento que centrar. La marca del split arranca apagada.');
 
             // Fase 5, incrementos 5.1 y 5.2: rastro del layout al cargar. Muchos mensajes,
             // para verlo suceder en la consola. El motor y renderKeyboard no cambian.
