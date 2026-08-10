@@ -1422,6 +1422,72 @@ deduplicación del rótulo más la aclaración. Este PR decide el nombre; el 5.4
 
 ---
 
+## 2026-08-10 — "Tensión Legal" pasa a "Sensible (empuja a la tónica)"
+
+**Contexto:** el nombre estaba en la lista de renombres de la Terminología de pantalla desde que
+`ARCHITECTURE.md` §5.1 anotó que promete más de lo que cubre. Para decidir el nombre nuevo se fue al
+motor en vez de discutir sobre la etiqueta.
+
+**Lo que hace el motor.** En `evaluateMelodyStatus`, dentro de `src/engine.js`, el estado `tension`
+sale de cuatro condiciones simultáneas: el universo es menor, el pitch class es el que está un
+semitono debajo de la tónica, la nota no pertenece al universo, y no pertenece al acorde que suena.
+La línea que las junta es la que asigna `isSensible`. O sea que ese color nombra **una sola nota, en
+un solo tipo de universo, y solo cuando no está escrita en él**.
+
+**Por qué el nombre viejo estaba mal.** "Tensión" sugiere una familia con miembros, la novena, la
+oncena, cualquier nota de color, y el usuario espera que se le pinten varias. Se le pinta una. Y
+"legal" es una metáfora que no significa nada fuera de la cabeza de quien la escribió.
+
+**Decisión:** en la leyenda de la guía el nombre pasa a **Sensible (empuja a la tónica)**, con el
+mismo patrón que la decisión de hoy sobre Universo: término técnico primario más aclaración
+didáctica. "Sensible" no es una elección de estilo, es como se llama en la teoría musical en español
+el séptimo grado a semitono de la tónica, y el propio motor ya lo nombra así en `sensiblePC` e
+`isSensible`. "Empuja a la tónica" describe lo que el oído siente, que es lo que hace que la nota
+funcione.
+
+**Consecuencia:** `docs/GLOSARIO.md` guarda tres capas y no dos, porque la pantalla no aguanta más
+de dos y el glosario sí: el término, qué significa, y cuándo lo pinta este programa. Esa tercera
+capa es la que responde por qué en un universo mayor el color no se enciende nunca.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-10 — Por qué el texto quedaba borroso: la capa de composición que no se invalida
+
+**Contexto:** después del cascarón del lienzo, el texto de las cajas quedaba borroso al
+redimensionar, y el autor reportó cuatro observaciones que parecían no tener un patrón común.
+
+**El mecanismo**, que es la parte que no se deriva leyendo el código. Una capa de composición se
+rasteriza una vez, a la escala que había cuando se creó, y el compositor la reutiliza. Cambiar el
+`transform` de un ancestro no la invalida: la estira. Recién vuelve a rasterizarse cuando algo la
+ensucia.
+
+Eso explica las cuatro observaciones sin excepciones. Al redimensionar la caja queda borrosa porque
+su capa sigue rasterizada a la escala vieja. Al cambiar la nomenclatura se afila porque el texto
+cambió y ensució la capa. Al cerrar y reabrir los widgets se afilan porque la capa se destruye y se
+crea a la escala actual. Y la página de prueba que reescribía el ancho y el alto del contenedor en
+cada ajuste nunca reprodujo el problema, porque invalidaba siempre.
+
+**Decisión:** tres cambios.
+
+1. Después de escribir el `transform` del lienzo, se reescribe el `transform` de cada caja abierta
+   con las mismas coordenadas. Escribir el mismo valor ensucia la capa y la obliga a rasterizar a la
+   escala nueva. Esto no es lógica de reubicación por `resize`, que sigue prohibida: no recalcula
+   ninguna posición, reescribe la que la caja ya tenía.
+2. Se retira el desenfoque de fondo de los paneles. Sobre un color plano oscuro no aporta nada
+   visible y cuesta una capa por caja.
+3. Se retira la pista de composición que tenían las cajas. Protegía la fluidez de una animación que
+   la regla de animación de la Fase 5 prohíbe tener.
+
+**Consecuencia operativa:** agregar a una caja un filtro, un desenfoque de fondo o una pista de
+composición la promueve a capa propia y reintroduce esto. No se hace sin volver a mirar esta
+entrada.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

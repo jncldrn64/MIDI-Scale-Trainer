@@ -163,12 +163,13 @@ universo activo, y "Acorde" (`#f59e0b`, símbolo `♦`) pinta las del acorde det
 pintan aunque el usuario no toque nada.
 
 Cuatro son el veredicto nota por nota y salen de la jerarquía de la sección anterior:
-"Correcto" (`#22c55e`, `✓`), "Tensión Legal" (`#f97316`, `!`), "Paso Cromático" (`#a855f7`,
+"Correcto" (`#22c55e`, `✓`), "Sensible (empuja a la tónica)" (`#f97316`, `!`), "Paso Cromático" (`#a855f7`,
 `~`) y "Error" (`#ef4444`, `✕`).
 
-La etiqueta "Tensión Legal" nombra un caso único, la sensible en universo menor, y no una
-familia de tensiones permitidas. El nombre promete más de lo que cubre; su renombre está
-anotado en la Terminología de pantalla de la Fase 5 (`ROADMAP.md`).
+La etiqueta naranja nombra un caso único, la sensible en universo menor, y no una familia de
+tensiones permitidas. Se llamaba "Tensión Legal" y prometía más de lo que cubre; el incremento 5.4
+la renombró a "Sensible (empuja a la tónica)", con la razón medida contra el motor en
+`DECISIONS.md`, entrada del 2026-08-10.
 
 ## 6. Gaps confirmados leyendo el código
 

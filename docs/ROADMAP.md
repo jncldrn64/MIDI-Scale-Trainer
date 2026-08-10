@@ -280,7 +280,7 @@ y al blues como universos propios justamente porque no lo son. Renombrar adentro
 distinción. El renombre interno, si alguna vez se hace, es trabajo del punto de nomenclatura de
 "Deuda de método y documentación", con su propio PR y las fixtures en verde.
 
-Quinto, la etiqueta "Tensión Legal" de la leyenda entra a la lista de renombres. Nombra un caso
+Quinto, la etiqueta naranja de la leyenda entra a la lista de renombres. Nombra un caso
 único, la sensible en universo menor, y se lee como si nombrara una familia de tensiones
 permitidas. El nombre nuevo se decide junto con los otros de esta subsección.
 
@@ -365,6 +365,13 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   pertinente y que no estaba escrita en ningún lado: la nomenclatura alfabética usa un carácter
   donde la silábica usa dos, así que elegir nomenclatura tiene una consecuencia de legibilidad que
   crece cuando la pantalla es chica.
+  **Entregado.** Los seis trabajos están hechos: las dos etiquetas de nomenclatura, el renombre de
+  la sensible, la deduplicación del rótulo del widget de escala, la regla de iconos escrita en
+  `CLAUDE.md` con el código conforme a ella, el interruptor de nombres de tecla y el arreglo del
+  texto borroso. Dos cosas quedaron afuera a propósito y no se dan por cerradas: el nombre interno
+  `latino` sigue como está, porque renombrarlo es el punto de nombres internos de "Deuda de método y
+  documentación" con su propio PR, y poblar el glosario con los artefactos ya lo hizo el PR anterior
+  del 2026-08-10.
 - Incremento 5.5, análisis honesto: la función tonal que la Fase 4 dejó en el buffer se muestra en
   el panel de Análisis junto al numeral y la relación, y la etiqueta "Intercambio Modal" se
   relabela a "no clasificado" o "por definir". Van juntos para no dejar un estado intermedio
@@ -763,6 +770,12 @@ prioridad, no porque la rueda la bloquee.
 - Que el coloreo del teclado obedezca de verdad al estado abierto o cerrado de su dueño, según el
   reparto de la entrada del 2026-08-10. Hoy `renderKeyboard` pinta las seis categorías sin mirar qué
   widget está en pantalla. Bloqueado: toca `renderKeyboard`, que la Fase 5 preserva intacto.
+- La leyenda no explica por qué una nota fuera del universo puede salir verde. El motor acepta dos
+  casos de nota fuera del universo: la sensible, que se pinta naranja y desde el incremento 5.4 está
+  explicada, y el tono conductor de una dominante secundaria, que se pinta verde como si fuera
+  correcta y no aparece en la leyenda por ningún lado. El usuario ve una nota fuera de la escala en
+  verde y no tiene dónde averiguar por qué. Se cruza con el ítem de que la leyenda se filtre sola:
+  las dos cosas cambian qué filas muestra la guía, así que conviene decidirlas juntas.
 - Que la leyenda de la guía se filtre sola, mostrando solo las categorías cuyos dueños estén
   abiertos. Bloqueado por el ítem anterior: filtrar una leyenda que describe colores que igual se
   pintan sería mentirle al usuario.
