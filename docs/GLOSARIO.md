@@ -77,10 +77,19 @@
   muestra el widget que lo lee. Fuentes: 2026-08-10, *Lienzo de referencia y modelo de capas*, y
   2026-08-10, *Geometría del teclado de 88 teclas, y la barra no presenta lecturas*.
 - **lienzo de referencia**: el marco de diseño de 1280 x 720 contra el que se escriben todas las
-  medidas de la interfaz. Fuente: 2026-08-10, *Lienzo de referencia y modelo de capas*.
+  medidas de la interfaz. Existe en el código desde el incremento 5.6: es el contenedor `#lienzo`,
+  de 1280 x 720 px fijos, adentro del cual vive todo el contenido de la app. Fuentes: 2026-08-10,
+  *Lienzo de referencia y modelo de capas*, y 2026-08-10, *La migración al lienzo se parte en dos*.
 - **escala del lienzo**: el factor único por el que se multiplica todo el contenido para llenar la
-  ventana, `min(anchoVentana / 1280, altoVentana / 720)`. Lo que sobra queda en negro. Fuente:
-  2026-08-10, *Lienzo de referencia y modelo de capas*.
+  ventana, `min(anchoVentana / 1280, altoVentana / 720)`. Lo calcula el objeto `Lienzo`, que es el
+  único lugar de la app que lee el tamaño de la ventana. Fuentes: las dos de arriba.
+- **franja negra**: el sobrante que queda a los lados, o arriba y abajo, cuando la relación de
+  aspecto de la ventana no es 16:9. No se rellena con contenido: queda negro, como un archivo de
+  video con otra relación de aspecto. Fuente: 2026-08-10, *Lienzo de referencia y modelo de capas*.
+- **píxel de lienzo**: la unidad en que se escribe toda medida de la interfaz. Un píxel de lienzo
+  vale `escala` píxeles de pantalla. Las coordenadas guardadas de cada caja, los puntos de
+  nacimiento y el molde están en esta unidad, no en píxeles de pantalla. Fuente: 2026-08-10, *La
+  migración al lienzo se parte en dos*.
 
 ## Motor
 

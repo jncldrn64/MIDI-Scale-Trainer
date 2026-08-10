@@ -2,6 +2,29 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.58 — 2026-08-10
+
+### Added
+
+- `index.html`: incremento 5.6, el cascarón del lienzo. Todo el contenido vive en un contenedor `#lienzo` de 1280 x 720 px fijos, que JS escala y centra contra la ventana. Lo que sobra queda negro.
+- `index.html`: el objeto `Lienzo` es el único lugar de la app que lee el tamaño de la ventana. Calcula escala y offsets, se los escribe al cascarón, y los reporta al log en cada carga y en cada `resize`.
+- `index.html`: conversión del puntero a coordenadas de lienzo en el arrastre. Sin ella, a escala 1.5 la caja se movería un 50% más rápido que el puntero, y con franjas negras quedaría además desplazada por el offset.
+- `docs/DECISIONS.md`: entrada que parte la migración en dos piezas y trae la primera a la Fase 5, con la evidencia que lo justifica y el riesgo del arrastre escrito para que no se vuelva a pisar.
+- `docs/GLOSARIO.md`: entran "franja negra" y "píxel de lienzo"; "lienzo de referencia" y "escala del lienzo" dejan de ser decisión sin ejecución.
+
+### Changed
+
+- `index.html`: las medidas dejan de leer la ventana. `Layout.area`, `zonaNotas`, `clamp`, `puntosCompeten`, `nacimientoSistema`, la cobertura y dos líneas de log pasan a píxeles de lienzo. No queda ningún `innerWidth` ni `innerHeight` fuera del cálculo de la escala.
+- `index.html`: los ocho `getBoundingClientRect` del layout se retiran. Bajo el cascarón devuelven píxeles ya escalados; en su lugar van `offsetWidth` y `offsetHeight`, previos a la transformación, y para la posición de una caja se usa su estado.
+- `index.html`: el molde deja de usar unidades `vw`. Pasa a la variable `--w-widget` de 314.4 px de lienzo, que es 23% de 1280 más 20, debajo del tope de 320. El archivo ya no tiene ningún `vw`.
+- `index.html`: `buildKeyboard` pierde la fórmula de escala provisional. El alto de la blanca vuelve a ser 140 px planos, porque ahora el cascarón aplica la escala una sola vez.
+- `index.html`: los controles del escenario se ocultan, con el mismo mecanismo que "Fijar Acordes". Vivían en la capa 0, que no lleva controles interactivos. `lockChord` y `unlockChord` siguen funcionando contra el botón oculto.
+- `index.html`: la versión mostrada sube de V11.57 a V11.58.
+- `docs/ROADMAP.md`: vuelve el incremento 5.6 a la Fase 5, con el alcance recortado a la primera pieza. La fase cierra ahora con el 5.6. La Fase 5B pasa a describir solo la segunda.
+- `docs/ROADMAP.md`: el punto de deuda de "Motor Automático" decía que no se oculta ni se borra. Este PR lo ocultó; lo que queda sin decidir es el destino de la característica.
+
+Verificado a 1920x1080, 960x1000 y 800x600: la cobertura de los widgets que compiten da 31.8% en los tres, y las cinco cajas conservan sus coordenadas de lienzo. Si el número variara, algo seguiría leyendo la ventana.
+
 ## v11.57 — 2026-08-10
 
 ### Changed
