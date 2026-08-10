@@ -2,6 +2,33 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.55 — 2026-08-10
+
+### Added
+
+- `docs/GLOSARIO.md`: archivo nuevo, cuarto documento canónico. Dice qué significa cada término hoy y se corrige; `DECISIONS.md` dice por qué cambió y es append-only. Cada término apunta a su entrada por fecha y título, nunca por número de línea.
+- `docs/GLOSARIO.md`: 19 términos sembrados desde las tres fuentes que hoy hacen de glosario sin gobernar. "Ranura" queda marcado como superado, con los dos términos que lo reemplazaron: cap para el límite y punto de nacimiento para la coordenada.
+- `docs/DECISIONS.md`: entrada de dueño de superficie. Cada categoría de color del teclado tiene un widget dueño y cerrar al dueño apaga su efecto. La escala es del widget de escala; las otras cinco, del widget de salida del motor.
+- `docs/DECISIONS.md`: la misma entrada fija que los widgets no se hablan entre sí. Un dato tiene un autor y muchos lectores. Con canales de a pares el número crece con el cuadrado; con estado compartido, un widget nuevo no conoce a ninguno.
+- `docs/DECISIONS.md`: entrada del lienzo de referencia de 1280 x 720, con la fórmula de escala única y sin comportamiento responsive. Lo que sobra queda en negro. El precedente que se evita es la v11.5, que era una interfaz líquida.
+- `docs/DECISIONS.md`: la misma entrada escribe por primera vez el modelo de capas. Capa 0 el fondo, teclado y grilla alineados 1 a 1 y sin controles; capa 1 los widgets; capa 2 la barra.
+- `docs/DECISIONS.md`: entrada de jerarquía de menús. Tres entradas de primer nivel, todo a dos clics, y el log a cuatro bajo Ayuda. El tres es techo para lo que se usa tocando y piso para lo que no debería encontrarse.
+- `docs/DECISIONS.md`: entrada con el criterio de entrada a una fase en curso. Un ítem parqueado entra solo si dejarlo afuera bloquea un incremento pendiente o obliga a rehacer lo entregado.
+- `docs/ROADMAP.md`: incremento 5.6, migrar las medidas al lienzo de 1280 x 720. Va después del 5.5, sin renumerar nada. La fase cierra ahora con el 5.6 y no con el 5.5.
+- `docs/ROADMAP.md`: siete ítems de backlog nuevos, cada uno con su bloqueo declarado. El coloreo obedeciendo al dueño, la leyenda que se filtra sola, dos conflictos de dueño sin resolver, el split como rango, el feedback que se abre solo y el widget de acordes.
+- `docs/ROADMAP.md`: dos puntos nuevos de deuda verificada. Dónde vive el botón "Motor Automático", que está en la capa 0 y esa capa no lleva controles, y el destino sin decidir del panel "Fijar Acordes".
+- `CLAUDE.md`: regla de glosario. Toda entrada de DECISIONS que introduzca o refine un término escribe su línea en GLOSARIO en el mismo PR.
+- `CLAUDE.md`: criterio de entrada a una fase en curso, en su forma operativa de dos líneas. La razón vive en DECISIONS.
+
+### Changed
+
+- `CLAUDE.md`: la documentación canónica pasa de tres archivos a cuatro. Entra `docs/GLOSARIO.md`.
+- `docs/ROADMAP.md`: el incremento 5.4 suma tres trabajos. La mudanza de la leyenda a la guía con seis filas escritas a mano, el punto de nomenclatura de lo que ya existe, y poblar el glosario con los artefactos que hoy no tienen nombre.
+
+Ninguna de las cuatro entradas nuevas de `docs/DECISIONS.md` trae cambio de código detrás. Lo que obedece hoy es la documentación, y cablearlo está en el backlog.
+
+La versión mostrada sigue en V11.53; el desfase lo cierra el próximo PR de código.
+
 ## v11.54 — 2026-08-09
 
 ### Added

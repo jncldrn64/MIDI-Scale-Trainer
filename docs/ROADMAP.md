@@ -349,13 +349,24 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   de colores a la guía, que la entrada de decisiones del 2026-08-09 ya resolvió en el papel y este
   incremento ejecuta. El otro es decidir la regla de iconos y emojis de la interfaz, que hoy no
   existe escrita; el ítem de coherencia visual del set de iconos del BACKLOG es el material de
-  partida y se cierra acá, en vez de quedar dos veces anotado.
+  partida y se cierra acá, en vez de quedar dos veces anotado. Suma tres trabajos más. La leyenda de
+  colores se muda a la guía con contenido escrito a mano, seis filas con color, nombre de la
+  categoría y widget dueño, fijo y sin filtrado dinámico. El punto "Nomenclatura de lo que ya
+  existe" de la deuda de método deja de estar suelto y lo toma este incremento. Y "Glosario vivo en
+  vez de glosario congelado" deja de ser sugerencia: lo ejecutó el PR que creó `docs/GLOSARIO.md`, y
+  lo que queda acá es poblarlo con los nombres de los artefactos que hoy no tiene nombre ningún
+  documento.
 - Incremento 5.5, análisis honesto: la función tonal que la Fase 4 dejó en el buffer se muestra en
   el panel de Análisis junto al numeral y la relación, y la etiqueta "Intercambio Modal" se
   relabela a "no clasificado" o "por definir". Van juntos para no dejar un estado intermedio
   contradictorio.
+- Incremento 5.6, migrar las medidas al lienzo de referencia: las medidas de la interfaz mezclan
+  hoy píxeles con unidades `vw`, y pasan a escribirse contra el lienzo de 1280 x 720 que fija la
+  entrada de decisiones del 2026-08-10. Va después del 5.5. Por qué entra a una fase en curso, con
+  el criterio del 2026-08-10 en la mano: el lienzo es una decisión de esta fase, y dejar la
+  migración afuera la volvería una decisión sin ejecución.
 
-La fase pasa a `en progreso` al completarse el incremento 5.1, y a `cerrada` cuando el 5.5 esté
+La fase pasa a `en progreso` al completarse el incremento 5.1, y a `cerrada` cuando el 5.6 esté
 hecho y corroborado.
 
 **El gestor de paneles se parte, y la salida del motor tiene lugar.** El ADR del 2026-07-24
@@ -402,6 +413,13 @@ conciencia.
   construir, y el widget de prueba. El segundo se creó porque el cap es de tres y sin un cuarto
   candidato la rama que bloquea una apertura no se puede ejercer desde la interfaz. Los dos nacen
   cerrados, así que no se dibuja nada, y se retiran cuando existan los widgets de verdad.
+- El botón "Motor Automático" bloquea el acorde detectado para que el motor deje de redetectarlo
+  mientras se practica sobre él, y al hacerlo cambia su rótulo a "Motor Pausado". Se queda: no se
+  oculta ni se borra. Lo que sí es deuda es dónde vive, en el contenedor de controles del escenario,
+  que la entrada del 2026-08-10 define como capa 0, y esa capa no lleva controles interactivos.
+- El panel "Fijar Acordes" ya está oculto a propósito, con un comentario en `index.html` que lo
+  declara y pide no borrarlo. Su destino no está decidido, y es la otra mitad de la misma
+  característica que "Motor Automático".
 
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, la barra de menús permanente existe como
@@ -727,6 +745,29 @@ prioridad, no porque la rueda la bloquee.
   de su texto que corresponde a una categoría de la leyenda, para que el color y la palabra digan lo
   mismo sin repetirlo. Queda anotada como idea y sin fase: primero hay que cablear los subtítulos a
   la salida del motor, que hoy siguen siendo un marcador de posición.
+- Que el coloreo del teclado obedezca de verdad al estado abierto o cerrado de su dueño, según el
+  reparto de la entrada del 2026-08-10. Hoy `renderKeyboard` pinta las seis categorías sin mirar qué
+  widget está en pantalla. Bloqueado: toca `renderKeyboard`, que la Fase 5 preserva intacto.
+- Que la leyenda de la guía se filtre sola, mostrando solo las categorías cuyos dueños estén
+  abiertos. Bloqueado por el ítem anterior: filtrar una leyenda que describe colores que igual se
+  pintan sería mentirle al usuario.
+- La precedencia entre el widget de escala y el de salida del motor cuando los dos reclaman el rojo,
+  porque la nota se sale de la escala. Es un conflicto de dos dueños sobre el mismo color y todavía
+  no tiene regla escrita.
+- La rama del preveredicto de `renderKeyboard`, la que pinta una nota recién tocada usando el
+  conjunto de alturas válidas de la escala, que es dato del widget de escala, con un color del
+  widget de salida del motor. No tiene dueño limpio y hay que decidirlo.
+- El split como rango: el usuario declara desde qué nota hasta qué nota quiere que el motor evalúe,
+  con el split exacto adentro de ese rango, y adapta su forma de tocar para caer dentro. Es distinto
+  del split actual, que es una sola nota. Bloqueado: toca la evaluación, o sea el motor, y eso está
+  fuera del alcance de la Fase 5.
+- Que el widget de feedback del sistema se abra solo cuando aparece un error, estando cerrado.
+  Bloqueado por un conflicto que hay que resolver antes: contradice que cerrar una caja sea una
+  decisión del usuario que el sistema respeta. Quien lo tome tiene que decidir si el feedback es una
+  excepción declarada o si el aviso viaja por otro canal.
+- Convertir "Motor Automático" y el panel "Fijar Acordes" en un widget que asista con los acordes.
+  Hoy son dos controles de la misma característica partida en dos, uno visible en el escenario y el
+  otro oculto a propósito.
 
 ---
 
