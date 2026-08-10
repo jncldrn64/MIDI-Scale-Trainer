@@ -1332,6 +1332,52 @@ siendo una sola nota MIDI, la 60 por defecto.
 
 ---
 
+## 2026-08-10 — La migración al lienzo se parte en dos, y la primera mitad vuelve a la Fase 5
+
+**Contexto:** esta es la tercera entrada sobre el mismo tema en tres PR, y conviene decirlo sin
+maquillaje. La primera metió la migración a la Fase 5 como incremento 5.6 con una tensión declarada.
+La segunda la sacó entera y la mandó a la Fase 5B. Esta la parte en dos y trae la mitad de vuelta.
+Lo que hace legítima cada vuelta es que trajo un dato que antes no existía. El de esta es concreto y
+se verificó con `grep`: el único manejador de `resize` de la app reconstruye el teclado y nada más.
+
+**La evidencia:** las posiciones de las cajas se guardan en píxeles absolutos de la ventana donde se
+arrastraron, y el ancho de cada caja encogía con la ventana porque usaba unidades `vw`, pero su
+posición no se recalculaba nunca. Al achicar la ventana, las cajas quedaban fuera del área visible
+y desaparecían. `Layout.clamp` hace exactamente la cuenta que haría falta, pero solo corre al
+arrastrar y al colocar, no al redimensionar.
+
+Sin lienzo, la corrección es llamar a `clamp` desde el `resize`, o sea escribir lógica de
+reubicación que el lienzo vuelve innecesaria el día que llegue. El criterio del 2026-08-10 admite un
+ítem a una fase en curso cuando dejarlo afuera obliga a rehacer trabajo. Este es ese caso.
+
+**Decisión:** la migración se parte en dos piezas.
+
+1. **El cascarón, que vuelve a la Fase 5 como incremento 5.6.** El contenedor de 1280 x 720 escalado
+   y centrado, las franjas negras, la corrección del arrastre, y las medidas que leían la ventana
+   pasando a leer el lienzo.
+2. **La normalización, que se queda en la Fase 5B.** Pasar cada medida y cada comentario restante a
+   unidades de lienzo, junto con la modularización, porque esa fase reescribe esas funciones igual.
+
+**Qué queda superado de "La migración al lienzo sale de la Fase 5":** solo la parte que manda la
+pieza 1 a la Fase 5B. La pieza 2 se queda ahí y las tres razones de aquella entrada siguen valiendo
+para ella, en especial la tercera, que la 5B reescribe las mismas funciones.
+
+**El riesgo del arrastre, que es la clase de detalle que se vuelve a pisar.** Con el cascarón
+escalado, `getBoundingClientRect` devuelve coordenadas de pantalla, ya multiplicadas por la escala,
+mientras que `style.transform = translate(x, y)` escribe coordenadas de lienzo. El arrastre mezclaba
+las dos: leía `clientX` y lo escribía como si fuera lienzo. Sin corregirlo, a escala 1.5 la caja se
+mueve un 50% más rápido que el puntero y se despega, y con franjas negras además queda desplazada
+por el offset. La corrección es convertir el puntero antes de usarlo,
+`(clientX - offsetX) / escala`, en el `pointerdown` y en el `pointermove`.
+
+Por la misma razón, adentro del lienzo no se mide con `getBoundingClientRect`: se usa `offsetWidth`
+y `offsetHeight`, que son valores previos a la transformación, y para la posición de una caja se usa
+su estado, que ya está en coordenadas de lienzo.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

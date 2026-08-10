@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.57 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.58 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -14,7 +14,21 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); height: 100vh; overflow: hidden; }
+        /* El fondo del body es el negro de las franjas: lo que sobra fuera del lienzo. */
+        body { background: #000; color: var(--text-main); height: 100vh; overflow: hidden; }
+
+        /* El lienzo de referencia: 1280 x 720 px fijos. JS le escribe el transform con la
+           escala y los offsets calculados contra la ventana. Ninguna medida de adentro
+           depende del tamaño de la ventana, así que nada se reacomoda al redimensionar.
+           El ancho del molde de widget vive acá como variable, derivado del lienzo: 23% de
+           1280 más 20 son 314.4, y el tope de 25% son 320, así que manda el primero. */
+        #lienzo {
+            position: absolute; top: 0; left: 0;
+            width: 1280px; height: 720px;
+            transform-origin: 0 0;
+            background: var(--bg-main); overflow: hidden;
+            --w-widget: 314.4px;
+        }
         .container { max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
         
         /* --- Fase 5, incremento 5.2: barra de menús permanente ---
@@ -32,7 +46,7 @@
         /* Menú desplegable de la barra: cuelga debajo, estado instantáneo vía hidden. */
         .menu-panel {
             position: fixed; top: 30px; left: 12px; z-index: 100;
-            width: min(420px, 96vw); max-height: calc(100vh - 42px); overflow-y: auto;
+            width: 420px; max-height: 678px; overflow-y: auto;   /* medidas de lienzo: 720 menos la barra y el aire */
             background: rgba(11,17,32,0.97); border: 1px solid #334155; border-top: none;
             border-radius: 0 0 10px 10px; padding: 12px;
             display: flex; flex-direction: column; gap: 10px;
@@ -185,9 +199,9 @@
 
         /* --- Incremento 5.3, partes segunda y tercera: el molde, el movimiento y el chasis ---
            Cada caja se ubica sola por transform: translate(), así que el contenedor deja de
-           posicionar. El molde sale del Alcance de la Fase 5: alto de 170 px y ancho de 23vw
-           más 20 px, sin pasar de dos octavos del ancho de la ventana, que es lo que hace el
-           min(). Sin transiciones: la caja sigue al puntero, no lo persigue (regla de
+           posicionar. El molde sale del Alcance de la Fase 5: alto de 170 px y ancho de 23%
+           del lienzo más 20 px, o sea los 314.4 px de --w-widget, debajo del tope de dos
+           octavos que son 320. Sin transiciones: la caja sigue al puntero, no lo persigue (regla de
            animación de la Fase 5). La tercera parte suma cerrar, restaurar, el menú de
            widgets, el cap de tres y la opacidad por instancia. */
         .widgets-row { display: contents; }
@@ -197,7 +211,7 @@
         }
         .box.dragging { cursor: grabbing; }
         .widget {
-            width: min(calc(23vw + 20px), 25vw); height: 170px; overflow: hidden;
+            width: var(--w-widget); height: 170px; overflow: hidden;
             border: 1px solid #334155; border-radius: 12px;
             padding: 8px 12px;
             display: flex; flex-direction: column; gap: 4px;
@@ -228,7 +242,7 @@
            su texto en vez de recortarlo (DECISIONS, 2026-08-01). */
         .syswidget.guia {
             white-space: normal; border-radius: 12px; padding: 10px 14px;
-            width: min(calc(23vw + 20px), 25vw); height: auto; line-height: 1.5;
+            width: var(--w-widget); height: auto; line-height: 1.5;
         }
 
         /* Menú de widgets: una fila por instancia, con abrir o cerrar, opacidad y reset. */
@@ -249,12 +263,23 @@
     </style>
 </head>
 <body>
+    <!-- EL CASCARÓN DEL LIENZO (incremento 5.6). Todo el contenido vive adentro de un
+         contenedor de 1280 x 720 px fijos, que JS escala y centra contra la ventana. Lo que
+         sobra a los lados o arriba y abajo son las franjas negras, como un archivo de video
+         con otra relación de aspecto (DECISIONS, 2026-08-10).
+
+         Dato de CSS del que depende todo esto: un ancestro con transform se vuelve el bloque
+         contenedor de sus descendientes position: fixed. Por eso la barra, los paneles de
+         menú, el escenario, .ovl y .box siguen siendo fixed y pasan a posicionarse contra el
+         lienzo en vez de contra la ventana, sin cambiarles el position. No convertirlos a
+         absolute. -->
+    <div id="lienzo">
     <div class="container">
         <!-- BARRA DE MENÚS PERMANENTE (incremento 5.2): fija arriba, siempre visible. El
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.57</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.58</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">⚙️ Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -393,7 +418,13 @@
             <div class="falling-reserved">
                 <span class="reserved-label">🎵 Zona de notas que caen · reservado</span>
             </div>
-            <div class="stage-controls">
+            <!-- OCULTO A PROPÓSITO EN EL INCREMENTO 5.6: los controles del escenario viven en
+                 la capa 0, que es solo teclado y grilla de notas y no lleva controles
+                 interactivos (DECISIONS, 2026-08-10). Se oculta, no se borra: el markup, el id
+                 y lockChord y unlockChord quedan intactos y siguen funcionando contra el botón
+                 oculto. El camino de vuelta es el ítem de backlog que convierte a este control
+                 y al panel "Fijar Acordes" en un widget que asista con los acordes. -->
+            <div class="stage-controls" hidden>
                 <button class="btn btn-warning" id="btn-lock">🔓 Motor Automático</button>
                 <!-- "Centrar en Split" (btn-c4) vivía acá parqueado; en el 5.2 se mudó al
                      menú de Opciones de la barra, que era su hogar planeado. -->
@@ -423,6 +454,7 @@
         <!-- La consola vivía acá como overlay (5.1); en el 5.2 se mudó entera al final del
              menú de Opciones, desplegable incluido, con su JS sin tocar. -->
     </div>
+    </div><!-- /#lienzo -->
 
     <!-- Núcleo puro de teoría musical (fuente única de verdad, ver src/engine.js).
          Define los globales SCALES, CHORD_TEMPLATES y MathEngine, y el objeto Engine
@@ -688,9 +720,11 @@
                     if(!BLACK_KEYS.includes(i%12)) whites.push(i);
                 }
 
-                const anchoBlanca = wrapper.clientWidth / whites.length;
-                const escala = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
-                const altoBlanca = Math.round(140 * escala);
+                const anchoBlanca = wrapper.clientWidth / whites.length;   // el contenedor mide el lienzo entero
+                // El alto son 140 px de lienzo planos. La fórmula de escala que había acá se
+                // borró: era el lienzo aplicado por adelantado a este único número, y ahora el
+                // cascarón escala todo. Dejar las dos cosas aplicaría la escala dos veces.
+                const altoBlanca = 140;
                 // La negra conserva su proporción: 0.62 del ancho y del alto de la blanca. A
                 // 0.80 el blanco visible entre dos negras cae de 9.4 px a 4.9 px y el teclado
                 // deja de leerse como teclado. Un piano real va en 0.58.
@@ -717,7 +751,7 @@
                 }
                 SysLog('LAYOUT', `Teclado de ${KEYBOARD_END - KEYBOARD_START + 1} teclas (MIDI ${KEYBOARD_START} a ${KEYBOARD_END}), ${whites.length} blancas, de borde a borde en ${Math.round(wrapper.clientWidth)} px.`);
                 SysLog('LAYOUT', `Ancho de blanca ${anchoBlanca.toFixed(2)} px; negra ${anchoNegra.toFixed(2)} px al 0.62, deja ${(anchoBlanca - anchoNegra).toFixed(1)} px de blanco visible entre negras.`);
-                SysLog('LAYOUT', `Escala del lienzo min(${window.innerWidth}/1280, ${window.innerHeight}/720) = ${escala.toFixed(3)}; alto de blanca 140 de lienzo = ${altoBlanca} px reales, negra ${Math.round(altoNegra)} px.`);
+                SysLog('LAYOUT', `Alto de blanca ${altoBlanca} px de lienzo, negra ${Math.round(altoNegra)} px. Planos: el cascarón del lienzo aplica la escala una sola vez.`);
                 this.renderKeyboard();
             },
             renderKeyboard() {
@@ -855,6 +889,35 @@
             return dato;
         }
 
+        // --- EL CASCARÓN DEL LIENZO (incremento 5.6) ---
+        // Todo el contenido vive en un contenedor de 1280 x 720 px fijos. Este objeto es el
+        // único lugar de la app que lee el tamaño de la ventana: calcula la escala y los
+        // offsets, y se los escribe al cascarón. Todo lo demás mide en píxeles de lienzo.
+        const LIENZO_ANCHO = 1280, LIENZO_ALTO = 720;
+
+        const Lienzo = {
+            escala: 1, offsetX: 0, offsetY: 0,
+
+            ajustar(motivo) {
+                const w = window.innerWidth, h = window.innerHeight;
+                this.escala = Math.min(w / LIENZO_ANCHO, h / LIENZO_ALTO);
+                this.offsetX = (w - LIENZO_ANCHO * this.escala) / 2;
+                this.offsetY = (h - LIENZO_ALTO * this.escala) / 2;
+                const el = document.getElementById('lienzo');
+                el.style.transform = `translate(${this.offsetX}px, ${this.offsetY}px) scale(${this.escala})`;
+                const franjaH = Math.round(this.offsetX), franjaV = Math.round(this.offsetY);
+                SysLog('LAYOUT', `Lienzo (${motivo}): ventana ${w} x ${h}, escala min(${w}/${LIENZO_ANCHO}, ${h}/${LIENZO_ALTO}) = ${this.escala.toFixed(4)}, offset (${franjaH}, ${franjaV}).`);
+                SysLog('LAYOUT', `Franjas negras: ${franjaH} px a cada lado, ${franjaV} px arriba y abajo. El lienzo dibujado mide ${Math.round(LIENZO_ANCHO * this.escala)} x ${Math.round(LIENZO_ALTO * this.escala)} px de pantalla.`);
+            },
+
+            // El puntero llega en coordenadas de pantalla y el transform de cada caja se
+            // escribe en coordenadas de lienzo. Sin esta conversión, a escala 1.5 la caja se
+            // movería un 50% más rápido que el puntero, y con franjas quedaría desplazada.
+            aLienzo(clientX, clientY) {
+                return { x: (clientX - this.offsetX) / this.escala, y: (clientY - this.offsetY) / this.escala };
+            }
+        };
+
         const Layout = {
             GAP: 16,       // separación uniforme entre cajas, la misma contra la que nacen
             FRANJA: 56,    // franja de nacimiento libre debajo de la barra
@@ -864,24 +927,27 @@
             el(id) { return document.getElementById(id); },
             cajas() { return CAJAS.map(c => this.el(c.id)).filter(Boolean); },
 
-            // El área de arrastre es toda la ventana debajo de la barra. El piano dejó de ser
+            // Todo lo que sigue está en coordenadas de lienzo, nunca de pantalla. Por eso no
+            // se usa getBoundingClientRect, que bajo el cascarón escalado devuelve píxeles ya
+            // multiplicados por la escala, sino offsetWidth y offsetHeight, que son previos a
+            // la transformación.
+            //
+            // El área de arrastre es todo el lienzo debajo de la barra. El piano dejó de ser
             // el límite de abajo: los widgets flotan sobre el fondo entero, y el fondo no se
             // reordena para hacerles lugar (DECISIONS, 2026-08-09).
             area() {
-                const barra = this.el('menubar').getBoundingClientRect();
-                return { top: barra.bottom, bottom: window.innerHeight, left: 0, right: window.innerWidth };
+                return { top: this.el('menubar').offsetHeight, bottom: LIENZO_ALTO, left: 0, right: LIENZO_ANCHO };
             },
 
             // La zona de notas es otra cosa que el área: va de la barra al piano, y es contra
-            // ella que se mide el presupuesto de superposición.
+            // ella que se mide el presupuesto de superposición. El piano está pegado al borde
+            // inferior del lienzo, así que su tope sale de restar su alto.
             zonaNotas() {
-                const barra = this.el('menubar').getBoundingClientRect();
-                const piano = this.el('keyboard-wrapper').getBoundingClientRect();
-                return { top: barra.bottom, bottom: piano.top };
+                return { top: this.el('menubar').offsetHeight, bottom: LIENZO_ALTO - this.el('keyboard-wrapper').offsetHeight };
             },
 
             clamp(el, x, y) {
-                const a = this.area(), r = el.getBoundingClientRect();
+                const a = this.area(), r = { width: el.offsetWidth, height: el.offsetHeight };
                 const maxX = Math.max(a.left, a.right - r.width);
                 const maxY = Math.max(a.top, a.bottom - r.height);
                 const cx = Math.min(Math.max(x, a.left), maxX);
@@ -902,10 +968,9 @@
             // array de tres, indexado igual que el campo "punto" del estado.
             puntosCompeten() {
                 const a = this.area();
-                const ref = this.el('widget-escala').getBoundingClientRect();
-                const w = ref.width || Math.min(window.innerWidth * 0.23 + 20, window.innerWidth * 0.25);
+                const w = this.el('widget-escala').offsetWidth;
                 const total = w * CAP + this.GAP * (CAP - 1);
-                const x0 = Math.max(a.left, (window.innerWidth - total) / 2);
+                const x0 = Math.max(a.left, (LIENZO_ANCHO - total) / 2);
                 const y = a.top + this.FRANJA;
                 return Array.from({ length: CAP }, (_, i) => ({ x: x0 + i * (w + this.GAP), y, w }));
             },
@@ -914,17 +979,17 @@
             // debajo del otro, como fija el estándar espacial. La guía nace bajo el tercer
             // punto de nacimiento, alineada con el widget de la derecha.
             nacimientoSistema(id) {
-                const el = this.el(id), r = el.getBoundingClientRect();
+                const el = this.el(id), r = { width: el.offsetWidth, height: el.offsetHeight };
                 // La guía deja de nacer alineada con el tercer punto de nacimiento. Esa
                 // alineación la hacía leer como cuarta caja de la fila, y no lo es: es algo
                 // que se aprende y se apaga. Nace anclada al borde derecho, con 16 px de
                 // margen, y a la mitad vertical de la zona de notas.
                 if (id === 'sys-guia') {
                     const z = this.zonaNotas();
-                    return { x: window.innerWidth - this.GAP - r.width, y: z.top + (z.bottom - z.top) / 2 };
+                    return { x: LIENZO_ANCHO - this.GAP - r.width, y: z.top + (z.bottom - z.top) / 2 };
                 }
                 const fila = id === 'sys-subtitles' ? 0.46 : 0.51;
-                return { x: (window.innerWidth - r.width) / 2, y: window.innerHeight * fila };
+                return { x: (LIENZO_ANCHO - r.width) / 2, y: LIENZO_ALTO * fila };
             },
 
             nacimiento(id) {
@@ -1003,9 +1068,13 @@
             // el tope (ver DECISIONS, 2026-08-01).
             cobertura() {
                 const z = this.zonaNotas(), zona = z.bottom - z.top;
+                // Las bandas salen del estado, que ya está en coordenadas de lienzo, y del alto
+                // sin transformar de cada caja. Medirlas con getBoundingClientRect daría
+                // píxeles de pantalla y la cifra cambiaría con el tamaño de la ventana.
                 const union = sel => {
                     const bandas = Array.from(document.querySelectorAll(sel))
-                        .map(el => { const r = el.getBoundingClientRect(); return [Math.max(r.top, z.top), Math.min(r.bottom, z.bottom)]; })
+                        .filter(el => !el.hidden && this.estado[el.id])
+                        .map(el => { const t = this.estado[el.id].y; return [Math.max(t, z.top), Math.min(t + el.offsetHeight, z.bottom)]; })
                         .filter(([s, e]) => e > s).sort((p, q) => p[0] - q[0]);
                     let total = 0, s = null, e = null;
                     for (const [bs, be] of bandas) {
@@ -1025,13 +1094,15 @@
                     if (e.target.closest('select, button, input, option, textarea, a')) return;
                     e.preventDefault();
                     const desde = { x: this.estado[el.id].x, y: this.estado[el.id].y };
-                    const offX = e.clientX - desde.x, offY = e.clientY - desde.y;
+                    const p0 = Lienzo.aLienzo(e.clientX, e.clientY);
+                    const offX = p0.x - desde.x, offY = p0.y - desde.y;
                     let frenado = false;
                     el.setPointerCapture(e.pointerId);
                     el.classList.add('dragging');
 
                     const mover = ev => {
-                        const c = this.clamp(el, ev.clientX - offX, ev.clientY - offY);
+                        const pm = Lienzo.aLienzo(ev.clientX, ev.clientY);
+                        const c = this.clamp(el, pm.x - offX, pm.y - offY);
                         if (c.frenado) frenado = true;
                         this.colocar(el, c.x, c.y);
                     };
@@ -1073,8 +1144,8 @@
                 });
 
                 const a = this.area(), z = this.zonaNotas();
-                const molde = this.el('widget-escala').getBoundingClientRect();
-                SysLog('LAYOUT', `Incremento 5.3 (chasis): molde de ${Math.round(molde.width)} x ${Math.round(molde.height)} px por widget, tope de ancho dos octavos = ${Math.round(window.innerWidth / 4)} px.`);
+                const molde = { width: this.el('widget-escala').offsetWidth, height: this.el('widget-escala').offsetHeight };
+                SysLog('LAYOUT', `Incremento 5.3 (chasis): molde de ${Math.round(molde.width)} x ${Math.round(molde.height)} px por widget, tope de ancho dos octavos = ${Math.round(LIENZO_ANCHO / 4)} px.`);
                 SysLog('LAYOUT', `Área de arrastre: de y=${Math.round(a.top)} (barra) a y=${Math.round(a.bottom)} (borde de la ventana). El piano dejó de ser límite: los widgets flotan sobre el fondo entero.`);
                 SysLog('LAYOUT', `Zona de notas, contra la que se mide el presupuesto: de y=${Math.round(z.top)} a y=${Math.round(z.bottom)}, ${Math.round(z.bottom - z.top)} px.`);
                 this.puntosCompeten().forEach((p, i) => SysLog('LAYOUT', `  punto de nacimiento ${i}: (${Math.round(p.x)}, ${Math.round(p.y)}).`));
@@ -1203,7 +1274,10 @@
         }
 
         window.onload = () => {
-            loadConfig(); 
+            loadConfig();
+            // Primero el cascarón: todo lo que se mide después depende de que el lienzo ya
+            // esté escalado y ubicado.
+            Lienzo.ajustar('carga');
 
             document.getElementById('cfg-accum').value = State.config.accumMs;
             document.getElementById('cfg-hold').value = State.config.holdMs;
@@ -1315,7 +1389,7 @@
                 SysLog('LAYOUT', `Consola ${opening ? 'abierta' : 'colapsada'}`);
             };
 
-            window.addEventListener('resize', () => UI.buildKeyboard());
+            window.addEventListener('resize', () => { Lienzo.ajustar('resize'); UI.buildKeyboard(); });
             UI.buildUniverse(); UI.buildKeyboard(); MIDI.init();
 
             // El auto-clic de btn-c4 al cargar se retira. Existía para auto-centrar el
@@ -1327,7 +1401,7 @@
             // Fase 5, incrementos 5.1 y 5.2: rastro del layout al cargar. Muchos mensajes,
             // para verlo suceder en la consola. El motor y renderKeyboard no cambian.
             SysLog('LAYOUT', 'Incremento 5.1, fondo único activo: el teclado y la zona de notas que caen son una sola capa de fondo.');
-            SysLog('LAYOUT', `Fondo debajo de la barra: ${window.innerWidth} x ${window.innerHeight - 30} px (la barra ocupa los 30 px de arriba).`);
+            SysLog('LAYOUT', `Fondo debajo de la barra: ${LIENZO_ANCHO} x ${LIENZO_ALTO - 30} px de lienzo (la barra ocupa los 30 px de arriba).`);
             SysLog('LAYOUT', 'Incremento 5.2, barra de menús permanente montada: título y versión a la izquierda, menú Opciones al lado.');
             SysLog('LAYOUT', 'Menú Opciones armado, de arriba abajo: preajuste, los cuatro campos del motor, "Centrar en Split", y la consola completa.');
             SysLog('LAYOUT', 'Reubicados sin recrear, con sus id intactos: los cuatro cfg-* desde el overlay de ajustes, btn-c4 desde los controles del teclado, y btn-console-toggle mas console-actions mas logs-container desde el overlay de consola.');

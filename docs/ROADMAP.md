@@ -364,7 +364,15 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   el panel de Análisis junto al numeral y la relación, y la etiqueta "Intercambio Modal" se
   relabela a "no clasificado" o "por definir". Van juntos para no dejar un estado intermedio
   contradictorio.
-La fase pasa a `en progreso` al completarse el incremento 5.1, y a `cerrada` cuando el 5.5 esté
+- Incremento 5.6, el cascarón del lienzo: el contenedor de 1280 x 720 escalado y centrado, con las
+  franjas negras, la corrección del arrastre y las medidas que leían la ventana pasando a leer el
+  lienzo. Es la primera de las dos piezas en que se partió la migración; la segunda, normalizar cada
+  medida y cada comentario restante, se queda en la Fase 5B. Entra a esta fase por el criterio del
+  2026-08-10: sin lienzo hay que escribir reubicación de cajas por `resize` y borrarla después. La
+  razón completa vive en `DECISIONS.md`, entrada del 2026-08-10 "La migración al lienzo se parte en
+  dos, y la primera mitad vuelve a la Fase 5".
+
+La fase pasa a `en progreso` al completarse el incremento 5.1, y a `cerrada` cuando el 5.6 esté
 hecho y corroborado.
 
 **El gestor de paneles se parte, y la salida del motor tiene lugar.** El ADR del 2026-07-24
@@ -405,9 +413,11 @@ conciencia.
   candidato la rama que bloquea una apertura no se puede ejercer desde la interfaz. Los dos nacen
   cerrados, así que no se dibuja nada, y se retiran cuando existan los widgets de verdad.
 - El botón "Motor Automático" bloquea el acorde detectado para que el motor deje de redetectarlo
-  mientras se practica sobre él, y al hacerlo cambia su rótulo a "Motor Pausado". Se queda: no se
-  oculta ni se borra. Lo que sí es deuda es dónde vive, en el contenedor de controles del escenario,
-  que la entrada del 2026-08-10 define como capa 0, y esa capa no lleva controles interactivos.
+  mientras se practica sobre él, y al hacerlo cambia su rótulo a "Motor Pausado". El incremento 5.6
+  lo ocultó, con el mismo mecanismo y el mismo tenor que "Fijar Acordes": vivía en el contenedor de
+  controles del escenario, que es capa 0, y esa capa no lleva controles interactivos. Se ocultó, no
+  se borró, y `lockChord` y `unlockChord` siguen funcionando. Lo que queda sin decidir es el destino
+  de la característica.
 - El panel "Fijar Acordes" ya está oculto a propósito, con un comentario en `index.html` que lo
   declara y pide no borrarlo. Su destino no está decidido, y es la otra mitad de la misma
   característica que "Motor Automático".
@@ -451,13 +461,14 @@ la Fase 5 completa y antes de la Fase 6.
 del 2026-07-03 descarta. `src/engine.js` se queda como está: ya es el motor puro y corre en Node
 contra las fixtures. La app tiene que seguir abriendo desde `file://`.
 
-**Primer trabajo declarado: migrar las medidas al lienzo de referencia.** Las medidas de la
-interfaz mezclan hoy píxeles con unidades `vw`, y pasan a escribirse contra el lienzo de 1280 x 720
-que fija `DECISIONS.md`, entrada del 2026-08-10 "Lienzo de referencia y modelo de capas". Vive acá
-y no en la Fase 5 porque esta fase reescribe las mismas funciones que la migración tiene que tocar,
-las que calculan el área de arrastre, la zona de notas, los puntos de nacimiento y la cobertura,
-más el molde que usa `vw`. Dos pasadas separadas sobre el mismo código es trabajo doble. La razón
-completa vive en `DECISIONS.md`, entrada del 2026-08-10 "La migración al lienzo sale de la Fase 5".
+**Primer trabajo declarado: normalizar lo que quedó del lienzo.** El cascarón lo entregó el
+incremento 5.6 de la Fase 5, y con él las funciones de área, zona de notas, puntos de nacimiento,
+cobertura y arrastre ya miden en píxeles de lienzo. Lo que queda acá es la segunda pieza: pasar cada
+medida y cada comentario restante a unidades de lienzo, y revisar que ninguna regla de CSS siga
+resolviendo contra la ventana. Vive acá porque esta fase reescribe esas mismas funciones al
+modularizar, y dos pasadas separadas sobre el mismo código es trabajo doble. Las razones completas
+viven en `DECISIONS.md`, entradas del 2026-08-10 "La migración al lienzo sale de la Fase 5" y "La
+migración al lienzo se parte en dos, y la primera mitad vuelve a la Fase 5".
 
 **Criterio de aceptación:** las 41 fixtures siguen pasando, la app abre desde `file://` sin
 servidor, el autor la corrobora en Chrome con el piano físico, y ningún archivo de código pasa las
