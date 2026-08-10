@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.58 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.60 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -194,7 +194,10 @@
            defecto es solo dónde arranca cada panel; no se dibuja ningún recuadro fantasma que
            la marque. No tapan la zona central de juego del teclado: van al borde superior y a
            las esquinas. Mover y resetear a esa posición son del incremento 5.3. */
-        .overlay-panel { background: rgba(30,41,59,0.92); backdrop-filter: blur(4px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+        /* El desenfoque de fondo se retiró: sobre un color plano no aporta nada visible y
+           cuesta una capa de composición por caja, que es lo que producía el texto borroso.
+           Volver a agregar un filtro acá reintroduce el problema (DECISIONS, 2026-08-10). */
+        .overlay-panel { background: rgba(30,41,59,0.92); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
         .ovl { position: fixed; z-index: 10; }
 
         /* --- Incremento 5.3, partes segunda y tercera: el molde, el movimiento y el chasis ---
@@ -207,7 +210,7 @@
         .widgets-row { display: contents; }
         .box {
             position: fixed; left: 0; top: 0; z-index: 10;
-            touch-action: none; cursor: grab; will-change: transform;
+            touch-action: none; cursor: grab;
         }
         .box.dragging { cursor: grabbing; }
         .widget {
@@ -279,9 +282,9 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.58</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.60</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
-            <button id="btn-menu-opciones" aria-expanded="false">⚙️ Opciones</button>
+            <button id="btn-menu-opciones" aria-expanded="false">Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
                 <!-- 1. Preajuste de aprendizaje: un solo control que mueve las tres ventanas
                      de tiempo (acumulación, retención, error visual). Split queda afuera:
@@ -296,7 +299,7 @@
                 </div>
                 <!-- 2. Los cuatro campos, reubicados desde el overlay de ajustes con sus id
                      intactos. El cableado por id sigue siendo el mismo. -->
-                <h3>⚙️ Ajustes del Motor <span class="advanced-badge">avanzado</span></h3>
+                <h3>Ajustes del Motor <span class="advanced-badge">avanzado</span></h3>
                 <div class="settings-grid">
                     <div class="setting-row"><label>Acumulación (ms)</label><input type="number" id="cfg-accum" value="120"></div>
                     <div class="setting-row"><label>Retención (ms)</label><input type="number" id="cfg-hold" value="2000"></div>
@@ -307,7 +310,13 @@
                 <!-- 3. "Centrar en Split", reubicado desde los controles del teclado y ya sin
                      hidden: este menú es el hogar que esperaba desde el parqueo. El
                      auto-centrado al cargar lo sigue auto-clickeando. -->
-                <button class="btn" id="btn-c4">🎯 Marcar el Split</button>
+                <button class="btn" id="btn-c4">Marcar el Split</button>
+                <!-- El interruptor de nombres de tecla vive junto al de nomenclatura porque son
+                     la misma superficie: la nomenclatura decide qué dice la etiqueta y esto
+                     decide si se muestra. Pertinente por legibilidad: la alfabética usa un
+                     carácter donde la silábica usa dos, y sobre el lienzo de 1280 la tecla
+                     blanca mide 24.6 px. -->
+                <div class="setting-row"><label for="cfg-nombres">Nombres de tecla</label><input type="checkbox" id="cfg-nombres" checked></div>
                 <!-- El reset de posiciones vivía acá de forma provisoria, mientras el menú de
                      widgets no existía. Ya existe, así que el reset se mudó ahí. -->
                 <hr class="menu-sep">
@@ -315,7 +324,7 @@
                      acciones y contenedor de log, con su JS intacto. Abrirla cuesta dos
                      clics y accionarla tres, dentro del techo escrito en el ROADMAP. -->
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <button class="btn" id="btn-console-toggle" aria-expanded="false">📋 Consola y Logs ▸</button>
+                    <button class="btn" id="btn-console-toggle" aria-expanded="false">Consola y Logs ▸</button>
                     <div class="console-actions" id="console-actions" hidden>
                         <button class="btn" id="btn-copy">Copiar</button>
                         <button class="btn btn-success" id="btn-export">Exportar .txt</button>
@@ -328,13 +337,13 @@
                  instancia y no por tipo, abiertas y cerradas. Cada fila trae abrir o cerrar,
                  opacidad y reset de esa instancia. Las filas las arma Widgets.pintar(), para
                  que el menú y el estado no se puedan desincronizar. -->
-            <button id="btn-menu-widgets" aria-expanded="false">🧩 Widgets</button>
+            <button id="btn-menu-widgets" aria-expanded="false">Widgets</button>
             <div class="menu-panel" id="menu-widgets" hidden>
                 <div id="wm-compiten"></div>
                 <hr class="menu-sep">
                 <div id="wm-sistema"></div>
                 <hr class="menu-sep">
-                <button class="btn" id="btn-reset-layout">↺ Restablecer todas las posiciones</button>
+                <button class="btn" id="btn-reset-layout">Restablecer todas las posiciones</button>
             </div>
         </nav>
 
@@ -345,10 +354,14 @@
         <div class="widgets-row">
             <!-- Widget de escala: la barra de universo entera, ahora en el molde, con la
                  vista de fórmula adentro. Contenido apilado para entrar en la caja. -->
+            <!-- El rótulo queda una sola vez, en el widget-tag, que es donde todas las cajas
+                 llevan su nombre. La línea de adentro lo repetía. "Universo" es el término
+                 primario y "escala" la aclaración entre paréntesis, según DECISIONS,
+                 2026-08-10. El paréntesis cae cuando SCALES gane una fórmula que no tenga
+                 siete grados: hoy las tres tienen siete, así que la aclaración es verdadera. -->
             <div class="box widget universe-bar overlay-panel" id="widget-escala">
-                <div class="widget-tag">Escala</div>
+                <div class="widget-tag">Universo (escala)</div>
                 <div style="display:flex; gap:10px; align-items:center;">
-                    <strong>🌌 Universo:</strong>
                     <select id="root-select"></select>
                     <select id="scale-select">
                         <option value="major">Mayor (Natural)</option>
@@ -357,7 +370,7 @@
                     </select>
                 </div>
                 <div class="formula-display" id="formula-display"></div>
-                <button id="btn-toggle-nom">Nomenclatura: Anglosajona</button>
+                <button id="btn-toggle-nom">Nomenclatura: Alfabética</button>
             </div>
             <!-- Widget readout: las tres lecturas del motor apiladas en una sola caja. -->
             <div class="box widget overlay-panel" id="widget-readout">
@@ -404,7 +417,7 @@
                 <div class="legend-item"><div class="l-box" style="background:#bae6fd; color:black">•</div> Escala <span class="duenio">widget de escala</span></div>
                 <div class="legend-item"><div class="l-box" style="background:#f59e0b; color:black">♦</div> Acorde <span class="duenio">salida del motor</span></div>
                 <div class="legend-item"><div class="l-box" style="background:#22c55e">✓</div> Correcto <span class="duenio">salida del motor</span></div>
-                <div class="legend-item"><div class="l-box" style="background:#f97316; color:white">!</div> Tensión Legal <span class="duenio">salida del motor</span></div>
+                <div class="legend-item"><div class="l-box" style="background:#f97316; color:white">!</div> Sensible (empuja a la tónica) <span class="duenio">salida del motor</span></div>
                 <div class="legend-item"><div class="l-box" style="background:#a855f7; color:white">~</div> Paso Cromático <span class="duenio">salida del motor</span></div>
                 <div class="legend-item"><div class="l-box" style="background:#ef4444">✕</div> Error <span class="duenio">salida del motor</span></div>
             </div>
@@ -416,7 +429,7 @@
              La escala se sigue coloreando sobre las teclas: renderKeyboard queda intacto. -->
         <div class="stage">
             <div class="falling-reserved">
-                <span class="reserved-label">🎵 Zona de notas que caen · reservado</span>
+                <span class="reserved-label">Zona de notas que caen · reservado</span>
             </div>
             <!-- OCULTO A PROPÓSITO EN EL INCREMENTO 5.6: los controles del escenario viven en
                  la capa 0, que es solo teclado y grilla de notas y no lleva controles
@@ -425,7 +438,7 @@
                  oculto. El camino de vuelta es el ítem de backlog que convierte a este control
                  y al panel "Fijar Acordes" en un widget que asista con los acordes. -->
             <div class="stage-controls" hidden>
-                <button class="btn btn-warning" id="btn-lock">🔓 Motor Automático</button>
+                <button class="btn btn-warning" id="btn-lock">Motor Automático</button>
                 <!-- "Centrar en Split" (btn-c4) vivía acá parqueado; en el 5.2 se mudó al
                      menú de Opciones de la barra, que era su hogar planeado. -->
             </div>
@@ -443,11 +456,11 @@
              función UI.lockChord). Va a tener su propio módulo en una fase posterior. No
              borrar: solo está oculto por el atributo hidden sobre el contenedor. -->
         <div class="panel" id="lock-chords-panel" hidden>
-            <h3>📚 Práctica: Fijar Acordes</h3>
+            <h3>Práctica: Fijar Acordes</h3>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
                 <button class="btn btn-success" onclick="UI.lockChord([48,52,55],'M')">Do Mayor</button>
                 <button class="btn btn-success" onclick="UI.lockChord([50,53,57,60],'m7')">Re Menor 7</button>
-                <button class="btn btn-danger" onclick="UI.unlockChord()">✕ Liberar</button>
+                <button class="btn btn-danger" onclick="UI.unlockChord()">Liberar</button>
             </div>
         </div>
 
@@ -474,7 +487,13 @@
 
         // --- ESTADO GLOBAL ---
         const State = {
-            config: { latino: false, accumMs: 120, holdMs: 2000, errMs: 1000, splitNote: 60 },
+            // `latino` guarda si la nomenclatura es silábica (Do Re Mi) o alfabética (C D E).
+            // El nombre interno se queda: renombrarlo es el punto de nombres internos de "Deuda
+            // de método y documentación" del ROADMAP, que pide su propio PR con las fixtures en
+            // verde. Cambiarlo acá dejaría a medias una migración de `midiTrainerCfg`.
+            // La nomenclatura silábica de este programa es DO FIJO: Do es siempre la nota Do, no
+            // el primer grado de la escala activa. Quien viene de do móvil espera lo contrario.
+            config: { latino: false, nombresTecla: true, accumMs: 120, holdMs: 2000, errMs: 1000, splitNote: 60 },
             universe: { root: 0, type: 'major', validPitches: new Set() },
             midi: { access: null, activeBasses: new Set(), activeMelodies: new Set(), keysDown: new Set(), sustainActive: false },
             harmony: { chord: null, isLocked: false },
@@ -523,7 +542,7 @@
             const txt = State.logHistory.map(l => `[${l.time}] ${l.cat}: ${l.msg} ${l.data ? JSON.stringify(l.data) : ''}`).join('\n');
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(txt)
-                    .then(() => SysLog('LAYOUT', `📋 Logs copiados al portapapeles (${State.logHistory.length} entradas)`))
+                    .then(() => SysLog('LAYOUT', `Logs copiados al portapapeles (${State.logHistory.length} entradas)`))
                     .catch(err => SysLog('LAYOUT', '⚠️ No se pudo copiar al portapapeles: ' + err));
             } else {
                 SysLog('LAYOUT', '⚠️ navigator.clipboard no disponible en este contexto');
@@ -568,7 +587,7 @@
             },
             handleSustain(isOn) {
                 State.midi.sustainActive = isOn;
-                SysLog('MIDI', `🎛️ Pedal Sustain: ${isOn ? 'ON' : 'OFF'}`);
+                SysLog('MIDI', `Pedal Sustain: ${isOn ? 'ON' : 'OFF'}`);
                 
                 if (!isOn) {
                     for (let note of State.midi.activeBasses) {
@@ -582,14 +601,14 @@
             },
             noteOn(note, vel) {
                 State.midi.keysDown.add(note); 
-                SysLog('MIDI', `↓ DOWN: ${getNoteStr(note).name} (${note})`);
+                SysLog('MIDI', `DOWN: ${getNoteStr(note).name} (${note})`);
                 if(note < State.config.splitNote) { State.midi.activeBasses.add(note); this.triggerAccumulation(); }
                 else { State.midi.activeMelodies.add(note); this.evaluateMelody(note); }
                 UI.renderKeyboard(); UI.updateStatus();
             },
             noteOff(note) {
                 State.midi.keysDown.delete(note); 
-                SysLog('MIDI', `↑ UP: ${getNoteStr(note).name} (${note})`);
+                SysLog('MIDI', `UP: ${getNoteStr(note).name} (${note})`);
                 if (State.midi.sustainActive) return; 
                 this.releaseNoteInternal(note, note < State.config.splitNote);
                 UI.renderKeyboard(); UI.updateStatus();
@@ -777,7 +796,7 @@
                     const esNegra = BLACK_KEYS.includes(pc);
                     const marca = (State.ui.marcaSplit && i === State.config.splitNote) ? ' split-mark' : '';
                     key.className = `key ${esNegra?'black':'white'} ${color}${marca}`;
-                    key.innerHTML = esNegra ? '' : `<span>${getNoteStr(i).name}</span>`;
+                    key.innerHTML = (esNegra || !State.config.nombresTecla) ? '' : `<span>${getNoteStr(i).name}</span>`;
                 }
             },
             updateStatus() {
@@ -817,13 +836,13 @@
 
                     const relEl = document.getElementById('chord-relation');
                     if (rel.relation === 'diatonic') {
-                        relEl.innerText = `✓ Diatónico · ${numeral}`;
+                        relEl.innerText = `Diatónico · ${numeral}`;
                         relEl.style.color = "#22c55e";
                     } else if (rel.relation === 'secondary_dominant') {
-                        relEl.innerText = `💡 ${numeral} (V del ${targetNumeral}) → empuja a ${getNoteStr(rel.targetPC).name}`;
+                        relEl.innerText = `${numeral} (V del ${targetNumeral}) empuja a ${getNoteStr(rel.targetPC).name}`;
                         relEl.style.color = "#f97316";
                     } else {
-                        relEl.innerText = `⚠ Intercambio Modal · ${numeral}`;
+                        relEl.innerText = `Intercambio Modal · ${numeral}`;
                         relEl.style.color = "#ef4444";
                     }
                 } else {
@@ -839,12 +858,12 @@
                 const root = notes[0]%12;
                 State.harmony.chord = { rootPC: root, type, bassPC: root, inversion: 'Fijado', rawNotes: notes, template: CHORD_TEMPLATES[type] };
                 State.harmony.isLocked = true;
-                const btn = document.getElementById('btn-lock'); btn.innerText = "🔒 Motor Pausado"; btn.className = "btn btn-success";
+                const btn = document.getElementById('btn-lock'); btn.innerText = "Motor Pausado"; btn.className = "btn btn-success";
                 this.clearEvaluations(); this.renderKeyboard(); this.updateStatus();
             },
             unlockChord() {
                 State.harmony.isLocked = false; State.harmony.chord = null;
-                const btn = document.getElementById('btn-lock'); btn.innerText = "🔓 Motor Automático"; btn.className = "btn btn-warning";
+                const btn = document.getElementById('btn-lock'); btn.innerText = "Motor Automático"; btn.className = "btn btn-warning";
                 this.clearEvaluations(); this.renderKeyboard(); this.updateStatus();
             }
         };
@@ -905,6 +924,18 @@
                 this.offsetY = (h - LIENZO_ALTO * this.escala) / 2;
                 const el = document.getElementById('lienzo');
                 el.style.transform = `translate(${this.offsetX}px, ${this.offsetY}px) scale(${this.escala})`;
+                // Reescribir el transform de cada caja abierta con LAS MISMAS coordenadas. Una
+                // capa de composición se rasteriza una vez, a la escala que había cuando se
+                // creó, y cambiar el transform de un ancestro no la invalida: la estira. Escribir
+                // el mismo valor la ensucia y la obliga a rasterizar a la escala nueva.
+                // Esto NO es lógica de reubicación por resize, que sigue prohibida: no recalcula
+                // ninguna posición, reescribe la que la caja ya tenía.
+                if (typeof Layout !== 'undefined' && Layout.estado) {
+                    CAJAS.forEach(c => {
+                        const e = Layout.estado[c.id];
+                        if (e && e.abierto) document.getElementById(c.id).style.transform = `translate(${e.x}px, ${e.y}px)`;
+                    });
+                }
                 const franjaH = Math.round(this.offsetX), franjaV = Math.round(this.offsetY);
                 SysLog('LAYOUT', `Lienzo (${motivo}): ventana ${w} x ${h}, escala min(${w}/${LIENZO_ANCHO}, ${h}/${LIENZO_ALTO}) = ${this.escala.toFixed(4)}, offset (${franjaH}, ${franjaV}).`);
                 SysLog('LAYOUT', `Franjas negras: ${franjaH} px a cada lado, ${franjaV} px arriba y abajo. El lienzo dibujado mide ${Math.round(LIENZO_ANCHO * this.escala)} x ${Math.round(LIENZO_ALTO * this.escala)} px de pantalla.`);
@@ -1285,7 +1316,7 @@
             document.getElementById('cfg-split').value = State.config.splitNote;
             
             const btnNom = document.getElementById('btn-toggle-nom');
-            btnNom.innerText = State.config.latino ? "Nomenclatura: Latina" : "Nomenclatura: Anglosajona";
+            btnNom.innerText = State.config.latino ? "Nomenclatura: Silábica" : "Nomenclatura: Alfabética";
 
             const rs = document.getElementById('root-select');
             (State.config.latino ? NOTES_ES : NOTES_EN).forEach((n,i) => { 
@@ -1353,7 +1384,8 @@
             
             btnNom.onclick = (e) => {
                 State.config.latino = !State.config.latino;
-                e.target.innerText = State.config.latino ? "Nomenclatura: Latina" : "Nomenclatura: Anglosajona";
+                e.target.innerText = State.config.latino ? "Nomenclatura: Silábica" : "Nomenclatura: Alfabética";
+                SysLog('LAYOUT', `Nomenclatura: ${State.config.latino ? 'silábica (Do Re Mi), do fijo' : 'alfabética (C D E)'}.`);
                 saveConfig(); 
                 const v = rs.value; rs.innerHTML='';
                 (State.config.latino ? NOTES_ES : NOTES_EN).forEach((n,i) => { const o=document.createElement('option'); o.value=i; o.innerText=n; rs.appendChild(o); });
@@ -1370,6 +1402,13 @@
                 UI.renderKeyboard();
                 SysLog('LAYOUT', `Marca del split ${State.ui.marcaSplit ? 'encendida' : 'apagada'} sobre la nota MIDI ${State.config.splitNote}.`);
             };
+            const chkNombres = document.getElementById('cfg-nombres');
+            chkNombres.checked = State.config.nombresTecla;
+            chkNombres.onchange = (e) => {
+                State.config.nombresTecla = e.target.checked;
+                saveConfig(); UI.renderKeyboard();
+                SysLog('LAYOUT', `Nombres de tecla ${State.config.nombresTecla ? 'encendidos' : 'apagados'} sobre las 52 blancas.`);
+            };
             document.getElementById('btn-clear').onclick = () => document.getElementById('logs-container').innerHTML='';
             document.getElementById('btn-export').onclick = exportLogsTxt;
             document.getElementById('btn-copy').onclick = copyLogsClipboard;
@@ -1385,7 +1424,7 @@
                 if (opening) { logsContainer.removeAttribute('hidden'); consoleActions.removeAttribute('hidden'); }
                 else { logsContainer.setAttribute('hidden',''); consoleActions.setAttribute('hidden',''); }
                 consoleToggle.setAttribute('aria-expanded', String(opening));
-                consoleToggle.innerText = opening ? '📋 Consola y Logs ▾' : '📋 Consola y Logs ▸';
+                consoleToggle.innerText = opening ? 'Consola y Logs ▾' : 'Consola y Logs ▸';
                 SysLog('LAYOUT', `Consola ${opening ? 'abierta' : 'colapsada'}`);
             };
 

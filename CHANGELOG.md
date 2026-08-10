@@ -2,6 +2,34 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.60 — 2026-08-10
+
+### Changed
+
+- `index.html`: incremento 5.4. Las dos opciones de nomenclatura pasan a "Silábica" y "Alfabética". El comentario deja escrito que la silábica de este programa es do fijo: Do es siempre la nota Do, no el primer grado de la escala activa.
+- `index.html`: "Tensión Legal" pasa a "Sensible (empuja a la tónica)". El nombre viejo prometía una familia de tensiones y el motor pinta una sola nota, en un solo tipo de universo, cuando no está escrita en él.
+- `index.html`: el rótulo del widget de escala queda una sola vez, en el `widget-tag`, que es donde toda caja lleva su nombre. Dice "Universo (escala)": término primario más aclaración.
+- `index.html`: doce emojis salen de rótulos de control, de lecturas y del log, según la regla nueva. Quedan los seis símbolos de la leyenda, el prefijo de aviso del log, el `↺` del reset por instancia y el del título.
+- `index.html`: los símbolos de veredicto dejan de reusarse como adorno. El botón "Liberar" y la lectura "Diatónico" usaban los mismos glifos que la leyenda enseña sobre las teclas.
+- `index.html`: la versión mostrada sube de V11.58 a V11.60.
+- `docs/ARCHITECTURE.md`: la sección de la leyenda adopta el nombre nuevo y cita la entrada que lo decidió.
+
+### Added
+
+- `index.html`: interruptor de nombres de tecla en el menú de Opciones, junto al control de nomenclatura porque son la misma superficie. Persiste con el resto de la configuración.
+- `CLAUDE.md`: la regla de iconos y emojis, en seis puntos, medidos sobre los 20 símbolos distintos que tenía el archivo. Lo que no encaja en ninguno se saca en el mismo PR que lo introduce.
+- `docs/DECISIONS.md`: entrada con el renombre de la sensible y su razón medida contra `evaluateMelodyStatus`, que exige cuatro condiciones a la vez.
+- `docs/DECISIONS.md`: entrada con el mecanismo del texto borroso. Una capa de composición se rasteriza una vez y cambiar el transform de un ancestro no la invalida: la estira.
+- `docs/GLOSARIO.md`: la sensible con sus tres capas, incluida cuándo la pinta el programa; las dos nomenclaturas; y la condición verificable que retira el paréntesis de "universo".
+- `docs/ROADMAP.md`: ítem de backlog nuevo. La leyenda no explica por qué una nota fuera del universo puede salir verde, que es el caso del tono conductor de una dominante secundaria.
+
+### Fixed
+
+- `index.html`: el texto quedaba borroso al redimensionar. Se reescribe el transform de cada caja abierta con las mismas coordenadas, que ensucia su capa y la obliga a rasterizar a la escala nueva. No recalcula ninguna posición.
+- `index.html`: se retiran el desenfoque de fondo de los paneles y la pista de composición de las cajas. Los dos promovían cada caja a capa propia, que es lo que hacía posible el borroso.
+
+El incremento 5.4 queda entregado. El nombre interno `latino` se deja como está a propósito: renombrarlo es el punto de nombres internos del ROADMAP, con su propio PR.
+
 ## v11.59 — 2026-08-10
 
 ### Added

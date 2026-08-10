@@ -65,8 +65,21 @@
 - **salida del motor**: el dato que el motor deriva y deja en el buffer. Lo consume cualquier
   superficie, el teclado incluido, y presentar no es recalcular. Fuente: 2026-08-09, *Mapa de
   términos*.
-- **Tensión Legal**: etiqueta de la leyenda que nombra un caso único, la sensible en universo menor.
-  El incremento 5.4 la renombra. Fuente: 2026-08-09, *Mapa de términos*.
+- **sensible**: la nota a un semitono por debajo de la tónica, la que hace que el oído espere volver
+  a ella. En la leyenda aparece como "Sensible (empuja a la tónica)"; antes se llamaba "Tensión
+  Legal", nombre que prometía una familia de tensiones y nombraba una sola nota. **Cuándo la pinta
+  este programa:** solo con las cuatro condiciones que `evaluateMelodyStatus` exige a la vez, que el
+  universo sea menor, que el pitch class esté un semitono debajo de la tónica, que la nota no
+  pertenezca al universo y que no pertenezca al acorde que suena. Por eso en un universo mayor ese
+  color no se enciende nunca. Fuente: 2026-08-10, *"Tensión Legal" pasa a "Sensible (empuja a la
+  tónica)"*.
+- **nomenclatura silábica**: nombrar las notas Do Re Mi. Es **do fijo**: Do es siempre la nota Do, no
+  el primer grado de la escala activa. Antes se llamaba "Latina" en pantalla. El nombre interno del
+  código sigue siendo `latino`, y renombrarlo es el punto de nombres internos de "Deuda de método y
+  documentación" del `ROADMAP.md`. Fuente: CHANGELOG v11.60.
+- **nomenclatura alfabética**: nombrar las notas C D E. Antes se llamaba "Anglosajona" en pantalla.
+  Usa un carácter donde la silábica usa dos, así que sobre teclas de 24.6 px de lienzo la elección
+  tiene consecuencia de legibilidad. Fuente: CHANGELOG v11.60.
 
 ## Medidas y geometría
 
@@ -98,7 +111,10 @@
 - **universo**: el conjunto de notas permitidas. Es el término primario también en pantalla, con
   "escala" como aclaración entre paréntesis: toda escala es un universo, no todo universo es una
   escala. Los nombres del motor, `universeType`, `universeRoot` y `universePitchesSet`, se quedan
-  como están, porque ese conjunto no siempre es una escala de siete notas. Fuentes: 2026-08-09,
+  como están, porque ese conjunto no siempre es una escala de siete notas. **Condición verificable
+  que retira el paréntesis:** que la constante `SCALES` de `src/engine.js` gane una entrada cuya
+  fórmula `f` no tenga siete grados. Hoy tiene tres entradas y las tres tienen siete, así que la
+  aclaración nace verdadera. Fuentes: 2026-08-09,
   *Mapa de términos*, y 2026-08-10, *Universo es el término primario, y escala la aclaración que se
   retira sola*, que corrige la parte de aquella que daba por hecho el renombre en pantalla.
 - **split**: la nota MIDI que separa mano izquierda de derecha, para que el motor sepa qué es bajo y

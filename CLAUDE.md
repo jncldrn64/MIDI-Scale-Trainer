@@ -164,6 +164,28 @@ El conteo de la regla 2 depende de su expresión regular: cambiarla cambia el n�
 comparación con la línea base. Si hace falta afinarla, se recalculan los tres archivos de una
 y se reescribe la regla con los valores nuevos y su fecha.
 
+## Iconos y emojis
+
+Seis reglas, medidas el 2026-08-10 sobre los 20 símbolos distintos que tenía `index.html`.
+
+1. Los seis símbolos de la leyenda, `•` `♦` `✓` `!` `~` `✕`, no son iconos decorativos. Son
+   feedback: se repiten sobre las teclas, se eligen por legibilidad a 24.6 px de lienzo y se
+   explican en la guía. Quedan fuera de esta regla, y cambiarlos es cambiar el feedback.
+2. Ninguno de esos seis se reusa como adorno en otro lado. Un `✓` en un botón o en una lectura
+   le enseña al usuario un significado que después contradice sobre el teclado.
+3. El rótulo de un control no lleva emoji. Un botón dice lo que hace con palabras.
+4. Un símbolo tipográfico sí puede ser el rótulo entero de un control cuando la palabra no
+   entra. El caso vivo es el `↺` del reset por instancia, que mide lo que mide una fila del
+   menú. Si hay lugar para la palabra, va la palabra.
+5. En el log se permite un solo prefijo, `⚠`, para marcar una línea de aviso. El log es texto
+   plano sin color ni columnas, así que el prefijo es lo único que distingue un aviso al leer
+   una corrida entera. Ningún otro símbolo va al log: la etiqueta de categoría ya dice de dónde
+   viene la línea.
+6. El `🎹` del título se queda. Es identidad de producto, aparece una sola vez y no rotula
+   ningún control.
+
+Un emoji que no encaje en ninguna de las seis se saca en el mismo PR que lo introduce.
+
 ## Guion largo
 
 Guion largo (`—`): prohibido en toda la prosa (regla 1 de no-ai-slop). Se permite únicamente
