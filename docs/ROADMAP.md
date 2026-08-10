@@ -355,7 +355,11 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   existe" de la deuda de método deja de estar suelto y lo toma este incremento. Y "Glosario vivo en
   vez de glosario congelado" deja de ser sugerencia: lo ejecutó el PR que creó `docs/GLOSARIO.md`, y
   lo que queda acá es poblarlo con los nombres de los artefactos que hoy no tiene nombre ningún
-  documento.
+  documento. Suma también el interruptor para encender y apagar los nombres de las teclas, que va
+  junto al selector de nomenclatura porque son la misma superficie de control. La razón que lo hace
+  pertinente y que no estaba escrita en ningún lado: la nomenclatura alfabética usa un carácter
+  donde la silábica usa dos, así que elegir nomenclatura tiene una consecuencia de legibilidad que
+  crece cuando la pantalla es chica.
 - Incremento 5.5, análisis honesto: la función tonal que la Fase 4 dejó en el buffer se muestra en
   el panel de Análisis junto al numeral y la relación, y la etiqueta "Intercambio Modal" se
   relabela a "no clasificado" o "por definir". Van juntos para no dejar un estado intermedio
@@ -396,13 +400,6 @@ conciencia.
 **Deuda verificada contra el código.** Lo que sigue no es impresión: cada punto se comprobó contra
 `index.html`.
 
-- El teclado dibuja 61 teclas, de la nota MIDI 36 a la 96, con las constantes `KEYBOARD_START` y
-  `KEYBOARD_END`. La documentación fija 88 teclas en cuatro lugares. Un piano de 88 va de la nota 21
-  a la 108. El código incumple lo escrito y hay que corregirlo.
-- El teclado ocupa demasiado alto para lo que aporta. Ningún documento fija su altura ni su posición,
-  así que no es un incumplimiento sino un hueco: queda como pregunta abierta cuánto alto merece el
-  teclado y si va pegado al borde inferior. Se decide junto con las 88 teclas, porque a más teclas
-  cada una sale más angosta y el alto necesario cambia.
 - Dos widgets existen solo como andamiaje y no tienen contenido: el tercer widget, rotulado por
   construir, y el widget de prueba. El segundo se creó porque el cap es de tres y sin un cuarto
   candidato la rama que bloquea una apertura no se puede ejercer desde la interfaz. Los dos nacen
@@ -753,6 +750,13 @@ prioridad, no porque la rueda la bloquee.
 - Que la leyenda de la guía se filtre sola, mostrando solo las categorías cuyos dueños estén
   abiertos. Bloqueado por el ítem anterior: filtrar una leyenda que describe colores que igual se
   pintan sería mentirle al usuario.
+- Alto del teclado configurable por el usuario. Hoy son 140 px de lienzo fijos. El techo está
+  calculado y escrito: 236 px de lienzo, porque a partir de ahí la zona de notas baja de 453.3 px y
+  los 170 px del molde se pasan del tope de tres octavos. Un control que deje elegir tiene que
+  frenar ahí o negociar el molde o el cap.
+- Ancho de la negra configurable. Hoy es 0.62 del ancho de la blanca. Los dos extremos ya están
+  medidos: a 0.58 es lo que usa un piano real, y a 0.80 el blanco visible entre negras cae a 4.9 px.
+  Es cosmético y no bloquea nada.
 - La precedencia entre el widget de escala y el de salida del motor cuando los dos reclaman el rojo,
   porque la nota se sale de la escala. Es un conflicto de dos dueños sobre el mismo color y todavía
   no tiene regla escrita.

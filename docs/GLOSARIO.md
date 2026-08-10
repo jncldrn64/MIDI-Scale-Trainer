@@ -50,10 +50,11 @@
 ## Contenido y superficies
 
 - **guía**: el tercer widget de sistema. Es la única caja que crece en vertical en vez de recortar su
-  texto, y esa es su única excepción escrita al molde. Nace en la columna derecha, bajo el tercer
-  punto de nacimiento. Adentro vive la leyenda de colores. No se le dice "leyenda": la leyenda es
-  contenido, la guía es la caja. Fuente: 2026-08-09, *Dónde nace la guía, y los dos únicos sinónimos
-  que valen*.
+  texto, y esa es su única excepción escrita al molde. Nace anclada al borde derecho, con 16 px de
+  margen, y a la mitad vertical de la zona de notas. Adentro vive la leyenda de colores. No se le
+  dice "leyenda": la leyenda es contenido, la guía es la caja. Fuente: 2026-08-10, *Geometría del
+  teclado de 88 teclas, y la barra no presenta lecturas*, que supera el nacimiento fijado en
+  2026-08-09, *Dónde nace la guía, y los dos únicos sinónimos que valen*.
 - **leyenda de colores**: la explicación de las seis categorías de color del teclado. Es contenido
   que vive dentro de la guía. No es una caja ni un widget. Fuente: 2026-08-09, *Dónde vive la
   leyenda de colores*.
@@ -72,7 +73,9 @@
   tecla. La capa 0 no lleva ningún control interactivo, y esa es su parte operativa: un botón ahí es
   deuda. **Capa 1**, los widgets, que flotan sobre la capa 0 con las notas pasando por detrás.
   **Capa 2**, el chrome: la barra de menús permanente, única zona vedada al movimiento de widgets.
-  Fuente: 2026-08-10, *Lienzo de referencia y modelo de capas*.
+  La capa 2 contiene comandos y no presenta lecturas: si un dato del motor tiene que verse, lo
+  muestra el widget que lo lee. Fuentes: 2026-08-10, *Lienzo de referencia y modelo de capas*, y
+  2026-08-10, *Geometría del teclado de 88 teclas, y la barra no presenta lecturas*.
 - **lienzo de referencia**: el marco de diseño de 1280 x 720 contra el que se escriben todas las
   medidas de la interfaz. Fuente: 2026-08-10, *Lienzo de referencia y modelo de capas*.
 - **escala del lienzo**: el factor único por el que se multiplica todo el contenido para llenar la
