@@ -18,9 +18,17 @@ Recién después se toca código.
 
 ## Documentación
 
-La documentación canónica vive en `docs/` y son tres archivos: `ARCHITECTURE.md`,
-`ROADMAP.md` y `DECISIONS.md`. No se crea ningún archivo de documentación nuevo sin
-preguntar primero.
+La documentación canónica vive en `docs/` y son cuatro archivos: `ARCHITECTURE.md`,
+`ROADMAP.md`, `DECISIONS.md` y `GLOSARIO.md`. No se crea ningún archivo de documentación
+nuevo sin preguntar primero.
+
+Regla de glosario: toda entrada de `docs/DECISIONS.md` que introduzca o refine un término
+escribe también su línea en `docs/GLOSARIO.md`, en el mismo PR. `DECISIONS.md` guarda por qué
+cambió y es append-only; `GLOSARIO.md` guarda qué significa hoy y se corrige.
+
+Criterio de entrada a una fase en curso: un ítem parqueado entra a una fase que ya arrancó solo
+si dejarlo afuera hace imposible ejecutar un incremento pendiente, o si obliga a rehacer trabajo
+ya entregado. La razón vive en `docs/DECISIONS.md`, entrada del 2026-08-10.
 
 Excepción por categoría: un `README.md` de subcarpeta documenta su propia carpeta y no
 cuenta como doc canónico. `tests/README.md` explica cómo correr las fixtures; un futuro

@@ -1081,6 +1081,161 @@ refine un término agrega su línea de la misma forma.
 
 ---
 
+## 2026-08-10 — Dueño de superficie: cerrar el widget apaga su efecto
+
+**Contexto:** el teclado pinta seis categorías de color y ninguna tenía autor declarado. Con los
+widgets ya cerrables desde la tercera parte del incremento 5.3, la pregunta se volvió concreta: si
+el usuario cierra el widget que produce un color, el color no debería seguir apareciendo solo.
+
+**Decisión:** toda superficie de salida tiene un widget dueño, y cerrar el dueño apaga su efecto.
+El reparto de las seis categorías del teclado, con los colores que `ARCHITECTURE.md` §5.1 verificó:
+
+| Categoría | Color | Dueño |
+|---|---|---|
+| Escala | `#bae6fd` | widget de escala |
+| Acorde | `#f59e0b` | widget de salida del motor |
+| Correcto | `#22c55e` | widget de salida del motor |
+| Tensión Legal | `#f97316` | widget de salida del motor |
+| Paso Cromático | `#a855f7` | widget de salida del motor |
+| Error | `#ef4444` | widget de salida del motor |
+
+La guía es donde el usuario averigua quién produce cada efecto y contra quién compite. Esa es la
+razón de fondo por la que la leyenda vive ahí y no debajo del teclado.
+
+**Regla de comunicación entre widgets:** los widgets no se hablan entre sí. Un dato tiene un autor
+y muchos lectores. El widget de escala es el editor de la escala, no su dueño: el motor la lee del
+estado compartido y la sigue leyendo con ese widget cerrado. La cuenta que sostiene la regla: con
+widgets que se hablan de a pares, cada widget nuevo tiene que conocer a todos los anteriores y el
+número de canales crece con el cuadrado. Con estado compartido y un autor por dato, un widget nuevo
+no conoce a ninguno.
+
+**Refinación, no corrección:** la frase de `ROADMAP.md` que dice que el teclado consume el buffer
+aparte, coloreando sus teclas como cualquier otro consumidor, queda refinada. El teclado pinta por
+delegación de los widgets, no por voluntad propia. La frase no era falsa, era incompleta.
+
+**Distinción explícita:** esto no es el ítem de backlog "Apagar los efectos del fondo", que es un
+interruptor de display a elección del usuario y sigue en backlog. Acá el color no se apaga, deja de
+existir porque su autor no está en pantalla. Es propiedad, no preferencia. La misma distinción vale
+contra la frase del Alcance de la Fase 5 que dice que el coloreo no se apaga: esa frase habla de un
+interruptor global, y su propia razón, que el coloreo existe porque los widgets planeados dependen
+de él, es la que sostiene que el coloreo siga a los widgets.
+
+**Esta entrada no trae cambio de código.** Lo que obedece hoy es la documentación. Hacer que
+`renderKeyboard` obedezca el reparto está en el BACKLOG del `ROADMAP.md`.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-10 — Lienzo de referencia y modelo de capas
+
+**Contexto:** las medidas de la interfaz mezclan píxeles con unidades `vw`, y ningún archivo dice
+contra qué tamaño de ventana se escribieron. Tampoco estaba escrito el modelo de capas, aunque el
+código lo implementa desde el incremento 5.1.
+
+**Decisión:** se diseña sobre un lienzo de 1280 x 720. La app calcula
+`escala = min(anchoVentana / 1280, altoVentana / 720)` y escala el contenido entero por ese factor
+único. Lo que sobra queda en negro, arriba y abajo o a los lados, como un archivo de video con otra
+relación de aspecto. No hay comportamiento responsive: ningún elemento se reacomoda, se reordena ni
+cambia de tamaño relativo al escalar. Todo mantiene sus proporciones.
+
+**Razón:** con lienzo estático hay un solo número que cambia con la ventana. Con comportamiento
+responsive, cada medida escrita pasa a ser condicional y cada regla nueva tiene que declarar qué
+hace en cada rango. La v11.0 que este proyecto reconstruye reemplazó a una v11.5 que era una
+interfaz responsive líquida, según la entrada del 2026-07-03 "Base de reconstrucción: v11.0, no
+v11.5". Ese precedente es el que se está evitando.
+
+**Por qué 1280 x 720:** es la resolución 16:9 más chica de uso corriente, así que es el caso peor de
+legibilidad y todo lo demás escala hacia arriba. La aritmética que sostiene la elección: las 52
+teclas blancas del teclado que la documentación fija reparten 1280 en 24.6 px de lienzo por tecla,
+y a 1920 de ancho real eso son 36.9 px. `buildKeyboard` ya tiene la constante `W_WIDTH` fija en 36.
+O sea que el teclado ya estaba dimensionado para 1080p sin que nadie lo hubiera decidido. Este
+párrafo usa ese número como evidencia y no abre la deuda del rango del teclado, que sigue como
+está.
+
+**Modelo de capas**, que hasta hoy no estaba escrito en ningún archivo:
+
+- **Capa 0, fondo.** El teclado y la grilla de notas que caen. Están en el mismo plano y se alinean
+  1 a 1: cada columna de la grilla cae sobre su tecla, y por eso el teclado tiene que llegar de
+  borde a borde. Nada más vive en esta capa, y en particular ningún control interactivo.
+- **Capa 1, widgets.** Los que compiten por el cap y los de sistema. Flotan sobre la capa 0 y las
+  notas pasan por detrás.
+- **Capa 2, chrome.** La barra de menús permanente, siempre arriba, única zona vedada al movimiento
+  de widgets.
+
+**Consecuencia:** la leyenda de colores no puede vivir en la capa 0 debajo del teclado, porque esa
+capa es solo teclado y grilla. Su hogar es la guía, que es capa 1.
+
+**Alcance:** esta entrada fija la base y la fórmula. No decide el alto del teclado, que se elige
+mirando un boceto, y no migra las medidas existentes. Esa migración es el incremento 5.6 y no trae
+código en este PR.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-10 — Jerarquía de menús: el tres es techo y también es piso
+
+**Contexto:** el `ROADMAP.md` fija dentro del incremento 5.2 un techo de tres clics para todo lo que
+alguien use mientras toca, y en el mismo ítem declara una desviación consciente: el log quedó
+alcanzable porque la barra tenía un solo nivel y no había nada detrás de lo cual esconderlo. La
+barra ya creció: hoy tiene Opciones y Widgets.
+
+**Decisión:** la barra tiene tres entradas en el primer nivel, `Opciones`, `Widgets` y `Ayuda`, y
+las tres dejan su contenido a dos clics. El log de desarrollo cuelga de
+`Ayuda > Acerca de > Desarrollo`, o sea a cuatro clics. `Ayuda` todavía no existe en el código: esta
+entrada decide el destino, no describe el presente.
+
+**El número tres funciona de las dos formas**, y eso es lo que hace la regla útil. Es techo para
+todo lo que alguien use mientras toca. Y es piso para lo que no debería encontrar quien solo quiere
+tocar: el log no está oculto porque esté escondido, está oculto porque cuesta más de tres clics.
+Con esto se cierra la desviación que el propio ROADMAP declaró.
+
+**Por qué `Ayuda` y no `Opciones` para colgar `Acerca de`:** `Opciones` es lo que se toca mientras
+se toca y está sujeto al techo. Meterle un submenú de dos niveles lo vuelve un menú de profundidad
+mixta, donde el usuario no sabe si lo que busca está a dos clics o a cuatro.
+
+**Decisión emparejada:** el hogar del control de split es el widget de salida del motor y no el menú
+de Opciones, porque quien consume ese valor es el motor. La mudanza es trabajo futuro.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-10 — Criterio de entrada de un ítem parqueado a una fase en curso
+
+**Contexto:** la Fase 5 ya se reabrió una vez, según su propia nota de reapertura del 2026-07-25, y
+el backlog creció durante su ejecución. El `ROADMAP.md` tiene anotado como hueco que no existe
+criterio escrito para promover un ítem a fase, y este es el primero de esos huecos que se cierra.
+
+**Decisión:** un ítem parqueado entra a una fase en curso solo si dejarlo afuera hace imposible
+ejecutar un incremento pendiente, o si obliga a rehacer trabajo ya entregado. Todo lo demás se queda
+donde está, aunque sea buena idea y aunque el momento parezca oportuno.
+
+**Razón:** sin criterio, cada idea que aparece a mitad de fase parece obligatoria, y una fase que
+absorbe todo lo que se le cruza no cierra nunca.
+
+**Aplicación inmediata:** entran al alcance de la Fase 5 dos ítems que ya estaban escritos en la
+sección "Deuda de método y documentación" del `ROADMAP.md`, "Nomenclatura de lo que ya existe" y
+"Glosario vivo en vez de glosario congelado". Los dos porque el incremento 5.4 renombra cosas, y no
+se puede renombrar lo que ningún documento nombra ni fijar un nombre en un archivo que no se puede
+editar.
+
+No entran: barra de menús auto-ocultable, detección del rango MIDI real del dispositivo, glosario
+in-app, widgets como motores adicionales, subtítulos parcialmente coloreables, apagar los efectos
+del fondo.
+
+**Tensión declarada en vez de disimulada:** este mismo PR le agrega a la Fase 5 el incremento 5.6,
+la migración de medidas al lienzo. Por el criterio de arriba no habría entrado, porque no bloquea al
+5.4 ni al 5.5. Entra igual por otra razón, que se dice acá para que quede a la vista: el lienzo es
+una decisión de esta fase y dejar la migración afuera la volvería una decisión sin ejecución, que es
+la forma exacta en que se perdió la v11.5. Si el autor prefiere moverla al BACKLOG o a la Fase 5B,
+esta entrada es el lugar donde se ve qué se está negociando.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
