@@ -22,7 +22,6 @@ body { background: #000; color: var(--text-main); height: 100vh; overflow: hidde
     background: var(--bg-main); overflow: hidden;
     --w-widget: 314.4px;
 }
-.container { max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
 
 /* --- Fase 5, incremento 5.2: barra de menús permanente ---
    Fija arriba, de borde a borde, por encima de los overlays y siempre visible.
@@ -86,7 +85,9 @@ select:hover, button:hover { background: #475569; }
    bajan al secundario desde JavaScript, y esa es la única diferencia permitida. El
    amarillo que había acá distinguía dos lecturas de las otras dos sin ninguna razón,
    contra la regla 2 de "Colores" de CLAUDE.md. */
-.status-value { font-size: 1.6em; font-weight: 800; color: var(--text-main); }
+/* Sin font-size: las cuatro lecturas viven adentro del widget y `.widget .status-value`
+   lo pisa siempre por especificidad, así que el 1.6em que había acá no se aplicaba nunca. */
+.status-value { font-weight: 800; color: var(--text-main); }
 
 /* Teclado Full Width */
 /* El teclado llega de borde a borde: sin relleno lateral, sin centrado y sin
@@ -172,13 +173,14 @@ select:hover, button:hover { background: #475569; }
 .l-box { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; flex: 0 0 auto; }
 
 /* --- Fase 5, incremento 5.1: fondo único mas overlays en posición por defecto ---
-   El teclado y la zona de notas que caen son una sola capa de fondo fija a viewport
-   completo; los paneles pasan a overlays quietos encima. Sin mecánica de widgets
+   El teclado y la zona de notas que caen son una sola capa de fondo que toma el lienzo
+   entero; los paneles pasan a overlays quietos encima. Sin mecánica de widgets
    todavía: mover, opacidad, apagar, reset y menú llegan en el incremento 5.3.
    renderKeyboard y el coloreo de teclas no se tocan. */
 
-/* Fondo único: capa fija que toma el viewport entero, detrás de todo (z-index en el
-   piso). El teclado va a la franja de abajo a todo el ancho; la zona de notas que caen
+/* Fondo único: capa que toma el lienzo entero, detrás de todo (z-index en el piso).
+   Sigue siendo `position: fixed`, pero desde el incremento 5.6 su bloque contenedor es
+   el cascarón transformado y no la ventana, así que se estira contra el lienzo. El teclado va a la franja de abajo a todo el ancho; la zona de notas que caen
    llena el alto entre el borde superior y el teclado, como notas que caen hacia él. */
 /* El relleno del escenario no llega al teclado: la capa 0 es teclado más grilla, y el
    teclado va de borde a borde y pegado al borde inferior. Por eso el relleno se

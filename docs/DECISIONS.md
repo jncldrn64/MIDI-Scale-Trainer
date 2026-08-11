@@ -2020,6 +2020,37 @@ parte, porque esos métodos habían dejado index.html, y hoy además el objeto n
 
 ---
 
+## 2026-08-11 — La tercera pieza de la Fase 5B era chica, y se dice
+
+**Contexto:** el `ROADMAP.md` describía el tercer trabajo de la Fase 5B como pasar cada medida y cada
+comentario restante a unidades de lienzo, y revisar que ninguna regla de CSS siguiera resolviendo
+contra la ventana. Esa descripción se escribió el 2026-08-10, cuando el cascarón todavía no existía y
+se suponía que quedaba mucho por migrar.
+
+**El barrido dice otra cosa.** Sobre las catorce piezas de código quedaba una sola lectura de la
+ventana, la del cálculo de la escala en `lienzo.js`, que es el único lugar que debe leerla y cuyo
+comentario ya lo declaraba; una sola unidad de viewport en el CSS, la altura del `body`; las dos
+apariciones de `getBoundingClientRect` son comentarios que explican por qué no se usa; y las
+mediciones contra el DOM que quedan son `offsetWidth` y `offsetHeight`, previas a la transformación y
+por lo tanto ya en unidades de lienzo. La migración la había hecho el cascarón del incremento 5.6.
+
+**Decisión: se entrega lo que hay, cuatro restos, y se dice que era chica.** La alternativa, buscarle
+volumen a la pieza para que el trabajo entregado se pareciera a su descripción, es lo contrario de lo
+que este repo viene haciendo desde el 2026-08-09. Los cuatro restos son el teclado midiendo su
+contenedor en vez de usar `LIENZO_ANCHO`, una regla `.container` con un tope de 1600 px que adentro de
+1280 no puede activarse nunca, tres comentarios que decían que el fondo toma el viewport cuando toma
+el lienzo, y un `font-size` de CSS inalcanzable por especificidad.
+
+**Lo que esto deja escrito para la próxima vez.** Una descripción de trabajo futuro predice su tamaño,
+y una predicción escrita meses antes puede errarle por mucho. Cuando la pieza llega, lo que manda es
+la medición, y la diferencia se escribe en vez de disimularse. Es la misma familia de error que el
+2026-08-11 corrigió en el §7 con `<script type="module">`: una frase escrita por adelantado que
+nadie volvió a contrastar contra el estado real.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

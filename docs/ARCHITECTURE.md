@@ -35,7 +35,7 @@ State = {
 ```
 
 El estado es único y centralizado. No hay framework ni proxy reactivo. El render se
-dispara a mano llamando `UI.renderKeyboard()` y `UI.updateStatus()` después de cada
+dispara a mano llamando `Teclado.renderKeyboard()` y `Readout.updateStatus()` después de cada
 mutación. Esto alcanza porque el volumen de mutaciones por segundo es bajo: eventos MIDI
 de dedos humanos, no un loop de animación a 60 fps.
 
@@ -44,9 +44,12 @@ de dedos humanos, no un loop de animación a 60 fps.
 | Módulo | Responsabilidad | Toca el DOM | Vive en |
 |---|---|---|---|
 | `MathEngine` | Detección de acordes, diatonismo | No, función pura | `src/engine.js` |
-| `MIDI` | Recibe eventos hardware, actualiza `State`, dispara evaluación | Indirecto (llama a `UI.*`) | `index.html` |
-| `UI` | Construye y pinta el teclado, actualiza paneles | Sí | `index.html` |
-| `SysLog` / config | Logs y persistencia | Sí (logs) / localStorage (config) | `index.html` |
+| `MIDI` | Recibe eventos hardware, actualiza `State`, dispara evaluación | Indirecto | `src/midi.js` |
+| `Escala` | Escribe el universo activo y dibuja la fórmula | Sí | `src/escala.js` |
+| `Teclado` | Construye las 88 teclas y las pinta | Sí | `src/teclado.js` |
+| `Readout` | Presenta la salida del motor | Sí | `src/readout.js` |
+| `Armonia` | Manda sobre el buffer de armonía y el de evaluaciones | Sí (botón) | `src/armonia.js` |
+| `SysLog` / config | Logs y persistencia | Sí (logs) / localStorage (config) | `src/log.js`, `src/state.js` |
 
 `MathEngine.detectChord` y `MathEngine.isDiatonic` no leen `State` ni el DOM. Reciben
 argumentos y devuelven datos. Desde la extracción del 2026-07-04 (ver `DECISIONS.md`),
@@ -55,9 +58,9 @@ argumentos y devuelven datos. Desde la extracción del 2026-07-04 (ver `DECISION
 `applyPassingTone`; las Fases 3 y 4 sumaron `getRomanNumeral`,
 `isSecondaryDominantLeadingTone`, `getTonalFunction` y `scaleDegreesOrdered`, y `scalePitches`
 ya estaba. Son ocho, y la lista viva es el bloque de exports al final del archivo. El
-resto (`State`, `MIDI`, `UI`, `SysLog`) sigue en `index.html`. Cualquier lógica nueva de
+resto se repartió por permiso en la Fase 5B, y `index.html` quedó como markup. Cualquier lógica nueva de
 teoría musical (grados romanos, prioridad de reglas armónicas) va en `src/engine.js`, no en
-`UI` ni en `MIDI`. Esa es la línea que mantiene las fixtures corriendo en Node contra el
+los objetos de interfaz ni en `MIDI`. Esa es la línea que mantiene las fixtures corriendo en Node contra el
 mismo código que usa el navegador.
 
 ## 3. Flujo de evento MIDI (verificado)
@@ -67,7 +70,7 @@ noteOn(note, vel)
   → keysDown.add(note)
   → si note < splitNote:  activeBasses.add(note) → triggerAccumulation()
   → si note >= splitNote: activeMelodies.add(note) → evaluateMelody(note)
-  → UI.renderKeyboard() + UI.updateStatus()
+  → Teclado.renderKeyboard() + Readout.updateStatus()
 
 triggerAccumulation()
   → espera accumMs (debounce, 120ms por defecto)
@@ -182,7 +185,7 @@ la renombró a "Sensible (empuja a la tónica)", con la razón medida contra el 
 
 ## 7. No framework, por ahora
 
-Desde la v11.69 el código son quince archivos: `index.html`, que quedó como markup, más catorce bajo
+Desde la v11.70 el código son quince archivos: `index.html`, que quedó como markup, más catorce bajo
 `src/`. El motor puro sigue en `src/engine.js` (`MathEngine` y las funciones de teoría), los
 estilos en `src/estilos.css`, y el script que vivía adentro de `index.html` se repartió en trece
 archivos, cargados como scripts clásicos en este orden: `config.js`, `state.js`, `log.js`,
@@ -216,13 +219,14 @@ las tres partes de la decisión viven en `DECISIONS.md`, entrada del 2026-08-11 
 cargan desde `file://`, y el umbral deja de prescribir". Esa misma entrada retira el segundo
 gatillo que este párrafo tenía, "o el estado se vuelve difícil de razonar", por no tener medida.
 
-**El umbral se cruzó y la partición ya lo bajó.** Antes, medido el
+**El umbral se cruzó y la Fase 5B ya lo bajó.** Antes, medido el
 2026-08-11: `index.html` tenía 1524 líneas totales, 126 vacías y 227 de comentario, o sea 1171 de
-código y markup. Después de la v11.69: 246 totales, 9 vacías y 25 de comentario, o sea 212. El
+código y markup. Después de la v11.70: 246 totales, 9 vacías y 25 de comentario, o sea 212. El
 archivo más grande es `src/layout.js` con 304 líneas, y ninguno se acerca a las 1000. El
 gatillo se cumplió durante la Fase 5, con el trabajo visual en curso, y se decidió terminar esa
 fase antes de tocarlo. La partición es la Fase 5B del `ROADMAP.md`, entre la Fase 5 y la Fase 6.
-Este párrafo se borra cuando la 5B cierre.
+La 5B cerró el 2026-08-11 con la v11.70, así que este párrafo queda como el registro de que
+el umbral se disparó una vez y se atendió.
 
 El conteo se recalcula con estos tres comandos, y el de código y markup es la resta:
 

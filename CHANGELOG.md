@@ -2,6 +2,24 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.70 — 2026-08-11
+
+### Changed
+
+- `src/teclado.js`: el ancho de la blanca y el del teclado salen de `LIENZO_ANCHO` y ya no de medir el contenedor. Daba el mismo número, pero un relleno o un borde lateral en ese contenedor lo habría cambiado en silencio.
+- `src/estilos.css`: se borra la regla `.container` entera, con su tope de 1600 px de la era anterior al lienzo. Adentro de 1280 px fijos ese tope no puede activarse nunca, y el flex, el gap y el centrado no tenían efecto.
+- `src/estilos.css` e `index.html`: tres comentarios decían que el fondo es una capa fija que toma el viewport entero. Toma el lienzo desde el incremento 5.6, porque su bloque contenedor es el cascarón transformado.
+- `src/estilos.css`: `.status-value` pierde su `font-size`. Las cuatro lecturas viven dentro del widget y `.widget .status-value` lo pisaba siempre por especificidad, así que el 1.6em no se aplicaba nunca.
+- `docs/ARCHITECTURE.md`: los §1, §2 y §3 seguían diciendo que `UI` construye el teclado y que todo vive en `index.html`. Las dos cosas dejaron de ser ciertas con la partición.
+
+### Added
+
+- `docs/DECISIONS.md`: la tercera pieza de la Fase 5B era chica y se dice, en vez de inventarle volumen para que el trabajo se pareciera a su descripción. La migración la había hecho el cascarón.
+
+La Fase 5B queda `cerrada (2026-08-11)`. Sus tres trabajos: el contrato de permisos con la v11.66, la partición con la v11.67 y la v11.69, y los restos del lienzo con esta.
+
+Medido antes de tocar nada: queda una sola lectura de la ventana en toda la app, la del cálculo de la escala; una sola unidad de viewport en el CSS, la altura del `body`; y las dos apariciones de `getBoundingClientRect` son comentarios que explican por qué no se usa.
+
 ## v11.69 — 2026-08-11
 
 ### Changed

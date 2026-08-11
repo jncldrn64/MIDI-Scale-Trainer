@@ -14,14 +14,17 @@ const Teclado = {
     // la necesita. El resto de las medidas sigue como está.
     buildKeyboard() {
         const kb = document.getElementById('keyboard');
-        const wrapper = document.getElementById('keyboard-wrapper');
         kb.innerHTML = '';
         const whites = [];
         for(let i=KEYBOARD_START; i<=KEYBOARD_END; i++) {
             if(!BLACK_KEYS.includes(i%12)) whites.push(i);
         }
 
-        const anchoBlanca = wrapper.clientWidth / whites.length;   // el contenedor mide el lienzo entero
+        // El ancho sale de la constante del lienzo, no de medir el contenedor. Medirlo daba
+        // el mismo número porque el contenedor ocupa el lienzo entero, pero era una medición
+        // indirecta de una constante que ya existe: un relleno o un borde lateral en ese
+        // contenedor cambiaría el ancho de la tecla en silencio y nadie lo ataría a su causa.
+        const anchoBlanca = LIENZO_ANCHO / whites.length;
         // El alto son 140 px de lienzo planos. La fórmula de escala que había acá se
         // borró: era el lienzo aplicado por adelantado a este único número, y ahora el
         // cascarón escala todo. Dejar las dos cosas aplicaría la escala dos veces.
@@ -32,7 +35,7 @@ const Teclado = {
         const anchoNegra = anchoBlanca * 0.62, altoNegra = altoBlanca * 0.62;
         const fuente = Math.max(6, Math.round(anchoBlanca * 0.34));
 
-        kb.style.width = `${wrapper.clientWidth}px`;
+        kb.style.width = `${LIENZO_ANCHO}px`;
         kb.style.height = `${altoBlanca}px`;
         kb.style.setProperty('--sym', `${Math.round(anchoBlanca * 0.72)}px`);
 
@@ -50,7 +53,7 @@ const Teclado = {
                 d.style.left=`${(prevW*anchoBlanca)-(anchoNegra/2)}px`; kb.appendChild(d);
             }
         }
-        SysLog('LAYOUT', `Teclado de ${KEYBOARD_END - KEYBOARD_START + 1} teclas (MIDI ${KEYBOARD_START} a ${KEYBOARD_END}), ${whites.length} blancas, de borde a borde en ${Math.round(wrapper.clientWidth)} px.`);
+        SysLog('LAYOUT', `Teclado de ${KEYBOARD_END - KEYBOARD_START + 1} teclas (MIDI ${KEYBOARD_START} a ${KEYBOARD_END}), ${whites.length} blancas, de borde a borde en ${LIENZO_ANCHO} px.`);
         SysLog('LAYOUT', `Ancho de blanca ${anchoBlanca.toFixed(2)} px; negra ${anchoNegra.toFixed(2)} px al 0.62, deja ${(anchoBlanca - anchoNegra).toFixed(1)} px de blanco visible entre negras.`);
         SysLog('LAYOUT', `Alto de blanca ${altoBlanca} px de lienzo, negra ${Math.round(altoNegra)} px. Planos: el cascarón del lienzo aplica la escala una sola vez.`);
         this.renderKeyboard();
