@@ -2,6 +2,29 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.66 — 2026-08-11
+
+### Added
+
+- `docs/DECISIONS.md`: el contrato de permisos, primer trabajo de la Fase 5B. Tres niveles: el sistema posee los valores, un widget con permiso de escritura los cambia, y uno de solo lectura lee y presenta. Hoy el único con escritura es el widget de escala, sobre el universo.
+- `docs/DECISIONS.md`: por qué eso no contradice que los widgets no se hablen entre sí. El de escala afecta lo que el de salida del motor muestra y nunca lo llama: escribe en el sistema y el otro lee del sistema.
+- `docs/DECISIONS.md`: los dos efectos sobre las teclas con su dueño, veredicto y etiqueta, más el marcador del split anotado como hueco sin dueño de widget. El color y el símbolo son una sola señal, definida en la misma regla de CSS.
+- `docs/DECISIONS.md`: compartir un efecto se permite solo con precedencia escrita. La cascada de cuatro ramas de `UI.renderKeyboard`, acorde, veredicto, nota activa y escala, queda como la primera precedencia escrita del repo.
+- `docs/DECISIONS.md`: el criterio de corte de la partición. Se corta donde cambia el permiso, y con eso el objeto de layout es sistema, porque ningún widget tiene permiso sobre abrir, cerrar, mover, persistir ni medir.
+- `docs/ROADMAP.md`: tres ítems de backlog. Log filtrable por categoría, la guía compuesta por secciones que aporta cada widget, y el feedback leyendo del log en vez de escribirle.
+- `docs/GLOSARIO.md`: seis términos con su sección, valor del sistema, permiso de escritura, widget de solo lectura, efecto veredicto, efecto etiqueta y precedencia de efecto.
+
+### Changed
+
+- `docs/DECISIONS.md`: se acota la regla de autoría del 2026-08-10, que hoy está incumplida. Habla de widgets, no del código interno del sistema: dos partes del sistema pueden escribir la misma rama del estado porque el sistema es un solo autor con varias manos.
+- `docs/ROADMAP.md`: el primer trabajo de la Fase 5B queda marcado como entregado, con puntero a las dos entradas. Lo de los entrenamientos queda diferido con su disparador, que es que exista el primero.
+- `docs/ROADMAP.md`: dos decisiones de la partición escritas y no ejecutadas. El CSS sale a su propio archivo, 270 líneas; el markup no puede salir, porque sin ES Modules y sin build no hay forma de incluir un fragmento de HTML desde otro archivo.
+- `docs/ROADMAP.md`: el ítem de que la leyenda se filtre sola queda absorbido por el de la guía compuesta por secciones, que pide lo mismo y más. La referencia cruzada del ítem que lo citaba se reapunta.
+
+Medido al escribir el contrato: el universo no persiste. `saveConfig` guarda solo `State.config`, así que cada recarga vuelve a Do mayor. Si debería persistir no se decide acá.
+
+La versión mostrada sigue en V11.63; el desfase lo cierra el próximo PR de código.
+
 ## v11.65 — 2026-08-11
 
 ### Fixed

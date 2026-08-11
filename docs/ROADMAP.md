@@ -498,14 +498,31 @@ la Fase 5 completa y antes de la Fase 6.
 `src/engine.js` se queda como está: ya es el motor puro y corre en Node contra las fixtures. La app
 tiene que seguir abriendo desde `file://`.
 
-**Primer trabajo: el contrato de widgets y entrenamientos.** Doc-only, antes de tocar una línea de
-código. Es el documento que "Deuda de método y documentación" ya reclama, y que hay que atar a
-propósito con la nota de contrato de salida parqueada en la Fase 9 para no terminar con dos
-documentos que dicen lo mismo con sentidos distintos.
+**Primer trabajo: el contrato de permisos. Entregado el 2026-08-11.** Doc-only, antes de tocar una
+línea de código. Vive en `DECISIONS.md`, entradas del 2026-08-11 "El contrato de permisos: sistema,
+permiso de escritura y solo lectura" y "Los efectos sobre las teclas, y la primera precedencia
+escrita del repo". Fija tres niveles de permiso, qué efectos hay sobre las teclas y con qué dueño, y
+que compartir un efecto se permite solo con precedencia escrita.
+
+Lo de los entrenamientos queda diferido a propósito, no olvidado: qué pueden alterar, su formato y
+cómo se registran se definen de forma colateral cuando exista el primero, y ese es el disparador.
+Cuando llegue hay que atarlo a la nota de contrato de salida parqueada en la Fase 9, para no
+terminar con dos documentos que dicen lo mismo con sentidos distintos.
 
 **Segundo trabajo: la partición.** Con el contrato en la mano los cortes se deducen en vez de
-discutirse. La separación que `ARCHITECTURE.md` §2 documenta, `State`, `MIDI`, `UI` y `SysLog`, es
-el punto de partida, no el resultado: el contrato puede moverla.
+discutirse: **se corta donde cambia el permiso.** Lo que es sistema va junto, lo que tiene permiso de
+escritura va junto, y lo que solo lee y presenta va junto. La separación que `ARCHITECTURE.md` §2
+documenta, `State`, `MIDI`, `UI` y `SysLog`, es el punto de partida, no el resultado.
+
+Dos decisiones de la partición ya tomadas, que se ejecutan en ese PR y no antes:
+
+- **El CSS sale a su propio archivo.** Son 270 líneas entre `<style>` y `</style>`, medido el
+  2026-08-11, y no tiene costo.
+- **El markup no puede salir.** Sin ES Modules y sin build no existe forma de incluir un fragmento de
+  HTML desde otro archivo. Sacarlo obligaría a construirlo desde JavaScript, que es peor de leer y
+  elimina la posibilidad de ver la estructura abriendo el archivo. Es la misma familia de restricción
+  de plataforma que el CORS: ver `DECISIONS.md`, entrada del 2026-08-11 "Los ES Modules no cargan
+  desde `file://`, y el umbral deja de prescribir".
 
 Una restricción de la partición que conviene tener presente desde ahora: las fixtures corren en
 Node, y `src/engine.js` lleva una envoltura escrita a mano por eso, con `module.exports` para Node y
@@ -820,11 +837,20 @@ prioridad, no porque la rueda la bloquee.
   casos de nota fuera del universo: la sensible, que se pinta naranja y desde el incremento 5.4 está
   explicada, y el tono conductor de una dominante secundaria, que se pinta verde como si fuera
   correcta y no aparece en la leyenda por ningún lado. El usuario ve una nota fuera de la escala en
-  verde y no tiene dónde averiguar por qué. Se cruza con el ítem de que la leyenda se filtre sola:
-  las dos cosas cambian qué filas muestra la guía, así que conviene decidirlas juntas.
-- Que la leyenda de la guía se filtre sola, mostrando solo las categorías cuyos dueños estén
-  abiertos. Bloqueado por el ítem anterior: filtrar una leyenda que describe colores que igual se
-  pintan sería mentirle al usuario.
+  verde y no tiene dónde averiguar por qué. Se cruza con el ítem siguiente, el de la guía compuesta
+  por secciones: las dos cosas cambian qué muestra la guía, así que conviene decidirlas juntas.
+- La guía compuesta por secciones que aporta cada widget. Una sección por widget abierto, con su
+  dueño y su propósito, y cerrar un widget cierra su sección. Absorbe lo que este ítem pedía antes,
+  que la leyenda se filtrara sola: filtrar filas de una tabla fija es menos que componer la guía con
+  lo que cada widget trae, y el resultado visible es el mismo. Sigue bloqueado por el ítem anterior,
+  el de la nota fuera del universo que sale verde sin explicación.
+- Log filtrable por categoría, para separar lo musical de lo del sistema y que ciertos avisos puedan
+  llegar al feedback y otros no. El dato que lo justifica, medido el 2026-08-11 con
+  `grep -o "SysLog('[A-Z]*'" index.html | sort | uniq -c | sort -rn`: de 60 llamadas, 49 son de
+  disposición y 5 son musicales, 3 de `MATH` y 2 de `EVAL`. Lo musical está enterrado bajo lo demás.
+- El feedback lee del log en vez de escribirle. Hoy es al revés: `Feedback.avisar` escribe el texto
+  en la caja y recién después lo manda al log con categoría de disposición. Acoplado con el ítem del
+  log filtrable, porque leer del log solo sirve si el log se puede filtrar.
 - Alto del teclado configurable por el usuario. Hoy son 140 px de lienzo fijos. El techo está
   calculado y escrito: 236 px de lienzo, porque a partir de ahí la zona de notas baja de 453.3 px y
   los 170 px del molde se pasan del tope de tres octavos. Un control que deje elegir tiene que
