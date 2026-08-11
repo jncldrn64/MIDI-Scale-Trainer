@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.67 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.69 (Inteligencia Armónica)</title>
     <link rel="stylesheet" href="src/estilos.css">
 </head>
 <body>
@@ -23,7 +23,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.67</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.69</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -127,7 +127,7 @@
                 <div id="chord-inversion" style="font-size:11px; color:var(--text-muted);">-</div>
                 <div class="widget-row-line">
                     <span class="status-label">Análisis de Armonía</span>
-                    <span class="status-value" id="chord-relation" style="font-size:1.2em;">-</span>
+                    <span class="status-value" id="chord-relation">-</span>
                 </div>
                 <!-- Cuarta lectura: la función tonal, que la Fase 4 dejó en el buffer y hasta el
                      incremento 5.5.1 no se mostraba en ninguna parte. Vive en el widget de salida
@@ -201,14 +201,14 @@
 
         <!-- OCULTO A PROPÓSITO EN LA FASE 5: el panel "Fijar Acordes" se esconde de la
              pantalla pero queda intacto en el código (su markup, sus botones, sus id y la
-             función UI.lockChord). Va a tener su propio módulo en una fase posterior. No
+             función Armonia.lockChord). Va a tener su propio módulo en una fase posterior. No
              borrar: solo está oculto por el atributo hidden sobre el contenedor. -->
         <div class="panel" id="lock-chords-panel" hidden>
             <h3>Práctica: Fijar Acordes</h3>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="btn btn-success" onclick="UI.lockChord([48,52,55],'M')">Do Mayor</button>
-                <button class="btn btn-success" onclick="UI.lockChord([50,53,57,60],'m7')">Re Menor 7</button>
-                <button class="btn btn-danger" onclick="UI.unlockChord()">Liberar</button>
+                <button class="btn btn-success" onclick="Armonia.lockChord([48,52,55],'M')">Do Mayor</button>
+                <button class="btn btn-success" onclick="Armonia.lockChord([50,53,57,60],'m7')">Re Menor 7</button>
+                <button class="btn btn-danger" onclick="Armonia.unlockChord()">Liberar</button>
             </div>
         </div>
 
@@ -223,16 +223,20 @@
          corren este mismo archivo en Node. -->
     <script src="src/engine.js"></script>
 
-    <!-- El script salió de acá a src/ en la v11.67. El orden es el del archivo original y
-         sigue la dependencia conceptual: primero las constantes, después el estado, después
-         los productores de datos, después la interfaz, después el chasis de cajas, y último
-         el arranque. Solo arranque.js ejecuta algo al cargar, así que el orden de los otros
-         nueve no cambia el comportamiento; está elegido para que se lea de arriba abajo. -->
+    <!-- El script salió de acá a src/ en la v11.67, y en la v11.69 se repartió por permiso.
+         El orden agrupa por nivel: primero las constantes y el estado, después el log, después
+         los productores de datos del motor, después el único con permiso de escritura, después
+         lo que es sistema, después lo que solo lee y presenta, y último el arranque. Solo
+         arranque.js ejecuta algo al cargar, así que el orden de los otros doce no cambia el
+         comportamiento; está elegido para que se lea de arriba abajo. -->
     <script src="src/config.js"></script>
     <script src="src/state.js"></script>
     <script src="src/log.js"></script>
     <script src="src/midi.js"></script>
-    <script src="src/ui.js"></script>
+    <script src="src/armonia.js"></script>
+    <script src="src/escala.js"></script>
+    <script src="src/teclado.js"></script>
+    <script src="src/readout.js"></script>
     <script src="src/cajas.js"></script>
     <script src="src/lienzo.js"></script>
     <script src="src/layout.js"></script>

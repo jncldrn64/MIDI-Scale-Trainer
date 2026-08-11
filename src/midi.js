@@ -7,7 +7,14 @@ const MIDI = {
             navigator.requestMIDIAccess().then(access => {
                 State.midi.access = access;
                 this.bindDevices();
-                access.onstatechange = (e) => { SysLog('SYS', `Puerto MIDI: ${e.port.name} ${e.port.state}`); this.bindDevices(); };
+                access.onstatechange = (e) => {
+                    // Tipo e identificador van en la línea porque un dispositivo expone
+                    // puertos de entrada y de salida por separado, cada uno con su evento.
+                    // Sin ellos, tres líneas con el mismo nombre pueden ser tres puertos
+                    // distintos o el mismo evento tres veces, y no había forma de saberlo.
+                    SysLog('SYS', `Puerto MIDI ${e.port.type} "${e.port.name}" (id ${e.port.id}): ${e.port.state}`);
+                    this.bindDevices();
+                };
             }).catch(e => SysLog('ERROR', 'MIDI denegado'));
         }
     },
@@ -43,7 +50,7 @@ const MIDI = {
             for (let note of State.midi.activeMelodies) {
                 if (!State.midi.keysDown.has(note)) this.releaseNoteInternal(note, false);
             }
-            UI.renderKeyboard(); UI.updateStatus();
+            Teclado.renderKeyboard(); Readout.updateStatus();
         }
     },
     noteOn(note, vel) {
@@ -51,14 +58,14 @@ const MIDI = {
         SysLog('MIDI', `DOWN: ${getNoteStr(note).name} (${note})`);
         if(note < State.config.splitNote) { State.midi.activeBasses.add(note); this.triggerAccumulation(); }
         else { State.midi.activeMelodies.add(note); this.evaluateMelody(note); }
-        UI.renderKeyboard(); UI.updateStatus();
+        Teclado.renderKeyboard(); Readout.updateStatus();
     },
     noteOff(note) {
         State.midi.keysDown.delete(note); 
         SysLog('MIDI', `UP: ${getNoteStr(note).name} (${note})`);
         if (State.midi.sustainActive) return; 
         this.releaseNoteInternal(note, note < State.config.splitNote);
-        UI.renderKeyboard(); UI.updateStatus();
+        Teclado.renderKeyboard(); Readout.updateStatus();
     },
     releaseNoteInternal(note, isBass) {
         const ev = State.evaluations.get(note);
@@ -92,9 +99,9 @@ const MIDI = {
         if(State.midi.activeBasses.size >= 3 && !State.harmony.isLocked) {
             State.timers.accumulation = setTimeout(() => {
                 const chord = MathEngine.detectChord(Array.from(State.midi.activeBasses));
-                if(chord) { State.harmony.chord = chord; UI.clearEvaluations(); SysLog('MATH', 'Contexto: ' + getNoteStr(chord.rootPC).name + chord.type); }
+                if(chord) { State.harmony.chord = chord; Armonia.clearEvaluations(); SysLog('MATH', 'Contexto: ' + getNoteStr(chord.rootPC).name + chord.type); }
                 else { SysLog('MATH', '⚠️ Acorde no reconocido'); }
-                UI.renderKeyboard(); UI.updateStatus();
+                Teclado.renderKeyboard(); Readout.updateStatus();
             }, State.config.accumMs); 
         }
     },
@@ -102,7 +109,7 @@ const MIDI = {
         if(State.timers.contextHold) clearTimeout(State.timers.contextHold);
         State.timers.contextHold = setTimeout(() => {
             if(!State.harmony.isLocked && State.midi.activeBasses.size === 0) {
-                State.harmony.chord = null; UI.clearEvaluations(); UI.renderKeyboard(); UI.updateStatus();
+                State.harmony.chord = null; Armonia.clearEvaluations(); Teclado.renderKeyboard(); Readout.updateStatus();
             }
         }, State.config.holdMs); 
     },
@@ -119,7 +126,7 @@ const MIDI = {
         if(State.evaluations.has(note)) clearTimeout(State.evaluations.get(note).timeout);
         
         const timeoutTime = evalStatus === 'good' ? 0 : State.config.errMs;
-        const timeoutId = setTimeout(() => { State.evaluations.delete(note); UI.renderKeyboard(); }, timeoutTime);
+        const timeoutId = setTimeout(() => { State.evaluations.delete(note); Teclado.renderKeyboard(); }, timeoutTime);
         
         State.evaluations.set(note, { status: evalStatus, timeout: timeoutId, startTime: Date.now() });
         

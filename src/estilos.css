@@ -81,7 +81,12 @@ select:hover, button:hover { background: #475569; }
 /* Status */
 .status-item { text-align: center; }
 .status-label { font-size: 0.7em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; font-weight: bold; letter-spacing: 1px;}
-.status-value { font-size: 1.6em; font-weight: 800; color: #facc15; }
+/* Las cuatro lecturas del readout hablan un solo idioma: mismo tamaño, mismo peso y el
+   color primario de la escala de texto. Las dos que el motor puede admitir no saber
+   bajan al secundario desde JavaScript, y esa es la única diferencia permitida. El
+   amarillo que había acá distinguía dos lecturas de las otras dos sin ninguna razón,
+   contra la regla 2 de "Colores" de CLAUDE.md. */
+.status-value { font-size: 1.6em; font-weight: 800; color: var(--text-main); }
 
 /* Teclado Full Width */
 /* El teclado llega de borde a borde: sin relleno lateral, sin centrado y sin
