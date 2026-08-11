@@ -194,3 +194,18 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   incremento 5.6. **No tiene identificador estable en el código**: se la ubica solo por su clase
   `stage-controls`. No se le inventa un id acá; nombrarlo es trabajo del PR que decida el destino de
   esa característica.
+- **script clásico**: un `<script src>` sin `type="module"`. Es la única forma de cargar un archivo
+  de JavaScript desde `file://`, porque los scripts de tipo módulo se piden con CORS y el origen del
+  sistema de archivos es `null`. `index.html` carga así `src/engine.js`. Fuente: 2026-08-11, *Los ES
+  Modules no cargan desde `file://`, y el umbral deja de prescribir*.
+
+## Método
+
+- **umbral**: una alarma escrita que obliga a abrir una decisión cuando se cumple. Obliga a decidir
+  y no decide: no receta un mecanismo. El único vivo es el de las 1000 líneas de código y markup de
+  `index.html`, en el §7 de `ARCHITECTURE.md`. Fuente: 2026-08-11, *Los ES Modules no cargan desde
+  `file://`, y el umbral deja de prescribir*.
+- **promesa**: una frase del repo que afirma algo sobre una sintaxis, un protocolo o una API, y que
+  por lo tanto puede ser falsa aunque el repo entero sea coherente. Un número se recalcula con un
+  comando; una promesa solo se comprueba corriéndola. Fuente: 2026-08-11, *Los ES Modules no cargan
+  desde `file://`, y el umbral deja de prescribir*.
