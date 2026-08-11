@@ -521,6 +521,13 @@ scripts clásicos en el orden del original. Por qué se hace en dos PR, los dos 
 seguro y el criterio de nombres viven en `DECISIONS.md`, entrada del 2026-08-11 "La partición se hace
 en dos PR, y el primero es un corte puro".
 
+**La verificación con el piano físico que el Criterio de aceptación pide quedó cerrada el
+2026-08-11.** El PR del corte puro la declaró pendiente, porque corrió headless y ahí no hay Web
+MIDI. El autor conectó un teclado CASIO por USB y tocó sobre el `index.html` ya partido: el
+dispositivo se conectó, las notas entraron, el motor detectó cuatro contextos distintos y evaluó nota
+por nota, incluida la sensible en universo menor, que es el único caso que dispara ese color. Queda
+pendiente lo mismo para la segunda parte, que todavía no se escribió.
+
 También quedó ejecutado lo que ya estaba decidido acá: el CSS salió a su propio archivo, 270 líneas,
 y el markup se quedó, porque sin ES Modules y sin build no existe forma de incluir un fragmento de
 HTML desde otro archivo. Sacarlo obligaría a construirlo desde JavaScript, que es peor de leer y
@@ -539,6 +546,27 @@ tomarla, porque agregar envoltura para Node metería código que en el original 
 la justifica: la geometría es aritmética sobre números del lienzo, hoy no tiene ninguna prueba, y es
 donde se rompieron dos cosas durante la Fase 5, el clamp que no corría al redimensionar y la
 alineación de la grilla de la fórmula.
+
+Dos puntos de deuda verificada que también toma esta segunda parte, los dos vistos en el registro
+con MIDI real del 2026-08-11:
+
+- **Las cuatro lecturas del readout no comparten tratamiento visual.** Las cuatro llevan la clase
+  `status-value` y después cada una la pisa distinto. `chord-relation` lleva además un `font-size`
+  en línea escrito a mano en el markup que ninguna otra tiene. El conteo de manos y `chord-display`
+  conservan el amarillo de la regla base; `chord-relation` y `chord-function` reciben color desde
+  JavaScript. Son dos idiomas visuales en la misma caja sin nada que los distinga. Es deuda del PR
+  que escribió la regla de color, la entrada del 2026-08-11 "La paleta de veredicto no se reusa
+  fuera del teclado": ese PR sacó los hexadecimales de la paleta de las lecturas, que era el
+  problema real, y dejó la mitad del widget sin migrar.
+- **El log de puertos MIDI no permite distinguir tres puertos de un evento repetido.** En el
+  registro real aparecen tres líneas idénticas de conexión del mismo dispositivo, en el mismo
+  milisegundo, y dos de desconexión. El manejador de `onstatechange` en `src/midi.js` escribe el
+  nombre del puerto y su estado, y nada más. Un dispositivo MIDI expone puertos de entrada y de
+  salida por separado, cada uno con su evento, así que tres eventos pueden ser tres puertos
+  distintos con el mismo nombre o el mismo evento tres veces. Con lo que el log escribe hoy no hay
+  forma de saberlo, y ese es el defecto: un registro que no distingue entre tres cosas que pasaron y
+  una que se registró tres veces no sirve para diagnosticar. Agregar el tipo de puerto y su
+  identificador es una línea.
 
 Una restricción de la partición que conviene tener presente desde ahora: las fixtures corren en
 Node, y `src/engine.js` lleva una envoltura escrita a mano por eso, con `module.exports` para Node y
@@ -860,13 +888,31 @@ prioridad, no porque la rueda la bloquee.
   que la leyenda se filtrara sola: filtrar filas de una tabla fija es menos que componer la guía con
   lo que cada widget trae, y el resultado visible es el mismo. Sigue bloqueado por el ítem anterior,
   el de la nota fuera del universo que sale verde sin explicación.
-- Log filtrable por categoría, para separar lo musical de lo del sistema y que ciertos avisos puedan
-  llegar al feedback y otros no. El dato que lo justifica, medido el 2026-08-11 con
-  `grep -o "SysLog('[A-Z]*'" index.html | sort | uniq -c | sort -rn`: de 60 llamadas, 49 son de
-  disposición y 5 son musicales, 3 de `MATH` y 2 de `EVAL`. Lo musical está enterrado bajo lo demás.
-- El feedback lee del log en vez de escribirle. Hoy es al revés: `Feedback.avisar` escribe el texto
-  en la caja y recién después lo manda al log con categoría de disposición. Acoplado con el ítem del
-  log filtrable, porque leer del log solo sirve si el log se puede filtrar.
+- **Agrupar las categorías del log y filtrar por grupo. Va primero de los tres que siguen**, porque
+  es la condición para que los otros dos sean usables. No hay que inventar categorías: las seis que
+  existen ya se agrupan solas. `MIDI`, `MATH` y `EVAL` son musicales; `LAYOUT`, `SYS` y `ERROR` son
+  de sistema. Medido el 2026-08-11 con
+  `grep -o "SysLog('[A-Z]*'" src/*.js | sed 's/.*SysLog(//' | sort | uniq -c | sort -rn`: de 60
+  llamadas, 51 son de sistema y 9 musicales, o sea 85% contra 15%. Lo musical está enterrado bajo lo
+  demás. Falta agrupación y filtro, no vocabulario nuevo. El filtro es de desarrollo, así que vive
+  donde vive la consola, por debajo del piso de tres clics de la entrada del 2026-08-10 "Jerarquía
+  de menús: el tres es techo y también es piso".
+- **El coloreo se registra de forma diferencial.** Bloqueado por el ítem anterior. Hoy el log
+  registra el veredicto y no registra qué se pintó: ni qué tecla recibió qué categoría, ni qué rama
+  de la cascada de precedencia ganó, ni qué dueño la produjo. Choca con dos cosas escritas, la
+  entrada del 2026-07-25 "El log como canal de validación: toda salida del motor se registra, se
+  muestre o no", y el contrato de permisos, que define la cascada de `UI.renderKeyboard` como la
+  primera precedencia escrita del repo y deja su resultado invisible. El caso que lo hace urgente:
+  una nota puede estar a la vez en el universo y en el acorde detectado, la cascada le da el color
+  de acorde y el log dice que la evaluación fue correcta; los dos son ciertos, no coinciden, y hoy
+  no hay forma de detectar esa divergencia sin mirar la pantalla. Qué tiene que lograr y qué no
+  puede hacer está en `DECISIONS.md`, entrada del 2026-08-11 "El coloreo se registra de forma
+  diferencial, no absoluta".
+- **El feedback lee del log en vez de escribirle.** Depende del ítem de agrupar y filtrar. Hoy es al
+  revés: `Feedback.avisar` escribe el texto en la caja y recién después lo manda al log con
+  categoría de disposición. La razón nueva, del registro con MIDI real: si el log distingue musical
+  de sistema, el feedback puede elegir qué grupo mostrar, y sin esa distinción leer del log no le
+  sirve de nada.
 - Alto del teclado configurable por el usuario. Hoy son 140 px de lienzo fijos. El techo está
   calculado y escrito: 236 px de lienzo, porque a partir de ahí la zona de notas baja de 453.3 px y
   los 170 px del molde se pasan del tope de tres octavos. Un control que deje elegir tiene que

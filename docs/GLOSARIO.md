@@ -228,6 +228,11 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   original: la única diferencia admitida son los encabezados de archivo. Fuente: 2026-08-11, *La
   partición se hace en dos PR, y el primero es un corte puro*.
 
+- **registro diferencial**: forma de registrar el coloreo que escribe una línea solo cuando una tecla
+  cambia de categoría, con la tecla, la categoría que sale, la que entra y qué rama de la cascada
+  ganó. Un repintado que no cambia nada no escribe nada. Todavía no está construido. Fuente:
+  2026-08-11, *El coloreo se registra de forma diferencial, no absoluta*.
+
 ## Método
 
 - **umbral**: una alarma escrita que obliga a abrir una decisión cuando se cumple. Obliga a decidir

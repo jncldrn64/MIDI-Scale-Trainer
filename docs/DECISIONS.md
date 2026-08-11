@@ -1919,6 +1919,43 @@ la segunda parte.
 
 ---
 
+## 2026-08-11 — El coloreo se registra de forma diferencial, no absoluta
+
+**Contexto:** la primera sesión con un teclado conectado por USB dejó ver un hueco del log. El log
+registra el veredicto de cada nota y no registra qué se pintó: ni qué tecla recibió qué categoría, ni
+qué rama de la cascada ganó, ni qué dueño la produjo. Eso choca con dos cosas ya escritas, la entrada
+del 2026-07-25 *El log como canal de validación: toda salida del motor se registra, se muestre o no*,
+y el contrato de permisos del 2026-08-11, que declara la cascada de `UI.renderKeyboard` como la
+primera precedencia escrita del repo y deja su resultado invisible.
+
+El caso que lo vuelve urgente: una nota puede estar a la vez en el universo y en el acorde detectado.
+La cascada le da el color de acorde y el log dice que la evaluación fue correcta. Los dos son
+ciertos, no coinciden, y hoy no hay forma de detectar esa divergencia sin mirar la pantalla.
+
+**Por qué el video no es alternativa, y por qué esto va escrito.** El paso cromático dura 180
+milisegundos por definición del motor, o sea once cuadros a sesenta por segundo. Grabar y revisar
+imágenes para extraer un dato que el programa ya conoce y no escribe es más caro y menos preciso que
+escribirlo. El log no es una alternativa al video: es el único instrumento posible.
+
+**La restricción que obliga a decidir esto ahora.** `UI.renderKeyboard` repinta las 88 teclas enteras
+y se lo llama desde doce lugares distintos, uno por cada nota que baja o sube, cada detección o
+liberación de acorde, cada vencimiento de temporizador y cada cambio de universo o de nomenclatura.
+Una línea por tecla pintada convertiría unos segundos de música en miles de líneas y volvería el
+instrumento inservible justo cuando más hace falta.
+
+**Decisión: el registro es diferencial, no absoluto.** Se escribe una línea cuando una tecla cambia
+de categoría, con la tecla, la categoría que sale, la que entra y qué rama de la cascada ganó. Un
+repintado que no cambia nada no escribe nada.
+
+Esto fija qué tiene que lograr el registro y qué no puede hacer, y nada sobre cómo. Cuándo se
+construye lo decide el ítem del BACKLOG, que está bloqueado por el de agrupar y filtrar las
+categorías: un registro nuevo sobre un log donde el 85% de las líneas son de disposición se pierde
+igual que lo musical se pierde hoy.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
