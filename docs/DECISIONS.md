@@ -1956,6 +1956,70 @@ igual que lo musical se pierde hoy.
 
 ---
 
+## 2026-08-11 — `UI` se disuelve: el reparto por permiso y las fixtures de geometría
+
+**Contexto:** la segunda parte de la partición reparte por permiso, y el criterio atravesaba `UI` por
+la mitad. Sus siete métodos caían en tres niveles distintos del contrato del 2026-08-11: `buildUniverse`
+escribe el universo, `buildKeyboard` y `renderKeyboard` son capa 0, `updateStatus` solo lee y presenta,
+y `clearEvaluations`, `lockChord` y `unlockChord` mandan sobre el buffer de armonía.
+
+**Decisión: `UI` deja de existir.** No queda como uno de los tres. Sus métodos se reparten en cuatro
+objetos nuevos, cada uno en su archivo, siguiendo el criterio de nombres que ya rige, el archivo se
+llama como lo que define:
+
+| Objeto y archivo | Qué se llevó | Nivel de permiso |
+|---|---|---|
+| `Escala`, `escala.js` | `buildUniverse` | permiso de escritura sobre el universo |
+| `Teclado`, `teclado.js` | `buildKeyboard`, `renderKeyboard` | sistema, capa 0 |
+| `Readout`, `readout.js` | `updateStatus` y su firma de análisis | solo lectura |
+| `Armonia`, `armonia.js` | `clearEvaluations`, `lockChord`, `unlockChord` | sistema, buffer de armonía |
+
+**Por qué se disuelve en vez de quedar como uno de los tres.** "UI" nombra una capa del programa, no
+un nivel de permiso. Dejarlo vivo obligaría a que uno de los tres niveles se llamara con el
+vocabulario viejo, y a que quien lea una llamada tenga que acordarse de cuál de los siete métodos
+quedó adentro. Con los cuatro objetos, cada llamada dice a la vista qué produce el efecto:
+`Teclado.renderKeyboard()` dice que repinta el teclado, y `UI.renderKeyboard()` no decía nada que el
+nombre del método no dijera ya.
+
+**Lo que se mudó por la misma razón, aunque no sea de `UI`:** `saveLayout` y `loadLayout` pasan de
+`cajas.js` a `layout.js`, la deuda que la primera parte declaró. `saveConfig` y `loadConfig` pasan de
+`ui.js` a `state.js`. La regla que sale de las dos mudanzas: **la persistencia vive con lo que
+persiste**, `Layout.estado` con `Layout` y `State.config` con `State`.
+
+**Las cuatro lecturas del readout pasan a un solo tratamiento.** Es la deuda que el ROADMAP anotaba
+del PR que escribió la regla de color: ese PR sacó los hexadecimales de la paleta de veredicto de las
+lecturas y dejó la mitad del widget sin migrar. El `#facc15` de la regla base sale y queda
+`var(--text-main)`, así las cuatro comparten tamaño, peso y color primario, y la única diferencia que
+sobrevive es la que la regla 2 de "Colores" de `CLAUDE.md` permite: bajar al secundario cuando el
+motor admite no saber. Sale también un `font-size` en línea que solo llevaba una de las cuatro.
+
+Un defecto que apareció al unificar y se arregla acá: al soltar el acorde, las dos lecturas que
+reciben color desde JavaScript se quedaban en secundario, así que el mismo guion se veía de dos
+colores según lo que hubiera sonado antes. El secundario dice que el motor admite no saber, no que no
+haya nada, así que el guion vuelve al primario.
+
+**Decisión sobre las fixtures de geometría: no, y este es el criterio que la reabre.** El ROADMAP la
+justificaba diciendo que la geometría es aritmética pura sobre números del lienzo, sin DOM. Se
+verificó y es falso: `Layout.area` lee `offsetHeight` de la barra, `Layout.zonaNotas` lee además el
+del teclado, `Layout.clamp` lee `offsetWidth` y `offsetHeight` de la caja que recibe, `Layout.cobertura`
+recorre el documento con `querySelectorAll` y suma `offsetHeight`, y `Layout.puntosCompeten` lee el
+ancho del widget de escala. Cubrirlas hoy no pide una envoltura para Node: pide un DOM falso, y un DOM
+falso prueba el doble, no el código.
+
+**El criterio que la reabre:** el día que esas funciones reciban sus medidas como argumentos en vez de
+leerlas del documento, la aritmética queda aislada y se cubre con fixtures en el mismo PR que la
+aísle. No es una fecha ni un "más adelante": es una condición que se comprueba con `grep` sobre
+`layout.js` buscando `offsetWidth`, `offsetHeight` y `querySelectorAll`.
+
+**Lo que este PR no pudo arreglar y queda anotado.** `src/engine.js` tiene dos comentarios que citan
+`UI.buildUniverse` y `UI.updateStatus` "en index.html". Los dos ya estaban muertos desde la primera
+parte, porque esos métodos habían dejado index.html, y hoy además el objeto no existe. Tocar
+`src/engine.js` estaba fuera del alcance de este PR. Queda en el BACKLOG.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

@@ -1,4 +1,4 @@
-// state.js: el estado global y el formateador de nombre de nota. Cortado de index.html en la partición, sin mover nada.
+// state.js: el estado global, el formateador de nombre de nota y la persistencia de la config.
 
 // --- ESTADO GLOBAL ---
 const State = {
@@ -22,3 +22,9 @@ function getNoteStr(midi) {
     const pc = midi % 12;
     return { name: State.config.latino ? NOTES_ES[pc] : NOTES_EN[pc], oct: Math.floor(midi/12)-1, pc };
 }
+
+// --- PERSISTENCIA DE LA CONFIGURACIÓN ---
+// Viven acá porque persisten State.config, y la persistencia vive con lo que persiste.
+// La misma razón por la que saveLayout y loadLayout se mudaron junto a Layout.
+function saveConfig() { localStorage.setItem('midiTrainerCfg', JSON.stringify(State.config)); }
+function loadConfig() { const saved = localStorage.getItem('midiTrainerCfg'); if (saved) State.config = { ...State.config, ...JSON.parse(saved) }; }

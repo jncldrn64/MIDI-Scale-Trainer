@@ -1,4 +1,25 @@
-// layout.js: el objeto Layout y la superficie de avisos. Cortado de index.html en la partición, sin mover nada.
+// layout.js: el objeto Layout, su persistencia y la superficie de avisos.
+
+// Persistencia del layout. Vive acá, junto a Layout, y no en cajas.js: persiste
+// Layout.estado, no el registro de cajas. Quedó allá porque en index.html estas dos
+// funciones vivían físicamente entre el registro y el cascarón, y el corte puro de la
+// primera parte no podía moverlas.
+function saveLayout() { localStorage.setItem('midiTrainerLayout', JSON.stringify(Layout.estado)); }
+function loadLayout() {
+    const guardado = localStorage.getItem('midiTrainerLayout');
+    if (!guardado) return null;
+    let dato;
+    try { dato = JSON.parse(guardado); }
+    catch (e) { SysLog('LAYOUT', '⚠️ Layout guardado ilegible, se descarta y se vuelve al estado por defecto: ' + e); return null; }
+    // Coherencia: más de CAP widgets que compiten marcados como abiertos deja un
+    // estado que el propio cap prohíbe, así que no se restaura a medias.
+    const abiertos = CAJAS.filter(c => c.compite && dato[c.id] && dato[c.id].abierto).length;
+    if (abiertos > CAP) {
+        SysLog('LAYOUT', `⚠️ Layout guardado inconsistente: ${abiertos} widgets que compiten marcados como abiertos, y el cap es ${CAP}. Se descarta entero y se vuelve al estado por defecto.`);
+        return null;
+    }
+    return dato;
+}
 
 const Layout = {
     GAP: 16,       // separación uniforme entre cajas, la misma contra la que nacen

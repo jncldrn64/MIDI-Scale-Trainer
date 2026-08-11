@@ -19,8 +19,8 @@ window.onload = () => {
         const o=document.createElement('option'); o.value=i; o.innerText=n; rs.appendChild(o); 
     });
     
-    rs.onchange = () => UI.buildUniverse();
-    document.getElementById('scale-select').onchange = () => UI.buildUniverse();
+    rs.onchange = () => Escala.buildUniverse();
+    document.getElementById('scale-select').onchange = () => Escala.buildUniverse();
     
     document.getElementById('cfg-accum').onchange = (e) => { State.config.accumMs = parseInt(e.target.value); saveConfig(); };
     document.getElementById('cfg-hold').onchange = (e) => { State.config.holdMs = parseInt(e.target.value); saveConfig(); };
@@ -85,24 +85,24 @@ window.onload = () => {
         saveConfig(); 
         const v = rs.value; rs.innerHTML='';
         (State.config.latino ? NOTES_ES : NOTES_EN).forEach((n,i) => { const o=document.createElement('option'); o.value=i; o.innerText=n; rs.appendChild(o); });
-        rs.value = v; UI.buildUniverse();
+        rs.value = v; Escala.buildUniverse();
     };
 
-    document.getElementById('btn-lock').onclick = () => UI.unlockChord();
+    document.getElementById('btn-lock').onclick = () => Armonia.unlockChord();
     // Con 88 teclas que entran completas a lo ancho no hay desbordamiento, así que
     // desplazar el contenedor no hacía nada. El botón pasa a marcar la nota de split
     // sobre el teclado, encendiendo y apagando en cada clic. El split es una sola
     // nota MIDI, la 60 por defecto, que separa mano izquierda de derecha.
     document.getElementById('btn-c4').onclick = () => {
         State.ui.marcaSplit = !State.ui.marcaSplit;
-        UI.renderKeyboard();
+        Teclado.renderKeyboard();
         SysLog('LAYOUT', `Marca del split ${State.ui.marcaSplit ? 'encendida' : 'apagada'} sobre la nota MIDI ${State.config.splitNote}.`);
     };
     const chkNombres = document.getElementById('cfg-nombres');
     chkNombres.checked = State.config.nombresTecla;
     chkNombres.onchange = (e) => {
         State.config.nombresTecla = e.target.checked;
-        saveConfig(); UI.renderKeyboard();
+        saveConfig(); Teclado.renderKeyboard();
         SysLog('LAYOUT', `Nombres de tecla ${State.config.nombresTecla ? 'encendidos' : 'apagados'} sobre las 52 blancas.`);
     };
     document.getElementById('btn-clear').onclick = () => document.getElementById('logs-container').innerHTML='';
@@ -124,8 +124,8 @@ window.onload = () => {
         SysLog('LAYOUT', `Consola ${opening ? 'abierta' : 'colapsada'}`);
     };
 
-    window.addEventListener('resize', () => { Lienzo.ajustar('resize'); UI.buildKeyboard(); });
-    UI.buildUniverse(); UI.buildKeyboard(); MIDI.init();
+    window.addEventListener('resize', () => { Lienzo.ajustar('resize'); Teclado.buildKeyboard(); });
+    Escala.buildUniverse(); Teclado.buildKeyboard(); MIDI.init();
 
     // El auto-clic de btn-c4 al cargar se retira. Existía para auto-centrar el
     // teclado desbordado; con 88 teclas que entran completas no hay nada que centrar,

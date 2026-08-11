@@ -2,6 +2,29 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.69 — 2026-08-11
+
+### Changed
+
+- `src/`: `UI` deja de existir. Sus siete métodos se reparten en `Escala`, `Teclado`, `Readout` y `Armonia`, uno por nivel de permiso, cada uno en su archivo. "UI" nombraba una capa del programa, no un nivel.
+- `src/`: los llamadores quedan diciendo qué produce el efecto. Donde había `UI.renderKeyboard()` hay `Teclado.renderKeyboard()`, y el nombre del objeto agrega lo que el del método no decía.
+- `src/layout.js`: `saveLayout` y `loadLayout` vuelven desde `cajas.js`. `src/state.js`: `saveConfig` y `loadConfig` llegan desde el difunto `ui.js`. La persistencia vive con lo que persiste.
+- `src/estilos.css` y `index.html`: las cuatro lecturas del readout comparten tamaño, peso y color primario. Sale el `#facc15` de la regla base y sale el `font-size` en línea que llevaba una sola de las cuatro.
+- `src/midi.js`: el log de puertos escribe tipo e identificador además del nombre. Tres líneas con el mismo nombre ya se pueden distinguir de un evento registrado tres veces.
+
+### Fixed
+
+- `src/readout.js`: al soltar el acorde, las dos lecturas que reciben color desde JavaScript se quedaban en secundario, así que el mismo guion se veía de dos colores según lo que hubiera sonado antes. Vuelven al primario.
+
+### Added
+
+- `docs/DECISIONS.md`: el reparto por permiso, por qué `UI` se disuelve en vez de sobrevivir, y la decisión sobre las fixtures de geometría, que es que no, con la condición que la reabre.
+- `docs/ROADMAP.md`: ítem de backlog por dos comentarios de `src/engine.js` que citan métodos de un objeto que ya no existe.
+
+Las fixtures de geometría se decidieron que no. La justificación que el ROADMAP les daba, que la geometría es aritmética pura sin DOM, se verificó y es falsa: las cinco funciones leen el documento.
+
+`index.html` queda en 246 líneas, 212 de código y markup. El archivo más grande es `src/layout.js` con 304.
+
 ## v11.68 — 2026-08-11
 
 ### Added

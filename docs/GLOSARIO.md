@@ -223,6 +223,11 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   escala. Fuente: 2026-08-11, *Los efectos sobre las teclas, y la primera precedencia escrita del
   repo*.
 
+- **`Escala`, `Teclado`, `Readout` y `Armonia`**: los cuatro objetos en que se disolvió `UI` al
+  repartir por permiso. `Escala` edita el universo y es el único con permiso de escritura, `Teclado`
+  construye y pinta las 88 teclas y es capa 0, `Readout` presenta la salida del motor y solo lee, y
+  `Armonia` manda sobre el buffer de armonía y el de evaluaciones. `UI` ya no existe. Fuente:
+  2026-08-11, *`UI` se disuelve: el reparto por permiso y las fixtures de geometría*.
 - **corte puro**: una partición que mueve bloques a archivos y no mueve un solo método, ni renombra,
   ni reordena. Se prueba concatenando los archivos nuevos en orden de carga y comparando contra el
   original: la única diferencia admitida son los encabezados de archivo. Fuente: 2026-08-11, *La

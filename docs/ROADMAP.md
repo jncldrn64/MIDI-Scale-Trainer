@@ -535,38 +535,22 @@ elimina la posibilidad de ver la estructura abriendo el archivo. Es la misma fam
 de plataforma que el CORS: ver `DECISIONS.md`, entrada del 2026-08-11 "Los ES Modules no cargan desde
 `file://`, y el umbral deja de prescribir".
 
-**Segunda parte, la reorganización por permiso.** Pendiente. Es donde está el trabajo de verdad,
-porque el criterio atraviesa `UI` por la mitad: `buildUniverse` escribe el universo, o sea permiso de
-escritura; `buildKeyboard` y `renderKeyboard` son capa 0, o sea sistema; y `updateStatus` solo lee y
-presenta. Arrastra además un acomodo que el corte contiguo no pudo hacer: `saveLayout` y `loadLayout`
-quedaron en `cajas.js` y su lugar es `layout.js`.
+**Segunda parte, la reorganización por permiso. Entregada el 2026-08-11 con la v11.69.** `UI` se
+disolvió en cuatro objetos, uno por nivel de permiso: `Escala` con `buildUniverse`, el único con
+permiso de escritura; `Teclado` con `buildKeyboard` y `renderKeyboard`, capa 0; `Readout` con
+`updateStatus`, solo lectura; y `Armonia` con `clearEvaluations`, `lockChord` y `unlockChord`,
+sistema. `saveLayout` y `loadLayout` volvieron a `layout.js`, y `saveConfig` y `loadConfig` se fueron
+con `State`: la persistencia vive con lo que persiste. Los dos puntos de deuda que arrastraba quedaron
+cerrados, el tratamiento visual de las cuatro lecturas del readout y el log de puertos MIDI, que ahora
+escribe tipo e identificador. Las razones viven en `DECISIONS.md`, entrada del 2026-08-11 "`UI` se
+disuelve: el reparto por permiso y las fixtures de geometría".
 
-Ahí se decide también si la geometría del layout se cubre con fixtures. El corte puro no podía
-tomarla, porque agregar envoltura para Node metería código que en el original no existe. El dato que
-la justifica: la geometría es aritmética sobre números del lienzo, hoy no tiene ninguna prueba, y es
-donde se rompieron dos cosas durante la Fase 5, el clamp que no corría al redimensionar y la
-alineación de la grilla de la fórmula.
-
-Dos puntos de deuda verificada que también toma esta segunda parte, los dos vistos en el registro
-con MIDI real del 2026-08-11:
-
-- **Las cuatro lecturas del readout no comparten tratamiento visual.** Las cuatro llevan la clase
-  `status-value` y después cada una la pisa distinto. `chord-relation` lleva además un `font-size`
-  en línea escrito a mano en el markup que ninguna otra tiene. El conteo de manos y `chord-display`
-  conservan el amarillo de la regla base; `chord-relation` y `chord-function` reciben color desde
-  JavaScript. Son dos idiomas visuales en la misma caja sin nada que los distinga. Es deuda del PR
-  que escribió la regla de color, la entrada del 2026-08-11 "La paleta de veredicto no se reusa
-  fuera del teclado": ese PR sacó los hexadecimales de la paleta de las lecturas, que era el
-  problema real, y dejó la mitad del widget sin migrar.
-- **El log de puertos MIDI no permite distinguir tres puertos de un evento repetido.** En el
-  registro real aparecen tres líneas idénticas de conexión del mismo dispositivo, en el mismo
-  milisegundo, y dos de desconexión. El manejador de `onstatechange` en `src/midi.js` escribe el
-  nombre del puerto y su estado, y nada más. Un dispositivo MIDI expone puertos de entrada y de
-  salida por separado, cada uno con su evento, así que tres eventos pueden ser tres puertos
-  distintos con el mismo nombre o el mismo evento tres veces. Con lo que el log escribe hoy no hay
-  forma de saberlo, y ese es el defecto: un registro que no distingue entre tres cosas que pasaron y
-  una que se registró tres veces no sirve para diagnosticar. Agregar el tipo de puerto y su
-  identificador es una línea.
+**Las fixtures de geometría quedaron decididas que no**, y con criterio de reapertura escrito. La
+justificación que este documento les daba, que la geometría es aritmética pura sin DOM, se verificó y
+es falsa: `Layout.area`, `Layout.zonaNotas`, `Layout.clamp`, `Layout.cobertura` y
+`Layout.puntosCompeten` leen todas el documento. Cubrirlas hoy pide un DOM falso, y un DOM falso
+prueba el doble. La condición que reabre la decisión está en la misma entrada de `DECISIONS.md` y se
+comprueba con `grep` sobre `layout.js`.
 
 Una restricción de la partición que conviene tener presente desde ahora: las fixtures corren en
 Node, y `src/engine.js` lleva una envoltura escrita a mano por eso, con `module.exports` para Node y
@@ -913,6 +897,11 @@ prioridad, no porque la rueda la bloquee.
   categoría de disposición. La razón nueva, del registro con MIDI real: si el log distingue musical
   de sistema, el feedback puede elegir qué grupo mostrar, y sin esa distinción leer del log no le
   sirve de nada.
+- Dos comentarios de `src/engine.js` citan `UI.buildUniverse` y `UI.updateStatus` "en index.html".
+  Las dos citas están muertas: esos métodos dejaron `index.html` en la primera parte de la partición
+  y desde la segunda el objeto `UI` no existe. Hoy viven en `Escala` y en `Readout`. Bloqueado por
+  nada: es un comentario. Quedó afuera porque los dos PR de la partición declararon que no tocaban
+  `src/engine.js`, y romper esa promesa por dos comentarios habría costado más que anotarlos.
 - Alto del teclado configurable por el usuario. Hoy son 140 px de lienzo fijos. El techo está
   calculado y escrito: 236 px de lienzo, porque a partir de ahí la zona de notas baja de 453.3 px y
   los 170 px del molde se pasan del tope de tres octavos. Un control que deje elegir tiene que
