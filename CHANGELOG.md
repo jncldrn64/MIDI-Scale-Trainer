@@ -2,6 +2,25 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.68 — 2026-08-11
+
+### Added
+
+- `docs/DECISIONS.md`: el coloreo se registra de forma diferencial. Una línea cuando una tecla cambia de categoría, con la tecla, la que sale, la que entra y qué rama de la cascada ganó. Un repintado que no cambia nada no escribe nada.
+- `docs/ROADMAP.md`: tres ítems de backlog con orden declarado entre ellos. Agrupar y filtrar el log va primero porque es la condición para que los otros dos sean usables.
+- `docs/ROADMAP.md`: dos puntos de deuda verificada dentro de la segunda parte de la partición. Las cuatro lecturas del readout no comparten tratamiento visual, y el log de puertos MIDI no distingue tres puertos de un evento repetido.
+- `docs/GLOSARIO.md`: el término registro diferencial, marcado como todavía no construido.
+
+### Changed
+
+- `docs/ROADMAP.md`: la verificación con el piano físico que la Fase 5B pide queda cerrada para la primera parte. El corte puro la había declarado pendiente porque corrió headless, y ahí no hay Web MIDI.
+- `docs/ROADMAP.md`: el ítem del log filtrable pasa a hablar de grupos y no de categorías sueltas, con la cuenta recontada sobre `src/`. Las seis categorías ya se agrupan solas: 51 llamadas de sistema contra 9 musicales.
+- `docs/ROADMAP.md`: el comando que contaba las categorías apuntaba a `index.html` y ahí ya no hay script. La partición lo dejó devolviendo cero.
+
+Ninguno de estos ítems entra a la Fase 5B: por el criterio del 2026-08-10, dejarlos afuera no impide ejecutar la segunda parte de la partición ni obliga a rehacer la primera. Los dos de deuda sí van adentro, porque son código que esa segunda parte toca igual.
+
+La versión mostrada sigue en V11.67.
+
 ## v11.67 — 2026-08-11
 
 ### Changed
