@@ -2,6 +2,25 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.64 — 2026-08-11
+
+### Fixed
+
+- `docs/ROADMAP.md`: el Criterio de aceptación de la Fase 5 decía que el motor queda intacto y el incremento 5.5.2 tocó una línea. La cláusula pasa a pedir que ningún cambio de la fase altere el comportamiento del motor.
+- `docs/ROADMAP.md`: esa cláusula lleva puntero a la entrada que la decidió. Un criterio de interfaz que admite tocar el motor sin puntero se lee como algo que se coló.
+- `docs/DECISIONS.md`: entrada que supera la cláusula y la reemplaza por dos pruebas que se corren en vez de interpretarse, un `diff` sobre `src/engine.js` y las 41 fixtures.
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 5 pasa a `cerrada (2026-08-11)`. Los seis incrementos quedan marcados con la versión que los entregó, para que el cierre se pueda comprobar en vez de creerse.
+- `docs/ROADMAP.md`: se borra la subsección "Qué falta para cerrar la fase". Su primer punto ya estaba cumplido, el autor confirmó el arreglo del texto borroso con GPU real al recibir la v11.60, y el segundo lo resuelve este PR.
+- `CLAUDE.md`: regla de referencia cruzada. Un texto operativo lleva puntero a `DECISIONS.md` cuando sin él se leería como arbitrario. Extiende lo que el glosario ya hace con su campo de fuente.
+- `CLAUDE.md`: regla de método sobre el numstat. La tabla del cuerpo de un PR se copia del comando corrido como último paso, con los dos errores que la motivaron y su causa.
+
+La Fase 5 se abrió, se cerró apilada en la v11.19, se reabrió al modelo de capas y cierra ahora con seis incrementos y treinta y dos versiones publicadas.
+
+La versión mostrada sigue en V11.63; el desfase lo cierra el próximo PR de código.
+
 ## v11.63 — 2026-08-11
 
 ### Changed

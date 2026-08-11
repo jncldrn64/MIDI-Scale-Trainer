@@ -181,7 +181,7 @@ mayor, y un acorde no diatónico no recibe función forzada.
 
 ## FASE 5: Reencuadre visual al modelo de paneles (el teclado como fondo)
 
-**Estado:** `en progreso`
+**Estado:** `cerrada (2026-08-11)`, con la v11.64
 
 **Objetivo:** realinear la UI al modelo de capas del 2026-07-25, superando el primer intento
 apilado. El fondo es una sola capa de piano más notas que caen; las características flotan como
@@ -288,11 +288,11 @@ permitidas. El nombre nuevo se decide junto con los otros de esta subsección.
 **Incrementos de entrega.** La fase se entrega en cinco incrementos, del más estructural al más
 cosmético, cada uno un PR de código que se puede ver y corroborar por separado.
 
-- Incremento 5.1, fondo único: el teclado y las notas ocupan todo el ancho y alto como una sola
+- Incremento 5.1, **entregado en la v11.32**, fondo único: el teclado y las notas ocupan todo el ancho y alto como una sola
   capa de fondo, las notas pasan por detrás de los overlays, y la disposición apilada actual pasa
   a fondo más overlays en posiciones por defecto fijas, todavía sin mecánica de widgets. El
   coloreo del teclado que ya existe queda intacto. Motor intacto.
-- Incremento 5.2, barra permanente y chrome global: la barra de menús permanente tipo macOS, que
+- Incremento 5.2, **entregado en la v11.43**, barra permanente y chrome global: la barra de menús permanente tipo macOS, que
   las entradas de decisiones anteriores llaman panel de pestañas, y que aloja las opciones y el
   log. La barra trae los menús que ya tienen contenido real: opciones, donde viven los
   cuatro ajustes del motor, y log, que se descarga o se copia y no tiene terminal propia. El menú de
@@ -323,7 +323,7 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   decisiones numéricas para que la lectura le siga el pulso. Esta forma del menú se fija ahora
   aunque los valores concretos del preajuste se decidan al implementar, para no construir el menú
   dos veces.
-- Incremento 5.3, sistema de widgets: mover la caja arrastrando con el mouse, que es la
+- Incremento 5.3, **entregado en las v11.44, v11.46 y v11.53**, sistema de widgets: mover la caja arrastrando con el mouse, que es la
   única acción directa sobre ella, y el resto desde el menú de widgets, opacidad, apagar, reset
   a posición por defecto y persistir; el cap de tres ranuras para los que compiten; el menú de
   widgets en la barra, que coloca, restaura uno cerrado y da acceso a los controles de cada
@@ -349,7 +349,7 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   quedar sobre el piano. El punto de nacimiento de un widget que se abre desde el menú quedó
   decidido acá: el primero libre de izquierda a derecha, contando por asignación y no por dónde
   esté la caja en pantalla, y con los tres tomados la apertura se bloquea y el feedback lo avisa.
-- Incremento 5.4, nomenclatura por forma: las etiquetas del botón de nomenclatura pasan a
+- Incremento 5.4, **entregado en la v11.60**, nomenclatura por forma: las etiquetas del botón de nomenclatura pasan a
   "Silábica" y "Alfabética", con valor por defecto, persistencia por `localStorage` y el botón
   alcanzable. Suma dos trabajos más de nombres y símbolos. Uno es la mudanza física de la leyenda
   de colores a la guía, que la entrada de decisiones del 2026-08-09 ya resolvió en el papel y este
@@ -373,7 +373,7 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   `latino` sigue como está, porque renombrarlo es el punto de nombres internos de "Deuda de método y
   documentación" con su propio PR, y poblar el glosario con los artefactos ya lo hizo el PR anterior
   del 2026-08-10.
-- Incremento 5.5, análisis honesto. Se entrega en dos PR, con el mismo criterio con que el 5.3 se
+- Incremento 5.5, **entregado en las v11.62 y v11.63**, análisis honesto. Se entrega en dos PR, con el mismo criterio con que el 5.3 se
   entregó en tres: el corte es si toca el motor. El **5.5.1**, entregado, muestra la función tonal
   y no toca `src/engine.js`. El **5.5.2**, entregado, hizo el relabel del tercer valor de la
   clasificación y es el primero y único de toda la Fase 5 que tocó el motor: una sola línea, el
@@ -383,7 +383,7 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   el panel de Análisis junto al numeral y la relación, y la etiqueta del tercer caso de la cascada se
   relabela. Los dos trabajos no fueron juntos: el corte por motor los separó, y el estado intermedio
   quedó declarado en vez de evitado. Los dos están entregados.
-- Incremento 5.6, el cascarón del lienzo: el contenedor de 1280 x 720 escalado y centrado, con las
+- Incremento 5.6, **entregado en la v11.58**, el cascarón del lienzo: el contenedor de 1280 x 720 escalado y centrado, con las
   franjas negras, la corrección del arrastre y las medidas que leían la ventana pasando a leer el
   lienzo. Es la primera de las dos piezas en que se partió la migración; la segunda, normalizar cada
   medida y cada comentario restante, se queda en la Fase 5B. Entra a esta fase por el criterio del
@@ -391,8 +391,8 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   razón completa vive en `DECISIONS.md`, entrada del 2026-08-10 "La migración al lienzo se parte en
   dos, y la primera mitad vuelve a la Fase 5".
 
-La fase pasa a `en progreso` al completarse el incremento 5.1, y a `cerrada` cuando el 5.6 esté
-hecho y corroborado.
+La fase pasó a `en progreso` al completarse el incremento 5.1, y a `cerrada` el 2026-08-11, con los
+seis entregados y corroborados por el autor en el navegador.
 
 **El gestor de paneles se parte, y la salida del motor tiene lugar.** El ADR del 2026-07-24
 reserva el gestor completo de paneles para la segunda característica. Esa reserva es del gestor
@@ -441,25 +441,19 @@ conciencia.
   declara y pide no borrarlo. Su destino no está decidido, y es la otra mitad de la misma
   característica que "Motor Automático".
 
-**Qué falta para cerrar la fase.** Los seis incrementos están entregados y los tres puntos de deuda
-de arriba no son trabajo pendiente de esta fase: dos apuntan al ítem de backlog que junta a "Motor
-Automático" con "Fijar Acordes", y el de los widgets de andamiaje espera a que existan los widgets
-de verdad, que son de las Fases 9 y 10. Quedan dos cosas, las dos del Criterio de aceptación de esta
-misma sección:
-
-1. El autor tiene que corroborarlo en el navegador. En particular sigue sin confirmar, con GPU real,
-   el arreglo del texto borroso que entregó el incremento 5.4: la comprobación headless da un
-   rasterizado idéntico, pero headless no reproduce la capa de composición obsoleta que causaba el
-   problema.
-2. El Criterio dice que "el motor y el coloreo quedan intactos", y el incremento 5.5.2 tocó el motor
-   a propósito, con una línea y con las fixtures verdes. Esa cláusula se escribió cuando la fase se
-   creía enteramente de disposición. Hay que reconciliarla antes de cerrar, no ignorarla.
-
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, la barra de menús permanente existe como
 chrome para opciones y logs, la salida del motor tiene un lugar visible definido o queda
-cubierta por el log, el motor y el coloreo quedan intactos, todos los fixtures existentes
-siguen pasando, y el autor lo corrobora en el navegador.
+cubierta por el log, ningún cambio de esta fase altera el comportamiento del motor, todos los
+fixtures existentes siguen pasando, y el autor lo corrobora en el navegador.
+
+La cláusula del motor decía "el motor y el coloreo quedan intactos" y se reformuló, porque el
+incremento 5.5.2 tocó una línea de `src/engine.js` a propósito. Que un criterio de aceptación de
+una fase de interfaz admita tocar el motor no es un descuido: está decidido y comprobado en
+`DECISIONS.md`, entrada del 2026-08-11 "El Criterio de aceptación de la Fase 5 decía que el motor
+queda intacto, y envejeció". Ahí están las dos pruebas que reemplazan a la palabra "intactos", un
+`diff` sobre `src/engine.js` que muestre solo cambios de nombre de un valor de salida, y las 41
+fixtures en verde.
 
 **Nota de reapertura (2026-07-25):** el primer intento, apilado, se construyó y quedó en
 V11.19. Sirvió para ver que el modelo real es de capas, no de pila. Se reabre la fase para
