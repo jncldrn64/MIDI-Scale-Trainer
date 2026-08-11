@@ -469,7 +469,7 @@ de las fases anteriores se lee como "widget" según esa misma refinación.
 
 ## FASE 5B: Partir `index.html` en archivos, con el contrato escrito antes
 
-**Estado:** `pendiente`
+**Estado:** `cerrada (2026-08-11)`, con la v11.70
 
 **Objetivo:** escribir qué tiene que hacer cada pieza y recién entonces partir el archivo. Lo que
 pide esta fase no es el conteo de líneas sino el contrato de widgets y entrenamientos, que la
@@ -525,8 +525,10 @@ en dos PR, y el primero es un corte puro".
 2026-08-11.** El PR del corte puro la declaró pendiente, porque corrió headless y ahí no hay Web
 MIDI. El autor conectó un teclado CASIO por USB y tocó sobre el `index.html` ya partido: el
 dispositivo se conectó, las notas entraron, el motor detectó cuatro contextos distintos y evaluó nota
-por nota, incluida la sensible en universo menor, que es el único caso que dispara ese color. Queda
-pendiente lo mismo para la segunda parte, que todavía no se escribió.
+por nota, incluida la sensible en universo menor, que es el único caso que dispara ese color. La
+segunda parte se corroboró igual y con más exigencia, comparando dos registros de la misma pieza
+tocada dos veces: los contextos, los análisis armónicos y los veintinueve veredictos salieron
+idénticos, línea por línea y en orden.
 
 También quedó ejecutado lo que ya estaba decidido acá: el CSS salió a su propio archivo, 270 líneas,
 y el markup se quedó, porque sin ES Modules y sin build no existe forma de incluir un fragmento de
@@ -558,14 +560,22 @@ Node, y `src/engine.js` lleva una envoltura escrita a mano por eso, con `module.
 paga ese mismo peaje; los que sean de interfaz pura, no. Cuáles son cuáles lo decide el contrato, no
 la partición.
 
-**Tercer trabajo: normalizar lo que quedó del lienzo.** El cascarón lo entregó el
-incremento 5.6 de la Fase 5, y con él las funciones de área, zona de notas, puntos de nacimiento,
-cobertura y arrastre ya miden en píxeles de lienzo. Lo que queda acá es la segunda pieza: pasar cada
-medida y cada comentario restante a unidades de lienzo, y revisar que ninguna regla de CSS siga
-resolviendo contra la ventana. Vive acá porque esta fase reescribe esas mismas funciones al partir
-el archivo, y dos pasadas separadas sobre el mismo código es trabajo doble. Las razones completas
-viven en `DECISIONS.md`, entradas del 2026-08-10 "La migración al lienzo sale de la Fase 5" y "La
-migración al lienzo se parte en dos, y la primera mitad vuelve a la Fase 5".
+**Tercer trabajo: los restos del lienzo. Entregado el 2026-08-11 con la v11.70.**
+
+Esta pieza se describió como pasar cada medida y cada comentario restante a unidades de lienzo, y esa
+descripción se escribió antes de que el cascarón existiera. Un barrido sobre las catorce piezas la
+desmintió: **la migración la hizo el cascarón del incremento 5.6.** Quedaba una sola lectura de la
+ventana, la del cálculo de la escala en `lienzo.js`, que es el único lugar que debe leerla; una sola
+unidad de viewport en el CSS, la altura del `body`, que es correcta porque el `body` es el marco donde
+se dibujan las franjas negras y no contenido del lienzo; y las mediciones contra el DOM que quedan son
+`offsetWidth` y `offsetHeight`, previas a la transformación y ya migradas.
+
+Lo que quedaba eran cuatro restos, y así se hizo: el teclado pasó a derivar su ancho de
+`LIENZO_ANCHO` en vez de medir el contenedor, se borró la regla `.container` con su tope de 1600 px
+de la era anterior al lienzo, se corrigieron tres comentarios que seguían diciendo que el fondo toma
+el viewport, y se borró un `font-size` de CSS que no se alcanzaba nunca. La razón de escribirlo así
+en vez de inventarle volumen a la pieza vive en `DECISIONS.md`, entrada del 2026-08-11 "La tercera
+pieza de la Fase 5B era chica, y se dice".
 
 **Criterio de aceptación:** el contrato está escrito y mergeado antes del primer PR de código, las
 41 fixtures siguen pasando, la app abre desde `file://` sin servidor, el autor la corrobora en

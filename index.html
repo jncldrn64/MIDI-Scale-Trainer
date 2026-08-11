@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.69 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.70 (Inteligencia Armónica)</title>
     <link rel="stylesheet" href="src/estilos.css">
 </head>
 <body>
@@ -18,12 +18,12 @@
          lienzo en vez de contra la ventana, sin cambiarles el position. No convertirlos a
          absolute. -->
     <div id="lienzo">
-    <div class="container">
+    <div>
         <!-- BARRA DE MENÚS PERMANENTE (incremento 5.2): fija arriba, siempre visible. El
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.69</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.70</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -171,7 +171,7 @@
             </div>
         </div>
 
-        <!-- FONDO ÚNICO (capa fija a viewport completo, detrás de todo): el teclado en la
+        <!-- FONDO ÚNICO (capa que toma el lienzo entero, detrás de todo): el teclado en la
              franja de abajo a todo el ancho, y encima la zona reservada de notas que caen,
              vacía. El motor de notas que caen no existe todavía (backlog), no se crea acá.
              La escala se sigue coloreando sobre las teclas: renderKeyboard queda intacto. -->
