@@ -251,6 +251,40 @@ violaría append-only.
 Nada se declara "funciona" o "probado" sin una corrida real. Si no se verificó, se dice
 con esas palabras.
 
+## Promesas y umbrales
+
+La regla 6 de "Prosa" cubre los números: uno que describe el código va con el comando que lo
+recalcula. `wc -l` recalcula un número, y nada recalcula una promesa. Estas dos reglas cubren las
+promesas.
+
+1. **Ninguna regla del repo prescribe un mecanismo futuro.** Un umbral, un criterio de aceptación o
+   una regla de método pueden obligar a decidir; no pueden decidir por adelantado. Entre que la
+   regla se escribe y que se dispara pueden pasar meses, y el mecanismo prometido puede no existir,
+   no funcionar o haber dejado de ser el mejor.
+2. **Toda frase que nombre una sintaxis concreta, un protocolo o una API va con su corrida pegada**,
+   sin importar en qué sección esté ni de qué se disfrace. Esta es la red de la primera, y el
+   disparador es mecánico a propósito: en el caso que las motivó, la frase se leía como decisión de
+   diseño y no como promesa sobre el navegador, así que un disparador que dependa de reconocer la
+   intención no la habría atrapado.
+
+El caso: el §7 de `docs/ARCHITECTURE.md` fijó `<script type="module">` como salida del umbral de las
+1000 líneas, y se citó en tres archivos entre el 2026-07-03 y el 2026-08-09 sin que nadie abriera un
+módulo desde `file://`. La corrida tarda diez segundos y lo habría matado en el momento. Ver
+`docs/DECISIONS.md`, entrada del 2026-08-11 "Los ES Modules no cargan desde `file://`, y el umbral
+deja de prescribir".
+
+Cuando un umbral se dispara, la decisión que abre contesta tres preguntas antes de que se escriba
+nada en el ROADMAP:
+
+1. Qué se está volviendo difícil, concretamente y con el número que lo muestra.
+2. Qué opciones hay y qué cuesta cada una.
+3. Cuál es la corrida que descarta las que no funcionan.
+
+Las tres obligan a que la decisión exista, quede escrita y esté probada, y ninguna receta un
+mecanismo, así que no repiten el error que corrigen. Este es el protocolo mínimo. El completo, con
+el criterio para promover un ítem del BACKLOG a fase y el de reabrir una fase cerrada, es deuda de
+método: los dos ítems están anotados en el BACKLOG de `docs/ROADMAP.md`.
+
 ## Flujo de trabajo
 
 Se trabaja vía Pull Request. Si `push`, `branch` o `PR` devuelve `403`, se para y se avisa

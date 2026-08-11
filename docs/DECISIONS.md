@@ -1662,6 +1662,85 @@ comprobar y deja la decisión en manos de quien quiera justificarla. Un `diff` y
 
 ---
 
+## 2026-08-11 — Los ES Modules no cargan desde `file://`, y el umbral deja de prescribir
+
+**Contexto:** el §7 de `ARCHITECTURE.md`, sección "No framework, por ahora", fija desde el
+2026-07-03 que si `index.html` pasa las 1000 líneas el paso siguiente es modularizar con ES Modules
+nativos y `<script type="module">`. Eso no funciona desde `file://` y nunca se probó.
+
+Los scripts de tipo módulo, a diferencia de los clásicos, se piden con CORS. Desde el sistema de
+archivos el origen es `null`, y las peticiones de origen cruzado solo se admiten para los esquemas
+http, https, data, chrome y chrome-extension. La corrida, con una página que carga un script clásico
+y un módulo del mismo directorio, en Chromium 141:
+
+```
+blocked by CORS policy: Cross origin requests are only supported for
+protocol schemes: chrome, chrome-untrusted, data, http, https.
+RESULTADO: {"clasico":"el clasico cargo","modulo":null}
+```
+
+El clásico cargó y el módulo no. No es un bug ni una versión vieja del navegador: cuando se pidió
+permitir módulos desde `file://`, la respuesta fue que las funciones nuevas usan CORS sin excepción,
+porque la exención de los scripts clásicos es una herencia anterior al modelo de seguridad y no se
+quiere repetir.
+
+**Lo que hace grave este caso es que el repo ya tenía la respuesta correcta, desde el mismo día.**
+La entrada del 2026-07-03 de este archivo, *Fase 0: fixtures de regresión + extracción del motor puro
+a `src/engine.js`*, descarta migrar a ES Modules y dice que un `<script src>` global alcanza. El §7,
+escrito el mismo día en otro archivo, dice lo contrario. No faltaba información: había dos afirmaciones contradictorias y se
+propagó la del archivo que se lee como autoridad de arquitectura.
+
+**Y la alternativa ya está demostrada en producción.** `index.html` carga `src/engine.js` con un
+script clásico desde `file://` y funciona hoy. El encabezado de ese archivo explica por qué está
+escrito así: corre como global de navegador y como módulo de Node, sin build step ni ES Modules. El
+archivo que funciona documenta que funciona porque evita los módulos, y el §7 seguía prescribiéndolos.
+
+**Decisión, en tres partes.**
+
+1. **Los ES Modules quedan descartados mientras `file://` sea un requisito.** El camino de
+   modularización es scripts clásicos en varios archivos: sin `import` ni `export`, sin build, sin
+   bundler y sin framework.
+2. **El §7 deja de prescribir un mecanismo y pasa a abrir una decisión.** El umbral hizo bien su
+   trabajo: se disparó y alguien abrió la Fase 5B. Que el número sea arbitrario da igual, porque el
+   valor de una alarma no está en acertar el umbral sino en existir. Lo que falló es que la misma
+   frase que alertaba también recetaba el remedio, y esa receta nunca se corrió. Una regla de umbral
+   no puede prometer un mecanismo, porque entre que se escribe y que se dispara pueden pasar meses y
+   el mecanismo puede no existir o no ser el mejor. Al cruzarse, el umbral obliga a abrir una
+   decisión que se escribe acá con su corrida, y nada más.
+3. **El segundo gatillo del §7, "o el estado se vuelve difícil de razonar", se retira.** No tiene
+   medida y no se le inventa una: fijar hoy un umbral sobre código que todavía no existe repetiría
+   el error que esta entrada corrige. El gatillo de líneas alcanza como alarma, y si mañana el
+   estado se vuelve difícil de razonar con menos líneas, eso abre una decisión igual, por la vía
+   normal.
+
+**Qué queda superado.** Toda aparición que prescriba `<script type="module">` o ES Modules nativos
+como el paso siguiente: el §7 de `ARCHITECTURE.md`, el título, el objetivo y el alcance de la Fase
+5B en `ROADMAP.md`, y en este archivo las entradas del 2026-07-24 *Arquitectura de UI: paneles sobre
+un fondo fijo, el motor como única fuente*, del 2026-08-09 *El umbral de las 1000 líneas se cruzó
+durante la Fase 5, y se atiende después de cerrarla* y del 2026-08-10 *La migración al lienzo sale de
+la Fase 5 y pasa a la Fase 5B*. Las tres de acá se quedan escritas por append-only y quedan
+superadas por esta entrada en la parte que prescribe el mecanismo, no en el resto. La del 2026-07-03
+no queda superada: decía lo correcto.
+
+**El hueco de método, que es lo que hay que cerrar.** El PR que agendó la Fase 5B se llamó a sí
+mismo un arreglo de números y referencias que se pudren, y verificó seis cosas: el conteo de líneas,
+cuatro referencias de archivo y línea, dos citas del motor, las fixtures, las viñetas y la versión
+mostrada. Las seis eran sobre el estado del repo. Ninguna era sobre el destino que ese PR estaba
+agendando. La regla 6 de "Prosa" pide que un número que describe el código vaya con el comando que
+lo recalcula, y `wc -l` recalcula un número, pero nada recalcula una promesa. Un número heredado se
+recalcula y un mecanismo heredado no se prueba: esa asimetría es el hueco. La corrección va como
+regla operativa en `CLAUDE.md`, sección "Prosa", más el protocolo de tres preguntas que una decisión
+de umbral tiene que contestar.
+
+**Razón para no escribir acá cómo se parte el archivo.** El orden de carga de los scripts clásicos,
+el reparto de responsabilidades y el espacio de nombres son decisiones de la partición, y la
+partición todavía no ocurrió. Prescribir el mecanismo antes de necesitarlo es exactamente el error
+que esta entrada corrige.
+
+**Estado:** vigente. Supera al §7 en su formulación anterior.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

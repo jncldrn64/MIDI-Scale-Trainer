@@ -190,19 +190,34 @@ del lenguaje. Migrar a React o Vue no arregla el bug de raíz ambigua ni ningún
 teoría musical, y apila una curva de aprendizaje de framework encima de la de teoría
 musical, que es la prioridad real.
 
-El umbral está fijado en números: si `index.html` pasa las 1000 líneas, o el estado se
-vuelve difícil de razonar, el siguiente paso es modularizar con ES Modules nativos
-(`<script type="module">`), no adoptar un framework. Un framework se reconsidera solo si
-aparece una necesidad real de UI reactiva compleja, tipo múltiples vistas o routing, que
-hoy no existe.
+El umbral está fijado en números: si `index.html` pasa las 1000 líneas de código y markup, hay
+que abrir una decisión sobre cómo se parte, y esa decisión se escribe en `DECISIONS.md` con la
+corrida que descarta lo que no funciona. El umbral obliga a decidir y no decide: no receta
+ningún mecanismo. Un framework se reconsidera solo si aparece una necesidad real de UI reactiva
+compleja, tipo múltiples vistas o routing, que hoy no existe.
 
-**El umbral ya se cruzó.** Medido con `wc -l` el 2026-08-09: `index.html` tiene 1055 líneas y
-`src/engine.js` 249. El gatillo se cumplió durante la Fase 5, con el trabajo visual en curso, y
-se decidió terminar esa fase antes de tocarlo. La modularización es la Fase 5B del `ROADMAP.md`,
-entre la Fase 5 y la Fase 6. La decisión y su razón viven en `DECISIONS.md`, entrada del
-2026-08-09. Este párrafo se borra cuando la 5B cierre.
+La versión anterior de este párrafo sí recetaba: decía que el paso siguiente era modularizar con
+ES Modules nativos y `<script type="module">`. Eso no carga desde `file://`, que es requisito de
+esta app, y nunca se corrió en los treinta y nueve días que estuvo escrito. El camino que queda
+es scripts clásicos en varios archivos, que `src/engine.js` ya demuestra. La corrida del CORS y
+las tres partes de la decisión viven en `DECISIONS.md`, entrada del 2026-08-11 "Los ES Modules no
+cargan desde `file://`, y el umbral deja de prescribir". Esa misma entrada retira el segundo
+gatillo que este párrafo tenía, "o el estado se vuelve difícil de razonar", por no tener medida.
 
-Los conteos de líneas de esta sección se recalculan con `wc -l index.html src/engine.js`. La
-versión anterior de este texto declaraba 573 y 145 líneas, números de la v11.0 que envejecieron
-tres incrementos sin que nadie los volviera a correr, y por eso el umbral se cruzó sin que se
-notara.
+**El umbral ya se cruzó.** Medido el 2026-08-11: `index.html` tiene 1524 líneas totales, 126
+vacías y 227 de comentario, o sea 1171 de código y markup. `src/engine.js` tiene 249. El gatillo
+se cumplió durante la Fase 5, con el trabajo visual en curso, y se decidió terminar esa fase
+antes de tocarlo. La partición es la Fase 5B del `ROADMAP.md`, entre la Fase 5 y la Fase 6. Este
+párrafo se borra cuando la 5B cierre.
+
+El conteo se recalcula con estos tres comandos, y el de código y markup es la resta:
+
+```sh
+wc -l < index.html
+grep -c '^[[:space:]]*$' index.html
+grep -c '^[[:space:]]*\(//\|/\*\|\*\|<!--\)' index.html
+```
+
+La versión anterior de este texto declaraba 573 y 145 líneas, números de la v11.0 que
+envejecieron tres incrementos sin que nadie los volviera a correr, y por eso el umbral se cruzó
+sin que se notara.

@@ -2,6 +2,28 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.65 — 2026-08-11
+
+### Fixed
+
+- `docs/ARCHITECTURE.md`: el §7 recetaba `<script type="module">` como salida del umbral de las 1000 líneas. Los scripts de tipo módulo se piden con CORS y desde `file://` el origen es `null`, así que no cargan. La receta estuvo escrita treinta y nueve días sin correrse.
+- `docs/ARCHITECTURE.md`: el umbral deja de recetar un mecanismo y pasa a obligar a abrir una decisión. Una alarma escrita meses antes no puede prometer un remedio que nadie probó.
+- `docs/ARCHITECTURE.md`: se retira el segundo gatillo del §7, "o el estado se vuelve difícil de razonar". No tiene medida, y no se le inventa una sobre código que todavía no existe.
+- `docs/ARCHITECTURE.md`: el conteo del umbral pasa a ser por archivo, sin comentarios ni líneas vacías, con los tres comandos que lo recalculan. Medido el 2026-08-11: 1524 líneas totales, 126 vacías, 227 de comentario, 1171 de código y markup.
+- `docs/DECISIONS.md`: entrada con la corrida del CORS pegada. La respuesta correcta ya vivía en la entrada del 2026-07-03 desde el mismo día; lo que falló fue que se propagó la versión escrita en el archivo con más autoridad aparente.
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 5B se rejustifica. Deja de existir por el conteo de líneas y pasa a existir por el contrato de widgets y entrenamientos, que va primero porque cómo se parte el archivo depende de qué tiene que hacer cada pieza.
+- `docs/ROADMAP.md`: la fase queda con tres trabajos en orden, contrato, partición y la segunda pieza del lienzo. El alcance pasa a scripts clásicos en varios archivos. La subsección "Por qué 5B y no un número nuevo" no se tocó.
+- `docs/ROADMAP.md`: se anota una restricción de la partición que no estaba escrita. Las fixtures corren en Node y `src/engine.js` lleva envoltura a mano por eso; cualquier archivo nuevo que quiera cubrirse paga el mismo peaje.
+- `docs/ROADMAP.md`: "Bloqueada por" decía cinco incrementos cerrados. La Fase 5 cerró con seis.
+- `CLAUDE.md`: sección "Promesas y umbrales". Ninguna regla del repo receta un mecanismo futuro, y toda frase que nombre una sintaxis, un protocolo o una API va con su corrida pegada. El disparador es mecánico porque el error fue clasificar mal la frase.
+- `CLAUDE.md`: protocolo mínimo de tres preguntas para cuando un umbral se dispara. Qué se vuelve difícil y con qué número, qué opciones hay y qué cuestan, y cuál es la corrida que descarta las que no funcionan.
+- `docs/GLOSARIO.md`: tres términos, script clásico, umbral y promesa, con su sección de método.
+
+La versión mostrada sigue en V11.63; el desfase lo cierra el próximo PR de código.
+
 ## v11.64 — 2026-08-11
 
 ### Fixed

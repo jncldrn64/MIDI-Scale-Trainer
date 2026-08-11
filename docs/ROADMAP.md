@@ -467,14 +467,25 @@ de las fases anteriores se lee como "widget" según esa misma refinación.
 
 ---
 
-## FASE 5B: Modularizar `index.html` con ES Modules nativos
+## FASE 5B: Partir `index.html` en archivos, con el contrato escrito antes
 
 **Estado:** `pendiente`
 
-**Objetivo:** cumplir el umbral que `ARCHITECTURE.md` §7 fija desde el principio y que ya se
-cruzó. Esa sección dice que si `index.html` pasa las 1000 líneas el siguiente paso es
-modularizar con ES Modules nativos, sin adoptar framework. Medido el 2026-08-09: `index.html`
-tiene 1055 líneas y `src/engine.js` 249.
+**Objetivo:** escribir qué tiene que hacer cada pieza y recién entonces partir el archivo. Lo que
+pide esta fase no es el conteo de líneas sino el contrato de widgets y entrenamientos, que la
+subsección "Documento de requisitos, propósito y público objetivo" de "Deuda de método y
+documentación" ya reclama: qué puede usar o alterar un entrenamiento, qué puede usar o alterar un
+widget, y qué determina que algo sea uno, otro o ninguno.
+
+Ese motivo manda sobre el conteo por una razón mecánica: cómo se parte el archivo depende de qué
+tiene que hacer cada pieza. Partir primero y escribir el contrato después garantiza repartir de
+nuevo, que es el trabajo sobre trabajo que la Fase 5 sufrió por no levantar requisitos antes.
+
+El umbral del §7 sigue siendo la alarma que abrió esta fase y ya no dice cómo resolverla. Desde el
+2026-08-11 obliga a abrir una decisión, no a aplicar un mecanismo: la razón vive en `DECISIONS.md`,
+entrada del 2026-08-11 "Los ES Modules no cargan desde `file://`, y el umbral deja de prescribir".
+Medido el 2026-08-11, `index.html` tiene 1524 líneas totales y 1171 de código y markup, y
+`src/engine.js` 249; el §7 trae los comandos que lo recalculan.
 
 **Por qué 5B y no un número nuevo:** insertar una Fase 6 nueva obligaría a correr las seis fases
 siguientes, y los encabezados de este archivo son anclajes de los que un modelo saca qué hacer al
@@ -482,28 +493,43 @@ ejecutar una fase. Tampoco puede llamarse 5.5, porque ese nombre ya lo usa el qu
 de la Fase 5. La letra evita las dos colisiones y deja el orden de ejecución claro: va después de
 la Fase 5 completa y antes de la Fase 6.
 
-**Alcance:** partir `index.html` en módulos por responsabilidad, siguiendo la separación que
-`ARCHITECTURE.md` §2 ya documenta: `State`, `MIDI`, `UI` y `SysLog`. Se carga con
-`<script type="module">`, sin build step, sin bundler y sin framework, que es lo que la decisión
-del 2026-07-03 descarta. `src/engine.js` se queda como está: ya es el motor puro y corre en Node
-contra las fixtures. La app tiene que seguir abriendo desde `file://`.
+**Alcance:** partir `index.html` en archivos con scripts clásicos, cada uno cargado con su
+`<script src>`, sin `import`, sin `export`, sin build step, sin bundler y sin framework.
+`src/engine.js` se queda como está: ya es el motor puro y corre en Node contra las fixtures. La app
+tiene que seguir abriendo desde `file://`.
 
-**Primer trabajo declarado: normalizar lo que quedó del lienzo.** El cascarón lo entregó el
+**Primer trabajo: el contrato de widgets y entrenamientos.** Doc-only, antes de tocar una línea de
+código. Es el documento que "Deuda de método y documentación" ya reclama, y que hay que atar a
+propósito con la nota de contrato de salida parqueada en la Fase 9 para no terminar con dos
+documentos que dicen lo mismo con sentidos distintos.
+
+**Segundo trabajo: la partición.** Con el contrato en la mano los cortes se deducen en vez de
+discutirse. La separación que `ARCHITECTURE.md` §2 documenta, `State`, `MIDI`, `UI` y `SysLog`, es
+el punto de partida, no el resultado: el contrato puede moverla.
+
+Una restricción de la partición que conviene tener presente desde ahora: las fixtures corren en
+Node, y `src/engine.js` lleva una envoltura escrita a mano por eso, con `module.exports` para Node y
+`root.Engine` para el navegador. Cualquier archivo nuevo que quiera cubrirse con `node tests/run.js`
+paga ese mismo peaje; los que sean de interfaz pura, no. Cuáles son cuáles lo decide el contrato, no
+la partición.
+
+**Tercer trabajo: normalizar lo que quedó del lienzo.** El cascarón lo entregó el
 incremento 5.6 de la Fase 5, y con él las funciones de área, zona de notas, puntos de nacimiento,
 cobertura y arrastre ya miden en píxeles de lienzo. Lo que queda acá es la segunda pieza: pasar cada
 medida y cada comentario restante a unidades de lienzo, y revisar que ninguna regla de CSS siga
-resolviendo contra la ventana. Vive acá porque esta fase reescribe esas mismas funciones al
-modularizar, y dos pasadas separadas sobre el mismo código es trabajo doble. Las razones completas
+resolviendo contra la ventana. Vive acá porque esta fase reescribe esas mismas funciones al partir
+el archivo, y dos pasadas separadas sobre el mismo código es trabajo doble. Las razones completas
 viven en `DECISIONS.md`, entradas del 2026-08-10 "La migración al lienzo sale de la Fase 5" y "La
 migración al lienzo se parte en dos, y la primera mitad vuelve a la Fase 5".
 
-**Criterio de aceptación:** las 41 fixtures siguen pasando, la app abre desde `file://` sin
-servidor, el autor la corrobora en Chrome con el piano físico, y ningún archivo de código pasa las
-1000 líneas. El motor y `renderKeyboard` no cambian de comportamiento.
+**Criterio de aceptación:** el contrato está escrito y mergeado antes del primer PR de código, las
+41 fixtures siguen pasando, la app abre desde `file://` sin servidor, el autor la corrobora en
+Chrome con el piano físico, y ningún archivo de código pasa las 1000 líneas contadas como las cuenta
+el §7. El motor y `renderKeyboard` no cambian de comportamiento.
 
 **Bloquea:** Fase 6.
 
-**Bloqueada por:** Fase 5 completa, con sus cinco incrementos cerrados.
+**Bloqueada por:** Fase 5 completa, que cerró el 2026-08-11 con seis incrementos.
 
 **Excepción de método, anotada a propósito:** esta fase nace de un umbral que se disparó a mitad
 de otra fase, y el repo no tenía escrito qué hacer en ese caso. Se decidió terminar la Fase 5
