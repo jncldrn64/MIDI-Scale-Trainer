@@ -1853,6 +1853,72 @@ color del widget de salida del motor. No se resuelve acá; ya está anotada en e
 
 ---
 
+## 2026-08-11 — La partición se hace en dos PR, y el primero es un corte puro
+
+**Contexto:** el segundo trabajo de la Fase 5B es partir `index.html` en archivos. El contrato de
+permisos ya dice por dónde se corta, donde cambia el permiso, pero ese criterio atraviesa `UI` por
+la mitad: `buildUniverse` escribe el universo, o sea permiso de escritura; `buildKeyboard` y
+`renderKeyboard` son capa 0, o sea sistema; y `updateStatus` solo lee y presenta. Repartir esos
+métodos y mover los bloques en el mismo PR mezcla dos trabajos que fallan distinto.
+
+**Decisión: la partición se hace en dos PR.** El primero mueve bloques a archivos y no mueve un
+solo método entre objetos: ni renombres, ni reordenamientos internos, ni arreglos de paso. El
+segundo reorganiza por permiso, que es donde está el trabajo de verdad.
+
+**Razón: un corte puro se puede probar.** Concatenando los archivos nuevos en orden de carga y
+comparando contra el bloque de script original, el resultado tiene que ser idéntico salvo los
+encabezados de archivo. Eso convierte "no cambió el comportamiento" de una afirmación en una
+comprobación. En cuanto se mueve un método, esa propiedad se pierde y hay que volver a confiar en
+la lectura. El `diff` de la corrida dio exactamente diez líneas de diferencia, una por archivo, y
+las diez son el comentario de encabezado.
+
+**Los dos datos que hacen segura esta partición**, y que son la razón de que no necesite la
+ceremonia que una partición normalmente necesita:
+
+1. **En todo el script hay una sola sentencia ejecutable de primer nivel**, la asignación de
+   `window.onload`. Todo lo demás son declaraciones de constantes y de funciones. Eso resuelve las
+   referencias hacia adelante, que existen y son varias: `lienzo.js` nombra a `Layout` y `layout.js`
+   nombra a `Lienzo`, que es un ciclo entre dos archivos; `cajas.js` nombra a `Layout` y `midi.js`
+   nombra a `UI`, los dos definidos en archivos que cargan después. Con módulos serían un problema
+   de resolución; con scripts clásicos y solo definiciones no lo son, porque esas referencias viven
+   dentro de cuerpos de método y se resuelven cuando el método corre, que es siempre después de que
+   los diez archivos cargaron.
+2. **En scripts clásicos, un `const` de primer nivel va al ámbito léxico global**, compartido entre
+   todos los scripts de la página. No hace falta objeto contenedor, ni exportar, ni inventar un
+   espacio de nombres: un `const` definido en un archivo se ve desde otro. Por eso ningún archivo
+   nuevo lleva envoltura, y `src/engine.js` conserva la suya, que existe por otro motivo, correr en
+   Node contra las fixtures.
+
+**Criterio de nombres: cada archivo toma el nombre de lo que define.** `lienzo.js` define `Lienzo`,
+`layout.js` define `Layout`, `cajas.js` define `CAJAS`, `midi.js` define `MIDI`. Así el nombre del
+archivo no es una categoría inventada que haya que mantener sincronizada con el código, y el día que
+un objeto se renombre el archivo se renombra con él. Los nombres mezclan español e inglés porque los
+identificadores del código ya lo hacen, y renombrar identificadores es su propio PR, ya anotado en
+"Deuda de método y documentación" del `ROADMAP.md`.
+
+**El orden de carga es el orden del archivo original.** Como solo `arranque.js` ejecuta, el orden de
+los otros nueve no cambia el comportamiento; queda elegido para que se lea de arriba abajo, primero
+las constantes, después el estado, después los productores de datos, después la interfaz, después el
+chasis de cajas. Va dicho en un comentario del HTML. No se usó el atributo que difiere la ejecución:
+no hacía falta, y agregarlo habría sido un cambio de comportamiento en un PR que se define por no
+tener ninguno.
+
+**Un efecto lateral del corte contiguo, que muestra por qué hace falta el segundo PR.**
+`saveLayout` y `loadLayout` quedaron en `cajas.js` y no en `layout.js`, porque en el archivo
+original viven entre el registro de cajas y el cascarón del lienzo, y un corte puro no puede
+moverlas. Ese es exactamente el tipo de acomodo que el segundo PR resuelve.
+
+**Qué queda diferido.** Cubrir la geometría del layout con fixtures no se decide acá: agregar
+envoltura para Node rompería la propiedad de corte puro, porque metería código que en el original no
+existe. El dato que lo justifica está a la vista igual: la geometría es aritmética sobre números del
+lienzo, hoy no tiene ninguna prueba, y es donde se rompieron dos cosas durante la Fase 5, el clamp
+que no corría al redimensionar y la alineación de la grilla de la fórmula. El disparador es el PR de
+la segunda parte.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

@@ -223,6 +223,11 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   escala. Fuente: 2026-08-11, *Los efectos sobre las teclas, y la primera precedencia escrita del
   repo*.
 
+- **corte puro**: una partición que mueve bloques a archivos y no mueve un solo método, ni renombra,
+  ni reordena. Se prueba concatenando los archivos nuevos en orden de carga y comparando contra el
+  original: la única diferencia admitida son los encabezados de archivo. Fuente: 2026-08-11, *La
+  partición se hace en dos PR, y el primero es un corte puro*.
+
 ## Método
 
 - **umbral**: una alarma escrita que obliga a abrir una decisión cuando se cumple. Obliga a decidir
