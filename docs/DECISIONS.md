@@ -2087,6 +2087,44 @@ drenó son sus tres apuntes, no la sección.
 
 ---
 
+## 2026-08-11 — Un ítem parqueado nace con su fecha y el PR que lo trajo
+
+**Contexto:** el PR anterior le dio procedencia a los ítems cuyo origen alguien todavía recordaba, y
+22 de los 44 parqueados quedaron sin nada. Recordar no escalaba, pero el dato existía igual: cada
+ítem entró en un commit, y el commit se encuentra.
+
+```sh
+git log -S "fragmento distintivo del ítem" --format="%h %ad %s" --date=short -- docs/ROADMAP.md
+```
+
+El commit más viejo de esa lista es el que introdujo la cadena. Con ese comando los 44 ítems del
+BACKLOG y de "Direcciones sin fase" quedaron fechados, sin adivinar ninguno.
+
+**Decisión: un ítem parqueado se escribe con la fecha de su entrada y el PR que lo trajo.** La regla
+operativa vive en `CLAUDE.md`, sección "Fechas". Un ítem nuevo nace con ese dato, para que este
+trabajo no haya que repetirlo.
+
+**Por qué el dato importa, más allá de la fecha.** Dos ítems agregados por el mismo PR tienen una
+relación que el ROADMAP no muestra: se anotaron mirando lo mismo. Eso ya cambió la lectura de tres
+grupos. El PR del dueño de superficie trajo seis ítems de una vez, entre ellos la precedencia del
+rojo y la rama del preveredicto, que son el mismo conflicto visto desde dos lados. El PR de la Fase
+5B trajo los cuatro ítems de reglas de método juntos, que es lo que se esperaría, y el del estándar
+espacial trajo el metrónomo, que no tiene nada que ver con el espacio.
+
+**Lo que este dato no dice, y hay que decir que no dice.** El commit responde cuándo entró un ítem y
+con qué otros, no por qué se anotó. Los dos son datos distintos y mezclarlos contamina uno exacto con
+uno interpretado. Por eso este trabajo va antes que cualquier intento de explicar los ítems.
+
+**Una advertencia de método sobre el comando.** `-S` encuentra cuándo apareció una cadena, no cuándo
+apareció una idea. Si un ítem se reescribió, buscar su texto de hoy devuelve el commit de la
+reescritura. Pasó con dos: el ítem de agrupar el log entró como "Log filtrable por categoría" y el
+del feedback entró con otra redacción, los dos con el PR del contrato de permisos, y los dos se
+reescribieron el mismo día. Se resolvieron buscando la redacción vieja, y el ítem dice las dos cosas.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

@@ -770,23 +770,54 @@ prioridad, no porque la rueda la bloquee.
 - Modos griegos (Dórico, Frigio, Mixolidio, Lidio): extensión directa de `SCALES`. Son rotaciones
   de la escala mayor, así que tienen siete notas y la misma colección de calidades de acorde por
   grado, solo repartidas en otros grados. La vista de calidades de la rueda los cubre sin cambios.
+  **Entró:** 2026-07-04, PR "doc: reescribir docs y comentarios en la voz Rossmann". Ese es el
+  primer commit que toca `docs/ROADMAP.md`, así que este ítem está desde que el archivo existe y
+  `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Pentatónicas y Blues como
+  universos propios", "Glosario in-app que crezca junto con lo aprendido", "Modo canción" y
+  "Entrenamiento de oído puro".
 - Pentatónicas y Blues como universos propios, no como parches de excepción. Ojo con esto: no son
   escalas de siete notas, así que no producen una escalera de siete tríadas por grado y la vista de
   calidades de la rueda no se les extiende tal cual. Antes de programarlas hay que decidir qué
   significa ahí un acorde por grado, o si en esos universos la vista muestra otra cosa. Eso es lo
   que las vuelve universos propios y no una escala más en la lista.
+  **Entró:** 2026-07-04, PR "doc: reescribir docs y comentarios en la voz Rossmann". Ese es el
+  primer commit que toca `docs/ROADMAP.md`, así que este ítem está desde que el archivo existe y
+  `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Modos griegos (Dórico,
+  Frigio, Mixolidio, Lidio)", "Glosario in-app que crezca junto con lo aprendido", "Modo canción"
+  y "Entrenamiento de oído puro".
 - Glosario in-app que crezca junto con lo aprendido.
+  **Entró:** 2026-07-04, PR "doc: reescribir docs y comentarios en la voz Rossmann". Ese es el
+  primer commit que toca `docs/ROADMAP.md`, así que este ítem está desde que el archivo existe y
+  `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Modos griegos (Dórico,
+  Frigio, Mixolidio, Lidio)", "Pentatónicas y Blues como universos propios", "Modo canción" y
+  "Entrenamiento de oído puro".
 - Modo "canción": cargar un MIDI, reproducir el bajo, evaluar la melodía en vivo.
+  **Entró:** 2026-07-04, PR "doc: reescribir docs y comentarios en la voz Rossmann". Ese es el
+  primer commit que toca `docs/ROADMAP.md`, así que este ítem está desde que el archivo existe y
+  `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Modos griegos (Dórico,
+  Frigio, Mixolidio, Lidio)", "Pentatónicas y Blues como universos propios", "Glosario in-app que
+  crezca junto con lo aprendido" y "Entrenamiento de oído puro".
 - Entrenamiento de oído puro (dictado de intervalos, identificar un acorde solo de oído).
   El informe de campo ya marcó esto como el objetivo final, y el software actual no lo
   cubre.
+  **Entró:** 2026-07-04, PR "doc: reescribir docs y comentarios en la voz Rossmann". Ese es el
+  primer commit que toca `docs/ROADMAP.md`, así que este ítem está desde que el archivo existe y
+  `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Modos griegos (Dórico,
+  Frigio, Mixolidio, Lidio)", "Pentatónicas y Blues como universos propios", "Glosario in-app que
+  crezca junto con lo aprendido" y "Modo canción".
 - Menor melódica como escala disponible, junto a los modos griegos y las pentatónicas ya
   listados. Cobra sentido si el jazz entra como objetivo.
+  **Entró:** 2026-07-30, PR "doc: enriquecer la rueda de quintas, la regla de animación y el
+  backlog". Con ese mismo PR entraron "Calibración de tiempos por tapping" y "Lectura de partitura
+  como vista futura".
 - Calibración de tiempos por tapping. Hoy los cuatro campos del motor, acumulación, retención,
   error visual y split, se ajustan a mano con números. La idea es fijarlos tocando una secuencia y
   que el programa derive los valores de lo que midió. Arrastra dos cosas más: tempos, y que los
   valores buenos dependen del tempo de la canción, lo que lo ata al modo canción de este mismo
   backlog.
+  **Entró:** 2026-07-30, PR "doc: enriquecer la rueda de quintas, la regla de animación y el
+  backlog". Con ese mismo PR entraron "Menor melódica como escala disponible" y "Lectura de
+  partitura como vista futura".
 - Coherencia visual del set de iconos. Los emojis que la interfaz usa hoy no forman un conjunto
   coherente: cada uno viene de una familia distinta y se ven como piezas sueltas. Queda registrado
   un hallazgo negativo para no repetir el intento: pasarlos a SVG se probó y da más carga, no menos,
@@ -796,18 +827,26 @@ prioridad, no porque la rueda la bloquee.
   2026-08-10 y vive en `CLAUDE.md`, sección "Iconos y emojis", con el código conforme a sus seis
   puntos. Lo que queda de este ítem es solo la parte estética, conseguir un set coherente sin sumar
   costo gráfico.
+  **Entró:** 2026-07-30, PR "doc: cerrar las calidades de acorde de la rueda y precisar el
+  backlog".
 - Lectura de partitura como vista futura. Está anotado para que sea una decisión y no un olvido:
   se mencionó una vez, no está comprometido, y no tiene diseño ni alcance todavía.
+  **Entró:** 2026-07-30, PR "doc: enriquecer la rueda de quintas, la regla de animación y el
+  backlog". Con ese mismo PR entraron "Menor melódica como escala disponible" y "Calibración de
+  tiempos por tapping".
 - Comparar cómo reparten el espacio los programas que ya explican canciones con notas que caen,
   antes de dar por firme el presupuesto de superposición. Hoy se le reserva altura a un motor que no
   existe, y el tope de tres octavos sale de mirar un boceto, no de medir contra algo que funcione.
   Va junto con la lectura de archivos MIDI, porque hasta cargar una canción real no se sabe cuánto
   alto pide de verdad.
+  **Entró:** 2026-07-30, PR "doc: presupuesto de superposición y un solo menú de widgets".
 - Metrónomo. No existe en ninguna parte del proyecto hoy. Interesa porque el tiempo ya participa de
   la evaluación: el indulto por paso cromático depende de una duración fija de 180 ms, y tres de
   los cuatro ajustes del motor son ventanas de tiempo. Un metrónomo abre la puerta a que esas ventanas se
   deriven del tempo en vez de fijarse a mano. Va junto con la calibración por tapping y con los
   tempos por canción que ese ítem ya arrastra.
+  **Entró:** 2026-07-30, PR "doc: actualizar ARCHITECTURE a la jerarquía real y fijar el estándar
+  espacial". Con ese mismo PR entró "Hundir el log cuando la barra crezca".
 - Hundir el log cuando la barra crezca. Hoy queda alcanzable porque la barra tiene un solo nivel.
   La decisión del 2026-07-25 pide que la consola de debug viva detrás de submenús, oculta para
   quien solo toca. Cuando aparezcan menús que se ganen el espacio, como el de archivo para MIDI y
@@ -815,6 +854,8 @@ prioridad, no porque la rueda la bloquee.
   que la consola vive por debajo del piso de tres clics, así que la parte de dónde tiene que vivir
   está resuelta y lo que queda es mudarlo cuando la barra crezca. Ver `DECISIONS.md`, entrada del
   2026-08-10 "Jerarquía de menús: el tres es techo y también es piso".
+  **Entró:** 2026-07-30, PR "doc: actualizar ARCHITECTURE a la jerarquía real y fijar el estándar
+  espacial". Con ese mismo PR entró "Metrónomo".
 - Tabla histórica como widget candidato. Una vista tabular de lo que se tocó en orden, con el
   acorde detectado y el veredicto que el motor le dio a cada nota. No pide motor nuevo: el buffer y
   el log ya tienen esos datos, así que sería un widget que presenta, como el readout. Cubre una
@@ -826,11 +867,16 @@ prioridad, no porque la rueda la bloquee.
   puntuar precisión temporal, que es el eje de juego de ritmo que el proyecto dejó afuera, pero se
   le acerca lo suficiente como para no resolverlo de paso. Se decide cuando esta vista se diseñe,
   no antes.
+  **Entró:** 2026-07-31, PR "doc: preajuste de aprendizaje, selección por opacidad y tabla
+  histórica".
 - Redimensionar un widget en tiempo real. Hoy el molde es fijo a propósito, porque el tamaño
   uniforme es lo que hace que las cajas se lean como un sistema. Dejar que el usuario las estire
   abre preguntas que hoy no tienen respuesta: qué pasa con el tope de cobertura, qué pasa con el
   contenido que se recorta, y si el tamaño se persiste por instancia. Queda anotado como idea, no
   como decisión.
+  **Entró:** 2026-08-01, PR "doc: nacimiento discreto, movimiento libre y el molde con números".
+  Con ese mismo PR entraron "Lineamientos para partir una fase" y "Describir el destino visual en
+  texto dentro del repo".
 - Lineamientos para partir una fase. La Fase 5 tiene cinco incrementos y uno de ellos se entrega en
   dos PR de código, y esa estructura creció sin regla: no hay escrito cuándo un incremento se parte
   ni hasta qué profundidad. Sin lineamiento, el trabajo se subdivide tarde, cuando ya se empezó a
@@ -838,19 +884,29 @@ prioridad, no porque la rueda la bloquee.
   es el mismo problema visto desde el otro lado. **Origen anterior a la sesión de la v11.53 a la
   v11.70; lo que esa sesión aporta son tres casos reales para estudiar:** el incremento 5.3 partido
   en tres PR, el 5.5 en dos, y la partición de la Fase 5B en dos.
+  **Entró:** 2026-08-01, PR "doc: nacimiento discreto, movimiento libre y el molde con números".
+  Con ese mismo PR entraron "Redimensionar un widget en tiempo real" y "Describir el destino
+  visual en texto dentro del repo".
 - Describir el destino visual en texto dentro del repo, con números. Ya está parqueado en "Deuda de
   método y documentación" como sugerencia, y quedó demostrado por qué hace falta: una instrucción en
   prosa sobre dónde van las cajas se puede cumplir de varias maneras y la que sale es la que se
   parece a lo que ya había. Los números del molde y de las posiciones viajaron intactos; lo que
   quedó en palabras, no. Este ítem eleva aquella sugerencia a trabajo concreto: las reglas de
   posición se escriben con medidas, no con adjetivos.
+  **Entró:** 2026-08-01, PR "doc: nacimiento discreto, movimiento libre y el molde con números".
+  Con ese mismo PR entraron "Redimensionar un widget en tiempo real" y "Lineamientos para partir
+  una fase".
 - Detectar el rango real del teclado conectado por MIDI, en vez de asumirlo. El protocolo no lo
   informa directamente, así que habría que inferirlo o dejar que el usuario lo declare. Por defecto
   se muestran las 88 teclas, que es lo escrito. **Procedencia:** salió del incremento que llevó el
   teclado de 61 a 88 teclas, como la alternativa que se descartó ahí mismo. Ver `DECISIONS.md`,
   entrada del 2026-08-10 "Geometría del teclado de 88 teclas, y la barra no presenta lecturas".
+  **Entró:** 2026-08-09, PR "doc: consolidar el area de movimiento, el mapa de terminos y la deuda
+  verificada". Con ese mismo PR entró "Barra de menús que se oculta sola cuando no se usa".
 - Barra de menús que se oculta sola cuando no se usa, como una barra de tareas. Devolvería el alto de
   la barra al fondo y eliminaría la única zona vedada al movimiento de widgets.
+  **Entró:** 2026-08-09, PR "doc: consolidar el area de movimiento, el mapa de terminos y la deuda
+  verificada". Con ese mismo PR entró "Detectar el rango real del teclado conectado".
 - Reglas para cuando un umbral escrito se dispara a mitad de otra fase. Pasó el 2026-08-09 con las
   1000 líneas de `index.html` de `ARCHITECTURE.md` §7: el gatillo se cumplió durante la Fase 5 y no
   había escrito si se frena lo que está en curso, si se abre una fase nueva ahí mismo, o si se
@@ -862,27 +918,41 @@ prioridad, no porque la rueda la bloquee.
   queda es el protocolo completo. La parte de cómo nombrar una fase insertada tiene ahora su caso
   resuelto, la Fase 5B, y la razón está escrita en su propia subsección "Por qué 5B y no un número
   nuevo".
+  **Entró:** 2026-08-09, PR "add: Fase 5B para el umbral de las 1000 lineas y reglas de metodo que
+  faltaban". Con ese mismo PR entraron "Reglas para promover un ítem del BACKLOG a fase", "Reglas
+  para reabrir una fase cerrada" y "Levantar los requisitos y requerimientos antes".
 - Reglas para promover un ítem del BACKLOG a fase. Hoy no hay ninguna, así que una idea suelta se
   queda suelta aunque esté madura, y no por falta de mérito sino por falta de criterio escrito de
   qué la hace fase: si es tener alcance cerrado, criterio de aceptación verificable, o alguien que
   la pida. Sin ese criterio el BACKLOG crece y no drena. **Origen anterior a esta sesión, y sigue
   abierto.** Lo único que ganó es vecindad: existe desde el 2026-08-10 un criterio de entrada de un
   ítem parqueado a una fase **en curso**, que es otra pregunta y no lo reemplaza.
+  **Entró:** 2026-08-09, PR "add: Fase 5B para el umbral de las 1000 lineas y reglas de metodo que
+  faltaban". Con ese mismo PR entraron "Reglas para cuando un umbral escrito se dispara", "Reglas
+  para reabrir una fase cerrada" y "Levantar los requisitos y requerimientos antes".
 - Reglas para reabrir una fase cerrada y para agregarle trabajo. La Fase 5 se cerró, se reabrió y
   después creció a seis incrementos, con uno partido en tres PR, sin que nada escrito dijera si eso
   se puede ni hasta dónde. Va con el ítem de lineamientos para partir una fase, que ya está en esta
   lista: son dos caras del mismo hueco. **Origen anterior a esta sesión, y sigue abierto.** Hay dos
   casos reales para estudiar en vez de uno: la Fase 5, que cerró el 2026-08-11 con seis incrementos,
   y la Fase 5B, que nació de un umbral disparado a mitad de otra fase.
+  **Entró:** 2026-08-09, PR "add: Fase 5B para el umbral de las 1000 lineas y reglas de metodo que
+  faltaban". Con ese mismo PR entraron "Reglas para cuando un umbral escrito se dispara", "Reglas
+  para promover un ítem del BACKLOG a fase" y "Levantar los requisitos y requerimientos antes".
 - Levantar los requisitos y requerimientos antes de seguir programando. Ya está parqueado en "Deuda
   de método y documentación" como documento de requisitos, y los tres ítems de arriba son la
   consecuencia de no tenerlo: cada regla de método aparece cuando ya se rompió. **Origen anterior a
   esta sesión, y parcialmente atendido:** el contrato de permisos del 2026-08-11 cubre qué puede usar
   o alterar un widget, y deja los entrenamientos afuera a propósito, con su disparador declarado.
+  **Entró:** 2026-08-09, PR "add: Fase 5B para el umbral de las 1000 lineas y reglas de metodo que
+  faltaban". Con ese mismo PR entraron "Reglas para cuando un umbral escrito se dispara", "Reglas
+  para promover un ítem del BACKLOG a fase" y "Reglas para reabrir una fase cerrada".
 - Subtítulos de feedback parcialmente coloreables. La idea es que el subtítulo pueda teñir la parte
   de su texto que corresponde a una categoría de la leyenda, para que el color y la palabra digan lo
   mismo sin repetirlo. Queda anotada como idea y sin fase: primero hay que cablear los subtítulos a
   la salida del motor, que hoy siguen siendo un marcador de posición.
+  **Entró:** 2026-08-09, PR "doc: fijar donde vive la leyenda de colores y dos precisiones de
+  nomenclatura".
 - Que el coloreo del teclado obedezca de verdad al estado abierto o cerrado de su dueño, según el
   reparto de la entrada del 2026-08-10 "Dueño de superficie: cerrar el widget apaga su efecto". Hoy
   `Teclado.renderKeyboard` pinta las seis categorías sin mirar qué widget está en pantalla.
@@ -890,6 +960,10 @@ prioridad, no porque la rueda la bloquee.
   entrada declara ella misma que no trae cambio de código detrás y que cablearla es backlog. El
   bloqueo que tenía escrito, que la Fase 5 preservaba `renderKeyboard` intacto, venció: esa fase
   cerró el 2026-08-11.
+  **Entró:** 2026-08-10, PR "doc: dueno de superficie, lienzo de referencia y el glosario vivo".
+  Con ese mismo PR entraron "La precedencia entre el widget de escala", "La rama del preveredicto
+  de `renderKeyboard`", "El split como rango", "Que el widget de feedback del sistema se abra
+  solo" y "Convertir Motor Automático y el panel Fijar Acordes".
 - Los códigos del motor están en dos idiomas. `classifyChordRelation` devuelve `diatonic`,
   `secondary_dominant` y `unclassified`, en inglés, y `getTonalFunction` devuelve `tonica`,
   `subdominante`, `dominante`, `no_diatonica` y `por_definir`, en español. Los dos son salida del
@@ -898,6 +972,7 @@ prioridad, no porque la rueda la bloquee.
   salió del renombre del tercer valor de la clasificación, que entregó la v11.63; ese renombre
   respetó el idioma de sus vecinos para no crear un conjunto mixto, y la inconsistencia mayor quedó
   anotada en vez de arreglada.
+  **Entró:** 2026-08-11, PR "chg: incremento 5.5.2, el analisis dice lo que sabe y lo que no".
 - La leyenda no explica por qué una nota fuera del universo puede salir verde. El motor acepta dos
   casos de nota fuera del universo: la sensible, que se pinta naranja y desde el incremento 5.4 está
   explicada, y el tono conductor de una dominante secundaria, que se pinta verde como si fuera
@@ -906,6 +981,7 @@ prioridad, no porque la rueda la bloquee.
   por secciones: las dos cosas cambian qué muestra la guía, así que conviene decidirlas juntas.
   **Procedencia:** salió de leer el motor mientras se decidía el nombre nuevo de la sensible. Ver
   `DECISIONS.md`, entrada del 2026-08-10 '"Tensión Legal" pasa a "Sensible (empuja a la tónica)"'.
+  **Entró:** 2026-08-10, PR "chg: incremento 5.4, nomenclatura y rotulos honestos".
 - La guía compuesta por secciones que aporta cada widget. Una sección por widget abierto, con su
   dueño y su propósito, y cerrar un widget cierra su sección. Absorbe lo que este ítem pedía antes,
   que la leyenda se filtrara sola: filtrar filas de una tabla fija es menos que componer la guía con
@@ -913,6 +989,9 @@ prioridad, no porque la rueda la bloquee.
   el de la nota fuera del universo que sale verde sin explicación. **Procedencia:** la formulación
   amplia, con el propósito de cada widget y no solo su dueño, se escribió al revisar la guía después
   de la primera sesión con el teclado conectado. Entró con la v11.68.
+  **Entró:** 2026-08-11, PR "add: el contrato de permisos, primer trabajo de la Fase 5B". Con ese
+  mismo PR entraron "Agrupar las categorías del log y filtrar por grupo" y "El feedback lee del
+  log en vez de escribirle".
 - **Agrupar las categorías del log y filtrar por grupo. Va primero de los tres que siguen**, porque
   es la condición para que los otros dos sean usables. No hay que inventar categorías: las seis que
   existen ya se agrupan solas. `MIDI`, `MATH` y `EVAL` son musicales; `LAYOUT`, `SYS` y `ERROR` son
@@ -924,6 +1003,10 @@ prioridad, no porque la rueda la bloquee.
   de menús: el tres es techo y también es piso". **Procedencia:** salió de contar la proporción real
   del registro en la primera sesión con el teclado conectado por USB. La taxonomía que hacía falta ya
   existía; lo que faltaba era agruparla.
+  **Entró:** 2026-08-11, PR "add: el contrato de permisos, primer trabajo de la Fase 5B". El texto
+  de hoy entró como "Log filtrable por categoría" y se reescribió el mismo día con la v11.68. Con
+  ese mismo PR entraron "La guía compuesta por secciones que aporta cada" y "El feedback lee del
+  log en vez de escribirle".
 - **El coloreo se registra de forma diferencial.** Bloqueado por el ítem anterior. Hoy el log
   registra el veredicto y no registra qué se pintó: ni qué tecla recibió qué categoría, ni qué rama
   de la cascada de precedencia ganó, ni qué dueño la produjo. Choca con dos cosas escritas, la
@@ -939,54 +1022,83 @@ prioridad, no porque la rueda la bloquee.
   segundo, y extraer de imágenes un dato que el programa ya conoce y no escribe es más caro y menos
   preciso que escribirlo. La restricción de que el registro sea diferencial salió de contar los
   lugares desde los que se repinta el teclado, doce, y multiplicarlo por las 88 teclas.
+  **Entró:** 2026-08-11, PR "doc: lo que la primera sesion con MIDI real dejo ver".
 - **El feedback lee del log en vez de escribirle.** Depende del ítem de agrupar y filtrar. Hoy es al
   revés: `Feedback.avisar` escribe el texto en la caja y recién después lo manda al log con
   categoría de disposición. La razón nueva, del registro con MIDI real: si el log distingue musical
   de sistema, el feedback puede elegir qué grupo mostrar, y sin esa distinción leer del log no le
   sirve de nada. **Procedencia:** salió de leer la superficie de avisos mientras se escribía el
   contrato de permisos.
+  **Entró:** 2026-08-11, PR "add: el contrato de permisos, primer trabajo de la Fase 5B". El texto
+  de hoy reescrito el mismo día con la v11.68. Con ese mismo PR entraron "La guía compuesta por
+  secciones que aporta cada" y "Agrupar las categorías del log y filtrar por grupo".
 - Dos comentarios de `src/engine.js` citan `UI.buildUniverse` y `UI.updateStatus` "en index.html".
   Las dos citas están muertas: esos métodos dejaron `index.html` en la primera parte de la partición
   y desde la segunda el objeto `UI` no existe. Hoy viven en `Escala` y en `Readout`. Bloqueado por
   nada: es un comentario. Quedó afuera porque los dos PR de la partición declararon que no tocaban
   `src/engine.js`, y romper esa promesa por dos comentarios habría costado más que anotarlos.
+  **Entró:** 2026-08-11, PR "chg: partir index.html, segunda parte, repartir por permiso".
 - Alto del teclado configurable por el usuario. Hoy son 140 px de lienzo fijos. El techo está
   calculado y escrito: 236 px de lienzo, porque a partir de ahí la zona de notas baja de 453.3 px y
   los 170 px del molde se pasan del tope de tres octavos. Un control que deje elegir tiene que
   frenar ahí o negociar el molde o el cap. **Procedencia:** el techo no es una preferencia, sale de
   cruzar el molde de 170 px con el tope de tres octavos. Por eso el ítem lleva el número y no una
   fracción cómoda: un tercio del lienzo son 240 px y se pasa de 236.7.
+  **Entró:** 2026-08-10, PR "chg: teclado de 88 teclas de borde a borde y la leyenda dentro de la
+  guia". Con ese mismo PR entró "Ancho de la negra configurable".
 - Ancho de la negra configurable. Hoy es 0.62 del ancho de la blanca. Los dos extremos ya están
   medidos: a 0.58 es lo que usa un piano real, a 0.62 quedan 9.4 px de blanco visible entre dos
   negras, y a 0.80 caen a 4.9 px, con lo que el tope de las blancas casi desaparece y el teclado deja
   de leerse como teclado. Es cosmético y no bloquea nada. **Procedencia:** salió de evaluar si
   ensanchar las negras dejaría entrar texto en ellas. El motivo se cayó solo cuando se decidió que
   las negras no llevan etiqueta, así que lo que queda del ítem es solo la proporción.
+  **Entró:** 2026-08-10, PR "chg: teclado de 88 teclas de borde a borde y la leyenda dentro de la
+  guia". Con ese mismo PR entró "Alto del teclado configurable por el usuario".
 - La precedencia entre el widget de escala y el de salida del motor cuando los dos reclaman el rojo,
   porque la nota se sale de la escala. Es un conflicto de dos dueños sobre el mismo color y todavía
   no tiene regla escrita. **Procedencia:** salió de notar que el selector de universo también produce
   error: una nota se pinta roja por estar fuera de la escala, y esa decisión depende del universo
   aunque el color pertenezca al widget de salida del motor.
+  **Entró:** 2026-08-10, PR "doc: dueno de superficie, lienzo de referencia y el glosario vivo".
+  Con ese mismo PR entraron "Que el coloreo del teclado obedezca de verdad", "La rama del
+  preveredicto de `renderKeyboard`", "El split como rango", "Que el widget de feedback del sistema
+  se abra solo" y "Convertir Motor Automático y el panel Fijar Acordes".
 - La rama del preveredicto de `renderKeyboard`, la que pinta una nota recién tocada usando el
   conjunto de alturas válidas de la escala, que es dato del widget de escala, con un color del
   widget de salida del motor. No tiene dueño limpio y hay que decidirlo. **Procedencia:** salió de
   leer la cascada de precedencia mientras se repartían los colores por dueño. Usa dato de un dueño y
   color de otro, y esa mezcla es el problema.
+  **Entró:** 2026-08-10, PR "doc: dueno de superficie, lienzo de referencia y el glosario vivo".
+  Con ese mismo PR entraron "Que el coloreo del teclado obedezca de verdad", "La precedencia entre
+  el widget de escala", "El split como rango", "Que el widget de feedback del sistema se abra
+  solo" y "Convertir Motor Automático y el panel Fijar Acordes".
 - El split como rango: el usuario declara desde qué nota hasta qué nota quiere que el motor evalúe,
   con el split exacto adentro de ese rango, y adapta su forma de tocar para caer dentro. Es distinto
   del split actual, que es una sola nota. Bloqueado: toca la evaluación, o sea el motor. El bloqueo
   escrito antes decía que quedaba fuera del alcance de la Fase 5, y esa fase cerró el 2026-08-11; lo
   que sigue bloqueando es tocar el motor, no la fase.
+  **Entró:** 2026-08-10, PR "doc: dueno de superficie, lienzo de referencia y el glosario vivo".
+  Con ese mismo PR entraron "Que el coloreo del teclado obedezca de verdad", "La precedencia entre
+  el widget de escala", "La rama del preveredicto de `renderKeyboard`", "Que el widget de feedback
+  del sistema se abra solo" y "Convertir Motor Automático y el panel Fijar Acordes".
 - Que el widget de feedback del sistema se abra solo cuando aparece un error, estando cerrado.
   Bloqueado por un conflicto que hay que resolver antes: contradice que cerrar una caja sea una
   decisión del usuario que el sistema respeta. Quien lo tome tiene que decidir si el feedback es una
   excepción declarada o si el aviso viaja por otro canal.
+  **Entró:** 2026-08-10, PR "doc: dueno de superficie, lienzo de referencia y el glosario vivo".
+  Con ese mismo PR entraron "Que el coloreo del teclado obedezca de verdad", "La precedencia entre
+  el widget de escala", "La rama del preveredicto de `renderKeyboard`", "El split como rango" y
+  "Convertir Motor Automático y el panel Fijar Acordes".
 - Convertir "Motor Automático" y el panel "Fijar Acordes" en un widget que asista con los acordes.
   Hoy son dos controles de la misma característica partida en dos, uno visible en el escenario y el
   otro oculto a propósito. **Procedencia:** salió de rastrear en el código qué hace el botón, que
   bloquea el acorde detectado para que el motor deje de redetectarlo mientras se practica encima, y
   de encontrar que su otra mitad, el panel de fijar acordes, ya estaba oculta con el atributo
   `hidden` y un comentario que pide no borrarla. Por eso el ítem los junta.
+  **Entró:** 2026-08-10, PR "doc: dueno de superficie, lienzo de referencia y el glosario vivo".
+  Con ese mismo PR entraron "Que el coloreo del teclado obedezca de verdad", "La precedencia entre
+  el widget de escala", "La rama del preveredicto de `renderKeyboard`", "El split como rango" y
+  "Que el widget de feedback del sistema se abra solo".
 
 ---
 
@@ -1007,27 +1119,41 @@ decirlo, así que se leen juntos o no se leen.
   uno o varios según el tipo de entrenamiento, junto con su definición en datos y el widget que
   pueda traer. Bloqueada por: el sistema de widgets y ranuras, que el ADR reserva
   para después de la segunda característica, y un motor de notas que caen que hoy no existe.
+  **Entró:** 2026-07-25, PR "doc: incrementos de entrega en la Fase 5 y Direcciones sin fase". Con
+  ese mismo PR entraron "La guía de interfaz reactiva a lo abierto" y "El entrenamiento que
+  propone layout".
 - La guía de interfaz reactiva a lo abierto. La guía no solo explica el entrenamiento activo,
   también las opciones de cada widget abierto en las ranuras, lo abra el usuario o el
   entrenamiento. Bloqueada por: que haya más de una característica a la que reaccionar (la Fase 9
   aporta la segunda).
+  **Entró:** 2026-07-25, PR "doc: incrementos de entrega en la Fase 5 y Direcciones sin fase". Con
+  ese mismo PR entraron "Entrenamientos como datos y un posible taller" y "El entrenamiento que
+  propone layout".
 - El entrenamiento escribe sus instrucciones en los subtítulos del entrenamiento. Hoy los
   subtítulos están definidos como directrices en tiempo real, pero ningún documento dice quién las
   produce: la superficie existe y no tiene autor. Bloqueada por: que exista el sistema de
   entrenamientos. Pregunta abierta que trae, contra la regla de dueño de superficie del 2026-08-10:
   si el entrenamiento escribe ahí, es un autor más, y hay que decidir qué pasa cuando el
   entrenamiento y el motor quieren escribir en la misma superficie.
+  **Entró:** 2026-08-10, PR "doc: nombrar lo que ya existe y resolver Universo contra Escala".
 - El entrenamiento que propone layout. Un entrenamiento puede proponer una disposición de
   paneles y pedirle al usuario que la acepte o no; es consumidor que no impone, no cambia el
   layout por su cuenta. Bloqueada por: que exista el sistema de entrenamientos, acoplada con
   "entrenamientos como datos".
+  **Entró:** 2026-07-25, PR "doc: incrementos de entrega en la Fase 5 y Direcciones sin fase". Con
+  ese mismo PR entraron "Entrenamientos como datos y un posible taller" y "La guía de interfaz
+  reactiva a lo abierto".
 - Widgets como motores adicionales. Hoy un widget solo presenta lo que el motor calcula; a futuro
   un widget podría además calcular, siendo un motor más, no solo una vista. Bloqueada por: que el
   sistema de widgets exista y se estabilice primero; es dirección, no fase.
+  **Entró:** 2026-07-25, PR "doc: refinar el modelo de capas (readout widget, ranura límite, menú
+  colocador)". Con ese mismo PR entró "Apagar los efectos del fondo".
 - Apagar los efectos del fondo. El teclado y las notas que caen son fondo permanente, pero sus
   efectos, el coloreo de las teclas y lo que se pinte sobre las notas, son salida del motor y
   podrían apagarse como cualquier otra, dejando el teclado limpio. Bloqueada por: nada duro, es
   opción de display; se decide cuando haya con qué probarla.
+  **Entró:** 2026-07-25, PR "doc: refinar el modelo de capas (readout widget, ranura límite, menú
+  colocador)". Con ese mismo PR entró "Widgets como motores adicionales".
 
 ---
 

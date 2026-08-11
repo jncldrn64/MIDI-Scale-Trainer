@@ -76,6 +76,12 @@ Esto extiende un patrón que el repo ya tiene institucionalizado: cada término 
 
 Siempre ISO 8601 (`YYYY-MM-DD`). Nunca formato local.
 
+Un ítem que se agrega al BACKLOG o a "Direcciones sin fase" de `docs/ROADMAP.md` nace con la fecha de
+su entrada y el PR que lo trajo, en una línea que abre con `**Entró:**`. El dato es exacto y no
+depende de que alguien lo recuerde: sale de `git log -S` sobre el archivo. Los 44 que había se
+fecharon de una vez el 2026-08-11; ver `docs/DECISIONS.md`, entrada de ese día "Un ítem parqueado
+nace con su fecha y el PR que lo trajo".
+
 ## Commits
 
 El mensaje es `<tipo>: <resumen imperativo corto>`, con `tipo` en `{add, chg, fix, rmv,

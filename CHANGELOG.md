@@ -2,6 +2,18 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.72 — 2026-08-11
+
+### Added
+
+- `docs/ROADMAP.md`: los 44 ítems del BACKLOG y de "Direcciones sin fase" quedan fechados, con el PR que los trajo y con qué otros ítems entraron. El dato sale de `git log -S` sobre el archivo, así que cualquiera lo reproduce.
+- `docs/DECISIONS.md`: un ítem parqueado nace con su fecha y el PR que lo trajo. Con la advertencia de que `-S` encuentra cuándo apareció una cadena, no cuándo apareció una idea.
+- `CLAUDE.md`: la regla operativa en la sección "Fechas". Un ítem nuevo se escribe con su línea de entrada, para que este trabajo no haya que repetirlo.
+
+Antes: 22 de 44 ítems sin ninguna referencia a su origen. Después: 0 sin fecha de entrada. Los 22 que ya tenían procedencia del PR anterior la conservan y ganan la fecha.
+
+Cinco ítems se rastrean al primer commit que toca el archivo, así que están desde que el ROADMAP existe y `git log` no puede ir más atrás. Dos habían sido reescritos, y su línea dice las dos fechas.
+
 ## v11.71 — 2026-08-11
 
 ### Added
