@@ -2,6 +2,23 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.61 — 2026-08-10
+
+### Changed
+
+- `index.html`: la vista de fórmula pasa de una fila con guiones a una grilla de dos filas y trece columnas. Los siete grados abajo en las impares, las seis barras separadoras en las pares, y la etiqueta del paso arriba de cada barra.
+- `index.html`: los guiones se van. Existían para indicar que el paso va entre dos notas; en una grilla eso lo dice la posición, igual que una tecla negra no necesita una flecha para indicar que está entre dos blancas.
+- `index.html`: la regla base de la vista de fórmula pasa de flex a grid, y la del widget pierde el `flex-wrap`, que en una grilla no hace nada.
+- `index.html`: la versión mostrada sube de V11.60 a V11.61.
+- `CLAUDE.md`: la regla 4 de iconos se amplía a los separadores estructurales de un dato, que no rotulan nada y solo marcan dónde termina una parte. La barra de la fórmula es ese caso.
+
+### Added
+
+- `docs/DECISIONS.md`: entrada con el problema medido sobre las 36 combinaciones y por qué los guiones se pueden sacar sin perder información. Sin esa razón escrita, alguien los va a querer devolver.
+- `docs/GLOSARIO.md`: la vista de fórmula describe la forma nueva y trae el peor caso medido con el comando que lo recalcula, para que quien agregue un universo nuevo sepa contra qué probar.
+
+El molde de 314.4 px no se tocó: la solución entra en el espacio que ya estaba decidido. Los rótulos `S`, `T` y `T+S` tampoco.
+
 ## v11.60 — 2026-08-10
 
 ### Changed
