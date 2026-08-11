@@ -2,6 +2,29 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.71 — 2026-08-11
+
+### Added
+
+- `docs/ROADMAP.md`: procedencia escrita para 20 de los 38 ítems del BACKLOG. Cada uno dice ahora qué evidencia lo produjo, no solo qué se quiere hacer y qué lo bloquea.
+- `docs/ROADMAP.md`: los primeros cuatro ítems de "Direcciones sin fase" quedan declarados como caras del mismo sistema de entrenamientos. Decidir cualquiera por separado es decidir sobre los otros tres sin decirlo.
+- `docs/DECISIONS.md`: un apunte que describe algo ya implementado, o algo que ya es una fase declarada, no es una dirección pendiente. Con el criterio de adónde va cada caso.
+- `docs/GLOSARIO.md`: el término dominante secundaria, traído desde el Track paralelo de teoría.
+
+### Removed
+
+- `docs/ROADMAP.md`: los tres apuntes didácticos del Track paralelo de teoría. Función tonal se retira por duplicado del glosario, dominante secundaria pasa al glosario, y círculo de quintas se retira porque describe el trabajo de la Fase 10. La sección sigue viva: la Fase 11 tiene teoría asignada ahí.
+
+### Fixed
+
+- `docs/ROADMAP.md`: dos ítems declaraban un bloqueo vencido. El del coloreo por dueño decía que la Fase 5 preserva `renderKeyboard` intacto y el del split como rango decía que quedaba fuera del alcance de esa fase; la Fase 5 cerró el 2026-08-11.
+- `docs/ROADMAP.md`: el ítem de reabrir una fase cerrada decía que la Fase 5 creció a cinco incrementos. Fueron seis.
+- `docs/ROADMAP.md`: el Alcance de la Fase 4 apuntaba al Track paralelo de teoría por el material de la función tonal. Ese apunte se retiró, así que ahora apunta al glosario.
+
+Seis ítems quedan acotados por trabajo posterior a su escritura, con qué los acotó: la regla de iconos, el destino del log, el protocolo de umbral, el criterio de entrada a fase en curso, el contrato de permisos y los tres casos reales de fase partida.
+
+La versión mostrada sigue en V11.70.
+
 ## v11.70 — 2026-08-11
 
 ### Changed
