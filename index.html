@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.62 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.63 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -149,8 +149,8 @@
 
         /* Botones y Ajustes */
         .btn-success { background: #10b981 !important; color: white !important; }
-        .btn-warning { background: #f59e0b !important; color: black !important; }
-        .btn-danger { background: #ef4444 !important; color: white !important; }
+        .btn-warning { background: #d97706 !important; color: black !important; }
+        .btn-danger { background: #dc2626 !important; color: white !important; }
 
         .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
         .setting-row { display: flex; flex-direction: column; background: #0f172a; padding: 10px; border-radius: 6px; border: 1px solid #1e293b;}
@@ -164,7 +164,7 @@
             word-wrap: break-word; white-space: pre-wrap; line-height: 1.4;
         }
         .log-entry { margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px dotted #1e293b; color: #cbd5e1;}
-        .cat-MIDI { color: var(--accent); } .cat-MATH { color: #f472b6; } .cat-SYS { color: #22c55e; } .cat-EVAL { color: #a855f7; }
+        .cat-MIDI { color: var(--accent); } .cat-MATH { color: #f472b6; } .cat-SYS { color: #10b981; } .cat-EVAL { color: #818cf8; }
         
         /* La leyenda dejó de vivir al pie del teclado y vive adentro de la guía: la capa 0 es
            solo teclado y grilla. Es una lista vertical, una fila por categoría. */
@@ -294,7 +294,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.62</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.63</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -506,8 +506,12 @@
             no_diatonica: 'Fuera del universo',
             por_definir: 'Sin teoría escrita'
         };
+        // Las lecturas del readout no se distinguen por color: se distinguen por la palabra,
+        // que ya es distinta en cada caso. Solo se usa la escala de texto, primario para lo que el
+        // motor sabe y secundario para lo que admite no saber. Pintarlas con la paleta de veredicto
+        // le enseñaba al usuario un significado sobre una tecla y se lo contradecía en una lectura.
         const COLOR_FUNCION = {
-            tonica: '#22c55e', subdominante: '#38bdf8', dominante: '#f59e0b',
+            tonica: 'var(--text-main)', subdominante: 'var(--text-main)', dominante: 'var(--text-main)',
             no_diatonica: 'var(--text-muted)', por_definir: 'var(--text-muted)'
         };
 
@@ -887,16 +891,21 @@
                         SysLog('MATH', `Análisis: ${getNoteStr(c.rootPC).name}${c.type==='M'?'':c.type} = ${numeral} · relación ${rel.relation} · objetivo ${objetivo} · función ${funcion}`);
                     }
 
+                    // "Intercambio Modal" prometía un análisis que el motor nunca hizo: ese valor
+                    // era el return final de la cascada, o sea el cajón de todo lo que no se supo
+                    // clasificar. "Sin clasificar" dice el estado del análisis y no juzga el acorde.
+                    // Es la segunda aplicación del principio del incremento 5.5.1: lo que el motor
+                    // admite no saber no se oculta ni se maquilla.
                     const relEl = document.getElementById('chord-relation');
                     if (rel.relation === 'diatonic') {
                         relEl.innerText = `Diatónico · ${numeral}`;
-                        relEl.style.color = "#22c55e";
+                        relEl.style.color = 'var(--text-main)';
                     } else if (rel.relation === 'secondary_dominant') {
                         relEl.innerText = `${numeral} (V del ${targetNumeral}) empuja a ${getNoteStr(rel.targetPC).name}`;
-                        relEl.style.color = "#f97316";
+                        relEl.style.color = 'var(--text-main)';
                     } else {
-                        relEl.innerText = `Intercambio Modal · ${numeral}`;
-                        relEl.style.color = "#ef4444";
+                        relEl.innerText = `Sin clasificar · ${numeral}`;
+                        relEl.style.color = 'var(--text-muted)';
                     }
                 } else {
                     document.getElementById('chord-display').innerText = '-';

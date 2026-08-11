@@ -104,7 +104,7 @@
         if (isDominantType && universePitchesSet.has(targetPC)) {
             return { relation: 'secondary_dominant', targetPC };
         }
-        return { relation: 'modal_interchange', targetPC: null };
+        return { relation: 'unclassified', targetPC: null };
     }
 
     // Estado de una nota de melodía.

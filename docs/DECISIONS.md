@@ -1557,6 +1557,68 @@ tocó.
 
 ---
 
+## 2026-08-11 — El tercer valor de la clasificación deja de llamarse intercambio modal
+
+**Contexto:** `classifyChordRelation`, en `src/engine.js`, es una cascada de tres casos. Los dos
+primeros reconocen algo, diatónico y dominante secundaria. El tercero era el `return` final, el que
+se ejecuta cuando fallaron los dos anteriores, y devolvía `modal_interchange`.
+
+**El problema:** ese valor no era un diagnóstico, era el cajón de todo lo que el motor no supo
+clasificar. Un intercambio modal de verdad es una técnica específica y bien definida, tomar prestado
+un acorde del modo paralelo. Llamar así a lo que sobra le promete al usuario un análisis que el
+motor nunca hizo. Es el mismo defecto que tenía "Tensión Legal", donde el rótulo prometía una
+familia de tensiones y el código pintaba una sola nota.
+
+**Decisión,** que es la segunda aplicación del principio escrito en la entrada del incremento 5.5.1:
+lo que el motor admite no saber no se oculta ni se maquilla. El valor interno pasa a `unclassified`,
+en inglés como sus dos hermanos `diatonic` y `secondary_dominant`, y el texto en pantalla pasa a
+"Sin clasificar". "Sin clasificar" describe el estado del análisis y no juzga el acorde: un acorde
+que el motor no sabe nombrar no es un acorde equivocado.
+
+**Lo que este renombre no hace:** no agrega casos de clasificación. Que el motor reconozca de verdad
+un intercambio modal es trabajo de la Fase 11, que es la que va a escribir esa teoría.
+
+**La red funcionó y quedó demostrada.** Se cambió primero la línea del motor y se corrieron las
+fixtures sin tocar nada más: la de blues se puso roja y nombró el caso exacto, "esperaba
+'modal_interchange', obtuve 'unclassified'". Recién después se actualizó la fixture. Eso prueba que
+ese camino estaba cubierto, en vez de cambiar las dos cosas a la vez y no saberlo.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-11 — La paleta de veredicto no se reusa fuera del teclado
+
+**Contexto:** `CLAUDE.md` tenía desde el incremento 5.4 una regla para los iconos y ninguna para los
+colores. Sin regla, cuatro de los seis hexadecimales de la leyenda significaban además otra cosa en
+otra superficie: el verde de "Correcto" era también Tónica y Diatónico, el ámbar de "Acorde" era
+Dominante, el naranja de "Sensible" era dominante secundaria, y el rojo de "Error" era intercambio
+modal.
+
+**Por qué muerde:** la guía se titula "qué significa cada color" y lista seis. Un color que en
+pantalla significa otra cosa y no está en esa lista contradice la única superficie que existe para
+explicarlos. Es la misma colisión semántica que el incremento 5.4 corrigió con los glifos cuando
+sacó el `✕` de un botón y el `✓` de una lectura.
+
+El caso del rojo es el que se cruza con el renombre de hoy: un acorde que el motor no supo
+clasificar se pintaba del mismo rojo que la guía enseña como Error. El motor no dijo que estuviera
+mal, dijo que no supo.
+
+**Decisión:** la regla vive en `CLAUDE.md` porque es operativa, y son tres puntos. Los seis
+hexadecimales son la paleta de veredicto y viven solo sobre las teclas y en la leyenda que los
+explica. Las lecturas del readout se distinguen por la palabra, que ya es distinta en cada caso, y
+usan la escala de texto, primario para lo que el motor sabe y secundario para lo que admite no
+saber. El resto de la interfaz tiene su propia paleta y no repite un hexadecimal de la de veredicto.
+
+**Por qué no la alternativa.** Se consideró declarar que la paleta vale solo sobre las teclas y
+dejar que otras superficies la reusen con otro sentido. Eso obliga al usuario a saber en qué
+superficie está mirando antes de interpretar un color, que es exactamente el trabajo que la guía
+existe para ahorrarle.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
