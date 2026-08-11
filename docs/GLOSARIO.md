@@ -140,6 +140,13 @@
   teoría de la menor todavía no está escrita en este repo. Los dos últimos son admisiones de que el
   motor no sabe y no se ocultan. Fuente: 2026-08-11, *La función tonal se muestra completa, con las
   dos veces que el motor admite que no sabe*.
+- **dominante secundaria**: el acorde que funciona como dominante de un grado que no es la tónica,
+  y que se escribe V/V, V/ii y así. Es el nombre técnico de lo que se percibe como una nota que
+  empuja hacia otra y vuelve. El motor no la detecta como acorde: lo que evalúa desde la Fase 3 es su
+  tono conductor, con `isSecondaryDominantLeadingTone`, que devuelve `good` para esa nota aunque el
+  acorde no suene y aunque la nota esté fuera del universo. Fuente: 2026-08-11, *Un apunte que
+  describe algo ya hecho no es una dirección pendiente*, que lo trajo desde el Track paralelo de
+  teoría del `ROADMAP.md`.
 - **split**: la nota MIDI que separa mano izquierda de derecha, para que el motor sepa qué es bajo y
   qué es melodía. Es una sola nota, la 60 por defecto. No es una ventana de tiempo y no es un rango.
   En el código, el campo `State.config.splitNote` guarda el valor y el control que lo edita es

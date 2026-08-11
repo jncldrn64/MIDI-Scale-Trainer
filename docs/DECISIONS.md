@@ -2051,6 +2051,42 @@ nadie volvió a contrastar contra el estado real.
 
 ---
 
+## 2026-08-11 — Un apunte que describe algo ya hecho no es una dirección pendiente
+
+**Contexto:** el `ROADMAP.md` guarda ítems parqueados en tres lugares, el BACKLOG con 38, "Direcciones
+sin fase" con 6 y el "Track paralelo de teoría" con 3. Al escribir la procedencia de cada uno
+aparecieron tres que no eran trabajo: los tres apuntes del track de teoría describían cosas que el
+repo ya había resuelto en otro lado.
+
+**Decisión: un apunte que describe algo ya implementado, o algo que ya es una fase declarada, se
+retira de la lista de pendientes.** No es trabajo, es explicación, y su lugar depende de si sigue
+aportando:
+
+- Si el término sigue haciendo falta para leer el repo, va a `GLOSARIO.md`, que es donde vive lo que
+  un término significa hoy.
+- Si lo que describe ya está escrito en otro lado con más precisión, se retira por duplicado.
+- Si describe el trabajo de una fase declarada, se retira y la fase queda como el único lugar donde
+  vive.
+
+**Razón:** una lista de pendientes que contiene cosas hechas obliga a releer el código para saber cuál
+es cuál, y esa relectura se paga cada vez que alguien recorre la lista. El costo crece con el tiempo
+y con la cantidad de ítems, que es exactamente lo contrario de lo que una lista de pendientes tiene
+que hacer.
+
+**Aplicación inmediata.** "Función tonal" se retira por duplicado: `getTonalFunction` la deriva desde
+la Fase 4, `Readout.updateStatus` la muestra desde el incremento 5.5.1, y el glosario ya trae el
+término completo. "Dominante secundaria" pasa al glosario: el motor evalúa su tono conductor desde la
+Fase 3, en `isSecondaryDominantLeadingTone`, y el vocabulario sigue haciendo falta. "Círculo de
+quintas" se retira porque describe el trabajo de la Fase 10, que sigue `pendiente`.
+
+**Qué no decide esta entrada.** El "Track paralelo de teoría" no se cierra: sigue siendo el lugar
+donde se escribe la teoría antes de tocar código, y la Fase 11 ya tiene trabajo asignado ahí. Lo que
+drenó son sus tres apuntes, no la sección.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

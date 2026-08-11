@@ -161,9 +161,8 @@ cualquier panel la consuma.
 **Alcance:** es salida del motor, no una característica (ver el protocolo de clasificación
 en `DECISIONS.md`, 2026-07-25). No lleva panel propio: el motor deriva la función del grado
 del acorde en la tonalidad y la escribe en el buffer del motor, del que leen todos los
-paneles a la vez. El material teórico ya está escrito en la sección "Track paralelo de
-teoría" de este documento; el motor implementa eso: Tónica (I, vi, iii), Subdominante
-(IV, ii), Dominante (V, vii°).
+paneles a la vez. El material teórico es el que el `GLOSARIO.md` guarda bajo "función tonal";
+el motor implementa eso: Tónica (I, vi, iii), Subdominante (IV, ii), Dominante (V, vii°).
 
 **Criterio de aceptación:** dado un acorde y una tonalidad, el motor devuelve su función, y
 las fixtures existentes lo confirman en los casos que apliquen.
@@ -793,7 +792,10 @@ prioridad, no porque la rueda la bloquee.
   un hallazgo negativo para no repetir el intento: pasarlos a SVG se probó y da más carga, no menos,
   así que el SVG no es la salida por rendimiento. La pregunta abierta es cómo conseguir un set
   coherente sin sumar costo gráfico. Es cosmético y no bloquea nada. Este ítem dejó de estar sin
-  fase: el incremento 5.4 lo toma y ahí se decide la regla.
+  fase: el incremento 5.4 lo tomó y ahí se decidió la regla. **Acotado:** esa regla existe desde el
+  2026-08-10 y vive en `CLAUDE.md`, sección "Iconos y emojis", con el código conforme a sus seis
+  puntos. Lo que queda de este ítem es solo la parte estética, conseguir un set coherente sin sumar
+  costo gráfico.
 - Lectura de partitura como vista futura. Está anotado para que sea una decisión y no un olvido:
   se mencionó una vez, no está comprometido, y no tiene diseño ni alcance todavía.
 - Comparar cómo reparten el espacio los programas que ya explican canciones con notas que caen,
@@ -809,7 +811,10 @@ prioridad, no porque la rueda la bloquee.
 - Hundir el log cuando la barra crezca. Hoy queda alcanzable porque la barra tiene un solo nivel.
   La decisión del 2026-07-25 pide que la consola de debug viva detrás de submenús, oculta para
   quien solo toca. Cuando aparezcan menús que se ganen el espacio, como el de archivo para MIDI y
-  entrenamientos, el log baja al lugar que le corresponde.
+  entrenamientos, el log baja al lugar que le corresponde. **Acotado:** la jerarquía de menús ya fija
+  que la consola vive por debajo del piso de tres clics, así que la parte de dónde tiene que vivir
+  está resuelta y lo que queda es mudarlo cuando la barra crezca. Ver `DECISIONS.md`, entrada del
+  2026-08-10 "Jerarquía de menús: el tres es techo y también es piso".
 - Tabla histórica como widget candidato. Una vista tabular de lo que se tocó en orden, con el
   acorde detectado y el veredicto que el motor le dio a cada nota. No pide motor nuevo: el buffer y
   el log ya tienen esos datos, así que sería un widget que presenta, como el readout. Cubre una
@@ -830,7 +835,9 @@ prioridad, no porque la rueda la bloquee.
   dos PR de código, y esa estructura creció sin regla: no hay escrito cuándo un incremento se parte
   ni hasta qué profundidad. Sin lineamiento, el trabajo se subdivide tarde, cuando ya se empezó a
   construir. Va junto con la crítica obligatoria del diseño de fase, que ya está parqueada, porque
-  es el mismo problema visto desde el otro lado.
+  es el mismo problema visto desde el otro lado. **Origen anterior a la sesión de la v11.53 a la
+  v11.70; lo que esa sesión aporta son tres casos reales para estudiar:** el incremento 5.3 partido
+  en tres PR, el 5.5 en dos, y la partición de la Fase 5B en dos.
 - Describir el destino visual en texto dentro del repo, con números. Ya está parqueado en "Deuda de
   método y documentación" como sugerencia, y quedó demostrado por qué hace falta: una instrucción en
   prosa sobre dónde van las cajas se puede cumplir de varias maneras y la que sale es la que se
@@ -839,7 +846,9 @@ prioridad, no porque la rueda la bloquee.
   posición se escriben con medidas, no con adjetivos.
 - Detectar el rango real del teclado conectado por MIDI, en vez de asumirlo. El protocolo no lo
   informa directamente, así que habría que inferirlo o dejar que el usuario lo declare. Por defecto
-  se muestran las 88 teclas, que es lo escrito.
+  se muestran las 88 teclas, que es lo escrito. **Procedencia:** salió del incremento que llevó el
+  teclado de 61 a 88 teclas, como la alternativa que se descartó ahí mismo. Ver `DECISIONS.md`,
+  entrada del 2026-08-10 "Geometría del teclado de 88 teclas, y la barra no presenta lecturas".
 - Barra de menús que se oculta sola cuando no se usa, como una barra de tareas. Devolvería el alto de
   la barra al fondo y eliminaría la única zona vedada al movimiento de widgets.
 - Reglas para cuando un umbral escrito se dispara a mitad de otra fase. Pasó el 2026-08-09 con las
@@ -847,41 +856,63 @@ prioridad, no porque la rueda la bloquee.
   había escrito si se frena lo que está en curso, si se abre una fase nueva ahí mismo, o si se
   termina primero. Se resolvió caso por caso, con una excepción documentada, y esa es justamente la
   forma de decidir que este repo evita. Falta también cómo se nombra una fase que se inserta entre
-  dos existentes sin correr la numeración de las que siguen.
+  dos existentes sin correr la numeración de las que siguen. **Origen anterior a esta sesión, y
+  parcialmente resuelto:** el protocolo mínimo de tres preguntas que una decisión de umbral tiene que
+  contestar ya está escrito en `CLAUDE.md`, sección "Promesas y umbrales", desde la v11.65. Lo que
+  queda es el protocolo completo. La parte de cómo nombrar una fase insertada tiene ahora su caso
+  resuelto, la Fase 5B, y la razón está escrita en su propia subsección "Por qué 5B y no un número
+  nuevo".
 - Reglas para promover un ítem del BACKLOG a fase. Hoy no hay ninguna, así que una idea suelta se
   queda suelta aunque esté madura, y no por falta de mérito sino por falta de criterio escrito de
   qué la hace fase: si es tener alcance cerrado, criterio de aceptación verificable, o alguien que
-  la pida. Sin ese criterio el BACKLOG crece y no drena.
+  la pida. Sin ese criterio el BACKLOG crece y no drena. **Origen anterior a esta sesión, y sigue
+  abierto.** Lo único que ganó es vecindad: existe desde el 2026-08-10 un criterio de entrada de un
+  ítem parqueado a una fase **en curso**, que es otra pregunta y no lo reemplaza.
 - Reglas para reabrir una fase cerrada y para agregarle trabajo. La Fase 5 se cerró, se reabrió y
-  después creció a cinco incrementos, con uno partido en tres PR, sin que nada escrito dijera si eso
+  después creció a seis incrementos, con uno partido en tres PR, sin que nada escrito dijera si eso
   se puede ni hasta dónde. Va con el ítem de lineamientos para partir una fase, que ya está en esta
-  lista: son dos caras del mismo hueco.
+  lista: son dos caras del mismo hueco. **Origen anterior a esta sesión, y sigue abierto.** Hay dos
+  casos reales para estudiar en vez de uno: la Fase 5, que cerró el 2026-08-11 con seis incrementos,
+  y la Fase 5B, que nació de un umbral disparado a mitad de otra fase.
 - Levantar los requisitos y requerimientos antes de seguir programando. Ya está parqueado en "Deuda
   de método y documentación" como documento de requisitos, y los tres ítems de arriba son la
-  consecuencia de no tenerlo: cada regla de método aparece cuando ya se rompió.
+  consecuencia de no tenerlo: cada regla de método aparece cuando ya se rompió. **Origen anterior a
+  esta sesión, y parcialmente atendido:** el contrato de permisos del 2026-08-11 cubre qué puede usar
+  o alterar un widget, y deja los entrenamientos afuera a propósito, con su disparador declarado.
 - Subtítulos de feedback parcialmente coloreables. La idea es que el subtítulo pueda teñir la parte
   de su texto que corresponde a una categoría de la leyenda, para que el color y la palabra digan lo
   mismo sin repetirlo. Queda anotada como idea y sin fase: primero hay que cablear los subtítulos a
   la salida del motor, que hoy siguen siendo un marcador de posición.
 - Que el coloreo del teclado obedezca de verdad al estado abierto o cerrado de su dueño, según el
-  reparto de la entrada del 2026-08-10. Hoy `renderKeyboard` pinta las seis categorías sin mirar qué
-  widget está en pantalla. Bloqueado: toca `renderKeyboard`, que la Fase 5 preserva intacto.
+  reparto de la entrada del 2026-08-10 "Dueño de superficie: cerrar el widget apaga su efecto". Hoy
+  `Teclado.renderKeyboard` pinta las seis categorías sin mirar qué widget está en pantalla.
+  **Procedencia:** es la implementación de una decisión que hoy solo vive en documentación; esa
+  entrada declara ella misma que no trae cambio de código detrás y que cablearla es backlog. El
+  bloqueo que tenía escrito, que la Fase 5 preservaba `renderKeyboard` intacto, venció: esa fase
+  cerró el 2026-08-11.
 - Los códigos del motor están en dos idiomas. `classifyChordRelation` devuelve `diatonic`,
   `secondary_dominant` y `unclassified`, en inglés, y `getTonalFunction` devuelve `tonica`,
   `subdominante`, `dominante`, `no_diatonica` y `por_definir`, en español. Los dos son salida del
   mismo motor y los lee el mismo código. Unificarlos toca `src/engine.js` y las fixtures, así que va
-  con su propio PR y no se coló en el incremento que encontró la inconsistencia.
+  con su propio PR y no se coló en el incremento que encontró la inconsistencia. **Procedencia:**
+  salió del renombre del tercer valor de la clasificación, que entregó la v11.63; ese renombre
+  respetó el idioma de sus vecinos para no crear un conjunto mixto, y la inconsistencia mayor quedó
+  anotada en vez de arreglada.
 - La leyenda no explica por qué una nota fuera del universo puede salir verde. El motor acepta dos
   casos de nota fuera del universo: la sensible, que se pinta naranja y desde el incremento 5.4 está
   explicada, y el tono conductor de una dominante secundaria, que se pinta verde como si fuera
   correcta y no aparece en la leyenda por ningún lado. El usuario ve una nota fuera de la escala en
   verde y no tiene dónde averiguar por qué. Se cruza con el ítem siguiente, el de la guía compuesta
   por secciones: las dos cosas cambian qué muestra la guía, así que conviene decidirlas juntas.
+  **Procedencia:** salió de leer el motor mientras se decidía el nombre nuevo de la sensible. Ver
+  `DECISIONS.md`, entrada del 2026-08-10 '"Tensión Legal" pasa a "Sensible (empuja a la tónica)"'.
 - La guía compuesta por secciones que aporta cada widget. Una sección por widget abierto, con su
   dueño y su propósito, y cerrar un widget cierra su sección. Absorbe lo que este ítem pedía antes,
   que la leyenda se filtrara sola: filtrar filas de una tabla fija es menos que componer la guía con
   lo que cada widget trae, y el resultado visible es el mismo. Sigue bloqueado por el ítem anterior,
-  el de la nota fuera del universo que sale verde sin explicación.
+  el de la nota fuera del universo que sale verde sin explicación. **Procedencia:** la formulación
+  amplia, con el propósito de cada widget y no solo su dueño, se escribió al revisar la guía después
+  de la primera sesión con el teclado conectado. Entró con la v11.68.
 - **Agrupar las categorías del log y filtrar por grupo. Va primero de los tres que siguen**, porque
   es la condición para que los otros dos sean usables. No hay que inventar categorías: las seis que
   existen ya se agrupan solas. `MIDI`, `MATH` y `EVAL` son musicales; `LAYOUT`, `SYS` y `ERROR` son
@@ -890,7 +921,9 @@ prioridad, no porque la rueda la bloquee.
   llamadas, 51 son de sistema y 9 musicales, o sea 85% contra 15%. Lo musical está enterrado bajo lo
   demás. Falta agrupación y filtro, no vocabulario nuevo. El filtro es de desarrollo, así que vive
   donde vive la consola, por debajo del piso de tres clics de la entrada del 2026-08-10 "Jerarquía
-  de menús: el tres es techo y también es piso".
+  de menús: el tres es techo y también es piso". **Procedencia:** salió de contar la proporción real
+  del registro en la primera sesión con el teclado conectado por USB. La taxonomía que hacía falta ya
+  existía; lo que faltaba era agruparla.
 - **El coloreo se registra de forma diferencial.** Bloqueado por el ítem anterior. Hoy el log
   registra el veredicto y no registra qué se pintó: ni qué tecla recibió qué categoría, ni qué rama
   de la cascada de precedencia ganó, ni qué dueño la produjo. Choca con dos cosas escritas, la
@@ -901,12 +934,17 @@ prioridad, no porque la rueda la bloquee.
   de acorde y el log dice que la evaluación fue correcta; los dos son ciertos, no coinciden, y hoy
   no hay forma de detectar esa divergencia sin mirar la pantalla. Qué tiene que lograr y qué no
   puede hacer está en `DECISIONS.md`, entrada del 2026-08-11 "El coloreo se registra de forma
-  diferencial, no absoluta".
+  diferencial, no absoluta". **Procedencia:** salió de descartar el video como forma de mostrar el
+  coloreo. El paso cromático dura 180 ms por definición del motor, o sea once cuadros a sesenta por
+  segundo, y extraer de imágenes un dato que el programa ya conoce y no escribe es más caro y menos
+  preciso que escribirlo. La restricción de que el registro sea diferencial salió de contar los
+  lugares desde los que se repinta el teclado, doce, y multiplicarlo por las 88 teclas.
 - **El feedback lee del log en vez de escribirle.** Depende del ítem de agrupar y filtrar. Hoy es al
   revés: `Feedback.avisar` escribe el texto en la caja y recién después lo manda al log con
   categoría de disposición. La razón nueva, del registro con MIDI real: si el log distingue musical
   de sistema, el feedback puede elegir qué grupo mostrar, y sin esa distinción leer del log no le
-  sirve de nada.
+  sirve de nada. **Procedencia:** salió de leer la superficie de avisos mientras se escribía el
+  contrato de permisos.
 - Dos comentarios de `src/engine.js` citan `UI.buildUniverse` y `UI.updateStatus` "en index.html".
   Las dos citas están muertas: esos métodos dejaron `index.html` en la primera parte de la partición
   y desde la segunda el objeto `UI` no existe. Hoy viven en `Escala` y en `Readout`. Bloqueado por
@@ -915,27 +953,40 @@ prioridad, no porque la rueda la bloquee.
 - Alto del teclado configurable por el usuario. Hoy son 140 px de lienzo fijos. El techo está
   calculado y escrito: 236 px de lienzo, porque a partir de ahí la zona de notas baja de 453.3 px y
   los 170 px del molde se pasan del tope de tres octavos. Un control que deje elegir tiene que
-  frenar ahí o negociar el molde o el cap.
+  frenar ahí o negociar el molde o el cap. **Procedencia:** el techo no es una preferencia, sale de
+  cruzar el molde de 170 px con el tope de tres octavos. Por eso el ítem lleva el número y no una
+  fracción cómoda: un tercio del lienzo son 240 px y se pasa de 236.7.
 - Ancho de la negra configurable. Hoy es 0.62 del ancho de la blanca. Los dos extremos ya están
-  medidos: a 0.58 es lo que usa un piano real, y a 0.80 el blanco visible entre negras cae a 4.9 px.
-  Es cosmético y no bloquea nada.
+  medidos: a 0.58 es lo que usa un piano real, a 0.62 quedan 9.4 px de blanco visible entre dos
+  negras, y a 0.80 caen a 4.9 px, con lo que el tope de las blancas casi desaparece y el teclado deja
+  de leerse como teclado. Es cosmético y no bloquea nada. **Procedencia:** salió de evaluar si
+  ensanchar las negras dejaría entrar texto en ellas. El motivo se cayó solo cuando se decidió que
+  las negras no llevan etiqueta, así que lo que queda del ítem es solo la proporción.
 - La precedencia entre el widget de escala y el de salida del motor cuando los dos reclaman el rojo,
   porque la nota se sale de la escala. Es un conflicto de dos dueños sobre el mismo color y todavía
-  no tiene regla escrita.
+  no tiene regla escrita. **Procedencia:** salió de notar que el selector de universo también produce
+  error: una nota se pinta roja por estar fuera de la escala, y esa decisión depende del universo
+  aunque el color pertenezca al widget de salida del motor.
 - La rama del preveredicto de `renderKeyboard`, la que pinta una nota recién tocada usando el
   conjunto de alturas válidas de la escala, que es dato del widget de escala, con un color del
-  widget de salida del motor. No tiene dueño limpio y hay que decidirlo.
+  widget de salida del motor. No tiene dueño limpio y hay que decidirlo. **Procedencia:** salió de
+  leer la cascada de precedencia mientras se repartían los colores por dueño. Usa dato de un dueño y
+  color de otro, y esa mezcla es el problema.
 - El split como rango: el usuario declara desde qué nota hasta qué nota quiere que el motor evalúe,
   con el split exacto adentro de ese rango, y adapta su forma de tocar para caer dentro. Es distinto
-  del split actual, que es una sola nota. Bloqueado: toca la evaluación, o sea el motor, y eso está
-  fuera del alcance de la Fase 5.
+  del split actual, que es una sola nota. Bloqueado: toca la evaluación, o sea el motor. El bloqueo
+  escrito antes decía que quedaba fuera del alcance de la Fase 5, y esa fase cerró el 2026-08-11; lo
+  que sigue bloqueando es tocar el motor, no la fase.
 - Que el widget de feedback del sistema se abra solo cuando aparece un error, estando cerrado.
   Bloqueado por un conflicto que hay que resolver antes: contradice que cerrar una caja sea una
   decisión del usuario que el sistema respeta. Quien lo tome tiene que decidir si el feedback es una
   excepción declarada o si el aviso viaja por otro canal.
 - Convertir "Motor Automático" y el panel "Fijar Acordes" en un widget que asista con los acordes.
   Hoy son dos controles de la misma característica partida en dos, uno visible en el escenario y el
-  otro oculto a propósito.
+  otro oculto a propósito. **Procedencia:** salió de rastrear en el código qué hace el botón, que
+  bloquea el acorde detectado para que el motor deje de redetectarlo mientras se practica encima, y
+  de encontrar que su otra mitad, el panel de fijar acordes, ya estaba oculta con el atributo
+  `hidden` y un comentario que pide no borrarla. Por eso el ítem los junta.
 
 ---
 
@@ -943,6 +994,12 @@ prioridad, no porque la rueda la bloquee.
 
 Ideas de dirección que quedaron dichas y no se pierden, pero que no son fase porque les falta
 infraestructura o teoría que todavía no existe. No se construyen hasta que su bloqueo caiga.
+
+**Los primeros cuatro son caras del mismo tema y están listados como si fueran independientes.**
+Entrenamientos como datos, la guía reactiva a lo abierto, el entrenamiento que escribe en los
+subtítulos y el entrenamiento que propone layout describen todos el mismo sistema de entrenamientos,
+que no existe. Decidir cualquiera de los cuatro por separado es decidir sobre los otros tres sin
+decirlo, así que se leen juntos o no se leen.
 
 - Entrenamientos como datos y un posible taller. Un formato de datos (JSON) para definir
   entrenamientos, que a futuro abriría un taller donde se creen entrenamientos, y hasta widgets,
@@ -976,15 +1033,25 @@ infraestructura o teoría que todavía no existe. No se construyen hasta que su 
 
 ## Track paralelo de teoría (no bloquea código, informa las Fases 2, 3 y 4)
 
-- Círculo de quintas: ya lo derivaste vos aplicando T-T-S-T-T-T-S desde Re y sacando Do# y
-  Fa#. Falta amarrar el nombre "círculo de quintas" a algo que ya sabés hacer, no aprender
-  un sistema nuevo.
-- Función tonal: Tónica (I, vi, iii), Subdominante (IV, ii), Dominante (V, vii°). Esto
-  reemplaza la idea de "progresión obligatoria" que vos mismo cuestionaste. No hay una
-  secuencia fija de grados; hay funciones que se resuelven entre sí.
-- Dominante secundaria: lo que llamás "una nota que empuja y vuelve" ya tiene nombre, V/V,
-  V/ii. Fijar el vocabulario ayuda a leer `DECISIONS.md` y el código sin reinventar el
-  concepto cada vez.
+Esta sección es donde se escribe la teoría antes de tocar código. Sigue viva y con trabajo asignado:
+la Fase 11 declara que la teoría del intercambio modal se escribe acá antes de que el motor lo
+reconozca, porque sin respuesta correcta escrita no hay fixture.
+
+Lo que sí drenó el 2026-08-11 son sus tres apuntes didácticos. Los tres describían cosas que el repo
+ya resolvió en otro lado, y un apunte que describe algo ya hecho no es trabajo pendiente. El criterio
+y su razón viven en `DECISIONS.md`, entrada del 2026-08-11 "Un apunte que describe algo ya hecho no
+es una dirección pendiente". Adónde fue cada uno:
+
+- **Función tonal.** Listaba qué grados corresponden a cada función. `getTonalFunction` la deriva
+  desde la Fase 4 y `Readout.updateStatus` la muestra desde el incremento 5.5.1. El `GLOSARIO.md` ya
+  trae el término completo, con los cinco valores y las dos veces que el motor admite no saber, así
+  que el apunte se retira por duplicado.
+- **Dominante secundaria.** Fijaba el vocabulario para "una nota que empuja y vuelve". El motor la
+  evalúa desde la Fase 3, en `isSecondaryDominantLeadingTone`. El vocabulario sigue valiendo, así que
+  pasa a `GLOSARIO.md`, que es donde vive lo que un término significa hoy.
+- **Círculo de quintas.** No describe algo implementado: describe el trabajo de la Fase 10, que sigue
+  `pendiente`. Duplicar una fase declarada como apunte no agrega nada, así que se retira y la Fase 10
+  queda como el único lugar donde vive.
 
 ---
 
