@@ -117,6 +117,14 @@
   aclaración nace verdadera. Fuentes: 2026-08-09,
   *Mapa de términos*, y 2026-08-10, *Universo es el término primario, y escala la aclaración que se
   retira sola*, que corrige la parte de aquella que daba por hecho el renombre en pantalla.
+- **función tonal**: el papel que un acorde cumple dentro del universo activo. Lo deriva
+  `getTonalFunction` por índice de grado, así que vale en cualquier tonalidad. Devuelve cinco
+  valores y los cinco se muestran en el widget de salida del motor: **tónica** para los grados I,
+  iii y vi, **subdominante** para ii y IV, **dominante** para V y vii°, **fuera del universo**
+  cuando el acorde no pertenece, y **sin teoría escrita** cuando el universo no es mayor, porque la
+  teoría de la menor todavía no está escrita en este repo. Los dos últimos son admisiones de que el
+  motor no sabe y no se ocultan. Fuente: 2026-08-11, *La función tonal se muestra completa, con las
+  dos veces que el motor admite que no sabe*.
 - **split**: la nota MIDI que separa mano izquierda de derecha, para que el motor sepa qué es bajo y
   qué es melodía. Es una sola nota, la 60 por defecto. No es una ventana de tiempo y no es un rango.
   En el código, el campo `State.config.splitNote` guarda el valor y el control que lo edita es

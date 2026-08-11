@@ -372,10 +372,16 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   `latino` sigue como está, porque renombrarlo es el punto de nombres internos de "Deuda de método y
   documentación" con su propio PR, y poblar el glosario con los artefactos ya lo hizo el PR anterior
   del 2026-08-10.
-- Incremento 5.5, análisis honesto: la función tonal que la Fase 4 dejó en el buffer se muestra en
+- Incremento 5.5, análisis honesto. Se entrega en dos PR, con el mismo criterio con que el 5.3 se
+  entregó en tres: el corte es si toca el motor. El **5.5.1**, entregado, muestra la función tonal
+  y no toca `src/engine.js`. El **5.5.2**, pendiente, hace el relabel de "Intercambio Modal" y es el
+  primero de toda la Fase 5 que toca el motor, así que carga con las fixtures. La subdivisión no
+  renumera nada: el 5.5 sigue existiendo y la fase sigue cerrando con el 5.6.
+  El alcance original: la función tonal que la Fase 4 dejó en el buffer se muestra en
   el panel de Análisis junto al numeral y la relación, y la etiqueta "Intercambio Modal" se
-  relabela a "no clasificado" o "por definir". Van juntos para no dejar un estado intermedio
-  contradictorio.
+  relabela a "no clasificado" o "por definir". Los dos trabajos ya no van juntos: el corte por motor
+  los separa, y el estado intermedio queda declarado en vez de evitado. Lo que le falta al 5.5.2 es
+  solo el relabel, con sus fixtures.
 - Incremento 5.6, el cascarón del lienzo: el contenedor de 1280 x 720 escalado y centrado, con las
   franjas negras, la corrección del arrastre y las medidas que leían la ventana pasando a leer el
   lienzo. Es la primera de las dos piezas en que se partió la migración; la segunda, normalizar cada

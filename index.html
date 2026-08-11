@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.61 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.62 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -294,7 +294,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.61</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.62</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -400,6 +400,13 @@
                     <span class="status-label">Análisis de Armonía</span>
                     <span class="status-value" id="chord-relation" style="font-size:1.2em;">-</span>
                 </div>
+                <!-- Cuarta lectura: la función tonal, que la Fase 4 dejó en el buffer y hasta el
+                     incremento 5.5.1 no se mostraba en ninguna parte. Vive en el widget de salida
+                     del motor porque es su dueño (DECISIONS, 2026-08-10). -->
+                <div class="widget-row-line">
+                    <span class="status-label">Función Tonal</span>
+                    <span class="status-value" id="chord-function">-</span>
+                </div>
             </div>
             <!-- Andamiaje. El tercer widget ya no se dibuja como recuadro punteado: nace
                  cerrado y su punto de nacimiento queda solo como coordenada. Sigue existiendo
@@ -488,6 +495,22 @@
     <script src="src/engine.js"></script>
     <script>
         // --- CONFIGURACIÓN BASE ---
+        // Los cinco valores que devuelve getTonalFunction, con su texto en pantalla. Los tres
+        // primeros son términos de teoría y tienen nombre propio. Los dos últimos dicen qué pasa
+        // sin sonar a error del programa: uno es que el acorde está fuera del universo, y el otro
+        // que la teoría para ese tipo de universo todavía no se escribió. Ninguno se oculta.
+        const TEXTO_FUNCION = {
+            tonica: 'Tónica',
+            subdominante: 'Subdominante',
+            dominante: 'Dominante',
+            no_diatonica: 'Fuera del universo',
+            por_definir: 'Sin teoría escrita'
+        };
+        const COLOR_FUNCION = {
+            tonica: '#22c55e', subdominante: '#38bdf8', dominante: '#f59e0b',
+            no_diatonica: 'var(--text-muted)', por_definir: 'var(--text-muted)'
+        };
+
         const NOTES_EN = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         const NOTES_ES = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
         const BLACK_KEYS = [1, 3, 6, 8, 10];
@@ -721,14 +744,24 @@
                 // la barra que separa los dos grados a los que se refiere. `T+S` nombra el salto
                 // de tres semitonos de la menor armónica y no se abrevia: colapsarlo a `T` lo
                 // volvería indistinguible de un tono, y esa distinción es la que le da su sonido.
-                let html = `<span class="f-note">${getNoteStr(current).name}</span>`;
+                // La columna va explícita en cada elemento. Sin ella, el autoposicionamiento de
+                // CSS Grid usa un cursor que no retrocede: pone los seis rótulos en las columnas
+                // 1 a 6 de la fila de arriba mientras las notas y las barras ocupan las trece de
+                // abajo, y el rótulo deja de caer sobre su barra. El grado con índice i va a la
+                // columna 2i+1, y su etiqueta y su barra a la 2i+2.
+                let i = 0;
+                let html = `<span class="f-note" style="grid-column:1">${getNoteStr(current).name}</span>`;
 
                 scaleDef.f.forEach(step => {
                     current += step;
                     if(current - State.universe.root < 12) {
                         State.universe.validPitches.add(current % 12);
                         let label = step === 1 ? 'S' : (step === 2 ? 'T' : 'T+S');
-                        html += `<span class="f-step">${label}</span><span class="f-bar">|</span><span class="f-note">${getNoteStr(current).name}</span>`;
+                        const colSep = 2 * i + 2, colNota = 2 * i + 3;
+                        html += `<span class="f-step" style="grid-column:${colSep}">${label}</span>`
+                              + `<span class="f-bar" style="grid-column:${colSep}">|</span>`
+                              + `<span class="f-note" style="grid-column:${colNota}">${getNoteStr(current).name}</span>`;
+                        i++;
                     }
                 });
                 
@@ -833,11 +866,15 @@
                         ? MathEngine.getRomanNumeral({ rootPC: rel.targetPC, type: 'M', template: CHORD_TEMPLATES.M }, State.universe.root, State.universe.type)
                         : null;
 
-                    // Fase 4: la función tonal es salida del motor. Se calcula y se guarda en
-                    // el buffer (State.harmony.function) para que la Fase 5 la muestre después.
-                    // Acá NO se muestra en ningún panel: solo buffer y log.
+                    // Fase 4: la función tonal es salida del motor y se guarda en el buffer.
+                    // El incremento 5.5.1 la muestra, con los cinco valores que el motor puede
+                    // devolver, incluidos los dos que admiten que no sabe. Maquillarlos sería la
+                    // misma clase de mentira que el rótulo que el 5.5.2 corrige.
                     const funcion = MathEngine.getTonalFunction(c, State.universe.root, State.universe.type);
                     State.harmony.function = funcion;
+                    const funEl = document.getElementById('chord-function');
+                    funEl.innerText = TEXTO_FUNCION[funcion] || funcion;
+                    funEl.style.color = COLOR_FUNCION[funcion] || 'var(--text-muted)';
 
                     // Decisión del log (2026-07-25): la relación, el numeral y la función van
                     // al log, no solo al buffer. Se loguea al cambiar el análisis, para no
@@ -865,6 +902,7 @@
                     document.getElementById('chord-display').innerText = '-';
                     document.getElementById('chord-inversion').innerText = '-';
                     document.getElementById('chord-relation').innerText = '-';
+                    document.getElementById('chord-function').innerText = '-';
                     State.harmony.function = null;
                     UI._lastAnalysisSig = null;
                 }
