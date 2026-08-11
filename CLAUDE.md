@@ -176,7 +176,10 @@ Seis reglas, medidas el 2026-08-10 sobre los 20 símbolos distintos que tenía `
 3. El rótulo de un control no lleva emoji. Un botón dice lo que hace con palabras.
 4. Un símbolo tipográfico sí puede ser el rótulo entero de un control cuando la palabra no
    entra. El caso vivo es el `↺` del reset por instancia, que mide lo que mide una fila del
-   menú. Si hay lugar para la palabra, va la palabra.
+   menú. Si hay lugar para la palabra, va la palabra. La misma puerta vale para un separador
+   estructural de un dato, que no rotula nada y solo marca dónde termina una parte y empieza
+   otra: el caso vivo es la barra `|` de la vista de fórmula, que separa dos grados igual que
+   el borde entre dos teclas.
 5. En el log se permite un solo prefijo, `⚠`, para marcar una línea de aviso. El log es texto
    plano sin color ni columnas, así que el prefijo es lo único que distingue un aviso al leer
    una corrida entera. Ningún otro símbolo va al log: la etiqueta de categoría ya dice de dónde

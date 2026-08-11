@@ -133,10 +133,28 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   al planear el incremento 5.2 es el error que la subsección "Nomenclatura de lo que ya existe" del
   `ROADMAP.md` registra. Su clase `universe-bar` es el nombre viejo, de cuando era una barra y no un
   widget. Fuente: 2026-07-30, *Estándar espacial de los widgets*.
-- **vista de fórmula**: la fila que muestra los grados del universo activo con sus separadores de
-  tono y semitono. Es `formula-display`, y vive adentro del widget de escala. Existía y funcionaba
-  antes del incremento 5.3, así que el widget de escala la absorbió en vez de reescribirla. Fuente:
-  ROADMAP, alcance del incremento 5.3.
+- **vista de fórmula**: la grilla que muestra los grados del universo activo con sus pasos. Es
+  `formula-display`, y vive adentro del widget de escala. Son dos filas y trece columnas: los siete
+  grados abajo en las columnas impares, las seis barras separadoras `|` en las pares, y la etiqueta
+  del paso, `S`, `T` o `T+S`, arriba de cada barra. Existía y funcionaba antes del incremento 5.3,
+  así que el widget de escala la absorbió en vez de reescribirla. Peor caso medido el 2026-08-10 en
+  el formato nuevo: 38 caracteres en silábica y 30 en alfabética. En silábica hay empate en 38 entre
+  varias combinaciones, entre ellas `Do#` mayor y `Sol#` menor armónica, que era el peor caso del
+  formato viejo. Quien agregue un universo nuevo prueba contra ese largo, y lo recalcula con este
+  comando desde la raíz del repo:
+
+  ```sh
+  node -e 'const ES=["Do","Do#","Re","Re#","Mi","Fa","Fa#","Sol","Sol#","La","La#","Si"],EN=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+  const {SCALES}=require("./src/engine.js");
+  for (const [nom,N] of [["alfabética",EN],["silábica",ES]]) { let p={l:-1};
+    for (let r=0;r<12;r++) for (const [t,d] of Object.entries(SCALES)) { let c=r,s=N[r%12];
+      d.f.forEach(k=>{c+=k; if(c-r<12) s+=" | "+N[c%12];});
+      if (s.length>p.l) p={l:s.length,s,r:N[r%12],t}; }
+    console.log(nom, p.l, p.r, p.t, "->", p.s); }'
+  ```
+
+  Fuentes: ROADMAP, alcance del incremento 5.3, y 2026-08-10, *La vista de fórmula pasa a dos filas
+  con barra separadora*.
 - **selector de tónica**: el desplegable que elige la nota raíz del universo, `root-select`. Sus
   opciones cambian de nombre con la nomenclatura elegida.
 - **selector de tipo**: el desplegable que elige mayor, menor natural o menor armónica,

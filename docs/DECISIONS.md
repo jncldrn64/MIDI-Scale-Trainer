@@ -1488,6 +1488,39 @@ entrada.
 
 ---
 
+## 2026-08-10 — La vista de fórmula pasa a dos filas con barra separadora
+
+**Contexto:** el incremento 5.4 trajo la nomenclatura silábica y con ella la vista de fórmula dejó
+de entrar en el molde. La alfabética usa uno o dos caracteres por nota donde la silábica usa dos o
+tres, así que la misma fórmula ocupa bastante más. Y el salto de tres semitonos de la menor
+armónica, que se rotula `T+S`, es el separador más largo y empuja el máximo.
+
+**Medido sobre las 36 combinaciones**, doce tónicas por tres tipos de universo, contando caracteres
+de la cadena: con el formato viejo de guiones, el peor caso alfabético son 31 caracteres y el peor
+silábico son 40, `Sol#` menor armónica. Con el formato nuevo bajan a 30 y 38. El comando que
+recalcula los dos números vive en `GLOSARIO.md`, en la línea de la vista de fórmula.
+
+**Decisión:** la vista de fórmula pasa de una fila con guiones a una grilla de dos filas y trece
+columnas. Los siete grados van abajo, en las columnas impares. Las seis barras separadoras, `|`, van
+en las pares, y la etiqueta del paso va arriba, en la misma columna que la barra a la que se
+refiere. Sin barras en los extremos. La analogía es el teclado que el usuario ya tiene abajo en la
+pantalla: la barra es el borde entre dos teclas.
+
+**Por qué los guiones se pueden sacar sin perder información**, que es la parte que hay que dejar
+escrita para que nadie los quiera devolver. Los guiones de `-T-` existían para indicar que el paso
+va entre dos notas y no pertenece a ninguna. En una grilla eso lo dice la posición: la etiqueta está
+sobre la barra, y la barra está entre dos grados. Es la misma razón por la que una tecla negra no
+necesita una flecha que indique que está entre dos blancas.
+
+**Lo que no cambia:** el molde de 314.4 px no se toca, la solución entra en el espacio que ya está
+decidido. Los tres rótulos, `S`, `T` y `T+S`, se quedan tal cual. `T+S` se lee "tono más semitono",
+que es exactamente lo que el intervalo es; colapsarlo a `T` lo volvería indistinguible de un tono, y
+esa distinción es la que le da su sonido a la menor armónica.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

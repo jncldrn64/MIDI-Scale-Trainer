@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.60 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.61 (Inteligencia Armónica)</title>
     <style>
         :root {
             --bg-main: #0f172a;
@@ -70,8 +70,20 @@
         .universe-bar { background: var(--bg-panel); padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #334155; gap: 15px;}
         select, button { padding: 8px 16px; background: #334155; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: bold; transition: 0.2s;}
         select:hover, button:hover { background: #475569; }
-        .formula-display { display: flex; align-items: center; background: #0b1120; padding: 10px 20px; border-radius: 8px; font-family: monospace; font-size: 16px; border: 1px solid #1e293b;}
-        .f-note { color: var(--accent); font-weight: bold; } .f-step { color: #64748b; margin: 0 10px; font-size: 12px;}
+        /* La vista de fórmula es una grilla de trece columnas: los siete grados en las
+           impares, y las seis barras separadoras en las pares, con la etiqueta del paso justo
+           encima de cada barra. La analogía es el teclado que el usuario ya tiene abajo: la
+           barra es el borde entre dos teclas. Los guiones se fueron porque la posición en la
+           grilla ya dice que el paso va entre dos notas (DECISIONS, 2026-08-10). */
+        .formula-display {
+            display: grid; grid-template-columns: repeat(13, auto); grid-template-rows: auto auto;
+            align-items: center; justify-items: center; column-gap: 3px;
+            background: #0b1120; padding: 10px 20px; border-radius: 8px;
+            font-family: monospace; font-size: 16px; border: 1px solid #1e293b;
+        }
+        .f-note { color: var(--accent); font-weight: bold; grid-row: 2; }
+        .f-step { color: #64748b; font-size: 0.7em; grid-row: 1; }
+        .f-bar  { color: #334155; grid-row: 2; }
 
         /* Status */
         .status-item { text-align: center; }
@@ -224,7 +236,7 @@
         .widget .status-label { margin-bottom: 0; }
         .widget .status-value { font-size: 1.05em; }
         .widget.universe-bar { flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 8px 12px; }
-        .widget .formula-display { font-size: 11px; padding: 4px 8px; flex-wrap: wrap; }
+        .widget .formula-display { font-size: 11px; padding: 4px 8px; }
         .widget select, .widget button { padding: 4px 10px; font-size: 12px; }
         /* Andamiaje: los dos widgets sin contenido real. Ya no llevan recuadro punteado,
            porque el modelo no dibuja espacios reservados a la vista, y nacen cerrados. Se
@@ -282,7 +294,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.60</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.61</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -705,14 +717,18 @@
                 let current = State.universe.root; 
                 State.universe.validPitches.add(current % 12);
                 
+                // Grilla de dos filas: la etiqueta del paso va arriba, en la misma columna que
+                // la barra que separa los dos grados a los que se refiere. `T+S` nombra el salto
+                // de tres semitonos de la menor armónica y no se abrevia: colapsarlo a `T` lo
+                // volvería indistinguible de un tono, y esa distinción es la que le da su sonido.
                 let html = `<span class="f-note">${getNoteStr(current).name}</span>`;
-                
+
                 scaleDef.f.forEach(step => {
                     current += step;
                     if(current - State.universe.root < 12) {
                         State.universe.validPitches.add(current % 12);
                         let label = step === 1 ? 'S' : (step === 2 ? 'T' : 'T+S');
-                        html += `<span class="f-step">-${label}-</span><span class="f-note">${getNoteStr(current).name}</span>`;
+                        html += `<span class="f-step">${label}</span><span class="f-bar">|</span><span class="f-note">${getNoteStr(current).name}</span>`;
                     }
                 });
                 
