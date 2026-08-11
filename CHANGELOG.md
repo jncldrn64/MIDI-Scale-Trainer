@@ -2,6 +2,27 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.62 — 2026-08-11
+
+### Added
+
+- `index.html`: incremento 5.5.1. La función tonal que la Fase 4 dejó en el buffer se muestra como cuarta lectura del widget de salida del motor, que es su dueño. No se calcula nada nuevo: la variable ya estaba llena.
+- `index.html`: los cinco valores se muestran, incluidos los dos que admiten que el motor no sabe. "Fuera del universo" cuando el acorde no pertenece, y "Sin teoría escrita" cuando el universo no es mayor.
+- `docs/DECISIONS.md`: entrada con por qué esos dos no se ocultan ni se maquillan. Un hueco visible es información; un hueco tapado es un error futuro que el usuario no va a poder detectar.
+- `docs/GLOSARIO.md`: la función tonal con sus cinco valores y qué significa cada uno.
+
+### Fixed
+
+- `index.html`: la grilla de la vista de fórmula estaba declarada pero sin alinear. Ningún elemento declaraba su columna, así que los seis rótulos de paso caían en las columnas 1 a 6 en vez de sobre su barra.
+- `index.html`: la columna va ahora explícita en cada elemento. El grado con índice i va a la columna 2i+1, y su etiqueta y su barra a la 2i+2. Medido: las seis diferencias entre centro de rótulo y centro de barra dan cero.
+
+### Changed
+
+- `docs/ROADMAP.md`: el incremento 5.5 se parte en dos PR, con el mismo criterio que partió al 5.3: el corte es si toca el motor. El 5.5.1 queda entregado; el 5.5.2 se lleva el relabel de "Intercambio Modal" y las fixtures.
+- `index.html`: la versión mostrada sube de V11.61 a V11.62.
+
+El PR anterior entregó la grilla rota porque su criterio de aceptación medía filas y ancho, no la relación espacial que era el punto del cambio. La comprobación de este mide los centros.
+
 ## v11.61 — 2026-08-10
 
 ### Changed

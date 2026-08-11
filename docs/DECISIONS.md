@@ -1521,6 +1521,42 @@ esa distinción es la que le da su sonido a la menor armónica.
 
 ---
 
+## 2026-08-11 — La función tonal se muestra completa, con las dos veces que el motor admite que no sabe
+
+**Contexto:** `getTonalFunction` existe desde la Fase 4, se calcula en cada `updateStatus` y se
+guarda en el buffer. El comentario del código decía que ahí no se mostraba en ningún panel. El
+incremento 5.5.1 la muestra, en el widget de salida del motor, que es su dueño.
+
+**Los cinco valores que devuelve.** Tres son términos de teoría: tónica para los grados I, iii y vi
+de un universo mayor, subdominante para ii y IV, dominante para V y vii°. **Los otros dos son
+confesiones de que el motor no sabe**: uno dice que el acorde no pertenece al universo, y el otro
+que el universo no es mayor, porque la teoría de la menor no está escrita en este repo.
+
+**Decisión: los cinco se muestran, incluidos los dos últimos.** Ese es el punto entero de lo que el
+ROADMAP llama análisis honesto.
+
+**Por qué no se ocultan ni se maquillan**, que es la razón que hay que dejar escrita porque el
+incremento 5.5.2 la va a aplicar de nuevo a otro rótulo. Esconder una lectura cuando el motor no
+sabe le enseña al usuario que el programa siempre tiene respuesta, y la primera vez que le muestre
+una equivocada no va a tener forma de dudar de ella. Mostrar "Tónica" cuando el motor devolvió que
+no está definida es la misma clase de mentira, con la agravante de que es indistinguible de un dato
+bueno. Un hueco visible es información; un hueco tapado es un error futuro.
+
+**Consecuencia concreta que no se esconde:** en cualquier universo menor la función tonal dice hoy
+que no hay teoría escrita, siempre, porque `getTonalFunction` corta en su primera línea si el tipo
+no es mayor. Eso no es un defecto del incremento: es el estado real de la teoría de este repo, y así
+tiene que verse hasta que el Track paralelo la escriba.
+
+**Los textos elegidos:** "Tónica", "Subdominante" y "Dominante" para los tres términos. "Fuera del
+universo" para el acorde que no pertenece, que dice qué pasa sin sonar a error. "Sin teoría escrita"
+para el universo no mayor, que nombra la causa real en vez de culpar al acorde. Los dos últimos van
+en el gris de texto secundario, no en un color de veredicto, porque no son un juicio sobre lo que se
+tocó.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
