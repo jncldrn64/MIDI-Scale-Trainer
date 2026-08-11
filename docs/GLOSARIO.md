@@ -117,6 +117,21 @@
   aclaración nace verdadera. Fuentes: 2026-08-09,
   *Mapa de términos*, y 2026-08-10, *Universo es el término primario, y escala la aclaración que se
   retira sola*, que corrige la parte de aquella que daba por hecho el renombre en pantalla.
+- **sin clasificar**: el tercer valor que devuelve `classifyChordRelation`, `unclassified` en el
+  código. No es un diagnóstico: es lo que queda cuando el acorde no es diatónico y tampoco es una
+  dominante secundaria con objetivo en el universo. Se llamó `modal_interchange` hasta el incremento
+  5.5.2. En pantalla dice "Sin clasificar", que describe el estado del análisis y no juzga el
+  acorde. Fuente: 2026-08-11, *El tercer valor de la clasificación deja de llamarse intercambio
+  modal*.
+- **intercambio modal**: tomar prestado un acorde del modo paralelo, por ejemplo un acorde de La
+  menor dentro de La mayor. Es una técnica real y bien definida, y sigue siendo un término válido
+  del proyecto: la Fase 11 es la que va a escribir su teoría y hacer que el motor lo reconozca. Lo
+  que dejó de valer es usar esa palabra para nombrar lo que el motor no supo clasificar. Fuente:
+  2026-08-11, *El tercer valor de la clasificación deja de llamarse intercambio modal*.
+- **paleta de veredicto**: los seis hexadecimales de las categorías del teclado. Viven sobre las
+  teclas y en la leyenda que los explica, y ningún otro elemento de la app usa esos valores. La
+  regla operativa está en `CLAUDE.md`, sección "Colores". Fuente: 2026-08-11, *La paleta de veredicto
+  no se reusa fuera del teclado*.
 - **función tonal**: el papel que un acorde cumple dentro del universo activo. Lo deriva
   `getTonalFunction` por índice de grado, así que vale en cualquier tonalidad. Devuelve cinco
   valores y los cinco se muestran en el widget de salida del motor: **tónica** para los grados I,

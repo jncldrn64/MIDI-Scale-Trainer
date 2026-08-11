@@ -61,7 +61,7 @@ Hay tres tipos de caso, en el campo `kind`.
 }
 ```
 
-`relation` es uno de `diatonic`, `secondary_dominant` o `modal_interchange`. `targetPC` es
+`relation` es uno de `diatonic`, `secondary_dominant` o `unclassified`. `targetPC` es
 el pitch class al que empuja una dominante secundaria, o `null`. Para probar un conjunto de
 notas que no debe reconocerse como acorde, se usa `"expected": { "detected": false }`.
 
@@ -97,5 +97,5 @@ notas que no debe reconocerse como acorde, se usa `"expected": { "detected": fal
 | Archivo | Universo | Qué ancla |
 |---|---|---|
 | `oda-a-la-alegria.json` | Do Mayor | Re7 como dominante secundaria V/V. Más el gap de Fase 3 del Fa# en la melodía. |
-| `blues.json` | Do Mayor | Do7 → V/IV (dominante secundaria), Fa7 → intercambio modal, Sol7 → dominante diatónico. |
+| `blues.json` | Do Mayor | Do7 → V/IV (dominante secundaria), Fa7 → sin clasificar, Sol7 → dominante diatónico. |
 | `bad-apple.json` | Re menor | Do# (sensible menor) como tensión, y el indulto de 180 ms del paso cromático. |

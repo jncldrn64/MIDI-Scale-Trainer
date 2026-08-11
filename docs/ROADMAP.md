@@ -258,9 +258,10 @@ elección por `localStorage` con el mismo mecanismo que la persistencia de layou
 botón alcanzable en los menús nuevos. Segundo, la etiqueta "Intercambio Modal" que hoy muestra
 el panel de Análisis sale del caso else de `classifyChordRelation`, el fallback de "no diatónico
 y no dominante secundaria"; no es un diagnóstico derivado, es "no reconocido", y presentarlo
-como intercambio modal le afirma al usuario un análisis que el motor no hizo. Se cambia a "no
-clasificado" o "por definir", hasta que la Fase 11 escriba la teoría del intercambio modal; el
-nombre interno de esa relación en el motor se decide en la Fase 11, no en esta fase. Tercero, la
+como intercambio modal le afirma al usuario un análisis que el motor no hizo. **Entregado en el
+incremento 5.5.2:** el texto en pantalla dice "Sin clasificar" y el valor interno pasó a
+`unclassified`, en el mismo idioma que sus dos hermanos. El nombre interno se decidió acá y no en
+la Fase 11, que es la que va a escribir la teoría del intercambio modal de verdad. Tercero, la
 función tonal que la Fase 4 calcula y escribe en el buffer sin mostrarla se muestra acá en el
 panel de Análisis, junto al numeral y la relación, de forma consistente con el relabel honesto:
 para un acorde no diatónico la función dice "por definir" y la relación dice "no clasificado",
@@ -374,14 +375,14 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   del 2026-08-10.
 - Incremento 5.5, análisis honesto. Se entrega en dos PR, con el mismo criterio con que el 5.3 se
   entregó en tres: el corte es si toca el motor. El **5.5.1**, entregado, muestra la función tonal
-  y no toca `src/engine.js`. El **5.5.2**, pendiente, hace el relabel de "Intercambio Modal" y es el
-  primero de toda la Fase 5 que toca el motor, así que carga con las fixtures. La subdivisión no
+  y no toca `src/engine.js`. El **5.5.2**, entregado, hizo el relabel del tercer valor de la
+  clasificación y es el primero y único de toda la Fase 5 que tocó el motor: una sola línea, el
+  `return` final de `classifyChordRelation`, con las 41 fixtures como red. La subdivisión no
   renumera nada: el 5.5 sigue existiendo y la fase sigue cerrando con el 5.6.
   El alcance original: la función tonal que la Fase 4 dejó en el buffer se muestra en
-  el panel de Análisis junto al numeral y la relación, y la etiqueta "Intercambio Modal" se
-  relabela a "no clasificado" o "por definir". Los dos trabajos ya no van juntos: el corte por motor
-  los separa, y el estado intermedio queda declarado en vez de evitado. Lo que le falta al 5.5.2 es
-  solo el relabel, con sus fixtures.
+  el panel de Análisis junto al numeral y la relación, y la etiqueta del tercer caso de la cascada se
+  relabela. Los dos trabajos no fueron juntos: el corte por motor los separó, y el estado intermedio
+  quedó declarado en vez de evitado. Los dos están entregados.
 - Incremento 5.6, el cascarón del lienzo: el contenedor de 1280 x 720 escalado y centrado, con las
   franjas negras, la corrección del arrastre y las medidas que leían la ventana pasando a leer el
   lienzo. Es la primera de las dos piezas en que se partió la migración; la segunda, normalizar cada
@@ -439,6 +440,20 @@ conciencia.
 - El panel "Fijar Acordes" ya está oculto a propósito, con un comentario en `index.html` que lo
   declara y pide no borrarlo. Su destino no está decidido, y es la otra mitad de la misma
   característica que "Motor Automático".
+
+**Qué falta para cerrar la fase.** Los seis incrementos están entregados y los tres puntos de deuda
+de arriba no son trabajo pendiente de esta fase: dos apuntan al ítem de backlog que junta a "Motor
+Automático" con "Fijar Acordes", y el de los widgets de andamiaje espera a que existan los widgets
+de verdad, que son de las Fases 9 y 10. Quedan dos cosas, las dos del Criterio de aceptación de esta
+misma sección:
+
+1. El autor tiene que corroborarlo en el navegador. En particular sigue sin confirmar, con GPU real,
+   el arreglo del texto borroso que entregó el incremento 5.4: la comprobación headless da un
+   rasterizado idéntico, pero headless no reproduce la capa de composición obsoleta que causaba el
+   problema.
+2. El Criterio dice que "el motor y el coloreo quedan intactos", y el incremento 5.5.2 tocó el motor
+   a propósito, con una línea y con las fixtures verdes. Esa cláusula se escribió cuando la fase se
+   creía enteramente de disposición. Hay que reconciliarla antes de cerrar, no ignorarla.
 
 **Criterio de aceptación:** el fondo es una sola capa con el teclado y las notas a todo el
 ancho, las notas pasan por detrás de los overlays, la barra de menús permanente existe como
@@ -776,6 +791,11 @@ prioridad, no porque la rueda la bloquee.
 - Que el coloreo del teclado obedezca de verdad al estado abierto o cerrado de su dueño, según el
   reparto de la entrada del 2026-08-10. Hoy `renderKeyboard` pinta las seis categorías sin mirar qué
   widget está en pantalla. Bloqueado: toca `renderKeyboard`, que la Fase 5 preserva intacto.
+- Los códigos del motor están en dos idiomas. `classifyChordRelation` devuelve `diatonic`,
+  `secondary_dominant` y `unclassified`, en inglés, y `getTonalFunction` devuelve `tonica`,
+  `subdominante`, `dominante`, `no_diatonica` y `por_definir`, en español. Los dos son salida del
+  mismo motor y los lee el mismo código. Unificarlos toca `src/engine.js` y las fixtures, así que va
+  con su propio PR y no se coló en el incremento que encontró la inconsistencia.
 - La leyenda no explica por qué una nota fuera del universo puede salir verde. El motor acepta dos
   casos de nota fuera del universo: la sensible, que se pinta naranja y desde el incremento 5.4 está
   explicada, y el tono conductor de una dominante secundaria, que se pinta verde como si fuera

@@ -2,6 +2,32 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.63 — 2026-08-11
+
+### Changed
+
+- `src/engine.js`: el tercer valor de `classifyChordRelation` pasa de `modal_interchange` a `unclassified`. Una sola línea, el `return` final de la cascada. Es lo único que la Fase 5 tocó del motor.
+- `index.html`: la lectura de análisis dice "Sin clasificar" en vez de "Intercambio Modal". Ese valor era el cajón de lo que el motor no supo clasificar, no un diagnóstico.
+- `tests/fixtures/blues.json` y `tests/README.md`: el valor esperado y la prosa que lo describe adoptan el nombre nuevo. No se agregó ni se borró ninguna fixture.
+- `index.html`: las lecturas del readout dejan de usar la paleta de veredicto. Se distinguen por la palabra y usan la escala de texto, primario para lo que el motor sabe y secundario para lo que admite no saber.
+- `index.html`: dos botones y dos categorías del log dejan de repetir hexadecimales de la paleta. Los seis valores quedan solo en las clases del teclado y en la leyenda.
+- `index.html`: la versión mostrada sube de V11.62 a V11.63.
+- `docs/ARCHITECTURE.md`: la sección de evaluación adopta el nombre nuevo y registra qué era el valor viejo.
+
+### Added
+
+- `CLAUDE.md`: la regla de color, en tres puntos, al lado de la de iconos. Dónde vale la paleta de veredicto, cómo se distinguen las lecturas y qué usa el resto de la interfaz.
+- `docs/DECISIONS.md`: entrada con el renombre y su razón medida contra la cascada del motor, más la demostración de que la fixture ejercía ese camino.
+- `docs/DECISIONS.md`: entrada con la colisión de colores y por qué no se resolvió declarando que la paleta vale solo sobre las teclas.
+- `docs/GLOSARIO.md`: "sin clasificar", "intercambio modal" como término musical que sigue siendo válido, y "paleta de veredicto".
+- `docs/ROADMAP.md`: ítem de backlog nuevo. Los códigos del motor están en dos idiomas, inglés en la clasificación y español en la función tonal.
+
+### Fixed
+
+- `docs/ROADMAP.md`: la Fase 5 deja escrito qué le falta para cerrar. Los seis incrementos están entregados, pero el Criterio de aceptación pide corroboración del autor en el navegador y declara que el motor queda intacto, cláusula que este PR contradice a propósito.
+
+La fase sigue `en progreso`. Cerrarla con esas dos cosas sin resolver sería peor que dejarla abierta un PR más, y el ROADMAP ya lleva una reapertura registrada.
+
 ## v11.62 — 2026-08-11
 
 ### Added

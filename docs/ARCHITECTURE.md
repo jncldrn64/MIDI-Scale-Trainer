@@ -144,8 +144,10 @@ interfaz, dejó de ser cierta: la Fase 3 la conectó a la evaluación, y `evalua
 devuelve `good` para su tono conductor. Verificado leyendo la función: el chequeo corre
 después de `inScale || inChord` y antes de la sensible.
 
-El intercambio modal sigue fuera de la evaluación de notas a propósito. Es una etiqueta de
-relación del acorde con el universo (`classifyChordRelation`), no un estado de nota.
+La relación del acorde con el universo sigue fuera de la evaluación de notas a propósito. Es una
+etiqueta que devuelve `classifyChordRelation`, no un estado de nota. Su tercer valor se llamó
+`modal_interchange` hasta el incremento 5.5.2, que lo renombró a `unclassified`: no era un
+diagnóstico sino el `return` final de la cascada, o sea todo lo que el motor no supo clasificar.
 
 El umbral de 180 ms (`PASSING_TONE_MS`) está fijo en el código: no es uno de los cuatro
 ajustes que el usuario edita (acumulación, retención, error visual y split), y se calibró a

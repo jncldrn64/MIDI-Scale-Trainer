@@ -19,14 +19,14 @@
     },
     {
       "kind": "chord",
-      "label": "Fa7 (IV7): no diatónico y su target (Sib) no está en Do Mayor -> intercambio modal",
+      "label": "Fa7 (IV7): no diatónico y su target (Sib) no está en Do Mayor -> el motor no lo clasifica",
       "notesPlayed": [53, 57, 60, 63],
       "expected": {
         "detected": true,
         "rootPC": 5,
         "type": "7",
         "isDiatonic": false,
-        "relation": "modal_interchange",
+        "relation": "unclassified",
         "targetPC": null
       }
     },

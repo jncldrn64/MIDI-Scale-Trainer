@@ -189,6 +189,26 @@ Seis reglas, medidas el 2026-08-10 sobre los 20 símbolos distintos que tenía `
 
 Un emoji que no encaje en ninguna de las seis se saca en el mismo PR que lo introduce.
 
+## Colores
+
+Tres reglas, medidas el 2026-08-11.
+
+1. La paleta de veredicto son seis hexadecimales: `#bae6fd`, `#f59e0b`, `#22c55e`, `#f97316`,
+   `#a855f7` y `#ef4444`. Significan lo que la guía dice que significan, y viven en dos lugares:
+   sobre las teclas y en la leyenda que los explica. Ningún otro elemento de la app usa esos
+   seis valores.
+2. Las lecturas del readout no se distinguen por color. Se distinguen por la palabra, que ya es
+   distinta en cada caso, y usan la escala de texto: primario para lo que el motor sabe,
+   secundario para lo que admite no saber. Pintarlas con la paleta le enseña al usuario un
+   significado sobre una tecla y se lo contradice en una lectura.
+3. El resto de la interfaz, botones, categorías del log y acentos, tiene su propia paleta y no
+   repite un hexadecimal de la de veredicto. Puede quedar en la misma familia de color, que es
+   lo que ya hacía `.btn-success` con su verde propio; lo que no puede es repetir el valor.
+
+Medido antes de escribir la regla: cuatro elementos fuera del teclado usaban valores de la
+paleta, dos botones y dos categorías del log, más las tres lecturas del readout y las cinco de
+la función tonal. Los seis valores quedaron solo en las clases del teclado y en la leyenda.
+
 ## Guion largo
 
 Guion largo (`—`): prohibido en toda la prosa (regla 1 de no-ai-slop). Se permite únicamente
