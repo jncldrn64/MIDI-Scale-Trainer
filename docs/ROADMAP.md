@@ -509,20 +509,36 @@ cómo se registran se definen de forma colateral cuando exista el primero, y ese
 Cuando llegue hay que atarlo a la nota de contrato de salida parqueada en la Fase 9, para no
 terminar con dos documentos que dicen lo mismo con sentidos distintos.
 
-**Segundo trabajo: la partición.** Con el contrato en la mano los cortes se deducen en vez de
-discutirse: **se corta donde cambia el permiso.** Lo que es sistema va junto, lo que tiene permiso de
-escritura va junto, y lo que solo lee y presenta va junto. La separación que `ARCHITECTURE.md` §2
+**Segundo trabajo: la partición, en dos PR.** Con el contrato en la mano los cortes se deducen en vez
+de discutirse: **se corta donde cambia el permiso.** Lo que es sistema va junto, lo que tiene permiso
+de escritura va junto, y lo que solo lee y presenta va junto. La separación que `ARCHITECTURE.md` §2
 documenta, `State`, `MIDI`, `UI` y `SysLog`, es el punto de partida, no el resultado.
 
-Dos decisiones de la partición ya tomadas, que se ejecutan en ese PR y no antes:
+**Primera parte, el corte puro. Entregada el 2026-08-11 con la v11.67.** Los bloques se mudaron a
+archivos y no se movió un solo método entre objetos: `index.html` quedó como markup, los estilos
+salieron a `src/estilos.css` y el script se repartió en diez archivos bajo `src/`, cargados como
+scripts clásicos en el orden del original. Por qué se hace en dos PR, los dos datos que lo hacen
+seguro y el criterio de nombres viven en `DECISIONS.md`, entrada del 2026-08-11 "La partición se hace
+en dos PR, y el primero es un corte puro".
 
-- **El CSS sale a su propio archivo.** Son 270 líneas entre `<style>` y `</style>`, medido el
-  2026-08-11, y no tiene costo.
-- **El markup no puede salir.** Sin ES Modules y sin build no existe forma de incluir un fragmento de
-  HTML desde otro archivo. Sacarlo obligaría a construirlo desde JavaScript, que es peor de leer y
-  elimina la posibilidad de ver la estructura abriendo el archivo. Es la misma familia de restricción
-  de plataforma que el CORS: ver `DECISIONS.md`, entrada del 2026-08-11 "Los ES Modules no cargan
-  desde `file://`, y el umbral deja de prescribir".
+También quedó ejecutado lo que ya estaba decidido acá: el CSS salió a su propio archivo, 270 líneas,
+y el markup se quedó, porque sin ES Modules y sin build no existe forma de incluir un fragmento de
+HTML desde otro archivo. Sacarlo obligaría a construirlo desde JavaScript, que es peor de leer y
+elimina la posibilidad de ver la estructura abriendo el archivo. Es la misma familia de restricción
+de plataforma que el CORS: ver `DECISIONS.md`, entrada del 2026-08-11 "Los ES Modules no cargan desde
+`file://`, y el umbral deja de prescribir".
+
+**Segunda parte, la reorganización por permiso.** Pendiente. Es donde está el trabajo de verdad,
+porque el criterio atraviesa `UI` por la mitad: `buildUniverse` escribe el universo, o sea permiso de
+escritura; `buildKeyboard` y `renderKeyboard` son capa 0, o sea sistema; y `updateStatus` solo lee y
+presenta. Arrastra además un acomodo que el corte contiguo no pudo hacer: `saveLayout` y `loadLayout`
+quedaron en `cajas.js` y su lugar es `layout.js`.
+
+Ahí se decide también si la geometría del layout se cubre con fixtures. El corte puro no podía
+tomarla, porque agregar envoltura para Node metería código que en el original no existe. El dato que
+la justifica: la geometría es aritmética sobre números del lienzo, hoy no tiene ninguna prueba, y es
+donde se rompieron dos cosas durante la Fase 5, el clamp que no corría al redimensionar y la
+alineación de la grilla de la fórmula.
 
 Una restricción de la partición que conviene tener presente desde ahora: las fixtures corren en
 Node, y `src/engine.js` lleva una envoltura escrita a mano por eso, con `module.exports` para Node y

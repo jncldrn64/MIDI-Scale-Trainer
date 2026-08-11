@@ -182,8 +182,13 @@ la renombró a "Sensible (empuja a la tónica)", con la razón medida contra el 
 
 ## 7. No framework, por ahora
 
-Hoy el código son dos archivos: `index.html` (`State`, `MIDI`, `UI`, `SysLog`) y `src/engine.js`
-(`MathEngine` y las funciones puras de teoría). Los objetos-módulo ya
+Desde la v11.67 el código son doce archivos: `index.html`, que quedó como markup, más once bajo
+`src/`. El motor puro sigue en `src/engine.js` (`MathEngine` y las funciones de teoría), los
+estilos en `src/estilos.css`, y el script que vivía adentro de `index.html` se repartió en diez
+archivos, uno por bloque, cargados como scripts clásicos en el orden del documento:
+`config.js`, `state.js`, `log.js`, `midi.js`, `ui.js`, `cajas.js`, `lienzo.js`, `layout.js`,
+`widgets.js` y `arranque.js`. Cada uno toma el nombre de lo que define, y `arranque.js` va
+último porque contiene la única sentencia que ejecuta algo al cargar. Los objetos-módulo ya
 separan responsabilidades. Los colapsos que se documentan del historial (freeze del hilo
 principal, fuga de memoria por `innerHTML +=`) fueron problemas de patrones DOM y async, no
 del lenguaje. Migrar a React o Vue no arregla el bug de raíz ambigua ni ningún problema de
@@ -204,11 +209,13 @@ las tres partes de la decisión viven en `DECISIONS.md`, entrada del 2026-08-11 
 cargan desde `file://`, y el umbral deja de prescribir". Esa misma entrada retira el segundo
 gatillo que este párrafo tenía, "o el estado se vuelve difícil de razonar", por no tener medida.
 
-**El umbral ya se cruzó.** Medido el 2026-08-11: `index.html` tiene 1524 líneas totales, 126
-vacías y 227 de comentario, o sea 1171 de código y markup. `src/engine.js` tiene 249. El gatillo
-se cumplió durante la Fase 5, con el trabajo visual en curso, y se decidió terminar esa fase
-antes de tocarlo. La partición es la Fase 5B del `ROADMAP.md`, entre la Fase 5 y la Fase 6. Este
-párrafo se borra cuando la 5B cierre.
+**El umbral se cruzó y la primera parte de la partición ya lo bajó.** Antes, medido el
+2026-08-11: `index.html` tenía 1524 líneas totales, 126 vacías y 227 de comentario, o sea 1171 de
+código y markup. Después de la v11.67: 242 totales, 9 vacías y 25 de comentario, o sea 208. El
+archivo más grande que salió es `src/layout.js` con 283 líneas, y ninguno se acerca a las 1000. El
+gatillo se cumplió durante la Fase 5, con el trabajo visual en curso, y se decidió terminar esa
+fase antes de tocarlo. La partición es la Fase 5B del `ROADMAP.md`, entre la Fase 5 y la Fase 6.
+Este párrafo se borra cuando la 5B cierre.
 
 El conteo se recalcula con estos tres comandos, y el de código y markup es la resta:
 

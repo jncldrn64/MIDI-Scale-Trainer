@@ -2,6 +2,26 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.67 — 2026-08-11
+
+### Changed
+
+- `index.html`: queda como markup. Pasa de 1524 líneas a 242, de las cuales 208 son código y markup. Los estilos salen a `src/estilos.css` y el script se reparte en diez archivos bajo `src/`, cargados como scripts clásicos en el orden del original.
+- `index.html`: el orden de carga va explicado en un comentario. Solo `arranque.js` ejecuta algo, así que el orden de los otros nueve no cambia el comportamiento y está elegido para leerse de arriba abajo.
+- `src/`: diez archivos nuevos, uno por bloque. Cada uno toma el nombre de lo que define, así el nombre no es una categoría inventada que haya que mantener sincronizada con el código.
+- `docs/ARCHITECTURE.md`: el §7 pasa de describir dos archivos a describir doce, y el conteo del umbral se vuelve a correr. El archivo más grande que salió es `src/layout.js` con 283 líneas.
+
+### Added
+
+- `docs/DECISIONS.md`: por qué la partición va en dos PR. Un corte puro se puede probar concatenando los archivos y comparando contra el original; en cuanto se mueve un método esa propiedad se pierde.
+- `docs/DECISIONS.md`: los dos datos que hacen segura esta partición. Hay una sola sentencia ejecutable de primer nivel, y en scripts clásicos un `const` de primer nivel va al ámbito léxico global compartido.
+- `docs/ROADMAP.md`: la primera parte de la partición queda marcada como entregada, y la segunda con lo que arrastra. El criterio atraviesa `UI` por la mitad y hay que decidir las fixtures de geometría.
+- `docs/GLOSARIO.md`: el término corte puro, con la prueba que lo define.
+
+El `diff` de la prueba de corte puro dio diez líneas de diferencia sobre 1025, una por archivo, y las diez son el comentario de encabezado. El `diff` del CSS dio cero.
+
+`saveLayout` y `loadLayout` quedaron en `cajas.js` y su lugar es `layout.js`. En el original viven entre el registro de cajas y el cascarón del lienzo, y un corte contiguo no puede moverlas. Lo acomoda el PR siguiente.
+
 ## v11.66 — 2026-08-11
 
 ### Added
