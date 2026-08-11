@@ -2,6 +2,20 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.73 — 2026-08-11
+
+### Added
+
+- `docs/ROADMAP.md`: los 24 ítems que tenían fecha y ninguna explicación quedan clasificados en tres categorías distinguibles. Trece con cita a su fuente, cuatro con hipótesis y su base a la vista, y siete con el vacío declarado.
+- `docs/DECISIONS.md`: una inferencia se marca como inferencia y con su base a la vista, nunca como hecho. Ante la duda entre inferir y declarar el vacío, se declara el vacío.
+- `CLAUDE.md`: la regla en su forma operativa, dentro de "Honestidad de estado", con los tres marcadores que el ROADMAP usa.
+
+Dos ítems pasaron de inferidos a sin origen al aplicar el criterio, la calibración por tapping y el split como rango. Los dos tienen una explicación cómoda a mano que no sale del PR que los trajo, así que sería invención con forma de deducción.
+
+Un ítem anotado por un PR sin relación temática no es lo mismo que un ítem sin explicación. El metrónomo entró con el PR del estándar espacial y su CHANGELOG escribió la razón completa igual.
+
+Con esto los 44 ítems parqueados quedan con fecha, PR de entrada y una respuesta sobre su origen, sea una cita, una hipótesis marcada o un vacío declarado.
+
 ## v11.72 — 2026-08-11
 
 ### Added

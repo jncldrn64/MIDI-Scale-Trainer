@@ -2125,6 +2125,50 @@ reescribieron el mismo día. Se resolvieron buscando la redacción vieja, y el �
 
 ---
 
+## 2026-08-11 — Una inferencia se marca como inferencia, y ante la duda se declara el vacío
+
+**Contexto:** después de fechar los 44 ítems parqueados quedaban 24 con fecha y sin nada que
+explicara por qué se anotaron. Explicarlos con lo que el repo tiene, el PR que los trajo y lo que ese
+PR produjo, trae un riesgo distinto del de los trabajos anteriores de esta serie. Antes el modo de
+falla era escribir algo falso creyéndolo cierto. Acá es escribir algo **plausible** que suene a
+hecho.
+
+**Decisión: una inferencia se escribe marcada como inferencia y con su base a la vista, nunca como
+hecho. Ante la duda entre inferir y declarar el vacío, se declara el vacío.** La regla operativa vive
+en `CLAUDE.md`, sección "Honestidad de estado", con los tres marcadores.
+
+**Razón:** una explicación bien armada sobre una base débil es peor que un hueco declarado, porque el
+hueco se nota y la explicación no. Un resultado con siete vacíos y cuatro hipótesis se puede confiar
+entero; uno con once hipótesis obliga a auditar cada una.
+
+**El saldo de los 24**, que es el dato que la transición al roadmap siguiente va a necesitar:
+
+| Categoría | Cuántos |
+|---|---|
+| Explicado, con cita a la fuente | 13 |
+| Inferido, marcado como hipótesis con su base | 4 |
+| Sin origen recuperable | 7 |
+
+**Dos ítems pasaron de inferidos a sin origen al aplicar el criterio**, y conviene decirlo porque es
+donde la regla hizo trabajo. La calibración de tiempos por tapping y el split como rango tienen cada
+uno una explicación cómoda a mano, el motor ya usa ventanas de tiempo y el split ya existe como
+concepto. Ninguna de las dos sale del PR que trajo el ítem, así que serían invención con forma de
+deducción.
+
+**Un hallazgo que corrige una suposición razonable.** Un ítem anotado por un PR sin relación temática
+no es necesariamente un ítem sin explicación. El metrónomo entró con el PR del estándar espacial de
+los widgets, que no tiene nada que ver, y sin embargo el CHANGELOG de ese día escribió la razón
+completa. Lo mismo pasa con la tabla histórica. Anotación de paso y razón registrada son cosas
+distintas y pueden convivir.
+
+**Lo que este trabajo no hace.** Explicar por qué se anotó un ítem no es decidir qué hacer con él, y
+tampoco agrupar los que resultan ser el mismo tema. Las dos cosas son trabajo de la transición al
+roadmap siguiente y ya están anotadas.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

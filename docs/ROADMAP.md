@@ -775,6 +775,9 @@ prioridad, no porque la rueda la bloquee.
   `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Pentatónicas y Blues como
   universos propios", "Glosario in-app que crezca junto con lo aprendido", "Modo canción" y
   "Entrenamiento de oído puro".
+  **Sin origen recuperable.** Entró con el primer commit que toca `docs/ROADMAP.md`, así que `git
+  log` no puede ir más atrás y ese commit no dejó ninguna razón escrita. Es una de las ideas con
+  las que el roadmap nació, y no se sabe más que eso.
 - Pentatónicas y Blues como universos propios, no como parches de excepción. Ojo con esto: no son
   escalas de siete notas, así que no producen una escalera de siete tríadas por grado y la vista de
   calidades de la rueda no se les extiende tal cual. Antes de programarlas hay que decidir qué
@@ -785,18 +788,27 @@ prioridad, no porque la rueda la bloquee.
   `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Modos griegos (Dórico,
   Frigio, Mixolidio, Lidio)", "Glosario in-app que crezca junto con lo aprendido", "Modo canción"
   y "Entrenamiento de oído puro".
+  **Sin origen recuperable.** Entró con el primer commit que toca `docs/ROADMAP.md`, así que `git
+  log` no puede ir más atrás y ese commit no dejó ninguna razón escrita. Es una de las ideas con
+  las que el roadmap nació, y no se sabe más que eso.
 - Glosario in-app que crezca junto con lo aprendido.
   **Entró:** 2026-07-04, PR "doc: reescribir docs y comentarios en la voz Rossmann". Ese es el
   primer commit que toca `docs/ROADMAP.md`, así que este ítem está desde que el archivo existe y
   `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Modos griegos (Dórico,
   Frigio, Mixolidio, Lidio)", "Pentatónicas y Blues como universos propios", "Modo canción" y
   "Entrenamiento de oído puro".
+  **Sin origen recuperable.** Entró con el primer commit que toca `docs/ROADMAP.md`, así que `git
+  log` no puede ir más atrás y ese commit no dejó ninguna razón escrita. Es una de las ideas con
+  las que el roadmap nació, y no se sabe más que eso.
 - Modo "canción": cargar un MIDI, reproducir el bajo, evaluar la melodía en vivo.
   **Entró:** 2026-07-04, PR "doc: reescribir docs y comentarios en la voz Rossmann". Ese es el
   primer commit que toca `docs/ROADMAP.md`, así que este ítem está desde que el archivo existe y
   `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Modos griegos (Dórico,
   Frigio, Mixolidio, Lidio)", "Pentatónicas y Blues como universos propios", "Glosario in-app que
   crezca junto con lo aprendido" y "Entrenamiento de oído puro".
+  **Sin origen recuperable.** Entró con el primer commit que toca `docs/ROADMAP.md`, así que `git
+  log` no puede ir más atrás y ese commit no dejó ninguna razón escrita. Es una de las ideas con
+  las que el roadmap nació, y no se sabe más que eso.
 - Entrenamiento de oído puro (dictado de intervalos, identificar un acorde solo de oído).
   El informe de campo ya marcó esto como el objetivo final, y el software actual no lo
   cubre.
@@ -805,11 +817,17 @@ prioridad, no porque la rueda la bloquee.
   `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Modos griegos (Dórico,
   Frigio, Mixolidio, Lidio)", "Pentatónicas y Blues como universos propios", "Glosario in-app que
   crezca junto con lo aprendido" y "Modo canción".
+  **Sin origen recuperable.** Entró con el primer commit que toca `docs/ROADMAP.md`, así que `git
+  log` no puede ir más atrás y ese commit no dejó ninguna razón escrita. Es una de las ideas con
+  las que el roadmap nació, y no se sabe más que eso.
 - Menor melódica como escala disponible, junto a los modos griegos y las pentatónicas ya
   listados. Cobra sentido si el jazz entra como objetivo.
   **Entró:** 2026-07-30, PR "doc: enriquecer la rueda de quintas, la regla de animación y el
   backlog". Con ese mismo PR entraron "Calibración de tiempos por tapping" y "Lectura de partitura
   como vista futura".
+  **Hipótesis:** se anotó al especificar la rueda de quintas, que es lo que hacía ese PR, y que se
+  apoya en las escalas que `SCALES` ya tiene. Base: el mismo commit enriqueció la Fase 10 con tres
+  vistas acopladas de escala. No hay nada escrito que lo diga, así que esto se puede discutir.
 - Calibración de tiempos por tapping. Hoy los cuatro campos del motor, acumulación, retención,
   error visual y split, se ajustan a mano con números. La idea es fijarlos tocando una secuencia y
   que el programa derive los valores de lo que midió. Arrastra dos cosas más: tempos, y que los
@@ -818,6 +836,9 @@ prioridad, no porque la rueda la bloquee.
   **Entró:** 2026-07-30, PR "doc: enriquecer la rueda de quintas, la regla de animación y el
   backlog". Con ese mismo PR entraron "Menor melódica como escala disponible" y "Lectura de
   partitura como vista futura".
+  **Sin origen recuperable.** El PR que lo trajo trataba de la rueda de quintas y el CHANGELOG de
+  ese día lo nombra sin dar razón. No hay base para una hipótesis, así que queda declarado el
+  vacío en vez de inventarle una.
 - Coherencia visual del set de iconos. Los emojis que la interfaz usa hoy no forman un conjunto
   coherente: cada uno viene de una familia distinta y se ven como piezas sueltas. Queda registrado
   un hallazgo negativo para no repetir el intento: pasarlos a SVG se probó y da más carga, no menos,
@@ -834,12 +855,19 @@ prioridad, no porque la rueda la bloquee.
   **Entró:** 2026-07-30, PR "doc: enriquecer la rueda de quintas, la regla de animación y el
   backlog". Con ese mismo PR entraron "Menor melódica como escala disponible" y "Calibración de
   tiempos por tapping".
+  **Por qué se anotó:** el CHANGELOG v11.37 lo dice, "anotada como mención sin compromiso para que
+  sea decisión y no olvido". El ítem se escribió para que la idea quedara registrada como
+  descartada por ahora y no como algo que nadie recordó.
 - Comparar cómo reparten el espacio los programas que ya explican canciones con notas que caen,
   antes de dar por firme el presupuesto de superposición. Hoy se le reserva altura a un motor que no
   existe, y el tope de tres octavos sale de mirar un boceto, no de medir contra algo que funcione.
   Va junto con la lectura de archivos MIDI, porque hasta cargar una canción real no se sabe cuánto
   alto pide de verdad.
   **Entró:** 2026-07-30, PR "doc: presupuesto de superposición y un solo menú de widgets".
+  **Por qué se anotó:** el CHANGELOG v11.39 lo dice, "antes de dar por firme el tope de tres
+  octavos". El mismo commit creó la entrada del 2026-07-30 "Presupuesto de superposición", que
+  inventó ese tope; el ítem nació como la comprobación pendiente del número que ese PR acababa de
+  fijar.
 - Metrónomo. No existe en ninguna parte del proyecto hoy. Interesa porque el tiempo ya participa de
   la evaluación: el indulto por paso cromático depende de una duración fija de 180 ms, y tres de
   los cuatro ajustes del motor son ventanas de tiempo. Un metrónomo abre la puerta a que esas ventanas se
@@ -847,6 +875,11 @@ prioridad, no porque la rueda la bloquee.
   tempos por canción que ese ítem ya arrastra.
   **Entró:** 2026-07-30, PR "doc: actualizar ARCHITECTURE a la jerarquía real y fijar el estándar
   espacial". Con ese mismo PR entró "Hundir el log cuando la barra crezca".
+  **Por qué se anotó:** el CHANGELOG v11.41 da la razón entera, "porque el tiempo ya participa de
+  la evaluación (el indulto de 180 ms y las cuatro ventanas del motor) y un tempo permitiría
+  derivar esas ventanas en vez de fijarlas a mano". El PR que lo trajo trataba del estándar
+  espacial de los widgets y no tiene relación temática, así que es una anotación de paso cuya
+  razón igual quedó escrita.
 - Hundir el log cuando la barra crezca. Hoy queda alcanzable porque la barra tiene un solo nivel.
   La decisión del 2026-07-25 pide que la consola de debug viva detrás de submenús, oculta para
   quien solo toca. Cuando aparezcan menús que se ganen el espacio, como el de archivo para MIDI y
@@ -869,6 +902,9 @@ prioridad, no porque la rueda la bloquee.
   no antes.
   **Entró:** 2026-07-31, PR "doc: preajuste de aprendizaje, selección por opacidad y tabla
   histórica".
+  **Por qué se anotó:** el CHANGELOG v11.42 lo dice, "cubre una pregunta que ni la Fase 8 ni el
+  modo canción responden". El mismo PR trataba de la selección por opacidad y del preajuste de
+  aprendizaje, así que el ítem es una anotación de paso con su razón registrada.
 - Redimensionar un widget en tiempo real. Hoy el molde es fijo a propósito, porque el tamaño
   uniforme es lo que hace que las cajas se lean como un sistema. Dejar que el usuario las estire
   abre preguntas que hoy no tienen respuesta: qué pasa con el tope de cobertura, qué pasa con el
@@ -877,6 +913,9 @@ prioridad, no porque la rueda la bloquee.
   **Entró:** 2026-08-01, PR "doc: nacimiento discreto, movimiento libre y el molde con números".
   Con ese mismo PR entraron "Lineamientos para partir una fase" y "Describir el destino visual en
   texto dentro del repo".
+  **Por qué se anotó:** el CHANGELOG v11.45 lo dice, "anotado como idea y no como decisión, con
+  las preguntas que abre". El mismo commit fijó el molde uniforme con números en el Alcance de la
+  Fase 5, así que el ítem es la contrapregunta que ese molde abre al fijarse.
 - Lineamientos para partir una fase. La Fase 5 tiene cinco incrementos y uno de ellos se entrega en
   dos PR de código, y esa estructura creció sin regla: no hay escrito cuándo un incremento se parte
   ni hasta qué profundidad. Sin lineamiento, el trabajo se subdivide tarde, cuando ya se empezó a
@@ -896,6 +935,9 @@ prioridad, no porque la rueda la bloquee.
   **Entró:** 2026-08-01, PR "doc: nacimiento discreto, movimiento libre y el molde con números".
   Con ese mismo PR entraron "Redimensionar un widget en tiempo real" y "Lineamientos para partir
   una fase".
+  **Por qué se anotó:** el CHANGELOG v11.45 lo dice, "eleva a trabajo concreto una sugerencia ya
+  parqueada". No es una idea nueva de ese PR: es una sugerencia previa que ahí pasó a tener forma
+  de trabajo.
 - Detectar el rango real del teclado conectado por MIDI, en vez de asumirlo. El protocolo no lo
   informa directamente, así que habría que inferirlo o dejar que el usuario lo declare. Por defecto
   se muestran las 88 teclas, que es lo escrito. **Procedencia:** salió del incremento que llevó el
@@ -907,6 +949,9 @@ prioridad, no porque la rueda la bloquee.
   la barra al fondo y eliminaría la única zona vedada al movimiento de widgets.
   **Entró:** 2026-08-09, PR "doc: consolidar el area de movimiento, el mapa de terminos y la deuda
   verificada". Con ese mismo PR entró "Detectar el rango real del teclado conectado".
+  **Por qué se anotó:** el CHANGELOG v11.47 da la razón, "que devolvería su alto al fondo". Ese PR
+  estaba corrigiendo el área de movimiento de los widgets y declarando que la barra es la única
+  zona vedada, así que el ítem es la pregunta que esa restricción abre.
 - Reglas para cuando un umbral escrito se dispara a mitad de otra fase. Pasó el 2026-08-09 con las
   1000 líneas de `index.html` de `ARCHITECTURE.md` §7: el gatillo se cumplió durante la Fase 5 y no
   había escrito si se frena lo que está en curso, si se abre una fase nueva ahí mismo, o si se
@@ -953,6 +998,10 @@ prioridad, no porque la rueda la bloquee.
   la salida del motor, que hoy siguen siendo un marcador de posición.
   **Entró:** 2026-08-09, PR "doc: fijar donde vive la leyenda de colores y dos precisiones de
   nomenclatura".
+  **Hipótesis:** se anotó mientras se decidía dónde vive la explicación de los colores, que es lo
+  que hacía ese PR. Base: el mismo commit produjo la entrada del 2026-08-09 "Dónde vive la leyenda
+  de colores", que reparte quién dice qué entre el teclado, los subtítulos y la guía. El CHANGELOG
+  de ese día anota el ítem con su bloqueo y sin razón, así que esto se puede discutir.
 - Que el coloreo del teclado obedezca de verdad al estado abierto o cerrado de su dueño, según el
   reparto de la entrada del 2026-08-10 "Dueño de superficie: cerrar el widget apaga su efecto". Hoy
   `Teclado.renderKeyboard` pinta las seis categorías sin mirar qué widget está en pantalla.
@@ -1038,6 +1087,9 @@ prioridad, no porque la rueda la bloquee.
   nada: es un comentario. Quedó afuera porque los dos PR de la partición declararon que no tocaban
   `src/engine.js`, y romper esa promesa por dos comentarios habría costado más que anotarlos.
   **Entró:** 2026-08-11, PR "chg: partir index.html, segunda parte, repartir por permiso".
+  **Por qué se anotó:** lo dice el propio ítem y lo confirma el PR que lo trajo, que es el que
+  dejó esas citas muertas al disolver `UI`. Se anotó porque los dos PR de la partición declararon
+  que no tocaban `src/engine.js`.
 - Alto del teclado configurable por el usuario. Hoy son 140 px de lienzo fijos. El techo está
   calculado y escrito: 236 px de lienzo, porque a partir de ahí la zona de notas baja de 453.3 px y
   los 170 px del molde se pasan del tope de tres octavos. Un control que deje elegir tiene que
@@ -1081,6 +1133,10 @@ prioridad, no porque la rueda la bloquee.
   Con ese mismo PR entraron "Que el coloreo del teclado obedezca de verdad", "La precedencia entre
   el widget de escala", "La rama del preveredicto de `renderKeyboard`", "Que el widget de feedback
   del sistema se abra solo" y "Convertir Motor Automático y el panel Fijar Acordes".
+  **Sin origen recuperable.** El PR que lo trajo produjo cuatro entradas de decisiones, sobre
+  dueño de superficie, lienzo de referencia, jerarquía de menús y criterio de entrada a una fase
+  en curso, y ninguna toca la evaluación ni el split. El CHANGELOG de ese día lo nombra dentro de
+  una lista de siete sin dar razón. No hay base para una hipótesis.
 - Que el widget de feedback del sistema se abra solo cuando aparece un error, estando cerrado.
   Bloqueado por un conflicto que hay que resolver antes: contradice que cerrar una caja sea una
   decisión del usuario que el sistema respeta. Quien lo tome tiene que decidir si el feedback es una
@@ -1089,6 +1145,11 @@ prioridad, no porque la rueda la bloquee.
   Con ese mismo PR entraron "Que el coloreo del teclado obedezca de verdad", "La precedencia entre
   el widget de escala", "La rama del preveredicto de `renderKeyboard`", "El split como rango" y
   "Convertir Motor Automático y el panel Fijar Acordes".
+  **Hipótesis:** se anotó al escribir la regla que contradice. Base: el mismo commit produjo la
+  entrada del 2026-08-10 "Dueño de superficie: cerrar el widget apaga su efecto", que fija que
+  cerrar una caja es una decisión del usuario que el sistema respeta, y el ítem quedó escrito con
+  ese conflicto declarado en vez de como pedido limpio. El CHANGELOG no lo dice, así que esto se
+  puede discutir.
 - Convertir "Motor Automático" y el panel "Fijar Acordes" en un widget que asista con los acordes.
   Hoy son dos controles de la misma característica partida en dos, uno visible en el escenario y el
   otro oculto a propósito. **Procedencia:** salió de rastrear en el código qué hace el botón, que
@@ -1122,6 +1183,9 @@ decirlo, así que se leen juntos o no se leen.
   **Entró:** 2026-07-25, PR "doc: incrementos de entrega en la Fase 5 y Direcciones sin fase". Con
   ese mismo PR entraron "La guía de interfaz reactiva a lo abierto" y "El entrenamiento que
   propone layout".
+  **Por qué se anotó:** el CHANGELOG v11.28 lo dice para las tres ideas que ese PR capturó, "para
+  que no se pierdan, sin volverlas fase", cada una con su bloqueo. El motivo de la anotación es no
+  perder la idea, no que hubiera trabajo por hacer.
 - La guía de interfaz reactiva a lo abierto. La guía no solo explica el entrenamiento activo,
   también las opciones de cada widget abierto en las ranuras, lo abra el usuario o el
   entrenamiento. Bloqueada por: que haya más de una característica a la que reaccionar (la Fase 9
@@ -1129,6 +1193,8 @@ decirlo, así que se leen juntos o no se leen.
   **Entró:** 2026-07-25, PR "doc: incrementos de entrega en la Fase 5 y Direcciones sin fase". Con
   ese mismo PR entraron "Entrenamientos como datos y un posible taller" y "El entrenamiento que
   propone layout".
+  **Por qué se anotó:** el CHANGELOG v11.28 lo dice para las tres ideas que ese PR capturó, "para
+  que no se pierdan, sin volverlas fase", cada una con su bloqueo.
 - El entrenamiento escribe sus instrucciones en los subtítulos del entrenamiento. Hoy los
   subtítulos están definidos como directrices en tiempo real, pero ningún documento dice quién las
   produce: la superficie existe y no tiene autor. Bloqueada por: que exista el sistema de
@@ -1136,6 +1202,9 @@ decirlo, así que se leen juntos o no se leen.
   si el entrenamiento escribe ahí, es un autor más, y hay que decidir qué pasa cuando el
   entrenamiento y el motor quieren escribir en la misma superficie.
   **Entró:** 2026-08-10, PR "doc: nombrar lo que ya existe y resolver Universo contra Escala".
+  **Por qué se anotó:** el CHANGELOG v11.59 lo dice, "los subtítulos, que hoy son una superficie
+  sin autor declarado, con la pregunta abierta de qué pasa cuando el motor quiere escribir ahí
+  también". El PR estaba nombrando artefactos que ya existían y encontró una superficie sin dueño.
 - El entrenamiento que propone layout. Un entrenamiento puede proponer una disposición de
   paneles y pedirle al usuario que la acepte o no; es consumidor que no impone, no cambia el
   layout por su cuenta. Bloqueada por: que exista el sistema de entrenamientos, acoplada con
@@ -1143,17 +1212,28 @@ decirlo, así que se leen juntos o no se leen.
   **Entró:** 2026-07-25, PR "doc: incrementos de entrega en la Fase 5 y Direcciones sin fase". Con
   ese mismo PR entraron "Entrenamientos como datos y un posible taller" y "La guía de interfaz
   reactiva a lo abierto".
+  **Por qué se anotó:** el CHANGELOG v11.28 lo dice para las tres ideas que ese PR capturó, "para
+  que no se pierdan, sin volverlas fase", cada una con su bloqueo.
 - Widgets como motores adicionales. Hoy un widget solo presenta lo que el motor calcula; a futuro
   un widget podría además calcular, siendo un motor más, no solo una vista. Bloqueada por: que el
   sistema de widgets exista y se estabilice primero; es dirección, no fase.
   **Entró:** 2026-07-25, PR "doc: refinar el modelo de capas (readout widget, ranura límite, menú
   colocador)". Con ese mismo PR entró "Apagar los efectos del fondo".
+  **Por qué se anotó:** es la contrapregunta directa de lo que ese mismo commit decidió. Su
+  entrada del 2026-07-25 "Refinación del modelo: el readout es un widget que presenta" fija que un
+  widget lee el buffer y no recalcula, o sea que presentar no es recalcular; el ítem anota la
+  dirección contraria para no perderla.
 - Apagar los efectos del fondo. El teclado y las notas que caen son fondo permanente, pero sus
   efectos, el coloreo de las teclas y lo que se pinte sobre las notas, son salida del motor y
   podrían apagarse como cualquier otra, dejando el teclado limpio. Bloqueada por: nada duro, es
   opción de display; se decide cuando haya con qué probarla.
   **Entró:** 2026-07-25, PR "doc: refinar el modelo de capas (readout widget, ranura límite, menú
   colocador)". Con ese mismo PR entró "Widgets como motores adicionales".
+  **Hipótesis:** se anotó extendiendo al fondo lo que ese mismo commit decidió para los widgets.
+  Base: su entrada del 2026-07-25 fija que un widget de presentación se cierra y el dato sigue en
+  el buffer; el ítem pregunta lo mismo para los efectos del fondo, que también son salida del
+  motor. El CHANGELOG lo anota como idea capturada con su bloqueo y sin razón, así que esto se
+  puede discutir.
 
 ---
 

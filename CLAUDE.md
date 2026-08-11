@@ -257,6 +257,15 @@ violaría append-only.
 Nada se declara "funciona" o "probado" sin una corrida real. Si no se verificó, se dice
 con esas palabras.
 
+Cuando se recupera contexto perdido, la regla se extiende: **una inferencia se escribe marcada como
+inferencia y con su base a la vista, nunca como hecho. Ante la duda entre inferir y declarar el
+vacío, se declara el vacío.** El modo de falla acá no es escribir algo falso creyéndolo cierto, es
+escribir algo plausible que suene a hecho: un hueco declarado se nota y una explicación bien armada
+sobre una base débil no. Los tres marcadores que este repo usa en `docs/ROADMAP.md` son
+`**Por qué se anotó:**` para lo que tiene cita, `**Hipótesis:**` para lo que se dedujo, con su base,
+y `**Sin origen recuperable.**` para lo que no se sabe. Ver `docs/DECISIONS.md`, entrada del
+2026-08-11 "Una inferencia se marca como inferencia, y ante la duda se declara el vacío".
+
 ## Promesas y umbrales
 
 La regla 6 de "Prosa" cubre los números: uno que describe el código va con el comando que lo
