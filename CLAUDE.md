@@ -57,6 +57,21 @@ obsoleta; se agrega una nueva que la reemplaza y la referencia. Cada entrada abr
 `## YYYY-MM-DD — <título>`. La v11.5 se perdió por no tener este registro; por eso la
 historia acá no se reescribe.
 
+## Referencia cruzada a DECISIONS
+
+Un texto de un archivo operativo lleva puntero a la entrada de `docs/DECISIONS.md` que lo
+justifica cuando, sin ese puntero, se leería como arbitrario o como contradictorio con el resto
+del documento. El puntero cita fecha y título, nunca número de línea.
+
+La prueba práctica: leé la frase sin el puntero y preguntate si alguien que no estuvo ahí diría
+"¿y esto por qué?". Si la respuesta es sí, el puntero se gana su línea; si el texto se explica
+solo, el puntero es ruido. Un criterio de aceptación que admite tocar el motor en una fase de
+interfaz lo necesita. El molde de 314.4 px no, porque una medida de layout no le llama la
+atención a nadie.
+
+Esto extiende un patrón que el repo ya tiene institucionalizado: cada término de
+`docs/GLOSARIO.md` lleva su campo de fuente apuntando a la entrada por fecha y título.
+
 ## Fechas
 
 Siempre ISO 8601 (`YYYY-MM-DD`). Nunca formato local.
@@ -75,6 +90,14 @@ doc}`:
 El cuerpo del commit no vuelve a narrar el cambio: máximo 1 o 2 líneas y una referencia a
 la sección del CHANGELOG. El qué vive en el CHANGELOG, el porqué en DECISIONS, no en el
 mensaje del commit.
+
+La tabla de archivo por archivo del cuerpo de un PR se copia de la salida de `git diff --numstat`
+corrida **como último paso antes de escribir el cuerpo**, no antes de los últimos retoques ni
+reconstruida de memoria. Falló dos veces, las dos en `docs/ROADMAP.md`: se declaró `45 3` contra
+un real de `43 2`, por leer de `--stat`, que suma altas y bajas en un número; y se declaró `22 2`
+contra un real de `29 9`, por correr el comando y seguir editando después. La tabla es el único
+punto del cuerpo de un PR que se supone mecánico, y un número mecánico equivocado es peor que
+ninguno, porque nadie lo vuelve a comprobar.
 
 El título del Pull Request usa el mismo formato que el commit, con el mismo tipo. Así la lista
 de PR del repo se lee igual que el `git log` y se puede filtrar por tipo desde los dos lados.

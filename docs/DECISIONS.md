@@ -1619,6 +1619,49 @@ existe para ahorrarle.
 
 ---
 
+## 2026-08-11 — El Criterio de aceptación de la Fase 5 decía que el motor queda intacto, y envejeció
+
+**Contexto:** el Criterio de aceptación de la Fase 5 dice, textualmente, que "el motor y el coloreo
+quedan intactos". Se escribió al abrir la fase, cuando se la creía enteramente de disposición: el
+reencuadre visual no tenía por qué tocar teoría musical, y la cláusula era la garantía de que un
+rediseño de interfaz no se llevara por delante la lógica.
+
+**Qué la contradijo:** el incremento 5.5.2 tocó `src/engine.js`. Una línea, el `return` final de
+`classifyChordRelation`, que renombró el valor que la cascada devuelve cuando no reconoce nada.
+
+**Por qué el espíritu se cumplió aunque la letra no.** La cláusula existe para impedir que un
+rediseño de interfaz rehaga la lógica musical. El 5.5.2 no cambió ninguna regla de evaluación, ni el
+orden de la cascada, ni un umbral, ni un template de acorde: cambió el nombre de un valor de salida
+porque ese nombre afirmaba un análisis que el motor nunca hizo. Las 41 fixtures pasaban antes y
+pasan después, y la única que se tocó es la que verifica ese nombre. Además se corrió a propósito
+con el motor cambiado y la fixture sin tocar, para que se pusiera roja y demostrara que ese camino
+estaba cubierto.
+
+**Cerrar la fase dejando la cláusula intacta** haría que el ROADMAP afirmara para siempre que la
+Fase 5 no tocó el motor mientras el historial dice lo contrario. Es el modo de falla que este repo
+viene combatiendo desde el 2026-08-09: un documento que dice una cosa mientras el código hace otra.
+
+**Decisión: la cláusula se reformula en algo comprobable.** Donde decía que el motor queda intacto,
+pasa a decir que ningún cambio de esta fase altera el comportamiento del motor, con dos pruebas que
+se corren en vez de interpretarse:
+
+1. `git diff` sobre `src/engine.js` a lo largo de la fase muestra solo cambios de nombre de un valor
+   de salida. Ninguna condición, ningún umbral, ningún orden de la cascada, ninguna constante de
+   `SCALES` ni de `CHORD_TEMPLATES`.
+2. `node tests/run.js` da los 41 casos en verde con las mismas fixtures, salvo la línea que verifica
+   el nombre renombrado.
+
+Lo que se sigue prohibiendo queda igual de explícito: una fase de interfaz no agrega, saca ni
+reordena reglas de evaluación, no cambia umbrales y no toca las constantes de teoría. Si hace falta,
+es otra fase.
+
+**Por qué verificable y no "no se toca el motor sin buena razón":** esa formulación no se puede
+comprobar y deja la decisión en manos de quien quiera justificarla. Un `diff` y una corrida sí.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
