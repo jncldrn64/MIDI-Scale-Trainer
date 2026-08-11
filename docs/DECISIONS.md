@@ -1741,6 +1741,118 @@ que esta entrada corrige.
 
 ---
 
+## 2026-08-11 — El contrato de permisos: sistema, permiso de escritura y solo lectura
+
+**Contexto:** el `ROADMAP.md` declara al contrato como el primer trabajo de la Fase 5B, porque cómo
+se parte `index.html` depende de qué tiene que hacer cada pieza. El repo venía preguntándose quién
+es responsable de qué, y esa pregunta no cerraba: el widget de escala parecía dueño de la escala
+aunque el motor la siga leyendo con el widget cerrado.
+
+**La pregunta correcta es quién tiene permiso de qué.** No es que un widget tenga la acción, es que
+tiene permiso de cambiar el valor por defecto del sistema.
+
+**Decisión: tres niveles de permiso.**
+
+| Nivel | Qué puede hacer | Quién es hoy |
+|---|---|---|
+| El sistema | posee los valores, los produce y los conserva. No se cierra ni se apaga | el motor, el estado, el log, el lienzo, la infraestructura de cajas |
+| Widget con permiso de escritura | cambia un valor del sistema, además de leerlo y presentarlo | el widget de escala, que escribe el universo |
+| Widget de solo lectura | lee y presenta. No cambia ningún valor | el widget de salida del motor |
+
+**Esto no contradice la regla de que los widgets no se hablan entre sí**, de la entrada del
+2026-08-10 *Dueño de superficie: cerrar el widget apaga su efecto*. El widget de escala afecta lo
+que el de salida del motor muestra, y nunca lo llama: escribe en el sistema y el otro lee del
+sistema. El sistema es siempre el intermediario, y por eso un widget nuevo no necesita conocer a
+ninguno de los anteriores.
+
+**Acotación de la regla de autoría, que hoy está incumplida.** Esa misma entrada dice que un dato
+tiene un autor y muchos lectores. Sobre `index.html` no se cumple, y conviene acotarla en vez de
+dejarla mintiendo:
+
+- `State.harmony` la escriben dos lugares distintos. `MIDI.triggerAccumulation` y
+  `MIDI.triggerContextTimeout` escriben el acorde detectado; `UI.updateStatus` escribe la función
+  tonal, y `UI.lockChord` y `UI.unlockChord` escriben el acorde fijado y el bloqueo.
+- `State.evaluations` la escribe `MIDI.evaluateMelody` y la borran `MIDI.releaseNoteInternal`, el
+  temporizador que arma la propia `evaluateMelody` y `UI.clearEvaluations`.
+
+La acotación: **la regla habla de widgets, no del código interno del sistema.** Que dos partes del
+sistema escriban la misma rama del estado no la viola, porque el sistema es un solo autor con varias
+manos. Los widgets sí están limitados a un autor por dato, y solo los que tienen permiso de
+escritura pueden ser ese autor.
+
+**Los valores del sistema existen siempre.** Cerrar un widget cierra su editor y sus efectos, nunca
+borra el valor que editaba. Esto describe lo que el programa ya hace: `State.universe` arranca en
+`root: 0, type: 'major'`, o sea Do mayor, y vive en el estado global, no adentro del widget de
+escala. Si viviera adentro, cerrar el widget dejaría al motor sin universo contra el cual evaluar y
+al readout sin nada que leer. El contrato le pone nombre a esa realidad y no la cambia.
+
+Un detalle medido al escribir esto, que corrige una suposición razonable: **el universo no
+persiste.** `saveConfig` guarda `State.config` en `midiTrainerCfg` y nada más, así que cada recarga
+vuelve a Do mayor. Si debería persistir es una decisión que esta entrada no toma.
+
+**Consecuencia de diseño: quien quiera un editor alternativo del universo pide el mismo permiso**, y
+no hereda el valor. Si mañana existe otro selector de escala, los dos escriben el mismo valor del
+sistema y ninguno se entera del otro.
+
+**Por dónde se corta cuando llegue la partición: donde cambia el permiso.** Lo que es sistema va
+junto, lo que tiene permiso de escritura va junto, y lo que solo lee y presenta va junto. Con ese
+criterio el objeto de layout deja de ser un problema: abrir, cerrar, mover, persistir y medir son
+sistema, porque ningún widget tiene permiso sobre eso.
+
+**Qué queda diferido, a propósito.** Los entrenamientos no se tocan acá: qué pueden alterar, su
+formato y cómo se registran se definen de forma colateral cuando exista el primero, y el disparador
+es ese. Los nombres de los archivos, el orden de carga y el espacio de nombres son la partición, y
+su disparador es el PR que la ejecute. Escribirlos hoy sería recetar un mecanismo futuro, que la
+sección "Promesas y umbrales" de `CLAUDE.md` prohíbe.
+
+**Razón para que casi todo esto sea descriptivo.** Los tres niveles describen lo que el programa ya
+hace, la precedencia ya existe en el código y el universo ya vive en el sistema. Lo único nuevo es
+ponerles nombre y declarar qué queda diferido. Un contrato que describe lo que hay no envejece; uno
+que promete mecanismos sí, y ese error ya costó treinta y nueve días con `<script type="module">`.
+
+**Estado:** vigente. Refina la entrada del 2026-08-10 *Dueño de superficie: cerrar el widget apaga su
+efecto* sin editarla.
+
+---
+
+## 2026-08-11 — Los efectos sobre las teclas, y la primera precedencia escrita del repo
+
+**Contexto:** el contrato de permisos necesita saber sobre qué actúa un widget. Sobre el teclado hay
+más de un efecto y no estaban separados por nombre.
+
+**Decisión: dos efectos con dueño y un hueco.**
+
+**Efecto veredicto: color y símbolo, juntos e inseparables.** Las seis categorías pintan la tecla y
+le ponen su símbolo en la misma regla de CSS, en los pares `.color-scale` y `.color-scale::before` y
+sus cinco hermanos: `•` escala, `♦` acorde, `✓` correcto, `!` sensible, `~` paso cromático, `✕`
+error. No son dos efectos: es uno con dos señales, y el símbolo existe para que el color no sea la
+única. El reparto de dueños es el de la entrada del 2026-08-10 *Dueño de superficie: cerrar el
+widget apaga su efecto*: escala pertenece al widget de escala y las otras cinco al de salida del
+motor.
+
+**Efecto etiqueta: el nombre de la nota sobre la tecla.** Se enciende y se apaga con
+`State.config.nombresTecla`, y qué dice depende de la nomenclatura, que es un valor del sistema que
+un widget con permiso de escritura puede cambiar.
+
+**Un tercer lugar disponible, todavía sin dueño de widget: el marcador del split.** Es la clase
+`split-mark`, no es veredicto ni etiqueta, y lo enciende un control del sistema a través de
+`State.ui.marcaSplit`. Queda anotado como el hueco donde entraría un efecto nuevo aportado por un
+widget futuro. Es un hueco, no un plan.
+
+**Compartir un efecto está permitido si la precedencia está escrita. Sin precedencia escrita, no.**
+Dos widgets ya comparten el efecto veredicto y el código ya lo resuelve sin que nadie lo llamara
+así: `UI.renderKeyboard` recorre una cascada de cuatro ramas en este orden, acorde, veredicto, nota
+activa y escala. Esa cascada queda documentada como la primera precedencia del repo.
+
+La tercera rama de esa cascada, la del preveredicto, sigue sin dueño limpio: pinta una nota recién
+tocada usando el conjunto de alturas válidas de la escala, que es dato del widget de escala, con un
+color del widget de salida del motor. No se resuelve acá; ya está anotada en el BACKLOG del
+`ROADMAP.md`, junto con el conflicto entre los dos widgets cuando los dos reclaman el rojo.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

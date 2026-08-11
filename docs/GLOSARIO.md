@@ -199,6 +199,30 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   sistema de archivos es `null`. `index.html` carga así `src/engine.js`. Fuente: 2026-08-11, *Los ES
   Modules no cargan desde `file://`, y el umbral deja de prescribir*.
 
+## Permisos y efectos
+
+- **valor del sistema**: dato que el sistema posee, produce y conserva, y que existe con todos los
+  widgets cerrados. El universo activo es uno: vive en `State.universe` y arranca en Do mayor.
+  Fuente: 2026-08-11, *El contrato de permisos: sistema, permiso de escritura y solo lectura*.
+- **permiso de escritura**: el que tiene un widget que puede cambiar un valor del sistema, además de
+  leerlo y presentarlo. Hoy lo tiene uno solo, el widget de escala, sobre el universo. Un editor
+  alternativo del mismo valor pide el mismo permiso y no hereda el valor. Fuente: 2026-08-11, *El
+  contrato de permisos: sistema, permiso de escritura y solo lectura*.
+- **widget de solo lectura**: widget que lee y presenta y no cambia ningún valor. Hoy es el widget de
+  salida del motor. Fuente: 2026-08-11, *El contrato de permisos: sistema, permiso de escritura y
+  solo lectura*.
+- **efecto veredicto**: el color de la tecla y su símbolo, que son una sola señal y no dos. Las seis
+  categorías definen los dos en la misma regla de CSS. Fuente: 2026-08-11, *Los efectos sobre las
+  teclas, y la primera precedencia escrita del repo*.
+- **efecto etiqueta**: el nombre de la nota sobre la tecla. Se enciende y se apaga, y qué dice
+  depende de la nomenclatura. Fuente: 2026-08-11, *Los efectos sobre las teclas, y la primera
+  precedencia escrita del repo*.
+- **precedencia de efecto**: el orden fijo que decide qué dueño gana cuando dos widgets comparten un
+  efecto. Compartir está permitido si la precedencia está escrita, y prohibido si no. La única
+  escrita es la cascada de cuatro ramas de `UI.renderKeyboard`: acorde, veredicto, nota activa,
+  escala. Fuente: 2026-08-11, *Los efectos sobre las teclas, y la primera precedencia escrita del
+  repo*.
+
 ## Método
 
 - **umbral**: una alarma escrita que obliga a abrir una decisión cuando se cumple. Obliga a decidir
