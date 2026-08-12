@@ -2287,6 +2287,59 @@ pantalla.
 
 ---
 
+## 2026-08-11 — El lock de acorde es su propio widget, y su función es liberar la mano izquierda
+
+**Contexto:** la entrada de hoy *El lock de acorde vive en una vista del widget de escala, por ahora*
+resolvió mal el caso. Esta la supera. `docs/DECISIONS.md` es append-only, así que aquella se queda
+escrita.
+
+**El error, con su mecanismo, que es lo que más importa de esta entrada.** El argumento fue que el
+widget de escala ya tiene permiso de escritura sobre "el contexto que el motor evalúa" y que fijar un
+acorde es de la misma familia. Esa frase hace todo el trabajo y no resiste el examen: el widget de
+escala escribe `State.universe`, en `Escala.buildUniverse`, y el lock escribe `State.harmony`, en
+`Armonia.lockChord` y `Armonia.unlockChord`. **Son dos ramas distintas del estado, con autores
+distintos**, agrupadas bajo la palabra "contexto" para deducir de ahí una pertenencia que no existe.
+
+**La generalización, porque el error se puede repetir con cualquier caja que tenga espacio libre: el
+permiso de un widget sale de qué produce, no de qué escritura le queda cómoda.** Si el criterio fuera
+que quien ya escribe algo absorbe escrituras nuevas, un solo widget terminaría absorbiéndolas todas y
+el modelo de permisos dejaría de repartir nada.
+
+**Cómo se coló.** La ubicación la propuso el PR anterior y no venía pedida. Lo único afirmado antes
+era que el lock no es del readout, que sigue siendo cierto y sigue teniendo su razón: el readout es
+de solo lectura y un botón que congela el análisis lo convertiría en otra cosa. De ahí a elegirle un
+hogar hay un paso que ese PR dio solo.
+
+**Lo que sí se sabe, y es lo que resuelve el caso: el propósito pedagógico es liberar la mano
+izquierda para concentrarse en la melodía.** Llevaba cinco PR sin escribirse. Eso es una función, no
+un botón, y una función propia justifica un widget propio sin meterlo con calzador en otro.
+
+**Decisión, en cuatro partes:**
+
+1. **Es su propio widget**, porque produce acompañamiento. No elige el universo ni presenta análisis:
+   es una tercera cosa.
+2. **Su permiso es escritura sobre `State.harmony`**, por su propia razón y no por comodidad ajena.
+3. **No es un control del sistema**, porque un control del motor no se toca en tempo mientras se
+   practica.
+4. **El lock actual es el caso más simple de esa función**: un acorde, sostenido, sin ritmo. Arpegio,
+   vals y progresión son los casos siguientes.
+
+**Lo que no se decide acá:** qué widget sale del cap para que este entre. El cap no sube, se disputa,
+según la entrada de hoy sobre su razón pedagógica, y esa disputa se resuelve cuando el widget exista.
+
+**De dónde salió el panel "Fijar Acordes", que se venía discutiendo hace cinco PR sin que nadie lo
+averiguara.** Está en el primer commit del repositorio, el del 2026-07-04 que trajo `index.html`, con
+sus dos acordes escritos a mano y con `lockChord`. Es herencia de la v11.0 y **no hay propósito que
+recuperar**: ningún documento del repo dice para qué se construyó. Lo que sí quedó escrito es el
+criterio, que vale para el próximo caso igual: **un control heredado sin propósito declarado se
+evalúa por lo que hace hoy, no por lo que alguien quiso alguna vez.** Que la respuesta sea "no se
+sabe" también es información, con el mismo criterio de la entrada de hoy sobre inferencias.
+
+**Estado:** vigente. Supera a *El lock de acorde vive en una vista del widget de escala, por ahora*,
+del mismo día.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
