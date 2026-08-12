@@ -654,7 +654,30 @@ que marcó el informe de campo original.
 **Alcance:** un sonido corto al acertar, otro para tensión, otro para error. Entre 10 y 20
 líneas, sin dependencias.
 
-**Criterio de aceptación:** por definir.
+**Lo que esta fase no es, y hasta el 2026-08-11 no estaba escrito.** Feedback de veredicto y música
+son dos cosas. Esta fase entrega lo primero, tres sonidos generados con osciladores al vuelo, sin
+archivos y sin MIDI. El acompañamiento, los arpegios y las progresiones son música, salen por MIDI
+hacia el sintetizador del usuario y son del widget de acompañamiento del BACKLOG. Ver `DECISIONS.md`,
+entrada del 2026-08-11 "Feedback de veredicto y música son dos cosas, y el sonido es una superficie
+del sistema".
+
+Los tres sonidos son una superficie del sistema, igual que el teclado coloreable: los ofrece el
+sistema y cada widget decide cuál usar, en vez de que cada uno traiga los suyos. Hoy el motor es el
+único que da feedback, así que basta con que él tenga la variedad.
+
+**Criterio de aceptación**, escrito el 2026-08-11 porque decía "por definir" y la Fase 6 mostró que
+un criterio escrito después del trabajo no verifica nada:
+
+1. Tocando desde `file://` con el piano físico, cada una de las tres categorías de veredicto que el
+   motor produce, correcto, sensible y error, dispara su sonido, y los tres se distinguen de oído sin
+   mirar la pantalla.
+2. Los tres se generan con osciladores: `grep -rn "fetch\|Audio(\|\.mp3\|\.wav" src/` no devuelve
+   nada nuevo. Sin archivos y sin dependencias.
+3. El paso cromático, que dura 180 ms, no alcanza a disparar un sonido que se corte a sí mismo: se
+   comprueba tocando una nota fuera del universo por menos de ese umbral y verificando en el log que
+   el veredicto llegó a `passing` sin que el sonido quede colgado.
+4. Con el sonido apagado la app se comporta igual que hoy: las 41 fixtures verdes y el coloreo del
+   teclado sin cambios.
 
 **Bloquea:** ninguna declarada
 
@@ -1204,6 +1227,43 @@ prioridad, no porque la rueda la bloquee.
   acorde".
   **Por qué se anotó:** salió de revisar dónde vive el lock de acorde. Al contar qué ítems implican
   una preferencia nueva quedó a la vista que no hay regla que diga dónde guardarla.
+- **Salida MIDI configurable.** El usuario elige un puerto de salida y un canal, y la app manda notas
+  ahí. Hoy `MIDI.bindDevices` recorre `access.inputs` y nunca toca `access.outputs`, así que la mitad
+  de salida del protocolo está sin usar. Medido el 2026-08-11 desde `file://` en Chromium 149: tres
+  destinos distintos recibieron notas, dos hacia Qsynth y uno hacia el teclado por sus propios
+  parlantes. Puerto y canal son configuración del sistema y no un widget: no producen nada, deciden
+  por dónde sale lo que otros producen, que es la misma categoría que el split. **Dos requisitos, no
+  sugerencias:** el canal y la nota de un apagado se capturan al encender, no se leen después, y el
+  pánico va a los dieciséis canales y no al activo. Los dos salieron de fallas observadas y sus
+  síntomas viven en `DECISIONS.md`, entrada del 2026-08-11 "Dos requisitos de cualquier trabajo que
+  mande notas MIDI".
+  **Entró:** 2026-08-11, PR "doc: qué se puede hacer sonar, medido, y la Fase 7 reescrita".
+  **Por qué se anotó:** salió de medir qué se puede hacer sonar desde `file://`. El SoundFont no
+  entra y la salida MIDI sí, así que el sonido de calidad deja de ser un problema de la app.
+- **Program Change como petición declarada.** Pedirle al destino que use tal instrumento en tal canal.
+  La dificultad está medida y va escrita: la app no puede saber qué hay en cada canal del destino, y
+  MIDI no devuelve confirmación, así que pide y no se entera de si obtuvo. En la corrida del
+  2026-08-11 el cambio de programa no hizo nada hasta que hubo un SoundFont General MIDI en el canal.
+  Y el canal 10 reservado a percusión es una convención que la configuración real del autor no cumple.
+  No es imposible: necesita que el usuario declare qué tiene, y esa es una decisión de interfaz que
+  no se toma acá. Bloqueado por la salida MIDI configurable.
+  **Entró:** 2026-08-11, PR "doc: qué se puede hacer sonar, medido, y la Fase 7 reescrita". Con ese
+  mismo PR entraron "Salida MIDI configurable" y "Cargar un SoundFont".
+  **Por qué se anotó:** salió de la misma corrida que midió la salida MIDI.
+- **Cargar un SoundFont para que la app sintetice su propio sonido.** Queda anotado con lo que se
+  midió y sin promesa de que se haga. `decodeAudioData` no entiende un `.sf2`: con un archivo de 21.5
+  MB devolvió `EncodingError`, porque un SoundFont es un contenedor con muestras y mapeos, no un
+  archivo de audio. Usarlo exigiría escribir un analizador de formato propio. **El riesgo de memoria
+  que se temía no existe por ese camino**, y tampoco se puede medir: `performance.memory` mide el heap
+  de JavaScript y los búferes de audio viven fuera, `measureUserAgentSpecificMemory` no existe, y un
+  hilo aparte se crea pero adentro `AudioContext` da `undefined`. **El criterio disponible**, si algún
+  día se retoma, es poner el tope por tamaño de archivo antes de leerlo, que el selector da sin costo.
+  Las corridas completas viven en `DECISIONS.md`, entrada del 2026-08-11 "El SoundFont no entra por el
+  camino del audio, y MIDI de salida lo reemplaza".
+  **Entró:** 2026-08-11, PR "doc: qué se puede hacer sonar, medido, y la Fase 7 reescrita". Con ese
+  mismo PR entraron "Salida MIDI configurable" y "Program Change como petición declarada".
+  **Por qué se anotó:** salió de querer que el programa sonara a piano de verdad. Se anota para que
+  quede el resultado medido y nadie vuelva a intentarlo por el mismo camino.
 - **Un widget de acompañamiento, con un propósito: liberar la mano izquierda para concentrarse en la
   melodía.** Reemplaza a los dos controles de acordes que hoy están partidos en dos, "Motor
   Automático" visible en el escenario y "Fijar Acordes" oculto a propósito. Es su propio widget
@@ -1218,14 +1278,16 @@ prioridad, no porque la rueda la bloquee.
   widget se construya y se vea qué hace falta. Prometer hoy una lista cerrada de capacidades para algo
   que no existe es lo que "Promesas y umbrales" de `CLAUDE.md` prohíbe.
 
-  **Bloqueado por dos cosas.** La Fase 7, que trae el sonido: un acompañamiento tiene que sonar y hoy
-  la app no emite nada. Y el metrónomo, para el tempo, que deja de ser una idea suelta del BACKLOG y
-  pasa a ser dependencia de este widget.
+  **Bloqueado por dos cosas, corregidas el 2026-08-11.** La salida MIDI configurable, que es el ítem
+  nuevo de este mismo BACKLOG, y el metrónomo para el tempo, que deja de ser una idea suelta y pasa a
+  ser dependencia de este widget. **El bloqueo anterior decía la Fase 7 y era falso:** esa fase
+  entrega tres sonidos de veredicto, no un motor de acompañamiento, y el acompañamiento no la
+  necesita porque no sintetiza nada, manda MIDI hacia el sintetizador del usuario.
 
-  **El matiz que salva la parte útil:** el acorde fijo sin ritmo no necesita sonido, porque el motor
-  evalúa contra él sin que suene. El lock de hoy sigue funcionando como está, y un widget mínimo que
-  solo permita elegir y sostener un acorde de los grados del universo activo ya cumple el propósito
-  sin esperar a la Fase 7. Lo que espera es el acompañamiento con tempo.
+  **El matiz que salva la parte útil:** el acorde fijo sin ritmo no necesita sonar, porque el motor
+  evalúa contra él igual. El lock de hoy sigue funcionando como está, y un widget mínimo que solo
+  permita elegir y sostener un acorde de los grados del universo activo ya cumple el propósito sin
+  esperar a nada. Lo que espera es el acompañamiento con tempo.
 
   Las razones completas viven en `DECISIONS.md`, entrada del 2026-08-11 "El lock de acorde es su
   propio widget, y su función es liberar la mano izquierda", que supera a la de ese mismo día que lo
