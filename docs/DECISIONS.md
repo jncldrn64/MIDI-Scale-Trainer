@@ -2340,6 +2340,54 @@ del mismo día.
 
 ---
 
+## 2026-08-11 — El estado derivado no se persiste, se reconstruye
+
+**Contexto:** la Fase 6 pide persistir el universo, que hoy se pierde al recargar. `State.universe`
+tiene tres campos y uno es un `Set`, `validPitches`. `JSON.stringify` serializa un `Set` como `{}`,
+así que guardar la rama entera dejaría un universo sin alturas válidas y el fallo sería silencioso:
+el selector mostraría el universo correcto y el teclado no pintaría nada.
+
+**Decisión: se persiste lo que el usuario eligió y se reconstruye lo que el programa deriva.** Del
+universo se guardan la tónica y el tipo, que son un número y una cadena. El conjunto de alturas lo
+rearma `Escala.buildUniverse`, que es la misma función que lo arma en cada cambio de universo, así
+que restaurar es aplicar los dos valores a los selectores y dejar que el camino de siempre corra.
+
+**La regla vale más allá de este caso**, y por eso se escribe general: nueve ítems parqueados van a
+pedir persistencia, y varios guardan cosas de las que se deriva otra. Guardar lo derivado tiene dos
+costos. Uno, el formato guardado se acopla a la forma interna del dato, así que cambiarla obliga a
+migrar. Dos, un derivado guardado puede quedar en desacuerdo con su origen, y entonces hay dos
+verdades y ninguna manda.
+
+**Qué pasa con un valor guardado que ya no vale.** `loadUniverse` descarta el guardado entero y avisa
+por el log si el tipo no está en `SCALES` o si la tónica no es un entero de 0 a 11. Es el mismo
+criterio que `loadLayout` ya usaba contra el cap. **No es un sistema de migración**, y no se inventa
+uno: la regla de persistencia con su formato es un ítem parqueado sin decidir.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-11 — El reset a fábrica borra la configuración y no toca la disposición
+
+**Contexto:** la Fase 6 pide un botón de reset a valores de fábrica. Desde hoy persisten tres cosas en
+tres claves: `midiTrainerCfg` con `State.config`, `midiTrainerUniverse` con la tónica y el tipo, y
+`midiTrainerLayout` con `Layout.estado`. Y la disposición ya tiene su propio reset, `Layout.resetear`,
+en el menú de Widgets.
+
+**Decisión: el reset a fábrica borra las dos claves de configuración y deja `midiTrainerLayout`
+intacta.** Juntar las tres haría que un botón deshaga dos cosas independientes: quien quiere volver
+los ajustes del motor a su valor no necesariamente quiere perder dónde puso las cajas, y el camino
+inverso ya existe por separado.
+
+**Dónde vive, y por qué ahí.** No en el primer nivel de `Opciones`, que es lo que se toca mientras se
+toca según la entrada del 2026-08-10 *Jerarquía de menús: el tres es techo y también es piso*. Vive
+dentro del desplegable de la consola, que ya cuesta dos clics abrir, y **además pide confirmación**.
+Borra trabajo del usuario, así que tiene que costar más que un roce.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

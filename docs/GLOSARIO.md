@@ -263,6 +263,14 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   ganó. Un repintado que no cambia nada no escribe nada. Todavía no está construido. Fuente:
   2026-08-11, *El coloreo se registra de forma diferencial, no absoluta*.
 
+- **estado derivado**: un dato que el programa calcula a partir de otro que el usuario eligió. El
+  conjunto de alturas válidas del universo es el caso vivo: sale de la tónica y el tipo. No se
+  persiste, se reconstruye. Fuente: 2026-08-11, *El estado derivado no se persiste, se reconstruye*.
+- **reset a fábrica**: el control que devuelve la configuración a sus valores por defecto. Borra
+  `midiTrainerCfg` y `midiTrainerUniverse`, y no toca `midiTrainerLayout`, que tiene su propio reset
+  en el menú de Widgets. Vive dentro de la consola y pide confirmación. Fuente: 2026-08-11, *El reset
+  a fábrica borra la configuración y no toca la disposición*.
+
 ## Método
 
 - **umbral**: una alarma escrita que obliga a abrir una decisión cuando se cumple. Obliga a decidir

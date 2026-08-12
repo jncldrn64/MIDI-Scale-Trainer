@@ -19,6 +19,18 @@ window.onload = () => {
         const o=document.createElement('option'); o.value=i; o.innerText=n; rs.appendChild(o); 
     });
     
+    // El universo guardado se aplica sobre los dos selectores, que es de donde
+    // Escala.buildUniverse lee. Así el conjunto de alturas se reconstruye por el camino de
+    // siempre y no hace falta restaurar nada derivado.
+    const guardadoUniverso = loadUniverse();
+    if (guardadoUniverso) {
+        rs.value = guardadoUniverso.root;
+        document.getElementById('scale-select').value = guardadoUniverso.type;
+        SysLog('LAYOUT', `Universo restaurado de midiTrainerUniverse: tónica ${guardadoUniverso.root}, tipo "${guardadoUniverso.type}". Las alturas válidas se reconstruyen, no se leen del guardado.`);
+    } else {
+        SysLog('LAYOUT', 'Sin universo guardado: se arranca en el valor por defecto, Do mayor.');
+    }
+
     rs.onchange = () => Escala.buildUniverse();
     document.getElementById('scale-select').onchange = () => Escala.buildUniverse();
     
@@ -106,6 +118,30 @@ window.onload = () => {
         SysLog('LAYOUT', `Nombres de tecla ${State.config.nombresTecla ? 'encendidos' : 'apagados'} sobre las 52 blancas.`);
     };
     document.getElementById('btn-clear').onclick = () => document.getElementById('logs-container').innerHTML='';
+
+    // Reset a valores de fábrica. Vive dentro de la consola, o sea detrás del desplegable, y
+    // además pide confirmación: borra trabajo del usuario y no se puede rozar mientras se
+    // toca. Recarga porque los valores por defecto viven en la declaración de State.
+    document.getElementById('btn-reset-fabrica').onclick = () => {
+        SysLog('LAYOUT', 'Reset a fábrica: pedido, esperando confirmación.');
+        if (!confirm('Volver a los valores de fábrica. Se borran los ajustes del motor, la nomenclatura y el universo guardado. La disposición de las cajas no se toca, tiene su propio reset en el menú de Widgets.')) {
+            SysLog('LAYOUT', 'Reset a fábrica: cancelado por el usuario, no se borró nada.');
+            return;
+        }
+        resetFabrica();
+        SysLog('LAYOUT', 'Reset a fábrica: borradas midiTrainerCfg y midiTrainerUniverse. midiTrainerLayout queda intacta. Recargando.');
+        location.reload();
+    };
+
+    // El panel de logs crece y vuelve. Son dos altos de lienzo, 250 px y 560 px, y el segundo
+    // sale del techo del menú, 678 px, menos lo que ocupan el resto de los controles. No es
+    // arrastrable: redimensionar con el puntero es otro ítem, parqueado.
+    const logsWrapper = document.getElementById('logs-container');
+    document.getElementById('btn-log-alto').onclick = (e) => {
+        const expandido = logsWrapper.classList.toggle('alto-expandido');
+        e.target.innerText = expandido ? 'Contraer ▴' : 'Expandir ▾';
+        SysLog('LAYOUT', `Panel de logs ${expandido ? 'expandido a 560' : 'contraído a 250'} px de lienzo. Alto medido: ${logsWrapper.offsetHeight} px.`);
+    };
     document.getElementById('btn-export').onclick = exportLogsTxt;
     document.getElementById('btn-copy').onclick = copyLogsClipboard;
     document.getElementById('btn-reset-layout').onclick = () => Layout.resetear(null, 'reset global desde el menú de Widgets');
@@ -115,10 +151,11 @@ window.onload = () => {
     const consoleToggle = document.getElementById('btn-console-toggle');
     const consoleActions = document.getElementById('console-actions');
     const logsContainer = document.getElementById('logs-container');
+    const resetFabricaBtn = document.getElementById('btn-reset-fabrica');
     consoleToggle.onclick = () => {
         const opening = logsContainer.hasAttribute('hidden');
-        if (opening) { logsContainer.removeAttribute('hidden'); consoleActions.removeAttribute('hidden'); }
-        else { logsContainer.setAttribute('hidden',''); consoleActions.setAttribute('hidden',''); }
+        if (opening) { logsContainer.removeAttribute('hidden'); consoleActions.removeAttribute('hidden'); resetFabricaBtn.removeAttribute('hidden'); }
+        else { logsContainer.setAttribute('hidden',''); consoleActions.setAttribute('hidden',''); resetFabricaBtn.setAttribute('hidden',''); }
         consoleToggle.setAttribute('aria-expanded', String(opening));
         consoleToggle.innerText = opening ? 'Consola y Logs ▾' : 'Consola y Logs ▸';
         SysLog('LAYOUT', `Consola ${opening ? 'abierta' : 'colapsada'}`);

@@ -157,6 +157,13 @@ select:hover, button:hover { background: #475569; }
 .setting-row input { background: #1e293b; border: 1px solid #334155; color: var(--accent); padding: 5px 10px; border-radius: 4px; font-weight: bold; width: 100%;}
 
 /* Consola de Logs */
+/* El alto del panel de logs deja de ser un solo número. Son dos altos de lienzo, el normal
+   de 250 px y el expandido de 560 px, y el segundo entra debajo del techo del menú, que son
+   678 px. Sin transición: la regla de animación de la Fase 5 pide cambios instantáneos. */
+.logs-wrapper.alto-expandido { height: 560px; }
+/* `flex-shrink: 0` porque el menú es un contenedor flex en columna con techo, y sin esto el
+   panel se encoge por debajo del alto que declara: medía 222 px con 250 escritos. */
+.logs-wrapper { flex-shrink: 0; }
 .logs-wrapper { 
     background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 10px; 
     height: 250px; overflow-y: auto; overflow-x: hidden; font-family: 'Courier New', monospace; font-size: 11px; 
