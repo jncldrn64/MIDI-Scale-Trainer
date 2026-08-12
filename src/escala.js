@@ -37,6 +37,10 @@ const Escala = {
         });
         
         document.getElementById('formula-display').innerHTML = html;
+        // El universo se guarda en cada cambio, con la tónica y el tipo nada más. El conjunto de
+        // alturas lo acaba de reconstruir este mismo método, que es lo que lo vuelve derivable.
+        saveUniverse();
+        SysLog('LAYOUT', `Universo activo: tónica ${getNoteStr(State.universe.root).name}, tipo "${State.universe.type}", ${State.universe.validPitches.size} alturas válidas. Persistido en midiTrainerUniverse.`);
         Teclado.renderKeyboard(); 
         Readout.updateStatus();
     },

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.70 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.76 (Inteligencia Armónica)</title>
     <link rel="stylesheet" href="src/estilos.css">
 </head>
 <body>
@@ -23,7 +23,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.70</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.76</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -67,12 +67,19 @@
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <button class="btn" id="btn-console-toggle" aria-expanded="false">Consola y Logs ▸</button>
                     <div class="console-actions" id="console-actions" hidden>
+                        <button class="btn" id="btn-log-alto">Expandir ▾</button>
                         <button class="btn" id="btn-copy">Copiar</button>
                         <button class="btn btn-success" id="btn-export">Exportar .txt</button>
                         <button class="btn btn-danger" id="btn-clear">Limpiar</button>
                     </div>
                 </div>
                 <div class="logs-wrapper" id="logs-container" style="margin-top:10px;" hidden></div>
+                <!-- Reset a fábrica. Vive dentro de la consola y no en el primer nivel de
+                     Opciones: borra trabajo del usuario, así que tiene que costar más que un
+                     roce mientras se toca. Pide confirmación además. Borra las dos claves de
+                     configuración; la disposición de las cajas tiene su propio reset en el
+                     menú de Widgets. -->
+                <button class="btn btn-danger" id="btn-reset-fabrica" hidden>Volver a valores de fábrica</button>
             </div>
             <!-- MENÚ DE WIDGETS (incremento 5.3, tercera parte): lista las cajas por
                  instancia y no por tipo, abiertas y cerradas. Cada fila trae abrir o cerrar,
@@ -182,9 +189,9 @@
             <!-- OCULTO A PROPÓSITO EN EL INCREMENTO 5.6: los controles del escenario viven en
                  la capa 0, que es solo teclado y grilla de notas y no lleva controles
                  interactivos (DECISIONS, 2026-08-10). Se oculta, no se borra: el markup, el id
-                 y lockChord y unlockChord quedan intactos y siguen funcionando contra el botón
-                 oculto. El camino de vuelta es el ítem de backlog que convierte a este control
-                 y al panel "Fijar Acordes" en un widget que asista con los acordes. -->
+                 y unlockChord quedan intactos y siguen funcionando contra el botón oculto. El
+                 panel "Fijar Acordes" que lo acompañaba se retiró en la v11.76; este botón se
+                 queda porque el ítem de backlog del widget de acompañamiento lo reclama. -->
             <div class="stage-controls" hidden>
                 <button class="btn btn-warning" id="btn-lock">Motor Automático</button>
                 <!-- "Centrar en Split" (btn-c4) vivía acá parqueado; en el 5.2 se mudó al
@@ -199,17 +206,11 @@
              menú de Opciones de la barra, con sus id intactos. Siguen alcanzables mientras
              se toca: abrir el menú es un clic y cada campo queda a la vista. -->
 
-        <!-- OCULTO A PROPÓSITO EN LA FASE 5: el panel "Fijar Acordes" se esconde de la
-             pantalla pero queda intacto en el código (su markup, sus botones, sus id y la
-             función Armonia.lockChord). Va a tener su propio módulo en una fase posterior. No
-             borrar: solo está oculto por el atributo hidden sobre el contenedor. -->
-        <div class="panel" id="lock-chords-panel" hidden>
-            <h3>Práctica: Fijar Acordes</h3>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="btn btn-success" onclick="Armonia.lockChord([48,52,55],'M')">Do Mayor</button>
-                <button class="btn btn-success" onclick="Armonia.lockChord([50,53,57,60],'m7')">Re Menor 7</button>
-                <button class="btn btn-danger" onclick="Armonia.unlockChord()">Liberar</button>
-            </div>
+        <!-- El panel "Fijar Acordes" se retiró en la v11.76. Estaba desde el primer commit del
+             repositorio, con dos acordes escritos a mano, y ningún documento decía para qué se
+             construyó. Su reemplazo es el widget de acompañamiento, parqueado en el BACKLOG y
+             bloqueado por la Fase 7 y por el metrónomo. Ver DECISIONS, 2026-08-11, "El lock de
+             acorde es su propio widget, y su función es liberar la mano izquierda". -->
         </div>
 
         <!-- La consola vivía acá como overlay (5.1); en el 5.2 se mudó entera al final del

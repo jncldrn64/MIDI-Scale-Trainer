@@ -25,7 +25,7 @@ se reconstruye hacia adelante, versionado desde ahora.
 ```js
 State = {
   config: { latino, accumMs, holdMs, errMs, splitNote },  // persistido en localStorage
-  universe: { root, type, validPitches: Set },             // NO persistido (bug conocido)
+  universe: { root, type, validPitches: Set },             // root y type persistidos; el Set se reconstruye
   midi: { access, activeBasses: Set, activeMelodies: Set, keysDown: Set, sustainActive },
   harmony: { chord, isLocked, function },                  // function la escribe la Fase 4
   evaluations: Map<midiNote, {status, timeout, startTime}>,
@@ -185,7 +185,7 @@ la renombró a "Sensible (empuja a la tónica)", con la razón medida contra el 
 
 ## 7. No framework, por ahora
 
-Desde la v11.70 el código son quince archivos: `index.html`, que quedó como markup, más catorce bajo
+Desde la v11.76 el código son quince archivos: `index.html`, que quedó como markup, más catorce bajo
 `src/`. El motor puro sigue en `src/engine.js` (`MathEngine` y las funciones de teoría), los
 estilos en `src/estilos.css`, y el script que vivía adentro de `index.html` se repartió en trece
 archivos, cargados como scripts clásicos en este orden: `config.js`, `state.js`, `log.js`,
@@ -221,7 +221,7 @@ gatillo que este párrafo tenía, "o el estado se vuelve difícil de razonar", p
 
 **El umbral se cruzó y la Fase 5B ya lo bajó.** Antes, medido el
 2026-08-11: `index.html` tenía 1524 líneas totales, 126 vacías y 227 de comentario, o sea 1171 de
-código y markup. Después de la v11.70: 246 totales, 9 vacías y 25 de comentario, o sea 212. El
+código y markup. Después de la v11.76: 247 totales, 9 vacías y 26 de comentario, o sea 212. El
 archivo más grande es `src/layout.js` con 304 líneas, y ninguno se acerca a las 1000. El
 gatillo se cumplió durante la Fase 5, con el trabajo visual en curso, y se decidió terminar esa
 fase antes de tocarlo. La partición es la Fase 5B del `ROADMAP.md`, entre la Fase 5 y la Fase 6.

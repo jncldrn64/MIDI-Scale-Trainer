@@ -28,3 +28,34 @@ function getNoteStr(midi) {
 // La misma razón por la que saveLayout y loadLayout se mudaron junto a Layout.
 function saveConfig() { localStorage.setItem('midiTrainerCfg', JSON.stringify(State.config)); }
 function loadConfig() { const saved = localStorage.getItem('midiTrainerCfg'); if (saved) State.config = { ...State.config, ...JSON.parse(saved) }; }
+
+// El universo persiste aparte, y solo con lo que no se deriva. `validPitches` es un Set y
+// JSON.stringify lo serializa como {}, así que guardar la rama entera dejaría un universo sin
+// alturas al recargar. Se guardan la tónica y el tipo, que son dos números y una cadena, y el
+// conjunto lo reconstruye Escala.buildUniverse como en cualquier cambio de universo.
+function saveUniverse() {
+    localStorage.setItem('midiTrainerUniverse', JSON.stringify({ root: State.universe.root, type: State.universe.type }));
+}
+function loadUniverse() {
+    const guardado = localStorage.getItem('midiTrainerUniverse');
+    if (!guardado) return null;
+    let dato;
+    try { dato = JSON.parse(guardado); }
+    catch (e) { SysLog('LAYOUT', '⚠️ Universo guardado ilegible, se descarta y se arranca en Do mayor: ' + e); return null; }
+    // Coherencia, con el mismo criterio que loadLayout: un tipo que ya no existe en SCALES o
+    // una tónica fuera de las doce deja un universo que el motor no puede armar. Se descarta
+    // entero, no se migra: la regla de migraciones es un ítem parqueado sin decidir.
+    if (!SCALES[dato.type] || !Number.isInteger(dato.root) || dato.root < 0 || dato.root > 11) {
+        SysLog('LAYOUT', `⚠️ Universo guardado inválido (tónica ${dato.root}, tipo "${dato.type}"): se descarta y se arranca en Do mayor.`);
+        return null;
+    }
+    return dato;
+}
+
+// Reset a valores de fábrica. Borra las dos claves de configuración y deja el layout intacto,
+// que tiene su propio reset en el menú de Widgets. Juntar los dos haría que un botón deshaga
+// dos cosas independientes.
+function resetFabrica() {
+    localStorage.removeItem('midiTrainerCfg');
+    localStorage.removeItem('midiTrainerUniverse');
+}

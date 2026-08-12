@@ -595,26 +595,54 @@ BACKLOG.
 
 ## FASE 6: Calidad de vida
 
-**Estado:** `pendiente`
+**Estado:** `cerrada (2026-08-11)`, con la v11.76
 
 **Objetivo:** sumar las mejoras de calidad de vida que hoy faltan.
 
 **Alcance:**
 
-- Botón de reset a valores de fábrica (`State.config` más recarga).
-- Persistir también `State.universe`. Hoy solo se persiste `State.config`.
-- Panel de logs: expandir y contraer en vez de altura fija.
-- Retirar el panel "Fijar Acordes" con sus dos acordes escritos a mano. Este punto decía antes que
+- Botón de reset a valores de fábrica (`State.config` más recarga). **Entregado.** Borra
+  `midiTrainerCfg` y `midiTrainerUniverse` y deja `midiTrainerLayout` intacta, que tiene su propio
+  reset en el menú de Widgets. Vive dentro del desplegable de la consola y pide confirmación. Ver
+  `DECISIONS.md`, entrada del 2026-08-11 "El reset a fábrica borra la configuración y no toca la
+  disposición".
+- Persistir también `State.universe`. Hoy solo se persiste `State.config`. **Entregado**, y solo con
+  lo que no se deriva: la tónica y el tipo van a `midiTrainerUniverse`, y el conjunto de alturas lo
+  reconstruye `Escala.buildUniverse`. Guardar la rama entera habría dejado un `Set` serializado como
+  `{}` y un universo sin alturas al recargar. Ver `DECISIONS.md`, entrada del 2026-08-11 "El estado
+  derivado no se persiste, se reconstruye".
+- Panel de logs: expandir y contraer en vez de altura fija. **Entregado.** Dos altos de lienzo, 250 y
+  560 px, con un botón dentro de las acciones de la consola. No es arrastrable: redimensionar con el
+  puntero es el ítem parqueado de redimensionar un widget y no entra acá.
+- Retirar el panel "Fijar Acordes" con sus dos acordes escritos a mano. **Entregado**, markup y
+  botones. `Armonia.lockChord` se queda sin llamadores y anotada, porque es el caso más simple del
+  widget de acompañamiento y borrarla obligaría a reescribirla igual. Este punto decía antes que
   había que mejorar el panel generando los botones I, IV y V, o sea que daba por hecho que el panel
   sobrevive; eso contradecía al ítem del BACKLOG que lo disuelve. Dónde vive el lock no lo decide
   esta fase: lo decide el widget de acompañamiento cuando exista. Ver `DECISIONS.md`, entrada del
   2026-08-11 "El lock de acorde es su propio widget, y su función es liberar la mano izquierda".
 
-**Criterio de aceptación:** por definir.
+**Criterio de aceptación**, escrito el 2026-08-11 porque la fase decía "por definir" y un criterio
+escrito después del trabajo y a su medida no verifica nada. Los cuatro puntos son comprobables desde
+`file://` y sin dispositivo MIDI:
+
+1. **Reset:** con la consola abierta, el botón pide confirmación; al aceptar, `midiTrainerCfg` y
+   `midiTrainerUniverse` quedan en `null` y `midiTrainerLayout` conserva su contenido, y tras la
+   recarga los ajustes del motor vuelven a sus valores por defecto.
+2. **Universo persistido:** elegido un universo distinto del inicial y recargada la app, vuelven la
+   misma tónica y el mismo tipo, **y el conjunto de pitch classes pintado sobre el teclado es el
+   mismo antes y después**. Esa segunda mitad es la que prueba que el derivado se reconstruyó, y es
+   donde el `Set` podía fallar en silencio.
+3. **Panel de logs:** el alto medido pasa de 250 a 560 px y vuelve a 250, con el rótulo del botón
+   siguiendo el estado.
+4. **Panel de acordes:** `document.getElementById('lock-chords-panel')` devuelve `null`, y nada más
+   se rompe: las 88 teclas siguen dibujadas y la consola no tira errores.
+
+Más, para toda la fase: las 41 fixtures en verde, `node --check` sobre los catorce archivos de
+`src/`, `src/engine.js` y `tests/` sin tocar, y redimensionar la ventana sin que ninguna caja se
+mueva ni cambie la cobertura.
 
 **Bloquea:** ninguna declarada
-
----
 
 ## FASE 7: Feedback sonoro (Web Audio API)
 

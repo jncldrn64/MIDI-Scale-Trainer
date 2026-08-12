@@ -2,6 +2,29 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.76 — 2026-08-11
+
+### Added
+
+- `src/state.js`: el universo persiste en `midiTrainerUniverse`, con la tónica y el tipo nada más. `validPitches` es un `Set` y `JSON.stringify` lo serializa como `{}`, así que guardar la rama entera dejaba un universo sin alturas al recargar.
+- `src/state.js`: `loadUniverse` descarta el guardado entero y avisa si el tipo no está en `SCALES` o si la tónica no es un entero de 0 a 11. Es el criterio que `loadLayout` ya usaba contra el cap, no un sistema de migración.
+- `index.html` y `src/arranque.js`: botón de reset a valores de fábrica. Vive dentro del desplegable de la consola y pide confirmación, porque borra trabajo del usuario y no puede rozarse mientras se toca.
+- `index.html` y `src/estilos.css`: el panel de logs crece y vuelve, entre 250 y 560 px de lienzo. Sin transición y sin arrastre: redimensionar con el puntero es otro ítem, parqueado.
+- `docs/DECISIONS.md`: el estado derivado no se persiste, se reconstruye. Vale para los nueve ítems parqueados que van a pedir persistencia, no solo para el universo.
+- `docs/DECISIONS.md`: el reset a fábrica borra las dos claves de configuración y deja la disposición intacta, que ya tiene su propio reset en el menú de Widgets.
+
+### Removed
+
+- `index.html`: se retira el panel "Fijar Acordes" con sus tres botones. Estaba desde el primer commit del repositorio y oculto desde el incremento 5.6.
+
+### Fixed
+
+- `src/estilos.css`: `.logs-wrapper` gana `flex-shrink: 0`. El menú es un contenedor flex en columna con techo, así que el panel se encogía por debajo del alto que declaraba: medía 222 px con 250 escritos.
+
+`Armonia.lockChord` queda sin llamadores y anotada. Es el caso más simple del widget de acompañamiento y borrarla obligaría a reescribirla igual. Mientras nadie la llame, `State.harmony.isLocked` no puede volverse verdadero.
+
+La Fase 6 queda `cerrada (2026-08-11)` con sus cuatro puntos entregados. Su Criterio de aceptación decía "por definir" y se escribió en este PR, en términos que se corren.
+
 ## v11.75 — 2026-08-11
 
 ### Fixed
