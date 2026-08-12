@@ -604,12 +604,11 @@ BACKLOG.
 - Botón de reset a valores de fábrica (`State.config` más recarga).
 - Persistir también `State.universe`. Hoy solo se persiste `State.config`.
 - Panel de logs: expandir y contraer en vez de altura fija.
-- Retirar el panel "Fijar Acordes" con sus dos acordes escritos a mano. El lock de acorde pasa a
-  una vista del widget de escala, y los botones de grados se derivan del universo activo desde ahí.
-  Este punto decía antes que había que mejorar el panel generando los botones I, IV y V, o sea que
-  daba por hecho que el panel sobrevive; eso contradecía al ítem del BACKLOG que lo disuelve. Ver
-  `DECISIONS.md`, entrada del 2026-08-11 "El lock de acorde vive en una vista del widget de escala,
-  por ahora", que resuelve el conflicto y trae su condición de salida.
+- Retirar el panel "Fijar Acordes" con sus dos acordes escritos a mano. Este punto decía antes que
+  había que mejorar el panel generando los botones I, IV y V, o sea que daba por hecho que el panel
+  sobrevive; eso contradecía al ítem del BACKLOG que lo disuelve. Dónde vive el lock no lo decide
+  esta fase: lo decide el widget de acompañamiento cuando exista. Ver `DECISIONS.md`, entrada del
+  2026-08-11 "El lock de acorde es su propio widget, y su función es liberar la mano izquierda".
 
 **Criterio de aceptación:** por definir.
 
@@ -881,6 +880,8 @@ prioridad, no porque la rueda la bloquee.
   tempos por canción que ese ítem ya arrastra.
   **Entró:** 2026-07-30, PR "doc: actualizar ARCHITECTURE a la jerarquía real y fijar el estándar
   espacial". Con ese mismo PR entró "Hundir el log cuando la barra crezca".
+  **Reapuntado el 2026-08-11:** deja de ser una idea suelta. Es dependencia del widget de
+  acompañamiento, que necesita un tempo para encadenar progresiones o tocar una figura.
   **Por qué se anotó:** el CHANGELOG v11.41 da la razón entera, "porque el tiempo ya participa de
   la evaluación (el indulto de 180 ms y las cuatro ventanas del motor) y un tempo permitiría
   derivar esas ventanas en vez de fijarlas a mano". El PR que lo trajo trataba del estándar
@@ -1175,13 +1176,32 @@ prioridad, no porque la rueda la bloquee.
   acorde".
   **Por qué se anotó:** salió de revisar dónde vive el lock de acorde. Al contar qué ítems implican
   una preferencia nueva quedó a la vista que no hay regla que diga dónde guardarla.
-- Convertir "Motor Automático" y el panel "Fijar Acordes" en un widget que asista con los acordes.
-  Hoy son dos controles de la misma característica partida en dos, uno visible en el escenario y el
-  otro oculto a propósito. **Reapuntado el 2026-08-11:** el destino ya no es un widget propio sino
-  una vista del widget de escala, que es el que tiene permiso de escritura sobre el contexto que el
-  motor evalúa. La decisión trae condición de salida y puede volver a ser un widget propio cuando la
-  vista de rueda exista. Ver `DECISIONS.md`, entrada del 2026-08-11 "El lock de acorde vive en una
-  vista del widget de escala, por ahora". **Procedencia:** salió de rastrear en el código qué hace el botón, que
+- **Un widget de acompañamiento, con un propósito: liberar la mano izquierda para concentrarse en la
+  melodía.** Reemplaza a los dos controles de acordes que hoy están partidos en dos, "Motor
+  Automático" visible en el escenario y "Fijar Acordes" oculto a propósito. Es su propio widget
+  porque produce acompañamiento, que no es elegir el universo ni presentar análisis, y su permiso es
+  escritura sobre `State.harmony`. El lock actual es el caso más simple de esa función: un acorde,
+  sostenido, sin ritmo.
+
+  **Capacidades, como lista abierta y sin decidir:** elegir un acorde entre los que el universo activo
+  admite, sostenerlo, arpegiarlo, tocarlo en vals u otras figuras, encadenar progresiones a un tempo
+  dado, y eventualmente admitir acordes de intercambio modal u otras familias fuera del universo. La
+  lista va abierta a propósito: el propósito no envejece, y qué figuras toca se decide cuando el
+  widget se construya y se vea qué hace falta. Prometer hoy una lista cerrada de capacidades para algo
+  que no existe es lo que "Promesas y umbrales" de `CLAUDE.md` prohíbe.
+
+  **Bloqueado por dos cosas.** La Fase 7, que trae el sonido: un acompañamiento tiene que sonar y hoy
+  la app no emite nada. Y el metrónomo, para el tempo, que deja de ser una idea suelta del BACKLOG y
+  pasa a ser dependencia de este widget.
+
+  **El matiz que salva la parte útil:** el acorde fijo sin ritmo no necesita sonido, porque el motor
+  evalúa contra él sin que suene. El lock de hoy sigue funcionando como está, y un widget mínimo que
+  solo permita elegir y sostener un acorde de los grados del universo activo ya cumple el propósito
+  sin esperar a la Fase 7. Lo que espera es el acompañamiento con tempo.
+
+  Las razones completas viven en `DECISIONS.md`, entrada del 2026-08-11 "El lock de acorde es su
+  propio widget, y su función es liberar la mano izquierda", que supera a la de ese mismo día que lo
+  ponía en una vista del widget de escala. **Procedencia:** salió de rastrear en el código qué hace el botón, que
   bloquea el acorde detectado para que el motor deje de redetectarlo mientras se practica encima, y
   de encontrar que su otra mitad, el panel de fijar acordes, ya estaba oculta con el atributo
   `hidden` y un comentario que pide no borrarla. Por eso el ítem los junta.

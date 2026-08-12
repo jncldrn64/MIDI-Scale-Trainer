@@ -2,6 +2,25 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.75 — 2026-08-11
+
+### Fixed
+
+- `docs/DECISIONS.md`: entrada que supera a la de hoy que ponía el lock de acorde en una vista del widget de escala. Ese widget escribe `State.universe` y el lock escribe `State.harmony`: dos ramas distintas con autores distintos, agrupadas bajo la palabra "contexto".
+- `docs/DECISIONS.md`: la generalización que evita repetirlo. El permiso de un widget sale de qué produce, no de qué escritura le queda cómoda. Con el criterio contrario, un solo widget terminaría absorbiéndolas todas.
+- `docs/ROADMAP.md`: el punto de "Fijar Acordes" de la Fase 6 deja de decir dónde vive el lock. El panel se retira igual; dónde vive lo decide el widget cuando exista.
+
+### Changed
+
+- `docs/ROADMAP.md`: el ítem del widget de acordes se rehace con el propósito adelante, liberar la mano izquierda para concentrarse en la melodía, y las capacidades como lista abierta sin decidir.
+- `docs/ROADMAP.md`: ese ítem declara sus dos bloqueos, la Fase 7 por el sonido y el metrónomo por el tempo, con el matiz de que un acorde fijo sin ritmo no necesita sonido y ya cumple el propósito.
+- `docs/ROADMAP.md`: el metrónomo deja de ser una idea suelta y pasa a ser dependencia declarada del widget de acompañamiento.
+- `docs/GLOSARIO.md`: el término lock de acorde, que hasta hoy nombraba un botón y ahora nombra el caso más simple de una función.
+
+El panel "Fijar Acordes" está en el primer commit del repositorio, con sus dos acordes escritos a mano. Es herencia de la v11.0 y ningún documento dice para qué se construyó, así que no hay propósito que recuperar.
+
+De ahí sale un criterio que queda escrito: un control heredado sin propósito declarado se evalúa por lo que hace hoy, no por lo que alguien quiso alguna vez.
+
 ## v11.74 — 2026-08-11
 
 ### Added

@@ -204,6 +204,12 @@ verificó con `grep` contra el archivo antes de escribirse acá.
 - **panel de fijar acordes**: `lock-chords-panel`, oculto a propósito desde la Fase 5 con el
   atributo `hidden` y un comentario que pide no borrarlo. Ofrece dos acordes fijos, Do Mayor y
   Re m7, para practicar sobre ellos.
+- **lock de acorde**: fijar un acorde para que el motor deje de redetectarlo y evalúe la melodía
+  contra él. Hasta el 2026-08-11 nombraba un botón; hoy nombra el caso más simple de una función,
+  liberar la mano izquierda para concentrarse en la melodía. Un acorde, sostenido, sin ritmo; arpegio,
+  vals y progresión son los casos siguientes de la misma función. Escribe `State.harmony`, no
+  `State.universe`. Fuente: 2026-08-11, *El lock de acorde es su propio widget, y su función es
+  liberar la mano izquierda*.
 - **botón de bloqueo del motor**: `btn-lock`, rotulado "Motor Automático". Bloquea el acorde
   detectado para que el motor deje de redetectarlo mientras se practica encima, y al hacerlo cambia
   su rótulo a "Motor Pausado". Junto con el panel de fijar acordes es la misma característica
