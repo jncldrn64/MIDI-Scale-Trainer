@@ -2,6 +2,24 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.74 — 2026-08-11
+
+### Added
+
+- `docs/DECISIONS.md`: una vista es cómo se mira, un widget es quién tiene el permiso. Un widget puede tener varias vistas, y el permiso es del widget, porque si fuera de la vista dejaría de poder saberse qué toca una caja mirándola.
+- `docs/DECISIONS.md`: el cap de tres gana su razón pedagógica, que el usuario elija qué le conviene mirar en la fase de aprendizaje en la que está. De ahí sale que un widget nuevo no sube el cap, lo disputa.
+- `docs/DECISIONS.md`: el motor consume datos y no ejecuta lógica que no esté en `src/engine.js` y cubierta por las fixtures. Si algo externo sustituyera el cálculo, las 41 fixtures dejarían de significar algo.
+- `docs/DECISIONS.md`: el lock de acorde va en otra vista del widget de escala, con condición de salida escrita. Resuelve el conflicto entre el Alcance de la Fase 6 y un ítem del BACKLOG, que se contradecían sin citarse.
+- `docs/GLOSARIO.md`: el término vista, más widget y cap refinados con lo que ganaron.
+- `docs/ROADMAP.md`: ítem de backlog que pide una regla de persistencia, con el inventario de los nueve ítems parqueados que la van a necesitar.
+
+### Changed
+
+- `docs/ROADMAP.md`: el punto de "Fijar Acordes" de la Fase 6 pasa de mejorar el panel a retirarlo. Mejorarlo era construir botones dinámicos adentro de algo que otro ítem quiere disolver.
+- `docs/ROADMAP.md`: el ítem del widget de acordes se reapunta a una vista del widget de escala, y el Objetivo de la Fase 10 dice que la rueda es vista y no widget aparte.
+
+Dos afirmaciones del pedido no resolvieron contra el repo. El cap sí tenía razón escrita desde el 2026-07-25, la espacial, así que la de hoy se suma en vez de llenar un vacío. Y abrir el mismo widget dos veces no está soportado: `CAJAS` es un registro fijo de siete entradas atadas al markup.
+
 ## v11.73 — 2026-08-11
 
 ### Added

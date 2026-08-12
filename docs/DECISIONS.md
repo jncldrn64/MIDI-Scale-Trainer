@@ -2169,6 +2169,124 @@ roadmap siguiente y ya están anotadas.
 
 ---
 
+## 2026-08-11 — Una vista es cómo se mira, un widget es quién tiene el permiso
+
+**Contexto:** el contrato del 2026-08-11 *El contrato de permisos: sistema, permiso de escritura y
+solo lectura* dice qué puede tocar cada caja. Lo que no dice es qué pasa cuando una misma caja
+ofrece más de una forma de mostrar el mismo dato, que es lo que la Fase 10 pide con la rueda de
+quintas.
+
+**Decisión: una vista es una forma de mostrar el mismo dato; un widget es quién tiene el permiso.**
+La vista cambia cómo se mira y qué controles se ofrecen. Nunca cambia qué puede tocar la caja.
+
+Tres consecuencias:
+
+1. **Un widget puede tener varias vistas.** El selector de universo con vista lineal y con vista de
+   rueda de quintas es el mismo widget con el mismo permiso, no dos widgets. La Fase 10 ya lo
+   describe así, "la rueda de quintas como segunda vista dentro del panel de la escala".
+2. **Abrir el mismo widget más de una vez con vistas distintas es coherente con el modelo**, para ver
+   cómo una se liga con la otra. El modelo lo admite: una caja se identifica por identidad y no por
+   posición, y su estado se guarda por instancia. **Lo que no existe es el mecanismo.** `CAJAS` es un
+   registro fijo de siete entradas, cada una atada a un id que ya vive en el markup, y no hay ninguna
+   forma de crear una instancia nueva en tiempo de ejecución. Que el modelo lo admita y que el código
+   lo permita son dos cosas distintas, y hoy solo vale la primera.
+3. **El permiso es del widget, no de la vista.** Si cada vista tuviera el suyo, dejaría de poder
+   saberse qué puede tocar una caja mirándola, que es justo lo que el contrato garantiza.
+
+**Lo que esta entrada no decide:** cómo se cambia de vista, cómo se elige y dónde va el control. Eso
+es trabajo de la fase que construya la segunda vista.
+
+**Estado:** vigente. Refina el contrato del 2026-08-11 desde afuera, sin editarlo.
+
+---
+
+## 2026-08-11 — El cap de tres tiene una razón pedagógica, además de la espacial
+
+**Contexto:** el cap está escrito como número desde el incremento 5.3 y tiene una razón escrita, la
+de la entrada del 2026-07-25 *Precisiones del modelo de widgets*: "que no tapen las notas del fondo".
+Esa razón es espacial y sigue vigente. Lo que faltaba es la otra, que es la que decide qué pasa
+cuando aparezca un widget nuevo.
+
+**Decisión: el límite de tres existe para que el usuario elija qué le conviene mirar en la fase de
+aprendizaje en la que está.** No es una restricción de rendimiento. La espacial acota cuánto se tapa,
+que es el presupuesto de tres octavos; esta acota cuántas cosas compiten por la atención a la vez.
+
+**La consecuencia, que es lo que hace útil a la decisión: un widget nuevo no sube el cap, lo
+disputa.** Cuando aparezca uno que valga la pena, la pregunta correcta es qué sale, no cuánto sube el
+número.
+
+**Sobre los dos widgets de andamiaje.** El tercer widget y el widget de prueba existen sin contenido,
+y el `ROADMAP.md` ya declara que están para poder ejercer el cap. Con esta entrada queda explícito
+que no son el lugar reservado de dos widgets futuros: son las dos ranuras vacías contra las que el
+usuario aprende que hay un límite.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-11 — El motor no ejecuta lógica que venga de afuera
+
+**Contexto:** a medida que el proyecto crece aparece la tentación de que algo cargado desde afuera
+aporte su propio cálculo musical. Esta entrada fija qué garantiza el motor, y no depende de que ese
+algo llegue nunca.
+
+**Decisión: el motor consume datos. No ejecuta lógica que no esté en `src/engine.js` y cubierta por
+las fixtures.**
+
+**Razón, con el número:** las 41 fixtures son la única garantía dura del proyecto y corrieron verdes
+en veinte entregas seguidas. Si algo externo pudiera sustituir el cálculo del motor, esa cobertura
+dejaría de significar nada, porque lo que corre no sería lo que las fixtures prueban. Y el fallo
+aparecería solo con ese algo cargado, o sea en el caso menos reproducible posible.
+
+**El ejemplo que la vuelve concreta.** Un universo nuevo es un dato, no un algoritmo. `SCALES` en
+`src/engine.js` guarda hoy tres entradas, `major`, `minor` y `harmonic_minor`, y cada una es un
+arreglo de intervalos más un nombre, de la forma `{ f: [2, 2, 1, 2, 2, 2, 1], n: 'Mayor' }`. Agregar
+la escala de blues, que el BACKLOG pide desde el primer commit del `ROADMAP.md`, es agregar una
+entrada a esa constante. No hace falta lógica nueva.
+
+**La salida cuando un dato no alcance:** si algún día hace falta una regla que el motor no tiene, se
+agrega al motor con sus fixtures. Es más lento, y es la única forma en que las 41 fixtures siguen
+queriendo decir algo.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-11 — El lock de acorde vive en una vista del widget de escala, por ahora
+
+**Contexto:** dos textos vivos del `ROADMAP.md` se contradicen sobre los dos controles de acordes,
+que están ocultos desde el incremento 5.6. El Alcance de la Fase 6 pide mejorar "Fijar Acordes"
+generando los botones I, IV y V según la escala activa, o sea que asume que sigue siendo un panel de
+botones. Y el BACKLOG pide convertir "Motor Automático" y "Fijar Acordes" en un widget que asista con
+los acordes, o sea que asume que el panel se disuelve. Se escribieron con días de diferencia y
+ninguno cita al otro. Hacer el punto de la Fase 6 primero sería construir botones dinámicos adentro
+de un panel que el otro ítem quiere disolver.
+
+**Decisión: el lock de acorde no va en el readout ni en un widget propio. Va en otra vista del widget
+de escala.** Tres razones:
+
+1. **El readout es de solo lectura** según el contrato del 2026-08-11. Un botón que congela el
+   análisis lo convertiría en widget con permiso de escritura, y su nombre dejaría de describir lo
+   que hace.
+2. **El widget de escala ya tiene permiso de escritura** sobre el contexto que el motor evalúa. Fijar
+   un acorde es decirle al motor contra qué evaluar, igual que elegir un universo: es la misma clase
+   de acto.
+3. **Los botones de grados se derivan del universo que ese widget ya conoce.** Dejan de ser un panel
+   suelto con dos acordes escritos a mano.
+
+**Esta decisión tiene condición de salida y no es firme.** Se toma porque la vista lineal tiene
+espacio, sabiendo que la vista de rueda no lo va a tener. La ubicación se revisa cuando la vista de
+rueda exista y se vea si el control cabe, y esa revisión puede terminar en un widget propio sin que
+esta decisión haya estado mal.
+
+**Primer caso concreto de la entrada de hoy sobre vistas:** dos vistas del mismo widget pueden
+ofrecer distintos controles. El permiso sigue siendo el mismo; lo que cambia es qué se ofrece en
+pantalla.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
