@@ -14,8 +14,16 @@
 ## Cajas y su mecánica
 
 - **widget**: caja que se mueve, se cierra, tiene opacidad y reset, y aparece como fila en el menú
-  de Widgets. Hay siete instancias registradas. Antes se llamó "característica" y también "panel".
-  Fuente: 2026-08-09, *Mapa de términos*.
+  de Widgets. Hay siete instancias registradas. Es **quién tiene el permiso**: lo que puede tocar una
+  caja se sabe mirándola, y no cambia según lo que esté mostrando. Antes se llamó "característica" y
+  también "panel". Fuentes: 2026-08-09, *Mapa de términos*, y 2026-08-11, *Una vista es cómo se mira,
+  un widget es quién tiene el permiso*.
+- **vista**: una forma de mostrar el mismo dato dentro de un widget. Cambia cómo se mira y qué
+  controles se ofrecen; nunca cambia qué puede tocar la caja. Un widget puede tener varias: la vista
+  lineal y la de rueda de quintas son el mismo widget de escala con el mismo permiso. Abrir el mismo
+  widget dos veces con vistas distintas es coherente con el modelo y **todavía no tiene mecanismo**:
+  `CAJAS` es un registro fijo de siete entradas atadas al markup. Fuente: 2026-08-11, *Una vista es
+  cómo se mira, un widget es quién tiene el permiso*.
 - **widget que compite**: widget que cuenta contra el cap. Hay cuatro registrados, de los cuales dos
   son andamiaje sin contenido. Sinónimo válido: "los tres intercambiables del cap", que nombra a los
   tres que pueden estar abiertos a la vez. Fuente: 2026-08-09, *Dónde nace la guía, y los dos únicos
@@ -26,7 +34,11 @@
   solo el fondo, teclado y zona de notas, más la barra. Sinónimo válido: "los tres del sistema".
   Fuente: 2026-08-01, *Nacimiento discreto y movimiento libre*.
 - **cap**: el límite de tres widgets que compiten abiertos a la vez. Es un límite, no un espacio
-  dibujado en pantalla. Fuente: 2026-07-25, *Precisiones del modelo de widgets*.
+  dibujado en pantalla. Tiene dos razones y las dos valen: la espacial, que no tapen las notas del
+  fondo, y la pedagógica, que el usuario elija qué le conviene mirar en la fase de aprendizaje en la
+  que está. De ahí sale la consecuencia operativa: **un widget nuevo no sube el cap, lo disputa**.
+  Fuentes: 2026-07-25, *Precisiones del modelo de widgets*, y 2026-08-11, *El cap de tres tiene una
+  razón pedagógica, además de la espacial*.
 - **punto de nacimiento**: coordenada donde aparece un widget que compite al abrirse. Son tres, y
   son puntos, no celdas de una grilla: una vez movida, la caja queda donde el usuario la dejó.
   Fuente: 2026-08-01, *Nacimiento discreto y movimiento libre*.

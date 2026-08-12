@@ -604,8 +604,12 @@ BACKLOG.
 - Botón de reset a valores de fábrica (`State.config` más recarga).
 - Persistir también `State.universe`. Hoy solo se persiste `State.config`.
 - Panel de logs: expandir y contraer en vez de altura fija.
-- "Fijar Acordes" dinámico: generar los botones I, IV, V según la escala activa, en vez de
-  los dos acordes hardcodeados (Do Mayor y Re m7).
+- Retirar el panel "Fijar Acordes" con sus dos acordes escritos a mano. El lock de acorde pasa a
+  una vista del widget de escala, y los botones de grados se derivan del universo activo desde ahí.
+  Este punto decía antes que había que mejorar el panel generando los botones I, IV y V, o sea que
+  daba por hecho que el panel sobrevive; eso contradecía al ítem del BACKLOG que lo disuelve. Ver
+  `DECISIONS.md`, entrada del 2026-08-11 "El lock de acorde vive en una vista del widget de escala,
+  por ahora", que resuelve el conflicto y trae su condición de salida.
 
 **Criterio de aceptación:** por definir.
 
@@ -687,7 +691,9 @@ cualquier estándar sería adivinanza.
 
 **Objetivo:** agregar la rueda de quintas como segunda vista dentro del panel de la escala,
 con el conmutador que alterna entre lineal y rueda. El conmutador nace acá, con la segunda
-vista.
+vista. Vista y no widget aparte: es el mismo widget de escala con el mismo permiso, según
+`DECISIONS.md`, entrada del 2026-08-11 "Una vista es cómo se mira, un widget es quién tiene el
+permiso".
 
 **Alcance:** esta fase mueve la escala del teclado a un panel de característica en una ranura,
 primero en vista lineal, y le suma la rueda de quintas como vista alterna con su conmutador. La
@@ -1150,9 +1156,32 @@ prioridad, no porque la rueda la bloquee.
   cerrar una caja es una decisión del usuario que el sistema respeta, y el ítem quedó escrito con
   ese conflicto declarado en vez de como pedido limpio. El CHANGELOG no lo dice, así que esto se
   puede discutir.
+- Una regla de persistencia: qué merece guardarse, dónde vive y qué pasa cuando la forma de lo
+  guardado cambia. Hoy no hay ninguna escrita. Persisten dos cosas con dos claves de `localStorage`:
+  `midiTrainerCfg` guarda `State.config` y `midiTrainerLayout` guarda `Layout.estado`. Funciona por
+  dos comportamientos que conviene documentar en vez de dejar como accidente: `loadConfig` fusiona lo
+  guardado sobre los valores por defecto, así que agregar un campo nuevo no rompe nada; y `loadLayout`
+  descarta el estado entero con un aviso si es ilegible o si viola el cap. Lo que cuesta no tenerla ya
+  pasó: el comentario de `src/state.js` dice que renombrar el campo `latino` dejaría a medias una
+  migración de `midiTrainerCfg`, o sea que una migración que no existe frenó un renombre. Nueve ítems
+  parqueados van a necesitarla, y dos de ellos ya traen la pregunta adentro sin respuesta: el alto del
+  teclado configurable, el ancho de la negra, el filtro del log por categoría, apagar los efectos del
+  fondo, la barra auto-ocultable, el split como rango, la vista activa por instancia, **el tamaño de
+  un widget redimensionable**, que pregunta si el tamaño se persiste por instancia, y **cuánto
+  histórico guarda la tabla histórica**, que pregunta si se limpia sola. Esto pide una decisión y no
+  una receta: fijar hoy el formato de almacenamiento para preferencias que no existen es lo que la
+  sección "Promesas y umbrales" de `CLAUDE.md` prohíbe.
+  **Entró:** 2026-08-11, PR "doc: vista contra widget, el cap pedagógico y dónde vive el lock de
+  acorde".
+  **Por qué se anotó:** salió de revisar dónde vive el lock de acorde. Al contar qué ítems implican
+  una preferencia nueva quedó a la vista que no hay regla que diga dónde guardarla.
 - Convertir "Motor Automático" y el panel "Fijar Acordes" en un widget que asista con los acordes.
   Hoy son dos controles de la misma característica partida en dos, uno visible en el escenario y el
-  otro oculto a propósito. **Procedencia:** salió de rastrear en el código qué hace el botón, que
+  otro oculto a propósito. **Reapuntado el 2026-08-11:** el destino ya no es un widget propio sino
+  una vista del widget de escala, que es el que tiene permiso de escritura sobre el contexto que el
+  motor evalúa. La decisión trae condición de salida y puede volver a ser un widget propio cuando la
+  vista de rueda exista. Ver `DECISIONS.md`, entrada del 2026-08-11 "El lock de acorde vive en una
+  vista del widget de escala, por ahora". **Procedencia:** salió de rastrear en el código qué hace el botón, que
   bloquea el acorde detectado para que el motor deje de redetectarlo mientras se practica encima, y
   de encontrar que su otra mitad, el panel de fijar acordes, ya estaba oculta con el atributo
   `hidden` y un comentario que pide no borrarla. Por eso el ítem los junta.
