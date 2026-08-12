@@ -271,6 +271,21 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   en el menú de Widgets. Vive dentro de la consola y pide confirmación. Fuente: 2026-08-11, *El reset
   a fábrica borra la configuración y no toca la disposición*.
 
+- **feedback de veredicto sonoro**: los tres sonidos cortos que marcan acierto, sensible y error.
+  Se generan con osciladores al vuelo, sin archivos y sin MIDI, y son una superficie del sistema que
+  cada widget decide usar, igual que el teclado coloreable. Es lo que entrega la Fase 7. Fuente:
+  2026-08-11, *Feedback de veredicto y música son dos cosas, y el sonido es una superficie del
+  sistema*.
+- **música**: acompañamiento, arpegios y progresiones. Sale por MIDI hacia el sintetizador que el
+  usuario ya tiene, no la sintetiza la app, y es del widget de acompañamiento. No es de la Fase 7.
+  Fuente: 2026-08-11, *Feedback de veredicto y música son dos cosas, y el sonido es una superficie
+  del sistema*.
+- **pánico**: mandar el apagado de todas las notas a los dieciséis canales del destino, no solo al
+  activo. Se dispara al cerrar la página, al cambiar de puerto o de canal, y a mano. Va a los
+  dieciséis porque si la app deja algo encendido no va a saber dónde, y el destino no tiene
+  recuperación automática. Todavía no está construido. Fuente: 2026-08-11, *Dos requisitos de
+  cualquier trabajo que mande notas MIDI*.
+
 ## Método
 
 - **umbral**: una alarma escrita que obliga a abrir una decisión cuando se cumple. Obliga a decidir

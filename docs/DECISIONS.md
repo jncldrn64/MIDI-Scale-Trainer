@@ -2388,6 +2388,150 @@ Borra trabajo del usuario, así que tiene que costar más que un roce.
 
 ---
 
+## 2026-08-11 — El SoundFont no entra por el camino del audio, y MIDI de salida lo reemplaza
+
+**Contexto:** la idea era cargar un SoundFont para que el programa sonara a piano de verdad, y la
+preocupación era la memoria: un archivo de 1.27 GB decodificado podía tumbar la pestaña. Antes de
+diseñar nada se corrieron dos diagnósticos desde `file://` en Chromium 149, con un teclado CASIO
+conectado y Qsynth andando. Lo que sigue son resultados, no razonamiento.
+
+**El SoundFont no falla por memoria. Falla antes.**
+
+```
+decodeAudioData sobre un .sf2 de 21.5 MB
+  → EncodingError: Unable to decode audio data
+```
+
+Un SoundFont no es un archivo de audio: es un contenedor con muestras, mapeos de tecla y envolventes.
+El navegador lo rechaza en milisegundos, así que **el riesgo de memoria no existe por ese camino**.
+Lo que aparece en su lugar es que usarlo exigiría escribir un analizador de formato propio.
+
+Tres medidas más de la misma corrida:
+
+- **Leer del disco solo funciona con el selector de archivos.** `fetch` sobre una ruta relativa da
+  `TypeError: Failed to fetch`, la misma restricción que impidió los ES Modules. El selector leyó los
+  21.5 MB en 18 ms.
+- **La memoria no se puede medir de forma útil.** `performance.memory` existe y declara un tope de
+  3585 MB, pero mide el heap de JavaScript y los búferes de audio viven fuera de ahí.
+  `measureUserAgentSpecificMemory` no existe, y `crossOriginIsolated` es `false`, que desde `file://`
+  no se puede activar.
+- **Aislar la decodificación no es posible.** Un hilo aparte se crea sin problema desde `file://`,
+  con URL de datos y con blob, pero adentro `AudioContext` y `OfflineAudioContext` dan `undefined`.
+  Puede leer y procesar bytes; no puede convertirlos en audio.
+
+**El criterio disponible, escrito como criterio y no como plan:** si algún día se quisiera un
+SoundFont, el tope se pone **por tamaño de archivo antes de leerlo**, que el selector da sin costo, y
+no midiendo memoria. Esta entrada no promete que se vaya a hacer ni que no.
+
+**Lo que sí se puede hacer, y elimina el problema en vez de resolverlo.** `src/midi.js` pide acceso
+MIDI y recorre `access.inputs`. **Nunca toca `access.outputs`.** Mandar una nota es abrir un puerto de
+salida y enviarle tres bytes, y la corrida lo confirmó con tres destinos:
+
+| Salida detectada | A dónde suena |
+|---|---|
+| `Midi Through Port-0` | a Qsynth |
+| `Synth input port (2:0)` | a Qsynth |
+| `CASIO USB-MIDI MIDI 1` | al piano, por sus parlantes |
+
+Con eso quedan cubiertos los dos casos que importan, el usuario con un sintetizador de software y el
+que solo tiene su teclado. El sonido de calidad deja de ser un problema de la app: lo pone el
+sintetizador que el usuario ya tiene.
+
+**Dos observaciones del instrumento, medidas y no supuestas.** La selección de timbre del músico y lo
+que llega por MIDI suenan a la vez sin pisarse: el autor tenía vibráfono seleccionado y lo que llegó
+de afuera sonó con otro timbre, tal como la especificación del CT-S300 describe, que solo el grupo B
+se controla por mensajes de canal externos. Y **el bucle es imposible**, que es una preocupación
+razonable que la especificación descarta: el instrumento envía lo que el músico toca, y no envía las
+canciones ni el acompañamiento que reproduce. La app no puede escuchar su propio arpegio.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-11 — La app no elige el sonido: manda notas a un puerto y un canal que el usuario elige
+
+**Contexto:** con la salida MIDI viable aparece la pregunta de si la app debería pedirle al
+sintetizador que use tal o cual instrumento. La corrida contesta que no puede saberlo.
+
+**Program Change es una petición que puede no tener efecto.** En el diagnóstico, cambiar el programa
+no hizo nada hasta que el usuario puso un SoundFont General MIDI en el canal; con un SoundFont de un
+solo instrumento no hay nada que cambiar. **MIDI no devuelve confirmación**, así que la app pide y no
+se entera de si obtuvo.
+
+**Y el canal reservado a percusión es una convención, no una garantía.** General MIDI reserva el canal
+10 y FluidSynth lo asume, pero en la configuración real del autor la percusión está en otro canal,
+porque repartió siete SoundFonts entre los dieciséis a su gusto.
+
+**Decisión: la app manda notas a un puerto y un canal que el usuario elige, y qué suena ahí es
+responsabilidad de quien lo configuró.** El que sabe qué hay en cada canal es el usuario, tanto si usa
+un sintetizador de software como si usa su teclado. La app que intente adivinarlo va a acertar a veces
+y fallar en silencio el resto, que es el peor de los dos resultados.
+
+**Dónde vive esa elección:** puerto y canal son **configuración del sistema**, no un widget. No
+producen nada; deciden por dónde sale lo que otros producen. Es la misma categoría que el split, y por
+lo tanto viven en el menú de Opciones, según la entrada del 2026-08-10 *Jerarquía de menús: el tres es
+techo y también es piso*, que fija que ahí va lo que se toca mientras se toca.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-11 — Dos requisitos de cualquier trabajo que mande notas MIDI
+
+**Contexto:** los dos salieron de fallas observadas en el diagnóstico, no de precaución teórica. Van
+con su síntoma, porque un requisito sin su síntoma se lee como manía y se termina omitiendo.
+
+**Primero: un apagado se captura, no se lee después.** En el diagnóstico, el canal del apagado se
+leía cuando el temporizador corría en vez de cuando la nota se encendía, así que cada apagado salió
+al canal equivocado. **El síntoma observado:** los timbres que decaen solos parecían funcionar, y los
+que sostienen quedaron sonando indefinidamente. La regla: el canal y la nota de un apagado se
+capturan en el momento de encender.
+
+**Segundo: el pánico va a los dieciséis canales, no al canal activo.** En la misma corrida el pánico
+no pudo apagar lo que había quedado colgado, porque estaba en otros canales. Si la app deja algo
+encendido, no va a saber dónde. Y el destino nunca se entera de que quien encendió esas notas dejó de
+existir: no hay tiempo de espera ni recuperación automática del otro lado.
+
+**Cuándo se dispara el pánico:** al cerrar la página, al cambiar de puerto o de canal, y a mano desde
+un control.
+
+**Alcance de esta entrada:** son requisitos de cualquier trabajo que mande notas, no de uno en
+particular. Hoy no hay ninguno implementado; se escriben ahora porque el costo de descubrirlos otra
+vez ya se pagó una.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-11 — Feedback de veredicto y música son dos cosas, y el sonido es una superficie del sistema
+
+**Contexto:** la Fase 7 dice hoy que su Alcance es "un sonido corto al acertar, otro para tensión,
+otro para error. Entre 10 y 20 líneas, sin dependencias". Con la salida MIDI viable, esa frase queda
+ambigua: no distingue entre hacer un ruido y tocar música.
+
+**Decisión: son dos cosas y se construyen distinto.**
+
+- **Feedback de veredicto:** acierto, tensión, error. Osciladores generados al vuelo, sin archivos y
+  sin MIDI. Es lo que la Fase 7 entrega y sigue siendo viable tal como está escrito.
+- **Música:** acompañamiento, arpegios, progresiones. Sale por MIDI hacia el sintetizador del
+  usuario. **No es de la Fase 7**, es del widget de acompañamiento.
+
+**Un bloqueo que queda corregido.** El ítem del widget de acompañamiento decía que estaba bloqueado
+por la Fase 7. Deja de ser cierto: la Fase 7 entrega tres sonidos de veredicto, no un motor de
+acompañamiento, y el acompañamiento no la necesita porque no sintetiza nada, manda MIDI. Lo que lo
+bloquea de verdad es la salida MIDI configurable, que estas corridas volvieron viable, y el metrónomo
+para el tempo.
+
+**El feedback de veredicto es una superficie compartida del sistema.** Los sonidos no los trae cada
+widget: los ofrece el sistema y cada widget decide cuál usar, igual que el teclado coloreable es una
+superficie del sistema que los widgets pintan por delegación, según el contrato del 2026-08-11. Hoy
+el motor es el único que da feedback, así que basta con que él tenga la variedad; la librería
+compartida importa el día que haya un segundo productor.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

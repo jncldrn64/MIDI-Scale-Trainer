@@ -2,6 +2,27 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.77 — 2026-08-11
+
+### Added
+
+- `docs/DECISIONS.md`: el SoundFont no falla por memoria, falla antes. `decodeAudioData` devolvió `EncodingError` sobre un `.sf2` de 21.5 MB, porque un SoundFont es un contenedor con muestras y mapeos, no un archivo de audio.
+- `docs/DECISIONS.md`: la salida MIDI lo reemplaza. `src/midi.js` recorre `access.inputs` y nunca toca `access.outputs`; tres destinos distintos recibieron notas en la corrida, dos hacia un sintetizador de software y uno hacia el teclado.
+- `docs/DECISIONS.md`: la app no elige el sonido. Program Change es una petición sin confirmación y el canal de percusión es una convención, así que qué suena es responsabilidad de quien configuró el destino.
+- `docs/DECISIONS.md`: dos requisitos de cualquier trabajo que mande notas, con el síntoma que los produjo. El apagado se captura al encender, y el pánico va a los dieciséis canales.
+- `docs/DECISIONS.md`: feedback de veredicto y música son dos cosas. La Fase 7 entrega lo primero con osciladores; lo segundo sale por MIDI y es del widget de acompañamiento.
+- `docs/ROADMAP.md`: tres ítems de backlog, salida MIDI configurable, Program Change como petición declarada y cargar un SoundFont, este último anotado con lo medido y sin promesa.
+- `docs/GLOSARIO.md`: tres términos, feedback de veredicto sonoro, música y pánico.
+
+### Changed
+
+- `docs/ROADMAP.md`: la Fase 7 dice qué no es y gana su Criterio de aceptación, que decía "por definir". El Alcance no cambia: tres sonidos con osciladores siguen siendo viables tal como estaban escritos.
+- `docs/ROADMAP.md`: el widget de acompañamiento deja de estar bloqueado por la Fase 7, que era falso. Lo bloquean la salida MIDI configurable y el metrónomo.
+
+Todo lo que este PR afirma sobre sonido sale de dos diagnósticos corridos desde `file://` en Chromium 149, con teclado conectado y sintetizador andando. Ninguna corrida la hice yo.
+
+La versión mostrada sigue en V11.76.
+
 ## v11.76 — 2026-08-11
 
 ### Added
