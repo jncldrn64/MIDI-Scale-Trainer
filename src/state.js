@@ -8,7 +8,10 @@ const State = {
     // verde. Cambiarlo acá dejaría a medias una migración de `midiTrainerCfg`.
     // La nomenclatura silábica de este programa es DO FIJO: Do es siempre la nota Do, no
     // el primer grado de la escala activa. Quien viene de do móvil espera lo contrario.
-    config: { latino: false, nombresTecla: true, accumMs: 120, holdMs: 2000, errMs: 1000, splitNote: 60 },
+    // `sonido` arranca en false a propósito: la app se usa con un piano que ya suena, y sumarle
+    // pitidos sin que nadie los pidiera es intrusivo. El log anuncia al cargar que el interruptor
+    // existe, que es cómo se descubre.
+    config: { latino: false, nombresTecla: true, accumMs: 120, holdMs: 2000, errMs: 1000, splitNote: 60, sonido: false },
     universe: { root: 0, type: 'major', validPitches: new Set() },
     midi: { access: null, activeBasses: new Set(), activeMelodies: new Set(), keysDown: new Set(), sustainActive: false },
     harmony: { chord: null, isLocked: false },

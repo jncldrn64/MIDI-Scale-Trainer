@@ -144,5 +144,11 @@ const MIDI = {
         else razon = 'fuera de escala, acorde y tonicización';
         const etiqueta = evalStatus === 'good' ? 'OK' : (evalStatus === 'tension' ? 'TENSIÓN' : (evalStatus === 'passing' ? 'PASO' : 'ERROR'));
         SysLog('EVAL', `${etiqueta} ${getNoteStr(note).name} (${razon}) -> ${evalStatus}`);
+        // El feedback suena acá, al apretar, y no al soltar: un sonido que llega cuando la nota
+        // ya terminó no sirve para tocar. El indulto por paso cromático puede reclasificar esta
+        // misma nota al soltarla, así que un error corto ya sonó como error. Es un falso positivo
+        // declarado, no un descuido: ver DECISIONS, 2026-08-11, "El feedback de veredicto suena al
+        // apretar, y el indulto no lo corrige".
+        Sonido.veredicto(evalStatus);
     }
 };

@@ -2,6 +2,26 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.78 — 2026-08-11
+
+### Added
+
+- `src/sonido.js`: el objeto `Sonido` con los tres sonidos de veredicto, generados con osciladores al vuelo. Sin archivos, sin dependencias y sin MIDI. Son 47 líneas, la tabla incluida.
+- `src/sonido.js`: los tres salen de una tabla y no están escritos a mano en tres lugares, así que agregar una variante cuesta una fila. Elegir entre variantes sigue siendo backlog y no se implementa.
+- `index.html` y `src/arranque.js`: interruptor de feedback sonoro en el menú de Opciones. Arranca apagado y persiste con el resto de la configuración.
+- `src/midi.js`: el sonido se dispara en `evaluateMelody`, al apretar la tecla. El paso cromático no suena, porque solo existe al soltar.
+- `docs/DECISIONS.md`: cuándo suena el feedback respecto del indulto, por qué arranca apagado, y el falso positivo declarado del error corto.
+
+### Changed
+
+- `docs/ARCHITECTURE.md`: `Sonido` entra en la tabla de responsabilidades, el flujo de evento MIDI muestra dónde se dispara, y `State.config` deja de estar desactualizado.
+
+El contexto de audio se crea y se reanuda con el primer clic o la primera tecla, no al cargar: creado al cargar queda suspendido y el primer veredicto no sale sin que nadie entienda por qué.
+
+Medido con `OfflineAudioContext`: los picos de los tres son 0.117, 0.115 y 0.095, y cuatro sonidos a la vez dan 0.401, debajo de 1.0, así que no saturan.
+
+La Fase 7 queda `pendiente` a propósito. El primer punto de su Criterio pide comprobar de oído con el piano físico y eso no se puede hacer sin el instrumento.
+
 ## v11.77 — 2026-08-11
 
 ### Added

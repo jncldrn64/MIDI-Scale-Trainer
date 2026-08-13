@@ -679,6 +679,13 @@ un criterio escrito después del trabajo no verifica nada:
 4. Con el sonido apagado la app se comporta igual que hoy: las 41 fixtures verdes y el coloreo del
    teclado sin cambios.
 
+**Entregado el 2026-08-11 con la v11.78**, salvo el punto 1 del Criterio, que pide comprobar de oído
+con el piano físico y no se puede hacer sin el instrumento. Por eso la fase queda `pendiente` hasta
+esa corroboración. Lo entregado: `src/sonido.js` con los tres sonidos derivados de una tabla, el
+interruptor en Opciones que arranca apagado y persiste, y el disparo al apretar la tecla. Las
+decisiones que este trabajo tomó viven en `DECISIONS.md`, entrada del 2026-08-11 "El feedback de
+veredicto suena al apretar, y el indulto no lo corrige".
+
 **Bloquea:** ninguna declarada
 
 ---
@@ -1237,6 +1244,13 @@ prioridad, no porque la rueda la bloquee.
   pánico va a los dieciséis canales y no al activo. Los dos salieron de fallas observadas y sus
   síntomas viven en `DECISIONS.md`, entrada del 2026-08-11 "Dos requisitos de cualquier trabajo que
   mande notas MIDI".
+
+  **Dos preguntas que hay que contestar al implementarlo, anotadas el 2026-08-11.** Primero, si el
+  usuario elige un solo puerto y canal para todo o uno por función: el acompañamiento y el metrónomo
+  podrían querer canales distintos, y sin esta anotación quien lo implemente va a elegir un destino
+  global porque es lo obvio, y el segundo consumidor va a pedir el suyo. Segundo, la razón de fondo
+  de que el canal lo elija el usuario y no la app: **MIDI no devuelve nada**, así que la app manda y
+  no se entera de si el canal tiene un piano, un órgano o nada.
   **Entró:** 2026-08-11, PR "doc: qué se puede hacer sonar, medido, y la Fase 7 reescrita".
   **Por qué se anotó:** salió de medir qué se puede hacer sonar desde `file://`. El SoundFont no
   entra y la salida MIDI sí, así que el sonido de calidad deja de ser un problema de la app.
