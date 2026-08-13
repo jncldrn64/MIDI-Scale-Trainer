@@ -24,7 +24,7 @@ se reconstruye hacia adelante, versionado desde ahora.
 
 ```js
 State = {
-  config: { latino, accumMs, holdMs, errMs, splitNote },  // persistido en localStorage
+  config: { latino, nombresTecla, accumMs, holdMs, errMs, splitNote, sonido },  // persistido
   universe: { root, type, validPitches: Set },             // root y type persistidos; el Set se reconstruye
   midi: { access, activeBasses: Set, activeMelodies: Set, keysDown: Set, sustainActive },
   harmony: { chord, isLocked, function },                  // function la escribe la Fase 4
@@ -49,6 +49,7 @@ de dedos humanos, no un loop de animación a 60 fps.
 | `Teclado` | Construye las 88 teclas y las pinta | Sí | `src/teclado.js` |
 | `Readout` | Presenta la salida del motor | Sí | `src/readout.js` |
 | `Armonia` | Manda sobre el buffer de armonía y el de evaluaciones | Sí (botón) | `src/armonia.js` |
+| `Sonido` | Feedback de veredicto con osciladores, sin archivos ni MIDI | No | `src/sonido.js` |
 | `SysLog` / config | Logs y persistencia | Sí (logs) / localStorage (config) | `src/log.js`, `src/state.js` |
 
 `MathEngine.detectChord` y `MathEngine.isDiatonic` no leen `State` ni el DOM. Reciben
@@ -70,6 +71,7 @@ noteOn(note, vel)
   → keysDown.add(note)
   → si note < splitNote:  activeBasses.add(note) → triggerAccumulation()
   → si note >= splitNote: activeMelodies.add(note) → evaluateMelody(note)
+                                                    → Sonido.veredicto(status)  [si está encendido]
   → Teclado.renderKeyboard() + Readout.updateStatus()
 
 triggerAccumulation()
@@ -185,12 +187,12 @@ la renombró a "Sensible (empuja a la tónica)", con la razón medida contra el 
 
 ## 7. No framework, por ahora
 
-Desde la v11.76 el código son quince archivos: `index.html`, que quedó como markup, más catorce bajo
-`src/`. El motor puro sigue en `src/engine.js` (`MathEngine` y las funciones de teoría), los
+Desde la v11.78 el código son dieciséis archivos: `index.html`, que quedó como markup, más quince
+bajo `src/`. El motor puro sigue en `src/engine.js` (`MathEngine` y las funciones de teoría), los
 estilos en `src/estilos.css`, y el script que vivía adentro de `index.html` se repartió en trece
 archivos, cargados como scripts clásicos en este orden: `config.js`, `state.js`, `log.js`,
-`midi.js`, `armonia.js`, `escala.js`, `teclado.js`, `readout.js`, `cajas.js`, `lienzo.js`,
-`layout.js`, `widgets.js` y `arranque.js`. Cada uno toma el nombre de lo que define, y
+`sonido.js`, `midi.js`, `armonia.js`, `escala.js`, `teclado.js`, `readout.js`, `cajas.js`,
+`lienzo.js`, `layout.js`, `widgets.js` y `arranque.js`. Cada uno toma el nombre de lo que define, y
 `arranque.js` va último porque contiene la única sentencia que ejecuta algo al cargar.
 
 El reparto sigue los tres niveles de permiso del contrato: `escala.js` es el único con permiso de
@@ -221,7 +223,7 @@ gatillo que este párrafo tenía, "o el estado se vuelve difícil de razonar", p
 
 **El umbral se cruzó y la Fase 5B ya lo bajó.** Antes, medido el
 2026-08-11: `index.html` tenía 1524 líneas totales, 126 vacías y 227 de comentario, o sea 1171 de
-código y markup. Después de la v11.76: 247 totales, 9 vacías y 26 de comentario, o sea 212. El
+código y markup. Después de la v11.78: 252 totales, 9 vacías y 27 de comentario, o sea 216. El
 archivo más grande es `src/layout.js` con 304 líneas, y ninguno se acerca a las 1000. El
 gatillo se cumplió durante la Fase 5, con el trabajo visual en curso, y se decidió terminar esa
 fase antes de tocarlo. La partición es la Fase 5B del `ROADMAP.md`, entre la Fase 5 y la Fase 6.

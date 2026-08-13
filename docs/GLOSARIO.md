@@ -286,6 +286,11 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   recuperación automática. Todavía no está construido. Fuente: 2026-08-11, *Dos requisitos de
   cualquier trabajo que mande notas MIDI*.
 
+- **falso positivo declarado**: el sonido de error que suena por una nota que el indulto va a
+  reclasificar a paso cromático al soltarla. Se acepta y no se corrige, porque al apretar el motor
+  todavía no sabía. Fuente: 2026-08-11, *El feedback de veredicto suena al apretar, y el indulto no
+  lo corrige*.
+
 ## Método
 
 - **umbral**: una alarma escrita que obliga a abrir una decisión cuando se cumple. Obliga a decidir

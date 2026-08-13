@@ -2532,6 +2532,41 @@ compartida importa el día que haya un segundo productor.
 
 ---
 
+## 2026-08-11 — El feedback de veredicto suena al apretar, y el indulto no lo corrige
+
+**Contexto:** el motor produce cuatro veredictos, `good`, `tension`, `passing` y `bad`, y uno de
+ellos aparece tarde. Al soltar la tecla, `applyPassingTone` puede reclasificar a `passing` una nota
+que duró menos de 180 ms, así que una nota puede evaluarse como error al apretarla y resultar paso
+cromático al soltarla. Ningún documento decía cuándo suena el feedback.
+
+**Decisión: suena al apretar.** El Objetivo de la Fase 7 es entrenar el oído sin mirar la pantalla, y
+un sonido que llega cuando la nota ya terminó no sirve para tocar. Sonar al soltar sería siempre
+correcto y siempre tarde; sonar las dos veces daría dos sonidos por nota.
+
+**Consecuencia, aceptada y declarada: el error corto es un falso positivo que no se corrige.** Una
+nota fuera del universo que dura menos de 180 ms suena como error, y el indulto la reclasifica
+después sin volver a sonar. No es un descuido: al momento de apretar el motor genuinamente no sabía,
+porque el indulto depende de una duración que todavía no ocurrió. Corregirlo pediría un segundo
+sonido o un retardo de 180 ms sobre cada nota, y las dos cosas son peores que el falso positivo.
+
+**Por eso son tres sonidos y no cuatro.** Los tres veredictos que existen en el momento de apretar
+son exactamente los tres que el Alcance de la fase nombra. `passing` no tiene sonido, y el objeto que
+los dispara lo dice por el log cuando se le pide.
+
+**El interruptor arranca apagado.** La app se usa con un piano que ya suena, y sumarle pitidos sin
+que nadie los pidiera es intrusivo. El costo de arrancar apagado es que puede no descubrirse, y se
+paga con el log: al cargar, la app anuncia que el interruptor existe y dónde está. Vive en el menú de
+Opciones, que es lo que se toca mientras se toca, según la entrada del 2026-08-10 *Jerarquía de
+menús: el tres es techo y también es piso*. Persiste con el resto de la configuración.
+
+**La forma no cierra la puerta a las variantes.** Los tres sonidos se derivan de una tabla, no se
+escriben a mano en tres lugares, así que agregar una variante cuesta una fila. Elegir entre variantes
+es backlog y no se implementa acá.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```
