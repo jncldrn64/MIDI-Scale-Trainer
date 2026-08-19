@@ -2567,6 +2567,37 @@ es backlog y no se implementa acá.
 
 ---
 
+## 2026-08-11 — El manejo de eventos no se cubre con fixtures todavía, y el motivo es el costo
+
+**Contexto:** el acorde detectado nunca se liberaba. `MIDI.triggerContextTimeout` es lo único que lo
+limpia y se lo llamaba solo dentro de la rama `if (ev)` de `MIDI.releaseNoteInternal`, o sea solo
+cuando la nota soltada tenía una evaluación registrada. Las notas de bajo nunca crean evaluación,
+porque `MIDI.noteOn` llama a `evaluateMelody` únicamente para las de arriba del split. La rama que
+limpia el acorde era inalcanzable justo para las notas que lo crean.
+
+**Ninguna de las 41 fixtures lo cubre, y el motivo no es descuido.** `tests/run.js` hace un solo
+`require`, el de `../src/engine.js`. Las fixtures prueban lógica pura: reciben datos y comparan
+datos. El defecto vivía en el manejo de eventos y temporizadores de `src/midi.js`, que ninguna
+fixture toca.
+
+**Decisión: no se agrega fixture en este PR, y el motivo es el costo de la infraestructura, no la
+dificultad del caso.** Cubrirlo pide tres cosas que hoy no existen: que `src/midi.js` sea cargable
+desde Node con su envoltura, un doble del DOM porque llama a `Teclado.renderKeyboard` y a
+`Readout.updateStatus`, y tiempo simulable, porque una prueba que espera 2000 ms reales no sirve.
+Eso es infraestructura de pruebas nueva, no una fixture más, y mezclarla con la corrección de un
+defecto haría un PR que falla de dos formas distintas.
+
+**Cómo se verifica el arreglo mientras tanto**, que es lo que no se puede omitir: con el guion de
+navegador que este PR corrió contra las dos versiones, la anterior y la arreglada. Enciende tres
+notas por debajo del split, espera a que el contexto se detecte, las suelta y espera más que la
+retención configurada. En la versión anterior el acorde sigue vivo; en la arreglada queda en `null`
+y el log lo declara. Es reproducible y queda escrito en el cuerpo del PR, pero **no corre solo**, y
+esa es exactamente la diferencia que el ítem del BACKLOG pide cerrar.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

@@ -69,7 +69,9 @@ const MIDI = {
     },
     releaseNoteInternal(note, isBass) {
         const ev = State.evaluations.get(note);
-        
+
+        // El indulto solo aplica a la melodía, que es lo único que tiene evaluación. Un bajo
+        // nunca crea una, porque noteOn solo llama a evaluateMelody para las notas de arriba.
         if (ev) {
             // Indulto Heurístico: Pasos Cromáticos (lógica en src/engine.js)
             const duration = Date.now() - ev.startTime;
@@ -78,20 +80,20 @@ const MIDI = {
                 ev.status = indultado;
                 SysLog('EVAL', `PASO CROMÁTICO: ${getNoteStr(note).name} (${duration}ms)`);
             }
+        }
 
-            if (isBass) {
-                State.midi.activeBasses.delete(note);
-                this.triggerContextTimeout();
-            } else {
-                State.midi.activeMelodies.delete(note);
-                if (ev.status === 'good') {
-                    clearTimeout(ev.timeout);
-                    State.evaluations.delete(note);
-                }
-            }
+        // El retiro de la nota de su conjunto aplica siempre, haya evaluación o no. Hasta la
+        // v11.79 esto vivía adentro del `if (ev)` de arriba, así que soltar un bajo nunca armaba
+        // el temporizador de liberación y el acorde detectado se quedaba pegado para siempre.
+        if (isBass) {
+            State.midi.activeBasses.delete(note);
+            this.triggerContextTimeout();
         } else {
-            if (isBass) State.midi.activeBasses.delete(note);
-            else State.midi.activeMelodies.delete(note);
+            State.midi.activeMelodies.delete(note);
+            if (ev && ev.status === 'good') {
+                clearTimeout(ev.timeout);
+                State.evaluations.delete(note);
+            }
         }
     },
     triggerAccumulation() {
@@ -107,9 +109,14 @@ const MIDI = {
     },
     triggerContextTimeout() {
         if(State.timers.contextHold) clearTimeout(State.timers.contextHold);
+        SysLog('MATH', `Retención armada: el contexto se libera en ${State.config.holdMs} ms si no queda ningún bajo apretado. Bajos activos ahora: ${State.midi.activeBasses.size}.`);
         State.timers.contextHold = setTimeout(() => {
             if(!State.harmony.isLocked && State.midi.activeBasses.size === 0) {
+                const c = State.harmony.chord;
                 State.harmony.chord = null; Armonia.clearEvaluations(); Teclado.renderKeyboard(); Readout.updateStatus();
+                SysLog('MATH', `Contexto liberado tras ${State.config.holdMs} ms: ${c ? getNoteStr(c.rootPC).name + c.type : 'no había acorde'}. El motor vuelve a evaluar solo contra el universo.`);
+            } else {
+                SysLog('MATH', `Retención vencida y el contexto se queda: ${State.harmony.isLocked ? 'el acorde está fijado a mano' : `todavía hay ${State.midi.activeBasses.size} bajo(s) apretado(s)`}.`);
             }
         }, State.config.holdMs); 
     },
