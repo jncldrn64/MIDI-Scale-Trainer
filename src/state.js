@@ -11,7 +11,12 @@ const State = {
     // `sonido` arranca en false a propósito: la app se usa con un piano que ya suena, y sumarle
     // pitidos sin que nadie los pidiera es intrusivo. El log anuncia al cargar que el interruptor
     // existe, que es cómo se descubre.
-    config: { latino: false, nombresTecla: true, accumMs: 120, holdMs: 2000, errMs: 1000, splitNote: 60, sonido: false },
+    // `clicTeclas` arranca en false por la misma puerta que `sonido`: la capa 0 no lleva
+    // controles interactivos, así que las 88 teclas quedan inertes hasta que alguien pide lo
+    // contrario. Encenderlo no las convierte en controles: las convierte en entrada sustituta,
+    // que fabrica el mismo mensaje MIDI que manda el dispositivo. El log lo anuncia al cargar,
+    // que es cómo se descubre que el interruptor existe.
+    config: { latino: false, nombresTecla: true, accumMs: 120, holdMs: 2000, errMs: 1000, splitNote: 60, sonido: false, clicTeclas: false },
     universe: { root: 0, type: 'major', validPitches: new Set() },
     midi: { access: null, activeBasses: new Set(), activeMelodies: new Set(), keysDown: new Set(), sustainActive: false },
     harmony: { chord: null, isLocked: false },

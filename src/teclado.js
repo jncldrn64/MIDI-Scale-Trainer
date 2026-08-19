@@ -56,7 +56,61 @@ const Teclado = {
         SysLog('LAYOUT', `Teclado de ${KEYBOARD_END - KEYBOARD_START + 1} teclas (MIDI ${KEYBOARD_START} a ${KEYBOARD_END}), ${whites.length} blancas, de borde a borde en ${LIENZO_ANCHO} px.`);
         SysLog('LAYOUT', `Ancho de blanca ${anchoBlanca.toFixed(2)} px; negra ${anchoNegra.toFixed(2)} px al 0.62, deja ${(anchoBlanca - anchoNegra).toFixed(1)} px de blanco visible entre negras.`);
         SysLog('LAYOUT', `Alto de blanca ${altoBlanca} px de lienzo, negra ${Math.round(altoNegra)} px. Planos: el cascarón del lienzo aplica la escala una sola vez.`);
+        this.armarClic();
         this.renderKeyboard();
+    },
+
+    // Teclas clicables. Se arma acá porque `buildKeyboard` recrea los 88 div en cada resize y
+    // un manejador enganchado antes se iría con el div viejo. El interruptor se lee adentro del
+    // manejador, no acá: así encenderlo y apagarlo no obliga a reconstruir el teclado.
+    //
+    // El clic no llama al motor. Llama a `MIDI.entradaSintetica`, que fabrica el mensaje y lo
+    // mete por `MIDI.processMsg`. Apretar enciende, soltar apaga, y sostener dura lo que dure
+    // el botón apretado, que es lo que hace comprobables el indulto de 180 ms y la retención
+    // del contexto sin dispositivo.
+    armarClic() {
+        let sonando = null;
+        const soltar = (origen) => {
+            if (sonando === null) return;
+            const n = sonando; sonando = null;
+            SysLog('MIDI', `Clic soltado sobre ${getNoteStr(n).name} (${n}) por ${origen}.`);
+            MIDI.entradaSintetica(n, false);
+        };
+        for (let m = KEYBOARD_START; m <= KEYBOARD_END; m++) {
+            const key = document.getElementById(`k-${m}`); if (!key) continue;
+            key.addEventListener('pointerdown', (e) => {
+                if (!State.config.clicTeclas) return;
+                e.preventDefault();
+                // La captura del puntero es lo que hace que soltar afuera de la tecla apague
+                // igual: el `pointerup` vuelve al elemento que capturó, no al que está debajo
+                // del cursor. Sin esto la nota quedaba encendida, que es el defecto que la
+                // v11.79 acaba de corregir del otro lado del camino.
+                // La captura va en try porque puede tirar, y si tira sin red se lleva puesta la
+                // nota entera: el manejador aborta antes de fabricar el mensaje y la tecla no
+                // suena. Medido en Chromium con un pointerdown sintético, que es como se prueba
+                // esto sin ratón. Sin captura, soltar afuera deja de apagar; con la nota muda no
+                // hay nada que apagar. Se registra para que la degradación no sea silenciosa.
+                let capturado = false;
+                try { key.setPointerCapture(e.pointerId); capturado = true; }
+                catch (err) { SysLog('MIDI', `⚠ La tecla no pudo capturar el puntero ${e.pointerId}: ${err.message}. La nota suena igual; soltar fuera de la tecla puede no apagarla.`); }
+                if (sonando !== null) soltar('un segundo clic sin soltar el primero');
+                sonando = m;
+                SysLog('MIDI', `Clic apretado sobre ${getNoteStr(m).name} (${m}), puntero ${e.pointerId}${capturado ? ' capturado por la tecla' : ' sin capturar'}.`);
+                MIDI.entradaSintetica(m, true);
+            });
+            key.addEventListener('pointerup', () => soltar('soltar el botón'));
+            key.addEventListener('pointercancel', () => soltar('cancelación del puntero'));
+        }
+        this.marcarClicable();
+        SysLog('LAYOUT', `Teclas clicables armadas sobre las ${KEYBOARD_END - KEYBOARD_START + 1} teclas, con velocidad fija ${MIDI.VELOCIDAD_CLIC}. Responden solo con el interruptor de Opciones encendido, que ahora está ${State.config.clicTeclas ? 'encendido' : 'apagado'}.`);
+    },
+
+    // La clase del contenedor solo cambia el cursor y el touch-action. No toca ninguna de las
+    // seis clases de veredicto ni agrega una séptima: el estado del interruptor no es feedback
+    // sobre la nota y no se pinta sobre la tecla.
+    marcarClicable() {
+        const kb = document.getElementById('keyboard');
+        kb.classList.toggle('clicable', !!State.config.clicTeclas);
     },
     renderKeyboard() {
         for(let i=KEYBOARD_START; i<=KEYBOARD_END; i++) {

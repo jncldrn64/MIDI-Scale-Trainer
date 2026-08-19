@@ -19,12 +19,54 @@ const MIDI = {
         }
     },
     bindDevices() {
+        // Hasta la v11.79 esta función solo enganchaba `onmidimessage` y nunca llamaba a
+        // `input.open()`. La apertura implícita del navegador puede fallar con un puerto que
+        // quedó de una sesión anterior sin cerrar, y `onstatechange` no rescata el caso porque
+        // solo se dispara cuando algo cambia: un puerto que ya figura como conectado no lo
+        // dispara nunca. Eso explicaría el ritual de apagar y encender el teclado tras recargar,
+        // que fuerza una desconexión seguida de una conexión. Es hipótesis, no hecho: no está
+        // reproducida en una corrida, y la corroboración pide el dispositivo físico.
+        //
+        // Lo que sí cambia acá y no depende de la hipótesis: el estado de cada puerto al arrancar
+        // se registra. Sin esa línea el defecto era invisible, porque el log solo hablaba de
+        // puertos cuando ya habían cambiado de estado.
+        let vistos = 0;
         for (let input of State.midi.access.inputs.values()) {
+            vistos++;
+            SysLog('MIDI', `Puerto de entrada "${input.name}" (id ${input.id}): estado ${input.state}, conexión ${input.connection}, fabricante ${input.manufacturer || 'sin declarar'}.`);
             if (!input.onmidimessage) {
-                SysLog('MIDI', `Listo: ${input.name}`);
                 input.onmidimessage = (msg) => this.processMsg(msg);
+                SysLog('MIDI', `Listo: ${input.name}`);
+            } else {
+                SysLog('MIDI', `Ya enganchado, no se vuelve a enganchar: ${input.name}.`);
+            }
+            // Apertura explícita, y se espera la promesa antes de darlo por listo. Un puerto ya
+            // abierto la resuelve igual, así que llamar de más no cuesta nada.
+            if (input.connection !== 'open') {
+                input.open().then(
+                    (p) => SysLog('MIDI', `Puerto "${p.name}" abierto explícitamente: conexión ${p.connection}.`),
+                    (e) => SysLog('ERROR', `⚠ El puerto "${input.name}" no abrió: ${e}. El teclado no va a responder hasta apagarlo y encenderlo.`)
+                );
+            } else {
+                SysLog('MIDI', `Puerto "${input.name}" ya venía abierto, no se vuelve a abrir.`);
             }
         }
+        if (vistos === 0) SysLog('MIDI', '⚠ Ningún puerto de entrada MIDI enumerado. Sin dispositivo, las teclas clicables de Opciones son la única entrada.');
+    },
+    // Entrada sustituta del teclado de pantalla. Fabrica los tres bytes y los mete por
+    // `processMsg`, que es la misma puerta por la que entra el dispositivo físico y que no
+    // pregunta de dónde vino el mensaje. Entrar por acá y no por `evaluateMelody` es lo que
+    // hace que el clic ejercite el corrimiento de estado, el split, la acumulación de bajos y
+    // la retención del contexto. Un clic que fuera directo a la evaluación probaría el motor y
+    // dejaría el camino de eventos sin probar, que es donde vivió el defecto del acorde pegado.
+    // Ver DECISIONS, 2026-08-19, "El clic entra por el camino MIDI, no por el motor".
+    VELOCIDAD_CLIC: 100,
+    entradaSintetica(note, encendido) {
+        const bytes = encendido
+            ? [0x90, note, this.VELOCIDAD_CLIC]
+            : [0x80, note, 0];
+        SysLog('MIDI', `Entrada sustituta: ${encendido ? 'NOTE ON' : 'NOTE OFF'} ${getNoteStr(note).name} (${note}), velocidad ${bytes[2]}, bytes [${bytes.join(', ')}]. Entra por processMsg, igual que el dispositivo.`);
+        this.processMsg({ data: bytes });
     },
     processMsg(msg) {
         const [cmd, data1, data2] = msg.data; 

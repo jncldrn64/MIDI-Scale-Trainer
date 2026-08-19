@@ -2,6 +2,52 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.81 — 2026-08-19
+
+### Added
+
+- Teclas clicables. Apretar el ratón sobre una tecla enciende la nota y soltarlo la apaga. El clic no llama al motor: llama a `MIDI.entradaSintetica`, que fabrica los tres bytes y los mete por `MIDI.processMsg`, la misma puerta del dispositivo. Así ejercita el split, la acumulación y la retención.
+- Interruptor "Teclas clicables" en Opciones, apagado de fábrica y persistido en `midiTrainerCfg`. Arranca apagado porque la capa 0 no lleva controles interactivos: encenderlo hace explícita la excepción en vez de disolver la regla. El log lo anuncia al cargar.
+- Captura del puntero sobre la tecla apretada, para que soltar el ratón afuera apague igual. Va en `try`: si la captura falla, la nota suena lo mismo y el log escribe el aviso, en vez de que el manejador aborte y la tecla quede muda.
+- `MIDI.bindDevices` abre cada puerto de entrada con `input.open()` y espera la promesa. Antes solo enganchaba `onmidimessage` y dejaba la apertura implícita, que puede fallar con un puerto de una sesión anterior sin cerrar.
+- El log escribe el estado y la conexión de cada puerto al arrancar, con su id y su fabricante. Sin esa línea, un puerto que no responde era invisible: el log solo hablaba de puertos cuando ya habían cambiado de estado.
+- `docs/DECISIONS.md`: por qué el clic entra por el camino MIDI, por qué va detrás de un interruptor, y por qué una tecla clicada es entrada sustituta y no un control.
+- `docs/ROADMAP.md`: notas de auditoría fechadas en las fases 2, 3 y 4, y tres ítems nuevos de backlog.
+- `docs/GLOSARIO.md`: el término entrada sustituta.
+
+### Changed
+
+- `docs/EN-DISCUSION.md`: salen sus tres primeros temas, que es el primer ejercicio de la regla de salida. Quedan dos, y a uno se le actualizó el campo de qué falta decidir, porque la auditoría que esperaba ya corrió.
+- `docs/ARCHITECTURE.md`: el diagrama del §3 arranca en `processMsg` y nombra las dos entradas; la tabla de módulos y el conteo del §7 se ponen al día.
+
+### Fixed
+
+- Nada. Este PR no corrige ningún defecto: la auditoría produjo una lista y no correcciones, que es lo que se le pidió.
+
+**La auditoría de las fases 2, 3 y 4 no confirma la sospecha del autor.** Ninguna regla de teoría se
+perdió ni cambió en el rediseño visual de la Fase 5. Los cinco pasos de la jerarquía de la Fase 2
+siguen implementados en orden; el `II7 (V del V)` de la Fase 3 sigue apareciendo en el panel; y la
+función tonal de la Fase 4 se calcula, se bufferea, se loguea y ahora además se muestra.
+
+Lo que sí encontró son tres defectos de pintado, y `git log -S` los rastrea a todos hasta el primer
+commit del repositorio, el del 2026-07-04, o sea que son anteriores a la Fase 2. Dos ya estaban en el
+BACKLOG desde el 2026-08-11 y no se duplicaron. El tercero es nuevo y hay que decirlo entero: la
+liberación del contexto también borra los veredictos de melodía vivos, y ese camino no era alcanzable
+hasta que la v11.79 arregló el acorde pegado. El arreglo no causó el síntoma que el autor reportó,
+que se reproduce igual sin él, pero le abrió una segunda situación en la que dispara.
+
+**El síntoma del símbolo que dura un instante no lo explica el acorde fantasma.** La hipótesis era
+que las notas de un acorde pegado se pintaban con el color de acorde en vez del de error. No puede
+pasar: `MIDI.noteOn` manda las notas por debajo del split a `activeBasses` y las de arriba a
+`activeMelodies`, y solo las de arriba reciben evaluación, así que las teclas que `renderKeyboard`
+pinta con `color-chord` y las que pinta con un veredicto son conjuntos que nunca se cruzan, con
+cualquier valor de split. La causa medida es otra: `Armonia.clearEvaluations`.
+
+**La hipótesis del puerto sigue sin comprobar y necesita el teclado físico.** Chromium sin cabeza
+niega el acceso MIDI entero, así que `bindDevices` nunca corre ahí. Lo que sí se comprobó con dos
+puertos simulados es que el código nuevo corre y escribe sus líneas, incluida la del error cuando la
+apertura se rechaza.
+
 ## v11.80 — 2026-08-19
 
 ### Added
