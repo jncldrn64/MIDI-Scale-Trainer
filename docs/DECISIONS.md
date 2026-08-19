@@ -2598,6 +2598,74 @@ esa es exactamente la diferencia que el ítem del BACKLOG pide cerrar.
 
 ---
 
+## 2026-08-19 — Un tema en discusión tiene dónde vivir, y de dónde salir
+
+**Contexto:** el repo sabe guardar dos estados del trabajo. Lo decidido va a este archivo, que es
+append-only. Lo parqueado va al BACKLOG del `ROADMAP.md`, y desde los PR del 2026-08-11 cada ítem
+lleva su fecha, el PR que lo trajo y una respuesta sobre su origen. **Lo que se está discutiendo no
+tiene lugar.** Un tema en debate, con parte resuelta y parte abierta, no es ninguna de las dos cosas:
+escribirlo como decisión sería declarar cerrado lo que no lo está, y parquearlo sería declararlo
+quieto cuando está avanzando. Hasta hoy eso vivía en la conversación y desaparecía con ella.
+
+**Decisión: se crea `docs/EN-DISCUSION.md`**, quinto documento canónico. El nombre dice lo que el
+archivo es y no dónde vive el contenido, y la regla operativa va a `CLAUDE.md`.
+
+**Tres reglas lo definen, y sin las tres el archivo se vuelve el problema que quiere resolver.**
+
+1. **No es una transcripción.** De cada tema se guarda su estado y no su historia, en cuatro campos
+   fijos: qué se discute, qué ya se sabe con evidencia, qué falta decidir y qué pasa si nadie decide.
+   Un pseudochat reintroduce lo que este repo lleva veinte PR evitando, documentos que solo se
+   entienden si estuviste ahí.
+2. **Salida garantizada.** Un tema sale decidido, a este archivo, o parqueado, al BACKLOG con su
+   fecha y su procedencia. No hay una tercera forma. Sin esto, en dos meses hay dos listas de
+   pendientes que se contradicen y nadie sabe cuál manda.
+3. **Contención: cinco PR sin moverse y se va al BACKLOG.** Un tema que no avanza no está en
+   discusión, está parqueado y nadie lo dijo. El número es arbitrario igual que el umbral de las 1000
+   líneas del §7, y lo que importa no es acertarlo sino que la salida exista. Cinco sale de medir el
+   ritmo real del repo con `git log --merges`: el día más cargado mergeó 13 PR y el más flojo 1, así
+   que cinco abarca desde media jornada activa hasta una semana floja.
+
+**Por qué el cuarto campo, que es el menos obvio.** "Qué pasa si nadie decide" es lo que permite
+priorizar sin discutir el tema entero: un tema cuyo costo por esperar es cero puede esperar, y uno
+que cobra en cada sesión no. Los dos casos aparecieron en el poblado inicial.
+
+**El primer ejercicio de la regla de salida se hizo al poblarlo.** De los once temas que traía la
+sesión, cinco entraron al archivo, tres fueron directo al BACKLOG, uno a la subsección de versionado,
+y dos ya estaban parqueados desde el 2026-08-11 y no se duplicaron.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-19 — Dos correcciones de método sobre cómo se descarta y cómo se pide una comprobación
+
+**Contexto:** las dos salieron de la misma sesión, las dos son errores del revisor y las dos son
+repetibles, así que no dependen de quién las cometió.
+
+**Primera: rechazar una idea por la acepción equivocada de una palabra.** El análisis por
+comportamiento se descartó usando la acepción de regla aproximada que puede fallar, cuando la
+propuesta usaba la del antivirus, análisis genérico de lo que ocurre en oposición a una base de casos
+particulares. Con esa segunda acepción la idea no solo no es riesgosa: **el motor ya la implementa**,
+porque la sensible, la dominante secundaria y el paso cromático son reglas generales sobre relaciones
+y no una lista de canciones. La objeción quedó retirada.
+
+**El criterio correcto, que reemplaza al que falló: se descarta si la complejidad supera el beneficio
+medible.** Y antes de descartar se comprueba qué quiso decir quien propuso, porque descartar por la
+acepción equivocada es rechazar otra idea, no la que estaba sobre la mesa.
+
+**Segunda: una instrucción de comprobación trae sus condiciones, no solo sus pasos.** Se pidió tocar
+ciertas notas para verificar los tres sonidos de la Fase 7 sin decir que las notas por debajo del
+split no se evalúan y por lo tanto no suenan. No era una instrucción incompleta: era una que no se
+podía seguir, y el tiempo se fue en buscar el error donde no estaba.
+
+**Las dos van a `CLAUDE.md` en forma operativa**, la primera en "Promesas y umbrales", donde vive el
+método de decidir, y la segunda en "Honestidad de estado", donde vive el método de declarar. Acá
+queda el registro de qué las produjo.
+
+**Estado:** vigente.
+
+---
+
 ### Plantilla para nuevas entradas
 
 ```

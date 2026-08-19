@@ -2,6 +2,24 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.80 — 2026-08-19
+
+### Added
+
+- `docs/EN-DISCUSION.md`: archivo nuevo, quinto canónico. Guarda lo que se está discutiendo y todavía no es ni una decisión ni un ítem parqueado, que era el único estado del trabajo que el repo no sabía representar.
+- `docs/EN-DISCUSION.md`: sus tres reglas. Una entrada trae cuatro campos fijos y no es una transcripción; un tema sale decidido o parqueado, sin tercera forma; y cinco PR sin moverse lo mandan al BACKLOG solo.
+- `docs/DECISIONS.md`: la razón del archivo, con el reparto del poblado inicial. De once temas, cinco entraron, tres fueron al BACKLOG, uno al versionado y dos ya estaban parqueados.
+- `docs/DECISIONS.md`: dos correcciones de método. Se descarta una idea si la complejidad supera el beneficio medible, no si suena riesgosa; y una instrucción de comprobación trae sus condiciones.
+- `docs/ROADMAP.md`: tres ítems de backlog sobre sonido y tiempos, y una tercera pregunta abierta en el esquema de versión, cómo se versiona un PR que no pertenece a ninguna fase.
+- `CLAUDE.md`: el orden de lectura pasa a cuatro archivos y la lista de canónicos a cinco. Las dos correcciones de método quedan en forma operativa, una en "Promesas y umbrales" y otra en "Honestidad de estado".
+- `docs/GLOSARIO.md`: el término tema en discusión, con su salida y su contención.
+
+El número cinco de la contención sale de medir el ritmo real con `git log --merges`: el día más cargado mergeó 13 PR y el más flojo 1, así que cinco abarca desde media jornada activa hasta una semana floja.
+
+Dos temas del documento de trabajo ya estaban en el BACKLOG desde el 2026-08-11 y no se duplicaron: el símbolo del veredicto que desaparece antes de tiempo, que quedó anotado con su medición, y cubrir el manejo de eventos con pruebas.
+
+La versión mostrada sigue en V11.79.
+
 ## v11.79 — 2026-08-11
 
 ### Fixed

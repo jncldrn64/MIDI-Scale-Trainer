@@ -291,6 +291,11 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   todavía no sabía. Fuente: 2026-08-11, *El feedback de veredicto suena al apretar, y el indulto no
   lo corrige*.
 
+- **tema en discusión**: lo que se está debatiendo y todavía no es ni una decisión ni un ítem
+  parqueado. Vive en `docs/EN-DISCUSION.md` con cuatro campos fijos, y sale de ahí de una de dos
+  formas: decidido a `DECISIONS.md` o parqueado al BACKLOG. Si lleva cinco PR sin moverse, se va al
+  BACKLOG solo. Fuente: 2026-08-19, *Un tema en discusión tiene dónde vivir, y de dónde salir*.
+
 ## Método
 
 - **umbral**: una alarma escrita que obliga a abrir una decisión cuando se cumple. Obliga a decidir

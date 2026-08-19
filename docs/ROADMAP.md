@@ -1278,6 +1278,35 @@ prioridad, no porque la rueda la bloquee.
   mismo PR entraron "Salida MIDI configurable" y "Program Change como petición declarada".
   **Por qué se anotó:** salió de querer que el programa sonara a piano de verdad. Se anota para que
   quede el resultado medido y nadie vuelva a intentarlo por el mismo camino.
+- **Submenús para alterar los valores y los sonidos del feedback.** Elegir entre variantes de los
+  tres sonidos que la Fase 7 entregó, y ajustar sus parámetros. La forma ya quedó preparada: en
+  `src/sonido.js` los tres salen de la constante `SONIDOS`, con frecuencia, tipo de onda, duración y
+  pico, así que agregar una variante cuesta una fila. Su hogar sale de la entrada del 2026-08-10
+  "Jerarquía de menús: el tres es techo y también es piso".
+  **Entró:** 2026-08-19, PR "add: dónde vive lo que se está discutiendo". Con ese mismo PR entraron
+  "Cada widget elige qué sonido usa" y "Ajustar los tiempos del motor desde la interfaz".
+  **Por qué se anotó:** la Fase 7 dejó la forma que lo permite y no lo implementó, por alcance.
+- **Cada widget elige qué sonido usa.** Hay una librería compartida de sonidos y cada widget decide
+  cuál usar, en vez de que cada uno traiga los suyos. Es la misma idea que la entrada del 2026-08-11
+  "Feedback de veredicto y música son dos cosas" ya declara, el sonido como superficie del sistema,
+  llevada al caso de más de un productor. Hoy el motor es el único que da feedback, así que basta con
+  que él tenga la variedad; esto importa el día que haya un segundo.
+  **Entró:** 2026-08-19, PR "add: dónde vive lo que se está discutiendo". Con ese mismo PR entraron
+  "Submenús para alterar los valores y los sonidos del feedback" y "Ajustar los tiempos del motor
+  desde la interfaz".
+  **Por qué se anotó:** salió de decidir dónde vive el feedback sonoro, con la analogía de los
+  sonidos del sistema operativo.
+- **Ajustar los tiempos del motor desde la interfaz, en vivo.** Los cuatro umbrales que gobiernan la
+  evaluación son el indulto de paso cromático, la acumulación, la retención del contexto y el error
+  visual. Tres de los cuatro ya se editan desde el menú de Opciones, `cfg-accum`, `cfg-hold` y
+  `cfg-err`; el indulto de 180 ms está fijo en `src/engine.js` y no es configurable. Ajustarlos y ver
+  el efecto en el momento es lo que permite entender qué hace cada uno, que es lo que costó la sesión
+  del acorde pegado.
+  **Entró:** 2026-08-19, PR "add: dónde vive lo que se está discutiendo". Con ese mismo PR entraron
+  "Submenús para alterar los valores y los sonidos del feedback" y "Cada widget elige qué sonido
+  usa".
+  **Por qué se anotó:** salió de intentar entender los cuatro umbrales editando el código y perder
+  tiempo en cada iteración.
 - **Cubrir el manejo de eventos con pruebas.** Hoy `tests/run.js` hace un solo `require`, el de
   `src/engine.js`, así que las 41 fixtures prueban lógica pura y nada de `src/midi.js`. El caso que
   lo justifica: el acorde detectado nunca se liberaba, porque el temporizador de liberación vivía en
@@ -1504,6 +1533,14 @@ contando como doc-only. Eso también queda por decidir.
 Cuando esto se ejecute, el punto de partida 11.xx.xx.xx se infiere de lo que ya está escrito en el
 CHANGELOG y en el resto de la documentación, contando cuántos cambios de cada tipo hubo. No hace
 falta recorrer el historial de commits.
+
+**Una tercera pregunta abierta, anotada el 2026-08-19: cómo se versiona un PR que no pertenece a
+ninguna fase.** El caso vivo es el PR que corrigió el acorde pegado, "fix: el acorde detectado nunca
+se libera": corrige un defecto, no entrega una fase, y el defecto estaba desde el primer commit del
+repositorio, así que tampoco es una fase mal implementada que se descubre después. Hoy el repo lo
+resuelve por costumbre, que es exactamente cómo se cortó la convención de títulos de Pull Request en
+el PR #49, por no estar escrita. Esta categoría necesita nombre cuando se fijen los lineamientos de
+versionado al pasar a la versión mayor siguiente.
 
 ### Crítica obligatoria del diseño de fase, y el impacto sobre lo ya implementado
 
