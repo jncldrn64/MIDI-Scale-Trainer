@@ -1278,6 +1278,44 @@ prioridad, no porque la rueda la bloquee.
   mismo PR entraron "Salida MIDI configurable" y "Program Change como petición declarada".
   **Por qué se anotó:** salió de querer que el programa sonara a piano de verdad. Se anota para que
   quede el resultado medido y nadie vuelva a intentarlo por el mismo camino.
+- **Cubrir el manejo de eventos con pruebas.** Hoy `tests/run.js` hace un solo `require`, el de
+  `src/engine.js`, así que las 41 fixtures prueban lógica pura y nada de `src/midi.js`. El caso que
+  lo justifica: el acorde detectado nunca se liberaba, porque el temporizador de liberación vivía en
+  una rama inalcanzable para las notas de bajo, y el defecto sobrevivió desde el primer commit del
+  repositorio sin que ninguna prueba lo tocara. Cubrirlo pide tres cosas que no existen: `src/midi.js`
+  cargable desde Node con su envoltura, un doble del DOM, y tiempo simulable, porque una prueba que
+  espera 2000 ms reales no sirve. Las razones viven en `DECISIONS.md`, entrada del 2026-08-11 "El
+  manejo de eventos no se cubre con fixtures todavía, y el motivo es el costo".
+  **Entró:** 2026-08-11, PR "fix: el acorde detectado nunca se libera". Con ese mismo PR entraron
+  "El veredicto de melodía se borra cuando aterriza un acorde" y "El teclado contradice al motor en
+  la nota que está sonando".
+  **Por qué se anotó:** salió de arreglar el acorde pegado y encontrar que ninguna fixture lo cubría.
+- **El veredicto de melodía se borra cuando aterriza un acorde, antes de su tiempo.** Medido el
+  2026-08-11: una nota de error muestra su veredicto y a los 300 ms ya no tiene evaluación, con
+  `errMs` en 1000. La causa está a la vista: `MIDI.triggerAccumulation` llama a
+  `Armonia.clearEvaluations` cada vez que detecta un acorde, y la acumulación son 120 ms, así que
+  cualquier veredicto de melodía vivo se borra al aterrizar el acorde. Es el síntoma que el autor
+  reportó como que el símbolo se ve un instante y desaparece antes de lo que el temporizador declara.
+  Falta decidir si limpiar las evaluaciones al detectar un contexto nuevo es lo correcto y el
+  temporizador miente, o al revés.
+  **Entró:** 2026-08-11, PR "fix: el acorde detectado nunca se libera". Con ese mismo PR entraron
+  "Cubrir el manejo de eventos con pruebas" y "El teclado contradice al motor en la nota que está
+  sonando".
+  **Por qué se anotó:** el autor lo reportó y se reprodujo al verificar el arreglo del acorde pegado.
+  No lo causaba ese defecto: se reprodujo igual antes y después.
+- **El teclado contradice al motor en la nota que está sonando.** Medido el 2026-08-11 con un acorde
+  de Do mayor activo y el universo en Fa# mayor: el motor dice `OK E (en el acorde activo) -> good` y
+  la tecla queda `color-inactive`, o sea gris. La causa son dos cosas encadenadas. Un veredicto
+  `good` se borra casi al instante, porque `MIDI.evaluateMelody` le da un temporizador de cero, así
+  que la rama de evaluaciones de la cascada deja de aplicar. Y la rama siguiente, la del preveredicto,
+  vuelve a derivar el color del universo en vez de leer el veredicto que el motor ya dio. Es el
+  síntoma que el autor reportó como que las notas alteradas no se colorean, y es el mismo ítem del
+  preveredicto que ya está en esta lista, ahora con su medición y su consecuencia visible.
+  **Entró:** 2026-08-11, PR "fix: el acorde detectado nunca se libera". Con ese mismo PR entraron
+  "Cubrir el manejo de eventos con pruebas" y "El veredicto de melodía se borra cuando aterriza un
+  acorde".
+  **Por qué se anotó:** el autor lo reportó y se reprodujo al verificar el arreglo del acorde pegado.
+  No lo causaba ese defecto: se reprodujo igual antes y después.
 - **Un widget de acompañamiento, con un propósito: liberar la mano izquierda para concentrarse en la
   melodía.** Reemplaza a los dos controles de acordes que hoy están partidos en dos, "Motor
   Automático" visible en el escenario y "Fijar Acordes" oculto a propósito. Es su propio widget

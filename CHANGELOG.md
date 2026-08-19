@@ -2,6 +2,25 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.79 — 2026-08-11
+
+### Fixed
+
+- `src/midi.js`: el acorde detectado nunca se liberaba. `triggerContextTimeout` vivía dentro de la rama que solo corre cuando la nota soltada tiene evaluación, y los bajos nunca crean una, así que la rama que limpia el acorde era inalcanzable para las notas que lo crean.
+- `src/midi.js`: el retiro de la nota de su conjunto sale del `if (ev)` y pasa a correr siempre. El indulto por paso cromático se queda adentro, que es lo único que de verdad depende de que haya evaluación.
+
+### Added
+
+- `src/midi.js`: `triggerContextTimeout` registra cuándo arma la retención, con cuántos bajos quedan, y qué pasa al vencer: si libera el contexto, si el acorde está fijado a mano o si todavía hay bajos apretados.
+- `docs/DECISIONS.md`: por qué el manejo de eventos no se cubre con fixtures todavía, y cómo se verifica el arreglo mientras tanto.
+- `docs/ROADMAP.md`: tres ítems de backlog. Cubrir el manejo de eventos con pruebas, y los dos defectos que el autor reportó, medidos y confirmados como distintos de este.
+
+El defecto está desde el primer commit del repositorio, con la misma forma. Sobrevivió 39 días y 81 pull requests porque hay que soltar todo y esperar dos segundos mirando la pantalla, y porque las 41 fixtures prueban `src/engine.js`, que no tiene la culpa.
+
+Contaminaba todo lo que venía después: con un acorde pegado, una nota fuera del universo se evalúa como correcta si pertenece a ese acorde.
+
+Los dos síntomas que el autor reportó aparte se reprodujeron idénticos antes y después del arreglo, así que este defecto no los causaba. Quedan anotados con su medición y sin resolver.
+
 ## v11.78 — 2026-08-11
 
 ### Added
