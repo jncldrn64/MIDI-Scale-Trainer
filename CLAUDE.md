@@ -4,7 +4,7 @@ Reglas que valen en cada sesión. Se leen antes de tocar nada.
 
 ## Orden de lectura
 
-Este repo no tiene `AGENTS.md`. Antes de tocar código se leen tres archivos de `docs/`, en
+Este repo no tiene `AGENTS.md`. Antes de tocar código se leen cuatro archivos de `docs/`, en
 este orden:
 
 1. `ARCHITECTURE.md`: el estado real del sistema, qué módulo vive en qué archivo y qué gaps
@@ -13,14 +13,25 @@ este orden:
    Restricciones como "no migrar a framework" y "reconstruir desde v11.0, no desde v11.5"
    viven solo acá; un agente que las saltee puede proponer justo lo que ya está descartado.
 3. `ROADMAP.md`: la fase actual y qué sigue.
+4. `EN-DISCUSION.md`: lo que se está discutiendo y todavía no es ni decisión ni ítem
+   parqueado. Va último porque es lo más volátil, y se lee igual: un tema de acá puede
+   contradecir lo que uno estaba por proponer.
 
 Recién después se toca código.
 
 ## Documentación
 
-La documentación canónica vive en `docs/` y son cuatro archivos: `ARCHITECTURE.md`,
-`ROADMAP.md`, `DECISIONS.md` y `GLOSARIO.md`. No se crea ningún archivo de documentación
-nuevo sin preguntar primero.
+La documentación canónica vive en `docs/` y son cinco archivos: `ARCHITECTURE.md`,
+`ROADMAP.md`, `DECISIONS.md`, `GLOSARIO.md` y `EN-DISCUSION.md`. No se crea ningún archivo de
+documentación nuevo sin preguntar primero.
+
+`docs/EN-DISCUSION.md` guarda lo que se está discutiendo y todavía no es ni una decisión ni un ítem
+parqueado. Se lee al empezar a trabajar, junto con los otros cuatro. Sus tres reglas viven en su
+propio encabezado y las tres son obligatorias: una entrada trae los cuatro campos, un tema sale de
+ahí decidido a `DECISIONS.md` o parqueado al BACKLOG, y un tema que lleva cinco PR sin moverse se va
+al BACKLOG solo. Sin la salida, en dos meses hay dos listas de pendientes que se contradicen. Ver
+`docs/DECISIONS.md`, entrada del 2026-08-19 "Un tema en discusión tiene dónde vivir, y de dónde
+salir".
 
 Regla de glosario: toda entrada de `docs/DECISIONS.md` que introduzca o refine un término
 escribe también su línea en `docs/GLOSARIO.md`, en el mismo PR. `DECISIONS.md` guarda por qué
@@ -257,6 +268,12 @@ violaría append-only.
 Nada se declara "funciona" o "probado" sin una corrida real. Si no se verificó, se dice
 con esas palabras.
 
+**Una instrucción de comprobación trae sus condiciones, no solo sus pasos.** Pedir que se toquen
+ciertas notas para verificar un sonido, sin decir que las notas por debajo del split no se evalúan y
+por lo tanto no suenan, no es una instrucción incompleta: es una que no se puede seguir. El costo lo
+paga quien la ejecuta, buscando el error donde no está. Antes de escribir una comprobación, la
+pregunta es qué tiene que ser verdad para que sus pasos funcionen, y eso va escrito con los pasos.
+
 Cuando se recupera contexto perdido, la regla se extiende: **una inferencia se escribe marcada como
 inferencia y con su base a la vista, nunca como hecho. Ante la duda entre inferir y declarar el
 vacío, se declara el vacío.** El modo de falla acá no es escribir algo falso creyéndolo cierto, es
@@ -287,6 +304,12 @@ El caso: el §7 de `docs/ARCHITECTURE.md` fijó `<script type="module">` como sa
 módulo desde `file://`. La corrida tarda diez segundos y lo habría matado en el momento. Ver
 `docs/DECISIONS.md`, entrada del 2026-08-11 "Los ES Modules no cargan desde `file://`, y el umbral
 deja de prescribir".
+
+**Una idea se descarta si la complejidad supera el beneficio medible, no si suena riesgosa.** Y
+antes de descartarla se comprueba qué quiso decir quien la propuso: descartar por la acepción
+equivocada de una palabra es rechazar otra idea, no la que estaba sobre la mesa. El caso vivo es el
+análisis por comportamiento, rechazado con la acepción de regla aproximada cuando la propuesta usaba
+la del antivirus, análisis genérico contra base de casos. La objeción quedó retirada.
 
 Cuando un umbral se dispara, la decisión que abre contesta tres preguntas antes de que se escriba
 nada en el ROADMAP:
