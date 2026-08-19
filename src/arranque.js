@@ -125,6 +125,14 @@ window.onload = () => {
         if (State.config.sonido) Sonido.despertar('el interruptor de sonido');
         SysLog('LAYOUT', `Feedback sonoro ${State.config.sonido ? 'encendido' : 'apagado'}. Tres sonidos: acierto, sensible y error.`);
     };
+    const chkClic = document.getElementById('cfg-clic');
+    chkClic.checked = State.config.clicTeclas;
+    chkClic.onchange = (e) => {
+        State.config.clicTeclas = e.target.checked;
+        saveConfig(); Teclado.marcarClicable();
+        SysLog('LAYOUT', `Teclas clicables ${State.config.clicTeclas ? 'encendidas' : 'apagadas'}. Apretar el ratón sobre una tecla fabrica un NOTE ON con velocidad ${MIDI.VELOCIDAD_CLIC} y soltarlo un NOTE OFF, los dos por processMsg.`);
+    };
+
     // El navegador no deja sonar nada antes del primer gesto sobre la página, y un evento MIDI
     // no cuenta como gesto. Se despierta con el primer clic o la primera tecla, una sola vez.
     const despertarUnaVez = () => {
@@ -200,6 +208,7 @@ window.onload = () => {
     SysLog('LAYOUT', 'Las cajas viven en el molde uniforme, se arrastran, se cierran y se restauran desde el menú de Widgets. El incremento 5.3 queda entregado en sus tres partes.');
     SysLog('LAYOUT', 'Zona de notas que caen: reservada y vacía sobre el teclado; el motor de notas que caen es backlog, no se crea acá.');
     SysLog('LAYOUT', 'renderKeyboard y el coloreo de teclas quedan intactos; el motor no cambia.');
+    SysLog('SYS', `Teclas clicables: ${State.config.clicTeclas ? 'encendidas' : 'apagadas'}. Se encienden en Opciones. Con el interruptor prendido, apretar el ratón sobre una tecla fabrica un mensaje MIDI y lo mete por el mismo manejador que usa el dispositivo físico: no llama al motor directamente, así que el clic ejercita el split, la acumulación de bajos y la retención del contexto igual que el teclado.`);
     SysLog('SYS', `Feedback sonoro: ${State.config.sonido ? 'encendido' : 'apagado'}. Se enciende en Opciones. Son tres sonidos de veredicto generados con osciladores, sin archivos y sin MIDI; el paso cromático no suena porque solo existe al soltar la tecla.`);
 
     // Incremento 5.3, chasis completo. Restaura el estado por instancia, ubica cada

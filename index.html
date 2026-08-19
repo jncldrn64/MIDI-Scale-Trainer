@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.79 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.81 (Inteligencia Armónica)</title>
     <link rel="stylesheet" href="src/estilos.css">
 </head>
 <body>
@@ -23,7 +23,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.79</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.81</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -62,6 +62,10 @@
                      mientras se toca, según la jerarquía de menús del 2026-08-10. Arranca
                      apagado: la app se usa con un piano que ya suena. -->
                 <div class="setting-row"><label for="cfg-sonido">Feedback sonoro</label><input type="checkbox" id="cfg-sonido"></div>
+                <!-- Teclas clicables. Arranca apagado por la misma razón que el feedback sonoro:
+                     la capa 0 no lleva controles interactivos, y encenderlo es pedir que las
+                     teclas actúen de entrada sustituta mientras dure la sesión. -->
+                <div class="setting-row"><label for="cfg-clic">Teclas clicables</label><input type="checkbox" id="cfg-clic"></div>
                 <!-- El reset de posiciones vivía acá de forma provisoria, mientras el menú de
                      widgets no existía. Ya existe, así que el reset se mudó ahí. -->
                 <hr class="menu-sep">

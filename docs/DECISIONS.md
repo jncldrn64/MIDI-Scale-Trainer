@@ -2664,6 +2664,48 @@ queda el registro de qué las produjo.
 
 **Estado:** vigente.
 
+## 2026-08-19 — El clic entra por el camino MIDI, no por el motor
+
+**Contexto:** cada comprobación de esta app exigía conectar el teclado físico. El costo está medido:
+el defecto del acorde detectado que nunca se liberaba era visible en cinco minutos con hardware a
+mano y sobrevivió desde el primer commit del repositorio, el del 2026-07-04. Y quien no tiene un
+piano no puede verificar nada.
+
+**Decisión:** las 88 teclas de la capa 0 aceptan el puntero. Apretar el ratón sobre una tecla llama
+a `MIDI.entradaSintetica`, que fabrica los tres bytes de un NOTE ON y los mete por `MIDI.processMsg`,
+que es la misma puerta por la que entra el dispositivo. Soltar hace lo mismo con un NOTE OFF. Ni el
+motor ni las salidas MIDI se tocan.
+
+**Razón:** un clic que llamara a `MIDI.evaluateMelody` probaría el motor y dejaría sin probar el
+corrimiento de estado, el split, la acumulación de bajos y la retención del contexto, que es
+exactamente donde vivió el defecto del acorde pegado. Se podría tener el clic andando y el teclado
+roto sin enterarse. Entrar por `processMsg` cuesta una función de cinco líneas y ejercita el camino
+entero. Comprobado midiendo las dos entradas sobre la misma nota: el clic escribe `MIDI: DOWN: E
+(64)`, `EVAL: OK E (en la escala) -> good` y `MIDI: UP: E (64)`, las mismas tres líneas que un
+mensaje entrado por `processMsg`, más las suyas de entrada sustituta.
+
+**Y va detrás de un interruptor, apagado de fábrica.** La entrada del 2026-08-10 declara la capa 0
+sin controles interactivos, y una tecla que responde al puntero contradice esa regla mientras esté
+encendida. Encenderlo a mano es lo que hace explícita la excepción, en vez de disolver la regla en
+silencio. Suma dos cosas: evita el clic accidental mientras se toca con el piano, y sigue la misma
+puerta que el feedback sonoro de la Fase 7, que también arranca apagado y se anuncia por el log al
+cargar, que es cómo se descubre que existe.
+
+**Una tecla clicada no es un control, es entrada sustituta.** Un control cambia una configuración o
+un estado del sistema; esta tecla produce el mismo mensaje que produce el dispositivo y no decide
+nada. Esa es la lectura por la que el interruptor encendido no rompe la regla de la capa 0: la capa
+sigue sin controles, y gana una entrada.
+
+**Un ratón toca una nota por vez, y eso es deliberado.** Apretar una segunda tecla sin soltar la
+primera suelta la primera. Así el clic no puede armar un acorde, que es una capacidad aparte y no
+la de este trabajo. La consecuencia hay que decirla: la detección de acordes no se comprueba
+clicando, se comprueba llamando a `MIDI.entradaSintetica` desde la consola, que es la misma función
+un nivel arriba del puntero.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas

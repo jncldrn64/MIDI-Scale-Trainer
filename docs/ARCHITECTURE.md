@@ -44,9 +44,9 @@ de dedos humanos, no un loop de animación a 60 fps.
 | Módulo | Responsabilidad | Toca el DOM | Vive en |
 |---|---|---|---|
 | `MathEngine` | Detección de acordes, diatonismo | No, función pura | `src/engine.js` |
-| `MIDI` | Recibe eventos hardware, actualiza `State`, dispara evaluación | Indirecto | `src/midi.js` |
+| `MIDI` | Recibe eventos del dispositivo y de la entrada sustituta, actualiza `State`, dispara evaluación | Indirecto | `src/midi.js` |
 | `Escala` | Escribe el universo activo y dibuja la fórmula | Sí | `src/escala.js` |
-| `Teclado` | Construye las 88 teclas y las pinta | Sí | `src/teclado.js` |
+| `Teclado` | Construye las 88 teclas, las pinta y las hace clicables | Sí | `src/teclado.js` |
 | `Readout` | Presenta la salida del motor | Sí | `src/readout.js` |
 | `Armonia` | Manda sobre el buffer de armonía y el de evaluaciones | Sí (botón) | `src/armonia.js` |
 | `Sonido` | Feedback de veredicto con osciladores, sin archivos ni MIDI | No | `src/sonido.js` |
@@ -67,6 +67,11 @@ mismo código que usa el navegador.
 ## 3. Flujo de evento MIDI (verificado)
 
 ```
+processMsg({data: [cmd, data1, data2]})   [única puerta de entrada]
+  → del dispositivo, vía input.onmidimessage
+  → o de MIDI.entradaSintetica(note, encendido), que es el clic sobre una tecla
+  → status 9 con data2 > 0 → noteOn; status 8, o 9 con data2 === 0 → noteOff
+
 noteOn(note, vel)
   → keysDown.add(note)
   → si note < splitNote:  activeBasses.add(note) → triggerAccumulation()
@@ -223,7 +228,9 @@ gatillo que este párrafo tenía, "o el estado se vuelve difícil de razonar", p
 
 **El umbral se cruzó y la Fase 5B ya lo bajó.** Antes, medido el
 2026-08-11: `index.html` tenía 1524 líneas totales, 126 vacías y 227 de comentario, o sea 1171 de
-código y markup. Después de la v11.78: 252 totales, 9 vacías y 27 de comentario, o sea 216. El
+código y markup. Después de la v11.78: 252 totales, 9 vacías y 27 de comentario, o sea 216. Y
+después de la v11.81, que le sumó el interruptor de teclas clicables: 256 totales, 9 vacías y 30 de
+comentario, o sea 217. El
 archivo más grande es `src/layout.js` con 304 líneas, y ninguno se acerca a las 1000. El
 gatillo se cumplió durante la Fase 5, con el trabajo visual en curso, y se decidió terminar esa
 fase antes de tocarlo. La partición es la Fase 5B del `ROADMAP.md`, entre la Fase 5 y la Fase 6.

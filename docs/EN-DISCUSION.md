@@ -39,75 +39,6 @@ así que cinco abarca desde media jornada activa hasta una semana floja. Se recu
 
 ---
 
-## Teclas clicables, con el clic entrando por el camino MIDI
-
-**Qué se discute.** Poder tocar el teclado de la pantalla con el puntero, y que ese clic genere un
-mensaje MIDI que entre por el mismo manejador que usa el dispositivo real, en vez de llamar al motor
-directamente.
-
-**Qué ya se sabe, con evidencia.** El camino existe y es corto: `MIDI.processMsg` recibe el mensaje
-y `MIDI.noteOn` y `MIDI.noteOff` son los manejadores, verificado con `grep` sobre `src/midi.js`. Un
-clic que entre por ahí ejercita los tres bytes, el corrimiento de estado, el split y la evaluación.
-El costo de no tenerlo también está medido: el defecto del acorde pegado era visible en cinco minutos
-con el teclado a mano y sobrevivió desde el primer commit del repositorio, porque cada comprobación
-exige conectar hardware.
-
-**Qué falta decidir.** Cómo se dibuja la interacción sobre la capa 0, que la entrada del 2026-08-10
-declara sin controles interactivos. Un clic sobre una tecla, ¿la convierte en control y contradice esa
-regla, o hay una lectura en que no?
-
-**Qué pasa si nadie decide.** Cada defecto del camino de eventos sigue costando una sesión con
-hardware, y los que no se noten a simple vista siguen sobreviviendo, como este.
-
-**Entró:** 2026-08-19, PR "add: dónde vive lo que se está discutiendo".
-
----
-
-## El teclado no se reconoce al recargar la página
-
-**Qué se discute.** Al recargar hay que apagar y encender el teclado físico para que vuelva a
-funcionar.
-
-**Qué ya se sabe, con evidencia.** El síntoma lo reportó el autor y no está reproducido en una
-corrida. La hipótesis tiene mecanismo y base verificable: `MIDI.bindDevices` recorre
-`access.inputs`, engancha `onmidimessage` y **nunca llama a `input.open()`**, comprobado leyendo la
-función entera. La apertura implícita puede fallar si el puerto viene de una sesión anterior que no
-se cerró, y `onstatechange` no se dispara porque el puerto ya figura como conectado. Apagar el
-teclado lo arregla porque fuerza una desconexión seguida de una conexión, que sí dispara el evento.
-
-**Qué falta decidir.** Nada de diseño: falta **comprobar** la hipótesis abriendo el puerto y
-esperando esa promesa, con el teclado conectado. Es lo único de este archivo que se cierra con una
-corrida y no con una discusión.
-
-**Qué pasa si nadie decide.** Cada sesión con hardware arranca con un ritual que nadie escribió, y el
-día que falle por otro motivo nadie va a distinguir un problema nuevo de este.
-
-**Entró:** 2026-08-19, PR "add: dónde vive lo que se está discutiendo".
-
----
-
-## Auditoría de qué quedó atrás antes de la Fase 5
-
-**Qué se discute.** El autor sospecha que el coloreo del teclado funcionaba mejor antes del rediseño
-visual, y que algo se perdió o cambió en el camino.
-
-**Qué ya se sabe, con evidencia.** Es comprobable sin discutirlo: las Fases 2, 3 y 4 tienen su
-Alcance y su Criterio de aceptación escritos en el `ROADMAP.md`, y el CHANGELOG registra qué entregó
-cada una. Contrastar eso contra lo que el motor hace hoy contesta la pregunta. Y hay al menos dos
-hallazgos recientes que apuntan en esa dirección sin ser de la Fase 5: el veredicto de melodía que se
-borra cuando aterriza un acorde y el teclado que contradice al motor en la nota que suena, los dos
-medidos el 2026-08-11 y los dos en el BACKLOG.
-
-**Qué falta decidir.** Si la auditoría es un PR propio o el trabajo previo de otro. Y qué se hace con
-lo que encuentre: si abre ítems, si reabre una fase, o si corrige en el momento.
-
-**Qué pasa si nadie decide.** La sospecha queda como sensación y cada defecto que aparezca se va a
-atribuir a la Fase 5 sin prueba, que es exactamente lo que este repo evita desde el 2026-08-09.
-
-**Entró:** 2026-08-19, PR "add: dónde vive lo que se está discutiendo".
-
----
-
 ## Fixtures con partituras de dominio público
 
 **Qué se discute.** Reemplazar o complementar las 41 fixtures con casos derivados de partituras de
@@ -143,8 +74,10 @@ de la palabra, la de regla aproximada que puede fallar. Y no está en conflicto 
 2026-08-11 "El motor no ejecuta lógica que venga de afuera": esa regla dice de dónde viene la lógica,
 no cuán general puede ser.
 
-**Qué falta decidir.** Qué casos concretos faltan. Es justamente lo que la auditoría de este mismo
-archivo puede contestar, así que los dos temas están acoplados y conviene leerlos juntos.
+**Qué falta decidir.** Qué casos concretos faltan. El acople con la auditoría se deshizo sin dar
+respuesta: la auditoría corrió el 2026-08-19 y no encontró ninguna regla de teoría perdida, sino tres
+defectos de pintado que vienen del primer commit. Así que la pregunta sigue abierta y ahora sin una
+fuente esperada que la conteste.
 
 **Qué pasa si nadie decide.** El motor se queda en las ocho reglas puras que tiene, que es un estado
 razonable y no urgente. Es el tema de este archivo con menos costo por esperar.

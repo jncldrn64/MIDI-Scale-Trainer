@@ -110,6 +110,11 @@ Esto no es código todavía: es la especificación que la Fase 3 implementa.
 antes de programarlo. Cumplido el 2026-07-23: la jerarquía de cinco pasos quedó fijada en
 `DECISIONS.md` (entrada 2026-07-23), con qué ya está en el código y qué completa la Fase 3.
 
+**Nota de auditoría (2026-08-19):** los cinco pasos siguen escritos y siguen implementados en ese
+orden. `Engine.evaluateMelodyStatus` pregunta escala o acorde, después tono conductor de dominante
+secundaria, después sensible menor, y devuelve `bad` si nada aplicó; `Engine.applyPassingTone`
+corre aparte, al soltar, sobre lo que quedó no-`good`. La fase se cumple sin cambios de forma.
+
 **Bloquea:** ninguna declarada
 
 ---
@@ -144,6 +149,18 @@ error. Además, la validación es de tres vías a la vez: la fixture pasa desde 
 autor lo ve en Chrome, y el log registra el numeral, la relación y el veredicto nota por nota,
 de modo que si la UI luego mueve el panel, la prueba ya quedó en el log.
 
+**Nota de auditoría (2026-08-19):** los cuatro puntos del Alcance se cumplen, dos de ellos con la
+forma cambiada, y el Criterio de aceptación tiene un agujero visual que no es de esta fase. Con
+Re7 sonando sobre Do Mayor el panel escribe `II7 (V del V) empuja a G`, que es la etiqueta que el
+criterio pide. El punto 4 cambió de dueño y de frecuencia: la llamada ya no vive en `UI.updateStatus`
+sino en `Readout.updateStatus`, porque el objeto `UI` se disolvió en la Fase 5B, y la línea
+`Análisis:` se escribe cuando cambia el análisis y no una vez por nota, para no repetirse. El
+veredicto sí sigue yendo al log nota por nota. El agujero: Fa# sobre ese Re7 deja de marcar error,
+que es lo que la fase prometía, pero la tecla queda gris en vez de verde, porque un veredicto `good`
+se borra con un temporizador de cero. Eso no lo rompió esta fase ni la 5: está en el código desde el
+primer commit del repositorio y ya vive en el BACKLOG como "El teclado contradice al motor en la
+nota que está sonando".
+
 **Bloquea:** Fase 4
 
 **Bloqueada por:** Fase 1
@@ -171,6 +188,13 @@ las fixtures existentes lo confirman en los casos que apliquen.
 y se loguea; su display en el panel de Análisis es alcance de la Fase 5, parqueado ahí, no se
 hizo acá. La menor devuelve "por definir", porque la teoría escrita cubre solo la agrupación
 mayor, y un acorde no diatónico no recibe función forzada.
+
+**Nota de auditoría (2026-08-19):** se cumple entero. `Engine.getTonalFunction` devuelve la función,
+`Readout.updateStatus` la escribe en `State.harmony.function` y la loguea dentro de la línea
+`Análisis:`, y once fixtures de tipo `function` la cubren. Lo que la nota de cierre dejó parqueado
+para la Fase 5 se entregó: la función se muestra en pantalla, con los cinco valores incluidos los
+dos que admiten no saber. Medido en Chromium: Sol Mayor sobre Do Mayor lee "Dominante" y Re7 lee
+"Fuera del universo".
 
 **Bloquea:** Fase 8.
 
@@ -1345,6 +1369,53 @@ prioridad, no porque la rueda la bloquee.
   acorde".
   **Por qué se anotó:** el autor lo reportó y se reprodujo al verificar el arreglo del acorde pegado.
   No lo causaba ese defecto: se reprodujo igual antes y después.
+- **La liberación del contexto también borra los veredictos de melodía vivos, y es un camino nuevo.**
+  Medido el 2026-08-19 en Chromium: con la retención a punto de vencer se toca una nota de error, la
+  tecla se pinta de rojo, y 220 ms después está gris con `errMs` en 1000. La causa es la misma
+  `Armonia.clearEvaluations` del ítem "El veredicto de melodía se borra cuando aterriza un acorde",
+  llamada esta vez desde `MIDI.triggerContextTimeout`. Lo que hay que decir es que ese segundo camino
+  no era alcanzable antes de la v11.79: hasta ese arreglo, soltar un bajo nunca armaba el
+  temporizador de retención, así que el temporizador nunca vencía y nunca limpiaba nada. El arreglo
+  del acorde pegado no causó el síntoma que el autor reportó, que se reproduce igual sin él, pero le
+  abrió una segunda situación en la que dispara. Se resuelve junto con el otro ítem, no aparte: la
+  pregunta de fondo es la misma, si limpiar las evaluaciones al cambiar de contexto es lo correcto y
+  el temporizador miente, o al revés.
+  **Entró:** 2026-08-19, PR "add: teclas clicables, el puerto que no vuelve al recargar, y la
+  auditoría de las fases 2 a 4". Con ese mismo PR entraron "Corroborar con el teclado físico que
+  abrir el puerto arregla la recarga" y "Un estilo por tipo de documento, verificable con un
+  comando".
+  **Por qué se anotó:** salió de medir, para la auditoría de las fases 2 a 4, cuánto dura de verdad
+  el símbolo del veredicto.
+- **Corroborar con el teclado físico que abrir el puerto arregla la recarga.** La v11.81 llama a
+  `input.open()` en `MIDI.bindDevices` y espera la promesa, y registra el estado y la conexión de
+  cada puerto al arrancar, que antes no se registraba. La hipótesis que eso ataca sigue sin
+  comprobar y no se puede comprobar sin el dispositivo: dice que la apertura implícita falla con un
+  puerto que quedó de una sesión anterior sin cerrar, y que `onstatechange` no rescata el caso porque
+  solo se dispara cuando algo cambia. Chromium sin cabeza no sirve para esto, comprobado el
+  2026-08-19: niega el acceso MIDI entero y `bindDevices` nunca corre, así que el log escribe
+  `ERROR: MIDI denegado` y ninguna línea de puerto. Lo que sí se comprobó, con dos puertos simulados,
+  es que el código nuevo corre y escribe sus líneas, incluida la de error cuando la apertura se
+  rechaza.
+  **Entró:** 2026-08-19, PR "add: teclas clicables, el puerto que no vuelve al recargar, y la
+  auditoría de las fases 2 a 4". Con ese mismo PR entraron "La liberación del contexto también borra
+  los veredictos de melodía vivos" y "Un estilo por tipo de documento, verificable con un comando".
+  **Por qué se anotó:** el trabajo se entregó y la comprobación pide hardware que esta sesión no
+  tiene.
+- **Un estilo por tipo de documento, verificable con un comando.** Los seis archivos de
+  documentación no se parecen entre sí. Medido el 2026-08-19: `CHANGELOG.md` tiene 422 viñetas y cero
+  negritas de apertura de párrafo; `DECISIONS.md` tiene 401 negritas de apertura y 41 viñetas;
+  `GLOSARIO.md` tiene 57 viñetas y cero tablas; `ARCHITECTURE.md` tiene una sola tabla, de ocho filas
+  de contenido, y tres viñetas. Los comandos que lo recalculan son `grep -c "^- "`, `grep -c "^\*\*"`
+  y `grep -c "^|"` sobre `CHANGELOG.md docs/*.md`. **Parte de esa disparidad es correcta y no se
+  toca:** un registro de cambios es una lista y una decisión es un argumento, así que no tienen por
+  qué escribirse igual. Lo que molesta es la disparidad adentro de un mismo archivo, porque el lector
+  no puede reconocer una entrada por su forma. Lo que falta es un estilo por tipo de documento, con
+  su comando que lo verifique, no un estilo único para todo.
+  **Entró:** 2026-08-19, PR "add: teclas clicables, el puerto que no vuelve al recargar, y la
+  auditoría de las fases 2 a 4". Con ese mismo PR entraron "La liberación del contexto también borra
+  los veredictos de melodía vivos" y "Corroborar con el teclado físico que abrir el puerto arregla la
+  recarga".
+  **Por qué se anotó:** el autor lo notó al leer los seis archivos seguidos.
 - **Un widget de acompañamiento, con un propósito: liberar la mano izquierda para concentrarse en la
   melodía.** Reemplaza a los dos controles de acordes que hoy están partidos en dos, "Motor
   Automático" visible en el escenario y "Fijar Acordes" oculto a propósito. Es su propio widget

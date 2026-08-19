@@ -120,6 +120,12 @@
 
 ## Motor
 
+- **entrada sustituta**: un mensaje MIDI que fabrica la app en vez de recibirlo de un dispositivo, y
+  que entra por el mismo manejador, `MIDI.processMsg`. Hoy la produce una sola cosa, el clic sobre
+  una tecla de la capa 0, con la función `MIDI.entradaSintetica`. No es un control: un control cambia
+  una configuración y esto produce el mismo mensaje que produce el teclado físico, así que la capa 0
+  sigue sin controles y gana una entrada. Va detrás del interruptor "Teclas clicables" de Opciones,
+  apagado de fábrica. Fuente: 2026-08-19, *El clic entra por el camino MIDI, no por el motor*.
 - **universo**: el conjunto de notas permitidas. Es el término primario también en pantalla, con
   "escala" como aclaración entre paréntesis: toda escala es un universo, no todo universo es una
   escala. Los nombres del motor, `universeType`, `universeRoot` y `universePitchesSet`, se quedan
