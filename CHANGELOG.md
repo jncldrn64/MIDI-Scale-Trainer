@@ -2,6 +2,22 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.87 — 2026-08-20
+
+### Fixed
+
+- `src/teclado.js`: el puntero a decisiones citaba "Alto de la tecla blanca" como si fuera una entrada, y no lo es. Es un párrafo dentro de la entrada "Geometría del teclado de 88 teclas, y la barra no presenta lecturas". El comentario nombra ahora la entrada y conserva el párrafo, así que la cita resuelve por los dos lados.
+
+**Sale de auditar las citas a `DECISIONS.md` contra los encabezados reales**, aplicando la regla 23
+del material original de `no-ai-slop`, que pide que una cita coincida con su fuente. De 62 punteros
+con fecha y título, 52 son exactos, 9 citan una entrada real con el título cortado en su dos puntos y
+resuelven sin ambigüedad, y este era el único que no resolvía contra ninguna entrada.
+
+Los 9 cortados no se tocaron. Dos viven en zona prohibida, una sección publicada del `CHANGELOG.md` y
+una entrada de `docs/DECISIONS.md`, que es append-only. Los otros siete resuelven bien y acortarlos
+puede haber sido deliberado, así que expandirlos es una decisión de estilo que no se toma sin el
+autor.
+
 ## v11.86 — 2026-08-20
 
 ### Added
