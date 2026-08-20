@@ -2,6 +2,40 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.89 — 2026-08-20
+
+### Fixed
+
+- Crear el contexto de audio bloqueaba el hilo principal adentro del manejador de apretar la tecla, que es el que estampa el momento de inicio. La primera nota de cada sesión se leía más larga de lo que duró y perdía el indulto por paso cromático.
+- Crear y reanudar el contexto se separan. Crear cuesta caro y no necesita permiso, así que va al arrancar si el sonido viene encendido o al encender el interruptor. Reanudar necesita un gesto y sigue colgado del primer clic o la primera tecla.
+- El aviso del chasis sale con la hora en que se escribió. Antes salía pelado y un aviso de hace cinco minutos se leía igual que uno recién puesto.
+- `sys-subtitles` recupera su rótulo. La v11.84 la vació por error: el pedido era sobre el feedback, y esa caja no tiene autor ni mensajes, así que vaciarla le sacó lo único que la identificaba.
+
+### Added
+
+- `docs/DECISIONS.md`: por qué crear y reanudar van en momentos distintos, por qué el aviso se marca con la hora en vez de caducar, y el mecanismo del error de la caja equivocada.
+- `docs/GLOSARIO.md`: los subtítulos y el feedback quedan separados por autor, que es la distinción que faltaba y que permitió confundirlas.
+
+### Changed
+
+- **La Fase 7 cierra**, con los cuatro puntos de su Criterio cubiertos.
+
+**El número que cerró el punto 3 del Criterio.** Se soltó la misma nota a los 95 ms tres veces
+seguidas en Chromium sobre `file://`.
+
+Antes, el motor midió 151, 99 y 97 ms, con el manejador en 52,5, 0,9 y 0,6 ms. Después midió 105, 99
+y 98 ms, con el manejador en 6,8, 0,8 y 0,7 ms. La primera nota dejó de tener trato distinto, que es
+lo que ese punto pedía poder comprobar.
+
+**Una regresión que el arreglo introdujo y se corrigió en el mismo trabajo.** Un contexto creado
+adentro de un gesto nace corriendo; uno creado al arrancar nace suspendido, y `resume` devuelve una
+promesa que no resuelve en el acto. Con la primera versión, el primer clic sobre una tecla dejaba de
+sonar. Se corrigió emitiendo cuando la promesa resuelve en vez de descartar el sonido.
+
+**Por qué la hora y no una etiqueta de "viejo".** "Viejo" necesita un umbral y no hay medición que
+diga cuál; inventarlo sería fijar un número sin evidencia. La hora no necesita umbral y es el mismo
+dato que el log ya estampa.
+
 ## v11.88 — 2026-08-20
 
 ### Added

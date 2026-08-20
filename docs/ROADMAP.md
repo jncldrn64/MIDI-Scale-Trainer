@@ -670,7 +670,7 @@ mueva ni cambie la cobertura.
 
 ## FASE 7: Feedback sonoro (Web Audio API)
 
-**Estado:** `pendiente`
+**Estado:** `cerrada (2026-08-20) v11.89`
 
 **Objetivo:** empezar a entrenar el oído sin mirar la pantalla, que es la brecha más grande
 que marcó el informe de campo original.
@@ -704,24 +704,23 @@ un criterio escrito después del trabajo no verifica nada:
    teclado sin cambios.
 
 **Entregado el 2026-08-11 con la v11.78**, salvo el punto 1 del Criterio, que pide comprobar de oído
-con el piano físico y no se puede hacer sin el instrumento. Por eso la fase queda `pendiente` hasta
-esa corroboración.
+con el piano físico y no se puede hacer sin el instrumento.
 
-**El punto 1 quedó cubierto el 2026-08-20.** El autor probó los tres sonidos con el ratón, sin
-conectar el teclado, y confirmó que **se distinguen** entre sí, que es lo que ese punto pide.
+**El punto 1 quedó cubierto el 2026-08-20.** El autor probó los tres sonidos con el ratón y con el
+teclado físico, y confirmó que **se distinguen** entre sí, que es lo que ese punto pide.
 
-**Y la fase no cierra igual, porque el punto 3 no se cumple en la primera nota de cada sesión.** Ese
-punto pide comprobar en el log que el veredicto llegó a `passing` al soltar una nota fuera del
-universo antes de los 180 ms. Medido el 2026-08-20 en Chromium sobre `file://`, en La menor, soltando
-Re# a los 95 ms: la primera nota evaluada de la sesión no recibe el indulto y queda `color-bad`; la
-segunda, idéntica, sí lo recibe y queda `color-passing`.
+**El punto 3 quedó cubierto el 2026-08-20 con la v11.89, y hubo que arreglar un defecto para
+llegar.** Ese punto pide comprobar en el log que el veredicto llegó a `passing` al soltar una nota
+fuera del universo antes de los 180 ms. Hasta la v11.88 la primera nota evaluada de cada sesión se
+leía más larga de lo que había durado, porque crear el contexto de audio bloqueaba el hilo principal
+adentro del manejador de apretar la tecla, que es el que estampa el momento de inicio.
 
-La causa está medida y es del propio sonido: crear el contexto de audio bloquea el hilo principal
-**107,4 ms**, y ese bloqueo ocurre adentro del camino de apretar la nota, que es el que estampa el
-momento de inicio. Con el contexto ya despierto el manejador tarda 7,7 ms y el indulto aplica. El
-detalle vive en el BACKLOG, "El contexto de audio se crea dentro del camino de la nota y se come el
-indulto". La fase queda `pendiente` hasta que ese defecto se arregle y el punto 3 se pueda comprobar
-en la primera nota.
+Se midió en Chromium sobre `file://`, soltando la misma nota a los 95 ms tres veces seguidas.
+
+Antes, el motor midió 151 ms la primera vez y 99 y 97 las siguientes, con el manejador tardando 52,5
+ms contra 0,9 y 0,6. Después midió 105, 99 y 98 ms, con el manejador en 6,8, 0,8 y 0,7. **La primera
+nota dejó de tener trato distinto**, que es lo que el punto pedía poder comprobar. El arreglo separó
+crear el contexto de reanudarlo y sacó la creación del camino de la nota.
 
 Lo entregado: `src/sonido.js` con los tres sonidos derivados de una tabla, el
 interruptor en Opciones que arranca apagado y persiste, y el disparo al apretar la tecla. Las
@@ -1570,10 +1569,14 @@ prioridad, no porque la rueda la bloquee.
   el que estampa el momento de inicio del que después se resta la duración. **A quién le pasa:** a
   quien toca con el teclado físico le pasa siempre en la primera nota, porque un evento MIDI no cuenta
   como gesto del usuario y el contexto no se despierta antes; a quien usa el ratón solo le pasa si su
-  primer clic de la sesión cae sobre una tecla. **Qué lo destraba:** despertar el contexto fuera del
-  camino de la nota. No está decidido si eso va al arranque, al encender el interruptor, o en otro
-  lado. **Bloquea el cierre de la Fase 7**, cuyo punto 3 del Criterio no se puede comprobar en la
-  primera nota mientras esto siga.
+  primer clic de la sesión cae sobre una tecla.
+  **Cerrado el 2026-08-20 con la v11.89.** Crear el contexto y reanudarlo se separaron en dos
+  funciones: crear cuesta caro y no necesita permiso del usuario, así que se hace al arrancar si el
+  sonido viene encendido o al encender el interruptor; reanudar es barato y sí necesita un gesto, así
+  que sigue colgado del primer clic o la primera tecla. Medido después: el manejador de la primera
+  nota baja de 52,5 ms a 6,8 ms, y la duración que el motor lee para una espera de 95 ms baja de 151
+  ms a 105 ms, o sea lo mismo que la segunda y la tercera. Con eso el punto 3 del Criterio de la Fase
+  7 se comprueba en la primera nota y la fase cerró.
   **Entró:** 2026-08-20, PR "doc: la Fase 7 cierra, y tres cosas que se dijeron y no llegaron a
   ningún archivo".
   **Por qué se anotó:** salió de comprobar los cuatro puntos del Criterio antes de cerrar la fase, y

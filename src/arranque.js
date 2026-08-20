@@ -122,7 +122,10 @@ window.onload = () => {
     chkSonido.onchange = (e) => {
         State.config.sonido = e.target.checked;
         saveConfig();
-        if (State.config.sonido) Sonido.despertar('el interruptor de sonido');
+        // Encender el interruptor es un clic, o sea un gesto del usuario, así que acá se puede
+        // crear y reanudar de una. Y es el momento correcto para pagar el costo de crear: está
+        // fuera del camino de la nota.
+        if (State.config.sonido) { Sonido.crear('el interruptor de sonido'); Sonido.reanudar('el interruptor de sonido'); }
         SysLog('LAYOUT', `Feedback sonoro ${State.config.sonido ? 'encendido' : 'apagado'}. Tres sonidos: acierto, sensible y error.`);
     };
     const chkClic = document.getElementById('cfg-clic');
@@ -133,15 +136,24 @@ window.onload = () => {
         SysLog('LAYOUT', `Teclas clicables ${State.config.clicTeclas ? 'encendidas' : 'apagadas'}. Apretar el ratón sobre una tecla fabrica un NOTE ON con velocidad ${MIDI.VELOCIDAD_CLIC} y soltarlo un NOTE OFF, los dos por processMsg.`);
     };
 
+    // Si el sonido viene encendido de una sesión anterior, el contexto se crea acá, al cargar.
+    // Crear no necesita gesto del usuario: el contexto nace suspendido y se queda ahí hasta que
+    // haya uno. Lo que se gana es que la primera nota no pague ese costo adentro de su manejador.
+    if (State.config.sonido) Sonido.crear('el arranque, con el sonido ya encendido');
+
     // El navegador no deja sonar nada antes del primer gesto sobre la página, y un evento MIDI
-    // no cuenta como gesto. Se despierta con el primer clic o la primera tecla, una sola vez.
-    const despertarUnaVez = () => {
-        Sonido.despertar('el primer gesto del usuario');
-        window.removeEventListener('pointerdown', despertarUnaVez);
-        window.removeEventListener('keydown', despertarUnaVez);
+    // no cuenta como gesto. Se reanuda con el primer clic o la primera tecla, una sola vez.
+    //
+    // Va en fase de captura, que corre de la ventana hacia el elemento, así que un clic sobre una
+    // tecla clicable reanuda antes de que corra el manejador de la tecla. En fase de burbuja
+    // corría después, y la primera nota clicada se quedaba muda.
+    const reanudarUnaVez = () => {
+        Sonido.reanudar('el primer gesto del usuario');
+        window.removeEventListener('pointerdown', reanudarUnaVez, true);
+        window.removeEventListener('keydown', reanudarUnaVez, true);
     };
-    window.addEventListener('pointerdown', despertarUnaVez);
-    window.addEventListener('keydown', despertarUnaVez);
+    window.addEventListener('pointerdown', reanudarUnaVez, true);
+    window.addEventListener('keydown', reanudarUnaVez, true);
 
     document.getElementById('btn-clear').onclick = () => document.getElementById('logs-container').innerHTML='';
 

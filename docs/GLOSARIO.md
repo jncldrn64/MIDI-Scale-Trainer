@@ -138,9 +138,22 @@
   el mismo motivo. No corre contra un acorde fijado a mano. Fuente: 2026-08-20, *La retención se
   re-arma con cualquier movimiento de bajos, y libera por debajo de tres*.
 - **superficie sin autor**: una caja que nadie está escribiendo. No muestra lo último que se escribió
-  como si siguiera vigente: queda vacía. El caso vivo son los subtítulos. Es la misma falla que un
-  acorde que sigue detectado sin bajos que lo sostengan. Fuente: 2026-08-20, *Una superficie sin autor
-  no muestra el último mensaje como si siguiera vigente*.
+  como si siguiera vigente. Es la misma falla que un acorde que sigue detectado sin bajos que lo
+  sostengan. **Corregido el 2026-08-20:** esta línea decía que el caso vivo eran los subtítulos, y era
+  al revés. Los subtítulos no tienen autor y por eso llevan rótulo y ningún mensaje; la caja con autor
+  y con mensaje viejo es el feedback del sistema, que se arregló marcando la hora. Fuentes: 2026-08-20,
+  *Una superficie sin autor no muestra el último mensaje como si siguiera vigente*, y 2026-08-20, *Se
+  vació la caja equivocada, y el mecanismo del error es usar el nombre de la conversación*.
+- **subtítulos del entrenamiento** (`sys-subtitles`): caja de sistema **sin autor**. Ninguna función
+  escribe ahí: el sistema de entrenamientos que va a hacerlo no existe. Muestra su rótulo y nada más,
+  para que se la reconozca en pantalla y en el menú de Widgets. **No es la caja de los avisos.**
+  Fuente: 2026-08-20, *Se vació la caja equivocada, y el mecanismo del error es usar el nombre de la
+  conversación*.
+- **feedback del sistema** (`sys-feedback`): caja de sistema **con autor**, `Feedback.avisar`, llamada
+  desde el chasis y desde MIDI. Muestra el último aviso con la hora en que se escribió, y ese aviso no
+  caduca ni se borra solo. **Es la caja de los avisos, y la que en conversación se puede confundir con
+  los subtítulos.** Fuente: 2026-08-20, *El aviso del chasis se marca con su hora, no se borra ni
+  caduca*.
 - **entrada sustituta**: un mensaje MIDI que fabrica la app en vez de recibirlo de un dispositivo, y
   que entra por el mismo manejador, `MIDI.processMsg`. Hoy la produce una sola cosa, el clic sobre
   una tecla de la capa 0, con la función `MIDI.entradaSintetica`. No es un control: un control cambia
