@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.84 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.89 (Inteligencia Armónica)</title>
     <link rel="stylesheet" href="src/estilos.css">
 </head>
 <body>
@@ -23,7 +23,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.84</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.89</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -166,15 +166,18 @@
              debajo, como fija el estándar espacial. La guía nace bajo el tercer punto de
              nacimiento y crece en vertical. El feedback muestra los avisos que genera el
              chasis, que no vienen del motor. -->
-        <!-- Los subtítulos nacen vacíos. El texto de relleno que había acá decía algo que nadie
-             sostenía: la caja lo mostraba igual sin que ningún autor estuviera escribiendo, que es
-             lo mismo que hacía el acorde detectado cuando se quedaba pegado. Ver DECISIONS,
-             2026-08-10, "Dueño de superficie: cerrar el widget apaga su efecto". No lleva
-             expiración de mensajes: el sistema de entrenamientos que va a escribir acá no existe, y
-             recetar cómo caducan sus mensajes sería prescribir sobre algo que no está. Vacía mide
-             37.2 x 13.1 px de pantalla y se sigue arrastrando, comprobado. -->
-        <div class="box syswidget" id="sys-subtitles"></div>
-        <div class="box syswidget" id="sys-feedback">Feedback del sistema · por cablear</div>
+        <!-- Los subtítulos llevan su rótulo y nada más. Ninguna función escribe acá todavía: el
+             sistema de entrenamientos que va a hacerlo no existe. El rótulo dice qué es la caja,
+             que es lo que la vuelve reconocible en pantalla y en el menú de Widgets; vaciarla del
+             todo, como quedó entre la v11.84 y la v11.88, la dejaba como un rectángulo mudo sin
+             nombre ni autor. No lleva expiración de mensajes: recetar hoy cómo caducan los mensajes
+             de un sistema que no existe sería prescribir sobre algo que no está. -->
+        <div class="box syswidget" id="sys-subtitles"><span class="widget-tag">Subtítulos del entrenamiento</span></div>
+        <!-- El feedback sí tiene autor: `Feedback.avisar` lo escribe desde el chasis y desde MIDI.
+             Nace con el aviso de que todavía no pasó nada, para que la caja diga qué es antes de
+             que el chasis tenga algo que decir. Ver DECISIONS, 2026-08-20, "El aviso del chasis se
+             marca con su hora, no se borra ni caduca". -->
+        <div class="box syswidget" id="sys-feedback"><span class="widget-tag">Feedback del sistema</span></div>
         <!-- La guía. La leyenda de colores se mudó acá desde el pie del teclado, según la
              entrada de decisiones del 2026-08-09 "Dónde vive la leyenda de colores". Cada fila
              lleva su color, su símbolo de accesibilidad, la categoría y el widget dueño, según

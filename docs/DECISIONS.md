@@ -3039,6 +3039,96 @@ El número queda congelado como línea base.
 
 ---
 
+## 2026-08-20 — El aviso del chasis se marca con su hora, no se borra ni caduca
+
+**Contexto:** `Feedback.avisar` escribe en la caja `sys-feedback` y el aviso se queda ahí sin límite.
+Un aviso de hace cinco minutos se lee igual que uno recién puesto, así que la caja lo presenta como
+si acabara de pasar.
+
+**Tres salidas posibles y por qué se eligió la tercera.** Caducar tras un tiempo declarado se
+descarta porque un aviso que se borra solo puede desaparecer antes de que el usuario lo lea. Borrarlo
+cuando ocurre lo que lo vuelve obsoleto exige saber, por cada mensaje, qué lo vuelve falso, y eso es
+un sistema general de expiración para un caso que hoy tiene seis llamadores.
+
+**Decisión: el aviso se queda y sale con la hora en que se escribió**, en formato `HH:MM:SS`, delante
+del texto.
+
+**Por qué la hora y no una etiqueta de "viejo".** "Viejo" necesita un umbral, y no hay ninguna
+medición que diga cuál: inventarlo sería fijar un número sin evidencia, que es lo que la sección
+"Promesas y umbrales" de `CLAUDE.md` prohíbe. La hora no necesita umbral y deja que el lector decida
+si le sirve. Es además el mismo dato que el log ya estampa en cada línea.
+
+**Lo que no cambia:** el aviso sigue yendo al log entero con su categoría, sin la hora repetida,
+porque el log ya la pone.
+
+---
+
+## 2026-08-20 — Se vació la caja equivocada, y el mecanismo del error es usar el nombre de la conversación
+
+**Contexto:** el PR de la v11.84 vació `sys-subtitles`. El autor había pedido vaciar el feedback. En
+la conversación la caja se nombró como "subtítulos de feedback", y el trabajo se quedó con la primera
+palabra.
+
+**Los dos hechos que lo vuelven un error y no una diferencia de criterio.** `sys-subtitles` no está
+cableado a nada: ninguna función escribe ahí, y su único contenido era el texto que decía qué era esa
+caja, así que vaciarlo no arregló nada y le sacó lo único que la identificaba. `sys-feedback` sí
+tiene autor, `Feedback.avisar`, llamado desde el chasis y desde MIDI, y ahí estaba el defecto que el
+autor describía.
+
+**Decisión: `sys-subtitles` recupera su rótulo** con la clase `widget-tag`, que es como este repo
+rotula una caja, y el arreglo del aviso viejo se aplica donde correspondía.
+
+**El mecanismo del error, que es lo que conviene que quede escrito.** Se usó la etiqueta con que la
+caja se nombró en la conversación en vez del nombre que el repo le da. El repo tiene los dos nombres
+escritos y desambiguados, el `id` en `CAJAS` y el nombre en el menú de Widgets, y **el glosario existe
+para exactamente esto**. La regla que sale: cuando una frase de la conversación nombra una caja, se
+resuelve contra `CAJAS` antes de tocar nada, porque una etiqueta hablada puede juntar dos cajas y un
+`id` no.
+
+**Y por qué el razonamiento del PR anterior no se tira.** Su entrada, "Una superficie sin autor no
+muestra el último mensaje como si siguiera vigente", sigue siendo correcta; lo que estaba mal era a
+qué caja se aplicaba. Una superficie sin autor no debe mostrar un mensaje viejo, y `sys-subtitles` no
+mostraba un mensaje: mostraba su rótulo, que es otra cosa. El aviso viejo lo tenía la caja con autor.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-20 — Crear el contexto de audio y reanudarlo son dos cosas y van en dos momentos distintos
+
+**Contexto:** con el sonido encendido, la primera nota evaluada de cada sesión se leía más larga de
+lo que había durado y perdía el indulto por paso cromático. La causa medida: crear el contexto de
+audio bloquea el hilo principal, y ese bloqueo ocurría adentro del manejador de apretar la tecla, que
+es el que estampa el momento de inicio del que después se resta la duración.
+
+**Decisión: crear y reanudar se separan.** Crear cuesta caro y no necesita permiso del navegador, así
+que se hace al arrancar cuando el sonido viene encendido, y al encender el interruptor. Reanudar es
+barato y sí necesita un gesto del usuario, así que sigue colgado del primer clic o la primera tecla.
+
+**El número que lo justifica.** Se soltó la misma nota a los 95 ms tres veces seguidas en Chromium
+sobre `file://`.
+
+Antes, el motor midió 151, 99 y 97 ms, con el manejador en 52,5, 0,9 y 0,6 ms. Después midió 105, 99
+y 98 ms, con el manejador en 6,8, 0,8 y 0,7 ms. La primera nota dejó de tener trato distinto.
+
+**No se crea al arrancar si el sonido está apagado:** quien nunca lo enciende no paga un contexto de
+audio que no pidió.
+
+**Una regresión que el arreglo introdujo y hubo que corregir en el mismo trabajo.** Un contexto
+creado adentro de un gesto del usuario nace corriendo; uno creado al arrancar nace suspendido y
+`resume` devuelve una promesa que no resuelve en el acto. Con la primera versión del arreglo, el
+primer clic sobre una tecla dejaba de sonar. Se corrigió emitiendo el sonido cuando la promesa
+resuelve en vez de descartarlo, así que el primer veredicto vuelve a sonar y la creación sigue fuera
+del camino de la nota.
+
+**Lo que no cambia:** el sonido sigue disparándose al apretar, no al soltar. La entrada del
+2026-08-11 "El feedback de veredicto suena al apretar, y el indulto no lo corrige" decidió ese
+momento y sus razones; este trabajo arregla cuánto tarda, no cuándo.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas

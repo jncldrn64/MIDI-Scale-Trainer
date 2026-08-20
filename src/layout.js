@@ -295,10 +295,22 @@ const Layout = {
 // El feedback del sistema muestra los avisos que genera el chasis. No viene del
 // motor: cablearlo a la salida del motor es trabajo posterior. Si la propia caja de
 // feedback está cerrada, el aviso igual queda en el log.
+// Cada aviso sale con la hora en que se escribió. Antes salía pelado, así que un aviso de hace
+// cinco minutos se leía igual que uno recién puesto: la caja lo mostraba como si acabara de pasar.
+//
+// De las tres salidas posibles se eligió marcar el aviso en vez de borrarlo, porque un aviso que se
+// borra solo puede desaparecer antes de que el usuario lo lea. Y se marca con la hora y no con una
+// etiqueta de "viejo", porque "viejo" necesita un umbral y no hay ninguna medición que diga cuál:
+// inventarlo sería fijar un número sin evidencia. La hora no necesita umbral y el lector decide.
+// Ver DECISIONS, 2026-08-20, "El aviso del chasis se marca con su hora, no se borra ni caduca".
+//
+// No se agrega expiración de mensajes ni nada general: esto es el chasis avisando, y es el único
+// caso que existe. El aviso sigue yendo al log entero, con su categoría, como antes.
 const Feedback = {
     avisar(texto) {
+        const hora = new Date().toTimeString().slice(0, 8);
         const el = document.getElementById('sys-feedback');
-        if (el) el.textContent = texto;
+        if (el) el.textContent = `${hora} · ${texto}`;
         SysLog('LAYOUT', `Feedback: ${texto}`);
     }
 };
