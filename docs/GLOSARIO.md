@@ -315,6 +315,17 @@ verificó con `grep` contra el archivo antes de escribirse acá.
 
 ## Método
 
+- **estado observable**: lo que vive en `State` y lo que persiste en `localStorage`. Es el disparador
+  de la regla de verbosidad: una función que lo escribe deja su línea de `SysLog` en el mismo cuerpo.
+  Lo que queda afuera es lo local a una función y lo que se deriva sin guardarse. Fuente: 2026-08-20,
+  *La verbosidad del registro es una regla con disparador, no una intención*.
+- **erosión de la verbosidad**: que el registro se vuelva menos completo con cada PR, porque el
+  código nuevo lo trae solo si alguien se acuerda de pedirlo. Se mide contra la línea base de 94
+  llamadas a `SysLog` del 2026-08-20: si un PR agrega funciones que escriben estado y ese total no se
+  mueve, está pasando. Fuente: la misma entrada.
+
+
+
 - **umbral**: una alarma escrita que obliga a abrir una decisión cuando se cumple. Obliga a decidir
   y no decide: no receta un mecanismo. El único vivo es el de las 1000 líneas de código y markup de
   `index.html`, en el §7 de `ARCHITECTURE.md`. Fuente: 2026-08-11, *Los ES Modules no cargan desde

@@ -86,7 +86,7 @@ empeorado con el rediseño visual.
 **Qué se discute.** Con el teclado ya encendido, la app no lo detecta al cargar. Hay que apagarlo y
 encenderlo con la página corriendo.
 
-**Qué ya se sabe, con evidencia. Lo valioso son cuatro hipótesis descartadas con prueba.**
+**Qué ya se sabe, con evidencia. Lo valioso son cinco hipótesis descartadas con prueba.**
 
 - No es que el puerto quede tomado por la pestaña anterior: cerrar Chrome entero no cambia nada.
 - No es lentitud de la enumeración: el puerto virtual del sistema aparece en el mismo segundo.
@@ -94,19 +94,78 @@ encenderlo con la página corriendo.
 - No es algo que este proyecto haya introducido. El arranque MIDI no se tocó en toda la serie:
   `git log -S"requestMIDIAccess"` devuelve dos commits, el primero del repositorio y el de la
   partición, que lo movió de archivo sin cambiarlo.
+- **Y no es falta de reintentos, que era la única salida propuesta del lado de la app.** El registro
+  de arranque de la versión 3.0 del programa, anterior a este repositorio, trae estas dos líneas:
+
+  ```
+  MIDI DEVICES_FOUND         {"count":1,"devices":["Midi Through Port-0"]}
+  MIDI DEVICE_MONITOR_STARTED {"interval":1000,"timeout":5000}
+  ```
+
+  La v3.0 reconsultaba los dispositivos cada segundo durante cinco, y el CASIO tampoco aparecía:
+  un solo puerto y es el virtual del sistema, idéntico al síntoma de hoy. De ahí salen dos cosas.
+  **El defecto es de arrastre**, anterior a este repositorio y anterior a la reconstrucción, así
+  que no es regresión de ningún PR de esta serie. Y **reintentar la enumeración no resuelve nada**,
+  que es justo lo que alguien va a programar primero si este dato no está escrito.
 
 Y dos cosas más quedaron comprobadas por el camino: el enganche del manejador funciona, y los puertos
 que sí aparecen se abren bien, con su línea de apertura explícita desde la v11.81.
 
 **Qué falta decidir.** Nada del lado de la app hasta saber la causa, y averiguarla queda fuera de
 alcance: apunta al navegador o a una actualización del sistema, ninguno de los dos cosa de este repo.
-La pregunta abierta es qué corrida separaría esas dos.
+La pregunta abierta es qué corrida separaría esas dos. Con la quinta hipótesis descartada, la
+sospecha del sistema gana peso: si el síntoma es el mismo en la v3.0 y hoy, con dos programas
+distintos, lo que no cambió entre los dos es la máquina.
 
 **Qué pasa si nadie decide.** El autor sigue apagando y encendiendo el teclado. Es una molestia
 conocida, con solución conocida, y desde la v11.82 la app la dice en pantalla en vez de quedarse
 muda.
 
 **Entró:** 2026-08-20, PR "fix: el split se lee dos veces, y el fallo mudo cuando no hay teclado".
+
+---
+
+## El formato del registro, y una razón que se calcula dos veces
+
+**Qué se discute.** Dos cosas que van juntas. Qué forma tiene una línea de registro, y qué hacer con
+la razón que el log imprime, que hoy se calcula aparte del motor.
+
+**Qué ya se sabe, con evidencia.** El registro de la versión 3.0 del programa y el de hoy son de dos
+clases distintas:
+
+```
+v3.0   MIDI DEVICES_FOUND {"count":1,"devices":["Midi Through Port-0"]}
+hoy    MIDI: Puerto de entrada "Midi Through Port-0" (id 1A0C…): estado connected…
+```
+
+El de la v3.0 separa nombre de evento y datos, así que se puede buscar por evento y comparar dos
+corridas de forma automática. El de hoy es prosa: explica mejor el porqué y se compara peor. Los dos
+sirven para cosas distintas y el repo tiene uno solo.
+
+Y la mitad que falta ya está construida sin usarse: `SysLog(cat, msg, data = null)` acepta un tercer
+parámetro que serializa a JSON en su propia línea, y de las 90 llamadas que hay fuera de `src/log.js`
+lo usan **cero**. Ese conteo hay que hacerlo leyendo las llamadas: contar comas con `grep` da tres
+falsos positivos, porque tres líneas de `src/layout.js` llevan plantillas de texto anidadas con comas
+adentro.
+
+Y la parte urgente, comprobada enfrentando las dos cascadas: en `MIDI.evaluateMelody` la razón que el
+log imprime se deriva con su propio encadenamiento de condiciones, mientras `Engine.evaluateMelodyStatus`
+deriva el veredicto con el suyo. Son dos implementaciones de la misma lógica en dos archivos. Hoy
+coinciden. El día que el motor cambie una regla, el log va a mentir y ninguna fixture lo va a notar:
+`grep -rn "razon" tests/` no devuelve nada, porque las fixtures prueban el veredicto y no su
+explicación.
+
+**Qué falta decidir.** Dos preguntas. ¿El registro pasa a llevar nombre de evento y datos separados
+además de la prosa, o se queda como está? Y ¿el motor devuelve la razón junto con el veredicto, en
+vez de que quien registra la reconstruya? La segunda tiene una restricción que la primera no: el
+motor corre en Node desde `tests/run.js` y no puede depender de nada del navegador, así que devolver
+una razón es cambiar su forma de retorno y eso toca las 41 fixtures.
+
+**Qué pasa si nadie decide.** La razón del registro puede divergir del motor sin que nada lo detecte,
+que es el peor modo de falla de un registro: uno que miente se cree más que uno que falta.
+
+**Entró:** 2026-08-20, PR "doc: la regla de verbosidad del log, y el reintento de puertos que ya se
+probó".
 
 ---
 

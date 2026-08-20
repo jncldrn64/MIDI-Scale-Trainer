@@ -323,6 +323,65 @@ mecanismo, así que no repiten el error que corrigen. Este es el protocolo míni
 el criterio para promover un ítem del BACKLOG a fase y el de reabrir una fase cerrada, es deuda de
 método: los dos ítems están anotados en el BACKLOG de `docs/ROADMAP.md`.
 
+## Verbosidad del registro
+
+El código de esta app es ultra verboso por consola, y hasta el 2026-08-20 eso no estaba escrito en
+ningún lado: dependía de que cada prompt lo pidiera. Dos disparadores, los dos mecánicos, para que
+la próxima sesión los cumpla sin que nadie se lo recuerde.
+
+**1. Toda función que escriba estado observable deja su línea de `SysLog` en el mismo cuerpo, y esa
+línea dice qué cambió, de qué a qué, y por qué.** Estado observable es lo que vive en `State` y lo
+que persiste en `localStorage`. El disparador es la escritura, no el criterio de quien escribe: si
+la función asigna a `State.algo`, o llama a `add`, `delete`, `clear` o `set` sobre algo de `State`,
+la línea se gana su lugar. Se comprueba enfrentando dos conteos por archivo:
+
+```sh
+for f in src/*.js; do
+  esc=$(grep -cE "State\.[a-zA-Z.]+ *=|State\.[a-zA-Z.]+\.(add|delete|clear|set)\(" "$f")
+  log=$(grep -c "SysLog" "$f")
+  printf "%-18s escrituras a State: %-3s  SysLog: %s\n" "$(basename $f)" "$esc" "$log"
+done
+```
+
+Un archivo con escrituras y cero `SysLog` es una violación segura. Que los dos números se parezcan no
+prueba que la regla se cumpla, así que el comando detecta el caso peor y no certifica el bueno.
+
+**La excepción es `src/engine.js`, y es la única.** El motor es puro y corre en Node desde
+`tests/run.js`, donde `SysLog` no existe. No escribe `State` ni nada más, así que la regla no lo
+alcanza: quien llama al motor registra lo que el motor devolvió.
+
+**2. Una razón que el registro imprime no se recalcula: viene de quien tomó la decisión.** Si una
+línea de log explica por qué una decisión salió como salió, y la decisión la tomó otra función, la
+razón viaja con la decisión en vez de reconstruirse en el punto donde se imprime. Es la misma forma
+que la entrada del 2026-08-20 "Nada que decida el destino de un evento se recalcula después de que el
+evento ocurrió", aplicada a la explicación en vez de al destino. El disparador también es mecánico:
+dos cascadas de condiciones sobre los mismos datos, en dos archivos, son una sola cascada mal puesta.
+
+**Por qué existe esta regla, con su caso.** El defecto del split que se leía dos veces vivió desde el
+primer commit del repositorio y costó dos sesiones, y la razón de que sobreviviera tanto es que **no
+dejaba rastro**: la nota que fallaba no producía ninguna línea al soltarse, y una línea que falta no
+se ve. Lo mismo con `Armonia.clearEvaluations`, que borra todos los veredictos vivos sin escribir
+nada, y por eso el símbolo que desaparecía antes de tiempo se atribuyó al rediseño visual durante
+semanas. La verbosidad no es prolijidad: es lo único que hace visible un defecto que no rompe nada a
+la vista.
+
+Y una regla que ya existía a medias: la entrada del 2026-07-25 "El log como canal de validación"
+obliga a registrar **toda salida del motor**. No alcanzó, por dos motivos que conviene decir. Cubre
+lo que el motor devuelve y no lo que cualquier función cambia, y vive en `DECISIONS.md`, que se lee
+para entender por qué algo es como es, no para saber qué hacer al escribir código. Esta sección la
+generaliza y la pone donde se aplica.
+
+**Línea base del 2026-08-20**, para que una sesión futura compare en vez de creer. 94 llamadas a
+`SysLog` con categoría literal, repartidas en `LAYOUT` 61, `MIDI` 14, `SYS` 8, `MATH` 6, `ERROR` 3 y
+`EVAL` 2, o sea 72 de sistema contra 22 musicales. Se recuenta con:
+
+```sh
+grep -o "SysLog('[A-Z]*'" src/*.js | sed "s/.*SysLog(//" | sort | uniq -c | sort -rn
+```
+
+El número sube con cada PR de código. Si un PR agrega funciones que escriben `State` y este total no
+se mueve, la regla se está erosionando otra vez.
+
 ## Flujo de trabajo
 
 Se trabaja vía Pull Request. Si `push`, `branch` o `PR` devuelve `403`, se para y se avisa

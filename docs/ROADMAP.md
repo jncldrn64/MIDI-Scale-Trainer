@@ -1422,6 +1422,33 @@ prioridad, no porque la rueda la bloquee.
   los veredictos de melodía vivos" y "Corroborar con el teclado físico que abrir el puerto arregla la
   recarga".
   **Por qué se anotó:** el autor lo notó al leer los seis archivos seguidos.
+- **Dejar el código conforme a la regla de verbosidad.** La regla se escribió el 2026-08-20 en
+  `CLAUDE.md`, sección "Verbosidad del registro", y este ítem es el trabajo de cumplirla en lo que ya
+  está escrito. Medido ese día con el comando que la propia regla trae: `src/armonia.js` tiene cuatro
+  escrituras a `State` y cero llamadas a `SysLog`, y `src/widgets.js` tiene una y cero. Los dos son
+  violaciones seguras. El caso que más importa es `Armonia.clearEvaluations`, que borra todos los
+  veredictos vivos sin escribir nada, y por eso el símbolo que desaparecía antes de tiempo se
+  atribuyó al rediseño visual hasta que se lo midió. El resto de los archivos tiene las dos columnas
+  distintas de cero, que no prueba que cumplan: el comando detecta el caso peor y no certifica el
+  bueno, así que hace falta leer función por función.
+  **Entró:** 2026-08-20, PR "doc: la regla de verbosidad del log, y el reintento de puertos que ya se
+  probó". Con ese mismo PR entró "La razón que el log imprime se calcula dos veces".
+  **Por qué se anotó:** la regla y su cumplimiento son dos PR a propósito, para que la regla no quede
+  sin revisar debajo de un diff de código.
+- **La razón que el log imprime se calcula dos veces, y puede mentir sin que nada lo note.** En
+  `MIDI.evaluateMelody` la razón que sale en la línea `EVAL` se deriva con su propio encadenamiento de
+  condiciones, mientras `Engine.evaluateMelodyStatus` deriva el veredicto con el suyo. Son dos
+  implementaciones de la misma lógica en dos archivos. **Comprobado el 2026-08-20: hoy coinciden**,
+  enfrentando las dos cascadas caso por caso. **El riesgo declarado:** el día que el motor cambie una
+  regla, el log va a explicar el veredicto con la regla vieja, y ninguna fixture lo va a notar porque
+  ninguna prueba la explicación. `grep -rn "razon" tests/` no devuelve nada. Un registro que miente se
+  cree más que uno que falta, así que el modo de falla es peor que el hueco. La forma de arreglarlo no
+  está decidida y se discute en `docs/EN-DISCUSION.md`, "El formato del registro, y una razón que se
+  calcula dos veces": hacer que el motor devuelva la razón cambia su forma de retorno y toca las 41
+  fixtures.
+  **Entró:** 2026-08-20, PR "doc: la regla de verbosidad del log, y el reintento de puertos que ya se
+  probó". Con ese mismo PR entró "Dejar el código conforme a la regla de verbosidad".
+  **Por qué se anotó:** salió de buscar el caso concreto que hace urgente la regla de verbosidad.
 - **Un widget de acompañamiento, con un propósito: liberar la mano izquierda para concentrarse en la
   melodía.** Reemplaza a los dos controles de acordes que hoy están partidos en dos, "Motor
   Automático" visible en el escenario y "Fijar Acordes" oculto a propósito. Es su propio widget

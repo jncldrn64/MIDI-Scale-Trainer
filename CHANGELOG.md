@@ -2,6 +2,33 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.83 — 2026-08-20
+
+### Added
+
+- `CLAUDE.md`: la sección "Verbosidad del registro", con dos disparadores mecánicos. Toda función que escriba estado observable deja su línea de `SysLog` en el mismo cuerpo, y una razón que el registro imprime no se recalcula, viene de quien tomó la decisión.
+- La regla trae su línea base para que una sesión futura compare en vez de creer: 94 llamadas a `SysLog` con categoría literal, 72 de sistema contra 22 musicales, con el comando que las recuenta.
+- `docs/DECISIONS.md`: por qué la verbosidad pasa a ser regla con disparador y no intención, con el caso que la justifica y con la regla de 2026-07-25 que ya la contenía a medias.
+- `docs/EN-DISCUSION.md`: la quinta hipótesis descartada del teclado que no se detecta, y el tema del formato del registro con la razón que se calcula dos veces.
+- `docs/ROADMAP.md`: dejar el código conforme a la regla, y la razón duplicada del registro como ítem propio con su riesgo declarado.
+- `docs/GLOSARIO.md`: estado observable y erosión de la verbosidad.
+
+**La v3.0 ya había probado el reintento de puertos, y no sirvió.** Su registro de arranque trae un
+monitor que reconsultaba los dispositivos cada segundo durante cinco, y el teclado tampoco aparecía:
+un solo puerto y es el virtual del sistema, idéntico al síntoma de hoy. De ahí salen dos cosas. El
+defecto es de arrastre, anterior a este repositorio, así que no es regresión de ningún PR de esta
+serie. Y reintentar la enumeración no resuelve nada, que es lo que alguien iba a programar primero.
+
+**Una regla que ya existía a medias.** La entrada del 2026-07-25 "El log como canal de validación"
+obliga a registrar toda salida del motor. No alcanzó por dos motivos: cubre lo que el motor devuelve
+y no lo que cualquier función cambia, y vive en `DECISIONS.md`, que se lee para entender por qué algo
+es como es, no para saber qué hacer al escribir código.
+
+**Este PR escribe la regla y no la implementa.** Lo que falta para que el código la cumpla quedó
+medido y anotado en el BACKLOG: `src/armonia.js` con cuatro escrituras a `State` y cero `SysLog`, y
+`src/widgets.js` con una y cero. La versión mostrada no se toca, que es lo que corresponde a un PR
+doc-only.
+
 ## v11.82 — 2026-08-20
 
 ### Fixed

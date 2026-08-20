@@ -2780,6 +2780,59 @@ el teclado porque es lo que el autor comprobó que funciona, y es lo único que 
 
 ---
 
+## 2026-08-20 — La verbosidad del registro es una regla con disparador, no una intención
+
+**Contexto:** el código de esta app es ultra verboso por consola desde siempre, y hasta hoy eso no
+estaba escrito en ningún archivo operativo. Dependía de que cada prompt lo pidiera, y por eso se
+erosiona: un PR agrega funciones nuevas y el registro aparece solo si alguien se acuerda. El autor
+tuvo que recordarlo, que es la señal de que la erosión ya pasó.
+
+**Y ya había una regla, que no alcanzó.** La entrada del 2026-07-25 "El log como canal de validación:
+toda salida del motor se registra, se muestre o no" obliga a registrar lo que el motor devuelve.
+Falló por dos motivos, los dos verificables. Cubre lo que el motor **devuelve**, no lo que cualquier
+función **cambia**: `Armonia` escribe cuatro veces sobre `State` y no tiene una sola llamada a
+`SysLog`. Y vive en `DECISIONS.md`, que se lee para entender por qué algo es como es, no para saber
+qué hacer al escribir código.
+
+**Decisión: la regla se generaliza y se muda a `CLAUDE.md`, con dos disparadores mecánicos.** El
+primero es que toda función que escriba estado observable deja su línea en el mismo cuerpo, diciendo
+qué cambió, de qué a qué y por qué. El segundo es que una razón que el registro imprime no se
+recalcula, viene de quien tomó la decisión.
+
+**Razón de que los disparadores sean mecánicos y no de criterio.** "Sé verboso" no gobierna nada:
+el primero que tenga apuro decide que su caso no lo necesitaba. Un disparador que se activa por lo
+que el código hace, y no por lo que alguien reconozca, es el mismo patrón que la sección "Promesas y
+umbrales" ya usa para las frases que nombran una API. En los dos casos el motivo es igual: si el
+disparador depende de reconocer la intención, no atrapa justo el caso que importa.
+
+**El caso que la justifica, y sin el caso la regla se lee como manía.** El defecto del split que se
+leía dos veces vivió desde el primer commit del repositorio y costó dos sesiones. Sobrevivió tanto
+porque no dejaba rastro: la nota que fallaba no producía ninguna línea al soltarse, y una línea que
+falta no se ve. Y `Armonia.clearEvaluations` borra todos los veredictos vivos sin escribir nada, por
+lo que el símbolo que desaparecía antes de tiempo se atribuyó al rediseño visual durante semanas,
+hasta que se lo midió.
+
+**El segundo disparador tiene su caso propio, y está vivo hoy.** En `MIDI.evaluateMelody`, la razón
+que el log imprime se calcula con su propia cascada de condiciones, en vez de venir del motor junto
+con el veredicto. Son dos implementaciones de la misma lógica en dos archivos. Hoy coinciden,
+comprobado enfrentándolas; el día que el motor cambie una regla, el log va a mentir y ninguna
+fixture lo va a notar, porque las fixtures prueban el veredicto y no su explicación:
+`grep -rn "razon" tests/` no devuelve nada.
+
+**Lo que esta entrada no hace:** dejar el código conforme. Eso es trabajo de código y queda anotado
+en el BACKLOG con su medición, junto con la razón duplicada. Escribir la regla y cumplirla son dos
+PR, y mezclarlos dejaría la regla sin revisar debajo de un diff de código.
+
+**Alcance y su única excepción:** `src/engine.js` queda afuera. Es puro y corre en Node desde
+`tests/run.js`, donde `SysLog` no existe, y no escribe estado. Quien llama al motor registra lo que
+el motor devolvió.
+
+**Estado:** vigente. Generaliza la entrada del 2026-07-25 "El log como canal de validación: toda
+salida del motor se registra, se muestre o no", que queda como estaba y sigue valiendo para la salida
+del motor.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas
