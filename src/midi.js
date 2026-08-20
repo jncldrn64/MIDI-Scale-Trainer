@@ -130,7 +130,7 @@ const MIDI = {
     noteOn(note, vel) {
         State.midi.keysDown.add(note); 
         SysLog('MIDI', `DOWN: ${getNoteStr(note).name} (${note})`);
-        if(note < State.config.splitNote) { State.midi.activeBasses.add(note); this.triggerAccumulation(); }
+        if(note < State.config.splitNote) { State.midi.activeBasses.add(note); this.triggerAccumulation(); this.triggerContextTimeout('se apretó un bajo'); }
         else { State.midi.activeMelodies.add(note); this.evaluateMelody(note); }
         Teclado.renderKeyboard(); Readout.updateStatus();
     },
@@ -177,7 +177,7 @@ const MIDI = {
         // el temporizador de liberación y el acorde detectado se quedaba pegado para siempre.
         if (isBass) {
             State.midi.activeBasses.delete(note);
-            this.triggerContextTimeout();
+            this.triggerContextTimeout('se soltó un bajo');
         } else {
             State.midi.activeMelodies.delete(note);
             if (ev && ev.status === 'good') {
@@ -197,16 +197,33 @@ const MIDI = {
             }, State.config.accumMs); 
         }
     },
-    triggerContextTimeout() {
+    // La retención se re-arma con cualquier movimiento de bajos, apretar o soltar, así que mide el
+    // tiempo desde que la mano izquierda se quedó quieta y no desde el último bajo soltado. Antes se
+    // armaba solo al soltar: quien soltaba unos bajos y apretaba otros dejaba el reloj corriendo
+    // desde el soltado viejo, y al vencer encontraba bajos apretados y no liberaba nada.
+    //
+    // Y libera con menos de tres bajos apretados, no con cero. Ese número no es un umbral nuevo: es
+    // el mismo mínimo y por el mismo motivo que `Engine.detectChord`, que abre con
+    // `if (notesArray.length < 3) return null`. Con dos notas no hay acorde que sostener, así que un
+    // acorde que sigue vigente con dos bajos apretados está vigente por inercia.
+    //
+    // Las dos mitades se necesitan y por eso van juntas. Re-armar sin bajar el umbral deja el acorde
+    // pegado igual, medido: con dos bajos nuevos apretados sobrevivía 4800 ms. Y bajar el umbral sin
+    // re-armar rompería el reacomodo de dedos, porque soltar una nota de tres arrancaría un reloj
+    // que nadie reinicia al volver a apretarla. Re-armando, ese gesto tiene la ventana entera para
+    // volver a tres. Ver DECISIONS, 2026-08-20, "La retención se re-arma con cualquier movimiento de
+    // bajos, y libera por debajo de tres".
+    triggerContextTimeout(motivo) {
         if(State.timers.contextHold) clearTimeout(State.timers.contextHold);
-        SysLog('MATH', `Retención armada: el contexto se libera en ${State.config.holdMs} ms si no queda ningún bajo apretado. Bajos activos ahora: ${State.midi.activeBasses.size}.`);
+        SysLog('MATH', `Retención re-armada porque ${motivo}: el contexto se libera en ${State.config.holdMs} ms si para entonces quedan menos de 3 bajos apretados. Bajos activos ahora: ${State.midi.activeBasses.size}.`);
         State.timers.contextHold = setTimeout(() => {
-            if(!State.harmony.isLocked && State.midi.activeBasses.size === 0) {
+            if(!State.harmony.isLocked && State.midi.activeBasses.size < 3) {
                 const c = State.harmony.chord;
+                const bajos = State.midi.activeBasses.size;
                 State.harmony.chord = null; Armonia.clearEvaluations(); Teclado.renderKeyboard(); Readout.updateStatus();
-                SysLog('MATH', `Contexto liberado tras ${State.config.holdMs} ms: ${c ? getNoteStr(c.rootPC).name + c.type : 'no había acorde'}. El motor vuelve a evaluar solo contra el universo.`);
+                SysLog('MATH', `Contexto liberado tras ${State.config.holdMs} ms sin movimiento: ${c ? getNoteStr(c.rootPC).name + c.type : 'no había acorde'}. Quedaban ${bajos} bajo(s) apretado(s), menos de los 3 que hacen falta para formar un acorde. El motor vuelve a evaluar solo contra el universo.`);
             } else {
-                SysLog('MATH', `Retención vencida y el contexto se queda: ${State.harmony.isLocked ? 'el acorde está fijado a mano' : `todavía hay ${State.midi.activeBasses.size} bajo(s) apretado(s)`}.`);
+                SysLog('MATH', `Retención vencida y el contexto se queda: ${State.harmony.isLocked ? 'el acorde está fijado a mano' : `todavía hay ${State.midi.activeBasses.size} bajo(s) apretado(s), suficientes para sostener un acorde`}.`);
             }
         }, State.config.holdMs); 
     },

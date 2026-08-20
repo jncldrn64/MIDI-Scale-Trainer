@@ -1449,6 +1449,32 @@ prioridad, no porque la rueda la bloquee.
   **Entró:** 2026-08-20, PR "doc: la regla de verbosidad del log, y el reintento de puertos que ya se
   probó". Con ese mismo PR entró "Dejar el código conforme a la regla de verbosidad".
   **Por qué se anotó:** salió de buscar el caso concreto que hace urgente la regla de verbosidad.
+- **La estrategia por contenido para soltar el contexto, con su condición de reapertura escrita.** Una
+  nota de bajo que no pertenece al acorde activo es evidencia directa de que el acorde cambió, y hoy
+  esa evidencia se descarta: el motor la tiene y no la usa. La estrategia sería tomarla como
+  disparador de un desvanecimiento gradual del acorde, y soltarlo del todo al detectar otro. **Perdió
+  contra la estrategia por movimiento el 2026-08-20**, comparada con un boceto y no discutiendo,
+  porque solo se separa de ella en casos que hay que forzar. Las razones viven en `DECISIONS.md`,
+  entrada de ese día "La retención se re-arma con cualquier movimiento de bajos, y libera por debajo
+  de tres". **La condición que la reabre, medida y reproducible:** que tres o más bajos que no forman
+  ningún acorde conserven el anterior. Reproducido el 2026-08-20 en Chromium con las teclas
+  clicables: se detecta Do mayor, se sueltan las tres notas, se aprieta el racimo Do#-Re-Mib, y a los
+  2600 ms el readout sigue diciendo Do mayor, con `⚠️ Acorde no reconocido` en el log. Ahí el conteo
+  de bajos no alcanza y hace falta mirar qué notas son, que es justo lo que esta estrategia hace.
+  **Entró:** 2026-08-20, PR "fix: la retención se re-arma con cualquier movimiento de bajos, y los
+  subtítulos se vacían". Con ese mismo PR entró "Una señal visual de que las cajas se arrastran".
+  **Por qué se anotó:** salió del boceto que comparó las dos estrategias, y se anota con su condición
+  de reapertura para que no vuelva por gusto ni se pierda por olvido.
+- **Una señal visual de que las cajas se arrastran.** Hoy no hay ninguna: las siete instancias de
+  `CAJAS` se mueven con el puntero y nada en pantalla lo dice hasta que alguien prueba. El cursor ya
+  cambia a `grab` sobre `.box` y a `grabbing` mientras se arrastra, así que la señal existe pero
+  aparece recién con el puntero encima y no se ve de lejos. Falta algo al pasar el ratón por encima.
+  **Sin decidir:** qué, y contra qué reglas. Un color nuevo choca con la paleta de veredicto, que
+  tiene seis hexadecimales reservados, y un símbolo nuevo choca con los seis de la leyenda. Queda un
+  cambio de borde, de fondo o de elevación, ninguno de los tres decidido.
+  **Entró:** 2026-08-20, PR "fix: la retención se re-arma con cualquier movimiento de bajos, y los
+  subtítulos se vacían". Con ese mismo PR entró "La estrategia por contenido para soltar el contexto".
+  **Por qué se anotó:** el autor lo pidió al notar que nada indica que las cajas sean arrastrables.
 - **Un widget de acompañamiento, con un propósito: liberar la mano izquierda para concentrarse en la
   melodía.** Reemplaza a los dos controles de acordes que hoy están partidos en dos, "Motor
   Automático" visible en el escenario y "Fijar Acordes" oculto a propósito. Es su propio widget

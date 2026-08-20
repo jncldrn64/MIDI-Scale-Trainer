@@ -2,6 +2,41 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.84 — 2026-08-20
+
+### Fixed
+
+- El acorde detectado podía quedarse vigente sin límite. `MIDI.triggerContextTimeout` se llamaba solo al soltar un bajo, así que quien soltaba unos y apretaba otros dejaba el reloj corriendo desde el soltado viejo, y al vencer encontraba bajos apretados y no liberaba nada.
+- La retención se re-arma ahora con cualquier movimiento de bajos, apretar o soltar, así que mide el tiempo desde que la mano izquierda se quedó quieta.
+- Y libera con menos de tres bajos apretados, no con cero. No es un umbral nuevo: es el mismo mínimo y por el mismo motivo que `Engine.detectChord`, porque con dos notas no hay acorde que sostener.
+- Los subtítulos nacen vacíos. El texto de relleno que tenían decía algo que nadie escribía y nadie retiraba, que es la misma falla que un acorde vigente sin bajos que lo sostengan.
+
+### Added
+
+- El registro dice qué re-armó la retención, apretar o soltar, y cuántos bajos quedan. Antes la línea era la misma en los dos casos y no permitía reconstruir el gesto.
+- `docs/DECISIONS.md`: la estrategia elegida y cómo se eligió, con el hueco que queda medido; y por qué una superficie sin autor queda vacía.
+- `docs/ROADMAP.md`: la estrategia por contenido con su condición de reapertura reproducible, y una señal visual de que las cajas se arrastran.
+- `docs/GLOSARIO.md`: retención del contexto y superficie sin autor.
+- `docs/EN-DISCUSION.md`: la sexta hipótesis descartada del teclado que no se detecta.
+
+**Las dos mitades del arreglo se necesitan, y la medición lo obliga.** Re-armar sin bajar el umbral no
+arregla nada: tres bajos que forman Do mayor, soltarlos, apretar dos nuevos, y el acorde seguía
+vigente a los 4800 ms. Bajar el umbral sin re-armar rompería el reacomodo de dedos, porque soltar una
+nota de tres arrancaría un reloj que nadie reinicia al volver a apretarla.
+
+**El hueco que queda está medido y no tapado.** Tres o más bajos que no forman ningún acorde conservan
+el anterior. Es la condición de reapertura de la estrategia por contenido, escrita como caso
+reproducible y no como "más adelante".
+
+**Cómo se eligió, que es método y no anécdota.** Con un boceto, no discutiendo: es una pregunta de
+interacción y no de corrección, y el repo ya resolvió así el alto de la tecla blanca y la vista de
+fórmula.
+
+**El teclado que no se detecta suma su sexta hipótesis descartada, y es la que cierra el tema del lado
+de la app:** el síntoma se reprodujo en un segundo programa, con otro código y otro camino de
+arranque. Dos implementaciones independientes con el mismo síntoma no dejan lugar a que la causa esté
+en ninguna de las dos.
+
 ## v11.83 — 2026-08-20
 
 ### Added

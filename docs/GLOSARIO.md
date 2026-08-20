@@ -131,6 +131,16 @@
   un dato de la interfaz; por eso el log imprime `manufacturer`, `version` y `name` de cada puerto y
   en qué grupo lo puso. Fuente: 2026-08-20, *Un puerto virtual se distingue de un dispositivo por el
   fabricante, y es una heurística*.
+- **retención del contexto**: la ventana de `holdMs` que decide cuánto sobrevive el acorde detectado
+  después de que la mano izquierda deja de moverse. Se re-arma con cualquier movimiento de bajos,
+  apretar o soltar, así que mide quietud y no tiempo desde el último soltado. Al vencer libera el
+  acorde si quedan menos de tres bajos apretados, que es el mismo mínimo de `Engine.detectChord` y por
+  el mismo motivo. No corre contra un acorde fijado a mano. Fuente: 2026-08-20, *La retención se
+  re-arma con cualquier movimiento de bajos, y libera por debajo de tres*.
+- **superficie sin autor**: una caja que nadie está escribiendo. No muestra lo último que se escribió
+  como si siguiera vigente: queda vacía. El caso vivo son los subtítulos. Es la misma falla que un
+  acorde que sigue detectado sin bajos que lo sostengan. Fuente: 2026-08-20, *Una superficie sin autor
+  no muestra el último mensaje como si siguiera vigente*.
 - **entrada sustituta**: un mensaje MIDI que fabrica la app en vez de recibirlo de un dispositivo, y
   que entra por el mismo manejador, `MIDI.processMsg`. Hoy la produce una sola cosa, el clic sobre
   una tecla de la capa 0, con la función `MIDI.entradaSintetica`. No es un control: un control cambia
