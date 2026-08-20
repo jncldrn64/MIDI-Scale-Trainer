@@ -2993,6 +2993,52 @@ Con esta entrada empieza por el otro lado.
 
 ---
 
+## 2026-08-20 — El material original manda si está, y el piso escrito cubre catorce de veinticuatro reglas
+
+**Contexto:** la sección "Prosa" nombraba una sola vía para llegar al material de `no-ai-slop` y
+`rossmann-voice`: instalar el plugin. El material estuvo disponible en una sesión entera por otra vía,
+un adjunto de la conversación, y nadie lo abrió, porque la regla no decía que hubiera que buscarlo.
+Se escribió bajo el piso propio durante toda esa sesión sin saber que el original estaba a mano.
+
+**Primera decisión: el disparador es tener el material, no la forma en que llegó.** Antes de escribir
+prosa se comprueba si está disponible por cualquier vía, y si está se abre y manda. Las reglas
+propias son el piso para cuando no está.
+
+**Segunda decisión: el piso pasa de seis reglas a siete**, con un techo de cinco oraciones por
+párrafo de prosa corrida.
+
+**Razón del techo, con la deriva que lo obliga.** El perfil de voz del original mide 2,1 oraciones de
+promedio por párrafo y admite cinco como máximo. Este repo venía subiendo: 3,1 oraciones de promedio
+en la prosa escrita hasta el 2026-07-04, 3,7 entre esa fecha y el 2026-08-08, y 4,6 en la escrita
+desde el 2026-08-09. Tres corridas, tres números que suben, y ninguna regla que lo mirara.
+
+**Y hay que decir cuánto pesa el piso, porque hasta hoy no estaba medido.** Se escribió el
+2026-08-09 con el original abierto, diez minutos después de que llegara, así que es un resumen de
+alguien que leyó la fuente y no una reconstrucción. Medido el 2026-08-20 contra las veinticuatro
+reglas del original: `CLAUDE.md` cubre catorce, entre esta sección y las de "Guion largo", "Honestidad
+de estado" y "Fechas".
+
+**Las diez que no cubre, y qué daño hicieron en 62.028 palabras escritas bajo el piso.** Puntos
+repetidos, variar estructura, narrar la referencia, comillas de burla, entusiasmo sintético, palabras
+evasivas, encabezados dramáticos, citar con exactitud, urgencia performativa y frases de relleno en
+inglés. Siete de las diez no produjeron un solo caso medible: narrar la referencia da cero, la
+cobertura da 2,3 marcadores por mil palabras contra un umbral de 8, y el léxico vetado da cero casos
+vivos. Las que sí se movieron son el largo de párrafo, que esta entrada ataca, y el exceso de
+negrita, que se parquea.
+
+**Lo que el piso hace mejor que el original, y conviene no perderlo al revisarlo.** La regla 24 del
+original prohíbe en bloque narrar lo que se buscó y no se encontró. La regla 5 del piso talla la
+excepción que este repo necesita: decir "no se verificó" sobre el estado del código es obligatorio.
+Aplicar la regla del original sin esa talla borraría la honestidad de estado.
+
+**Lo que esta entrada no hace:** tocar los 75 párrafos que hoy pasan el techo. Los 41 de
+`DECISIONS.md` no se pueden tocar por append-only, y el resto es trabajo de corrección que va aparte.
+El número queda congelado como línea base.
+
+**Estado:** vigente. Extiende la sección "Prosa" de `CLAUDE.md`, que hasta hoy declaraba seis reglas.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas

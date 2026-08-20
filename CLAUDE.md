@@ -158,10 +158,26 @@ sesión con `/plugin marketplace add realrossmanngroup/no_ai_slop_writing_rules`
 IA, sin guion largo en la prosa. Cada afirmación cierra sobre un dato concreto: un número,
 una línea de código, una fecha, un pitch class.
 
-Lo que sigue es el mínimo para escribir acá sin el plugin instalado. Son reglas propias,
+**Si el material original está disponible en la sesión, se lee y manda sobre lo que sigue.** Vale
+por el plugin instalado y vale por cualquier otra vía que ponga esos archivos al alcance, como un
+adjunto de la conversación. El disparador es tenerlo, no la forma en que llegó: antes de escribir
+prosa se comprueba si está, y si está se abre. Esto no estaba escrito hasta el 2026-08-20 y el costo
+se pagó una vez: el material estuvo disponible en una sesión entera sin que nadie lo abriera, porque
+la única vía que la regla nombraba era instalar el plugin.
+
+Lo que sigue es el mínimo para escribir acá cuando ese material no está. Son reglas propias,
 escritas con los números que salieron de medir este repo el 2026-08-09, no una copia del
 plugin: el texto de ese proyecto no se copia porque no trae licencia. Con el plugin instalado
-manda igual todo lo que dice; estas seis son el piso.
+manda igual todo lo que dice; estas siete son el piso.
+
+**El piso es un resumen, no una reconstrucción, y conviene saber cuánto pesa.** Se escribió el
+2026-08-09 con el original abierto, diez minutos después de tenerlo a mano. Medido el 2026-08-20
+contra ese original: de sus veinticuatro reglas, `CLAUDE.md` cubre catorce entre esta sección y las
+de "Guion largo", "Honestidad de estado" y "Fechas". Las diez que no cubre son puntos repetidos,
+variar estructura, narrar la referencia, comillas de burla, entusiasmo sintético, palabras evasivas,
+encabezados dramáticos, citar con exactitud, urgencia performativa y frases de relleno en inglés. En
+las 62.028 palabras que el repo escribió bajo el piso, siete de esas diez no produjeron un solo caso
+medible.
 
 1. Las listas de palabras vetadas del plugin están en inglés y acá se escribe en español, así
    que atrapan poco. No traducirlas. Lo que sí se busca antes de entregar: "muy",
@@ -199,6 +215,19 @@ manda igual todo lo que dice; estas seis son el piso.
    otra cosa. Las dos de `docs/DECISIONS.md` quedan por append-only y son deuda tolerada. Lo
    mismo vale para un número que describe el código, como un conteo de líneas: va con el comando
    que lo recalcula, o no va.
+7. Un párrafo de prosa corrida no pasa de cinco oraciones. Si no entra, son dos párrafos. El techo
+   sale del perfil de voz del original, que mide 2,1 oraciones de promedio, y cinco es el máximo que
+   ese perfil admite. No alcanza a las viñetas, a las tablas ni a las líneas de un glosario, que son
+   listas por diseño. Medido el 2026-08-20: **75 párrafos por encima del techo**, repartidos en
+   `docs/DECISIONS.md` 41 de 399, `docs/ROADMAP.md` 29 de 111, `docs/ARCHITECTURE.md` 5 de 26, y cero
+   en `CHANGELOG.md` y `docs/GLOSARIO.md`. Los de `DECISIONS.md` son historia congelada por
+   append-only, así que ese número no baja y tampoco debe subir. La media del repo venía subiendo
+   corrida tras corrida, de 3,1 oraciones por párrafo antes del 2026-07-05 a 4,6 después del
+   2026-08-09, y este techo es lo que corta esa deriva.
+
+   Este archivo también lo rompe, y se dice en vez de esconderlo detrás de estar fuera del corpus:
+   **8 párrafos por encima del techo el 2026-08-20**, el peor de diez oraciones. Son deuda tolerada y
+   el número no debe subir. Un techo que su propio archivo viola en silencio no gobierna nada.
 
 Los números de arriba son de la prosa que ya está escrita y sirven de línea base. Se recalculan
 con estos comandos, desde la raíz del repo, para que una sesión que no tenga este historial pueda
@@ -220,13 +249,31 @@ grep -E "^- \`" CHANGELOG.md | awk '{print NF}' | sort -n
 
 # Encabezados con paréntesis, por archivo, regla 4.
 grep -rcE "^#{1,4} .*\(.*\)" CHANGELOG.md docs/*.md tests/README.md
+
+# Párrafos de prosa corrida por encima de las cinco oraciones, regla 7. Descuenta bloques de
+# código, tablas, encabezados, citas, viñetas y sus continuaciones indentadas.
+python3 - CHANGELOG.md docs/*.md <<'EOF'
+import io,re,sys,statistics
+for f in sys.argv[1:]:
+    out, inc = [], False
+    for l in io.open(f, encoding='utf-8').read().split('\n'):
+        if l.strip().startswith('```'): inc = not inc; out.append(''); continue
+        if inc or re.match(r'^\s*[|#>]', l) or re.match(r'^\s*[-*+] ', l) \
+           or re.match(r'^\s{2,}\S', l) or re.match(r'^\s*\d+\. ', l):
+            out.append(''); continue
+        out.append(l)
+    p = [x for x in re.split(r'\n\s*\n', '\n'.join(out)) if len(x.split()) > 15]
+    if not p: print(f"{f}: sin prosa corrida"); continue
+    c = [len([o for o in re.split(r'(?<=[.:;!?])\s+', x) if o.strip()]) for x in p]
+    print(f"{f}: {len(p)} parrafos, media {statistics.mean(c):.1f}, sobre 5: {sum(1 for y in c if y>5)}")
+EOF
 ```
 
 `CLAUDE.md` queda fuera del corpus a propósito: es el archivo del estándar, y cada vez que se
 lo edita movería los números que él mismo declara.
 
 `docs/CONTEXTO-TEMPORAL.md` también queda fuera, y por el motivo contrario: su prosa está exenta de
-estas seis reglas por diseño, así que medirla sería medir algo que nadie va a corregir. Los comandos
+estas siete reglas por diseño, así que medirla sería medir algo que nadie va a corregir. Los comandos
 de abajo lo alcanzan por el `docs/*.md`, así que hay que descontarlo a mano, igual que se descuentan
 las viñetas del CHANGELOG que citan la regla 1. Mientras el archivo esté vacío, que es su estado
 normal, el descuento es cero.

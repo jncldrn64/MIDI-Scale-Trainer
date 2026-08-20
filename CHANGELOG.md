@@ -2,6 +2,30 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.86 — 2026-08-20
+
+### Added
+
+- `CLAUDE.md`: si el material original de las dos skills está disponible en la sesión por cualquier vía, se lee y manda sobre las reglas propias. Antes la única vía escrita era instalar el plugin, y un adjunto de la conversación quedaba invisible.
+- `CLAUDE.md`: la regla 7 de "Prosa". Un párrafo de prosa corrida no pasa de cinco oraciones, que es el máximo del perfil de voz del original. No alcanza a viñetas, tablas ni glosarios, que son listas por diseño.
+- La regla trae su línea base y su comando: 75 párrafos por encima del techo, 41 en `docs/DECISIONS.md`, 29 en `docs/ROADMAP.md` y 5 en `docs/ARCHITECTURE.md`.
+- `CLAUDE.md` declara que él mismo rompe el techo 8 veces, el peor de diez oraciones. Un techo que su propio archivo viola en silencio no gobierna nada.
+- `docs/DECISIONS.md`: por qué el disparador es tener el material y no la vía por la que llegó, y qué cubre el piso escrito contra las veinticuatro reglas del original.
+
+**La deriva que obliga al techo, medida en tres corridas.** La prosa escrita hasta el 2026-07-04 va en
+3,1 oraciones por párrafo; la escrita entre esa fecha y el 2026-08-08, en 3,7; la escrita desde el
+2026-08-09, en 4,6. El perfil del original mide 2,1. Tres números que suben y ninguna regla que los
+mirara.
+
+**Cuánto pesa el piso, que hasta hoy no estaba medido.** Cubre catorce de las veinticuatro reglas del
+original. De las diez que no cubre, siete no produjeron un solo caso medible en las 62.028 palabras
+escritas bajo él: narrar la referencia da cero, la cobertura da 2,3 marcadores por mil palabras contra
+un umbral de 8, y el léxico vetado da cero casos vivos.
+
+**Y una donde el piso gana.** La regla 24 del original prohíbe en bloque narrar lo que se buscó y no
+se encontró; la regla 5 del piso talla la excepción de decir "no se verificó" sobre el código, que
+este repo necesita. Aplicar la del original sin esa talla borraría la honestidad de estado.
+
 ## v11.85 — 2026-08-20
 
 ### Changed
