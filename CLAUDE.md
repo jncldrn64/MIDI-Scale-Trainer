@@ -13,25 +13,50 @@ este orden:
    Restricciones como "no migrar a framework" y "reconstruir desde v11.0, no desde v11.5"
    viven solo acá; un agente que las saltee puede proponer justo lo que ya está descartado.
 3. `ROADMAP.md`: la fase actual y qué sigue.
-4. `EN-DISCUSION.md`: lo que se está discutiendo y todavía no es ni decisión ni ítem
-   parqueado. Va último porque es lo más volátil, y se lee igual: un tema de acá puede
-   contradecir lo que uno estaba por proponer.
+4. `CONTEXTO-TEMPORAL.md`: lo que se observó y se perdería si nadie lo escribe. Va último
+   porque es lo más volátil, y se lee igual: una línea de acá puede contradecir lo que uno
+   estaba por proponer. Su estado normal es vacío.
 
 Recién después se toca código.
 
 ## Documentación
 
 La documentación canónica vive en `docs/` y son cinco archivos: `ARCHITECTURE.md`,
-`ROADMAP.md`, `DECISIONS.md`, `GLOSARIO.md` y `EN-DISCUSION.md`. No se crea ningún archivo de
+`ROADMAP.md`, `DECISIONS.md`, `GLOSARIO.md` y `CONTEXTO-TEMPORAL.md`. No se crea ningún archivo de
 documentación nuevo sin preguntar primero.
 
-`docs/EN-DISCUSION.md` guarda lo que se está discutiendo y todavía no es ni una decisión ni un ítem
-parqueado. Se lee al empezar a trabajar, junto con los otros cuatro. Sus tres reglas viven en su
-propio encabezado y las tres son obligatorias: una entrada trae los cuatro campos, un tema sale de
-ahí decidido a `DECISIONS.md` o parqueado al BACKLOG, y un tema que lleva cinco PR sin moverse se va
-al BACKLOG solo. Sin la salida, en dos meses hay dos listas de pendientes que se contradicen. Ver
-`docs/DECISIONS.md`, entrada del 2026-08-19 "Un tema en discusión tiene dónde vivir, y de dónde
-salir".
+`docs/CONTEXTO-TEMPORAL.md` guarda lo que se observó y se perdería si nadie lo escribe. Se lee al
+empezar a trabajar, junto con los otros cuatro. Reemplaza a `EN-DISCUSION.md`, que pedía cuatro
+campos con evidencia y pregunta formulada: eso filtraba por madurez, y lo que se pierde no es lo
+maduro sino lo crudo. Ver `docs/DECISIONS.md`, entrada del 2026-08-20 "El archivo de tránsito
+filtraba por madurez, y lo que se pierde es lo crudo".
+
+**Entrar cuesta una línea y salir cuesta la disciplina entera.** Se anota qué se observó, quién lo
+aportó y por qué podría importar, sin evidencia obligatoria y sin campos; si no se sabe por qué
+importa, se dice. Cualquiera anota, el que implementa y el que revisa, y también lo que no viene del
+autor. **La prosa de ese archivo está exenta de las reglas de "Prosa" y de "Guion largo"**, a
+propósito: encarecer la escritura es lo que garantiza que no se escriba. Lo único obligatorio es la
+fecha y quién anotó.
+
+Y cada línea sale a uno de cuatro destinos, con el porqué que traía: un PR que la ataque, el BACKLOG,
+una fase, o el descarte si es duplicada o irrelevante. **El archivo tiende a cero**, y uno grande
+dice que el vaciado no se está haciendo.
+
+**El orden es preguntar y después anotar.** Si el alcance se abre y lo anterior no quedó documentado,
+lo correcto es preguntarle al autor si conviene darle forma a lo abierto antes de seguir, que manda
+la idea directo a su hogar sin pasar por el tránsito. El archivo es la red para cuando esa pregunta
+no se hace o no se acepta. Al revés, se vuelve la excusa para no preguntar.
+
+**Cuándo.** Se anota cuando una rama de alcance se está cerrando, de forma incremental, y se recoge
+cuando esa rama se cierra. Dos números de red de seguridad, que no son el mecanismo: anotar si
+pasaron tres prompts sin que se anote nada y hubo discusión, recoger si pasaron nueve PR sin fase
+activa y el archivo no se vació. Existen porque un modelo con ventana grande reconoce la condición de
+estado y uno con ventana chica no, y **la regla se escribe para el peor lector, no para el mejor**.
+
+**La frontera con el BACKLOG.** Al BACKLOG va lo que ya se sabe que se quiere, porque de ahí sale el
+próximo roadmap y sus ítems tienen que poder evaluarse: qué bloquea a qué, qué se implementa y qué se
+posterga. Al contexto temporal va lo que todavía no se sabe si se quiere, que no se puede evaluar y
+no sirve para armar un roadmap.
 
 Regla de glosario: toda entrada de `docs/DECISIONS.md` que introduzca o refine un término
 escribe también su línea en `docs/GLOSARIO.md`, en el mismo PR. `DECISIONS.md` guarda por qué
@@ -199,6 +224,12 @@ grep -rcE "^#{1,4} .*\(.*\)" CHANGELOG.md docs/*.md tests/README.md
 
 `CLAUDE.md` queda fuera del corpus a propósito: es el archivo del estándar, y cada vez que se
 lo edita movería los números que él mismo declara.
+
+`docs/CONTEXTO-TEMPORAL.md` también queda fuera, y por el motivo contrario: su prosa está exenta de
+estas seis reglas por diseño, así que medirla sería medir algo que nadie va a corregir. Los comandos
+de abajo lo alcanzan por el `docs/*.md`, así que hay que descontarlo a mano, igual que se descuentan
+las viñetas del CHANGELOG que citan la regla 1. Mientras el archivo esté vacío, que es su estado
+normal, el descuento es cero.
 
 El conteo de la regla 2 depende de su expresión regular: cambiarla cambia el número y rompe la
 comparación con la línea base. Si hace falta afinarla, se recalculan los tres archivos de una
