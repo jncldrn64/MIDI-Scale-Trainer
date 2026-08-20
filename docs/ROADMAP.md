@@ -705,7 +705,25 @@ un criterio escrito después del trabajo no verifica nada:
 
 **Entregado el 2026-08-11 con la v11.78**, salvo el punto 1 del Criterio, que pide comprobar de oído
 con el piano físico y no se puede hacer sin el instrumento. Por eso la fase queda `pendiente` hasta
-esa corroboración. Lo entregado: `src/sonido.js` con los tres sonidos derivados de una tabla, el
+esa corroboración.
+
+**El punto 1 quedó cubierto el 2026-08-20.** El autor probó los tres sonidos con el ratón, sin
+conectar el teclado, y confirmó que **se distinguen** entre sí, que es lo que ese punto pide.
+
+**Y la fase no cierra igual, porque el punto 3 no se cumple en la primera nota de cada sesión.** Ese
+punto pide comprobar en el log que el veredicto llegó a `passing` al soltar una nota fuera del
+universo antes de los 180 ms. Medido el 2026-08-20 en Chromium sobre `file://`, en La menor, soltando
+Re# a los 95 ms: la primera nota evaluada de la sesión no recibe el indulto y queda `color-bad`; la
+segunda, idéntica, sí lo recibe y queda `color-passing`.
+
+La causa está medida y es del propio sonido: crear el contexto de audio bloquea el hilo principal
+**107,4 ms**, y ese bloqueo ocurre adentro del camino de apretar la nota, que es el que estampa el
+momento de inicio. Con el contexto ya despierto el manejador tarda 7,7 ms y el indulto aplica. El
+detalle vive en el BACKLOG, "El contexto de audio se crea dentro del camino de la nota y se come el
+indulto". La fase queda `pendiente` hasta que ese defecto se arregle y el punto 3 se pueda comprobar
+en la primera nota.
+
+Lo entregado: `src/sonido.js` con los tres sonidos derivados de una tabla, el
 interruptor en Opciones que arranca apagado y persiste, y el disparo al apretar la tecla. Las
 decisiones que este trabajo tomó viven en `DECISIONS.md`, entrada del 2026-08-11 "El feedback de
 veredicto suena al apretar, y el indulto no lo corrige".
@@ -1307,6 +1325,11 @@ prioridad, no porque la rueda la bloquee.
   `src/sonido.js` los tres salen de la constante `SONIDOS`, con frecuencia, tipo de onda, duración y
   pico, así que agregar una variante cuesta una fila. Su hogar sale de la entrada del 2026-08-10
   "Jerarquía de menús: el tres es techo y también es piso".
+  **Y una variante para el paso cromático no entra acá, anotado el 2026-08-20 al probar los sonidos:**
+  `passing` no existe en el momento de apretar la tecla, porque el indulto depende de una duración que
+  todavía no ocurrió, y por eso son tres sonidos y no cuatro. La razón completa vive en
+  `DECISIONS.md`, entrada del 2026-08-11 "El feedback de veredicto suena al apretar, y el indulto no lo
+  corrige". Darle sonido propio pediría dispararlo al soltar, que es otra decisión y no una variante.
   **Entró:** 2026-08-19, PR "add: dónde vive lo que se está discutiendo". Con ese mismo PR entraron
   "Cada widget elige qué sonido usa" y "Ajustar los tiempos del motor desde la interfaz".
   **Por qué se anotó:** la Fase 7 dejó la forma que lo permite y no lo implementó, por alcance.
@@ -1538,6 +1561,23 @@ prioridad, no porque la rueda la bloquee.
   ninguna regla de teoría perdida sino tres defectos de pintado.
   **Entró:** 2026-08-20, PR "chg: el archivo de tránsito pasa a ser contexto temporal, y se vacía".
   **Procedencia:** venía del archivo de tránsito, hoy `docs/CONTEXTO-TEMPORAL.md`, donde entró el 2026-08-19.
+- **El contexto de audio se crea dentro del camino de la nota y se come el indulto.** Con el sonido
+  encendido, la primera nota evaluada de la sesión pierde el indulto por paso cromático. Medido el
+  2026-08-20 en Chromium sobre `file://`, universo La menor, soltando Re# a los 95 ms: la primera
+  queda `color-bad` y sin línea `PASO CROMÁTICO`; la segunda, idéntica, queda `color-passing`. La
+  causa está medida: crear el contexto de audio bloquea el hilo principal **107,4 ms** contra 7,7 ms
+  con el contexto ya despierto, y ese bloqueo ocurre adentro del manejador de apretar la tecla, que es
+  el que estampa el momento de inicio del que después se resta la duración. **A quién le pasa:** a
+  quien toca con el teclado físico le pasa siempre en la primera nota, porque un evento MIDI no cuenta
+  como gesto del usuario y el contexto no se despierta antes; a quien usa el ratón solo le pasa si su
+  primer clic de la sesión cae sobre una tecla. **Qué lo destraba:** despertar el contexto fuera del
+  camino de la nota. No está decidido si eso va al arranque, al encender el interruptor, o en otro
+  lado. **Bloquea el cierre de la Fase 7**, cuyo punto 3 del Criterio no se puede comprobar en la
+  primera nota mientras esto siga.
+  **Entró:** 2026-08-20, PR "doc: la Fase 7 cierra, y tres cosas que se dijeron y no llegaron a
+  ningún archivo".
+  **Por qué se anotó:** salió de comprobar los cuatro puntos del Criterio antes de cerrar la fase, y
+  el punto 3 no pasó.
 - **Un widget de acompañamiento, con un propósito: liberar la mano izquierda para concentrarse en la
   melodía.** Reemplaza a los dos controles de acordes que hoy están partidos en dos, "Motor
   Automático" visible en el escenario y "Fijar Acordes" oculto a propósito. Es su propio widget

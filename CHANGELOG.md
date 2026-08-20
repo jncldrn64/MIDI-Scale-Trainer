@@ -2,6 +2,32 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.88 — 2026-08-20
+
+### Added
+
+- `docs/ROADMAP.md`: el punto 1 del Criterio de la Fase 7 queda cubierto. El autor probó los tres sonidos con el ratón y confirmó que **se distinguen** entre sí, que es lo que ese punto pide.
+- `docs/ROADMAP.md`: la Fase 7 **no cierra**, porque el punto 3 falla en la primera nota de cada sesión. Queda escrito qué lo bloquea y con qué medición.
+- `docs/ROADMAP.md`: el defecto que lo causa, como ítem propio. Crear el contexto de audio bloquea el hilo principal 107,4 ms adentro del camino de apretar la nota, y ese bloqueo se come el indulto de 180 ms.
+- `docs/ROADMAP.md`: el ítem de variantes de sonido gana la razón de por qué son tres y no cuatro, para que nadie lo reabra por error pidiendo una para el paso cromático.
+- `docs/CONTEXTO-TEMPORAL.md`: su primera carga desde que se vació. Dos observaciones sueltas del autor, el contexto de la discusión de fixtures antes de empezarla, y una observación propia del modelo.
+
+### Fixed
+
+- Nada de código. Este PR es doc-only y el defecto que encontró queda anotado, no arreglado.
+
+**El punto 3 del Criterio pide comprobar en el log que el veredicto llegó a `passing`**, soltando una
+nota fuera del universo antes de los 180 ms. Medido en La menor soltando Re# a los 95 ms: la primera
+nota evaluada de la sesión queda en error y la segunda, idéntica, recibe el indulto. Con el contexto
+de audio ya despierto el manejador tarda 7,7 ms en vez de 107,4 y el indulto aplica siempre.
+
+**A quien toca con el teclado físico le pasa en cada sesión**, porque un evento MIDI no cuenta como
+gesto del usuario y el contexto no se despierta antes de la primera nota.
+
+**Uno de los tres huérfanos ya estaba en el repo y no se duplicó.** Cómo se versiona un PR que no
+pertenece a ninguna fase está anotado desde el 2026-08-19 en la subsección del esquema de versión,
+con el caso vivo y con el precedente de la convención de títulos que se cortó en el PR #49.
+
 ## v11.87 — 2026-08-20
 
 ### Fixed
