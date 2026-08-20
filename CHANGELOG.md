@@ -2,6 +2,35 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.82 — 2026-08-20
+
+### Fixed
+
+- El split se leía dos veces. `MIDI.noteOn` clasificaba una nota comparándola contra el split y `MIDI.noteOff` repetía la comparación al soltar. Si el split se movía con la tecla apretada, la nota entraba por una puerta y salía por la otra, y quedaba encendida para siempre en el conjunto donde entró.
+- El bajo fantasma que dejaba ese defecto bloqueaba la liberación del contexto armónico, que exige cero bajos, así que el acorde detectado se quedaba vigente sin límite. Medido contra la v11.81: la nota sobrevivía a la retención entera y no producía ninguna línea de log al soltarse.
+- `MIDI.noteOff` lee ahora la clasificación de `State.midi.activeBasses`, que es el registro de la decisión tomada al apretar. El camino del pedal de sustain ya lo hacía bien, comprobado antes de tocarlo: itera los conjuntos en vez de recalcular.
+
+### Added
+
+- El log avisa cuando la clasificación guardada de una nota y la que daría el split de hoy no coinciden. El defecto vivió desde el primer commit porque no dejaba rastro: la nota que fallaba no producía ninguna línea, y una línea que falta no se ve.
+- Resumen de puertos MIDI al terminar de enganchar: cuántas entradas se enumeraron, cuáles son dispositivos reales y cuáles puertos virtuales del sistema, con nombre.
+- Aviso en el feedback del sistema cuando no hay ningún dispositivo real, cuando el navegador niega el acceso MIDI y cuando no expone Web MIDI. Antes se tocaba y no pasaba nada, sin ninguna pista de por qué.
+- El aviso se levanta solo cuando aparece un teclado. `bindDevices` vuelve a correr con cada cambio de estado, así que un teclado enchufado después dejaba en pantalla un texto que ya era falso.
+- `docs/DECISIONS.md`: la regla generalizada, y el criterio para distinguir un puerto virtual de un dispositivo con su heurística declarada.
+- `docs/EN-DISCUSION.md`: tres temas nuevos. El acorde que no se suelta con bajos apretados, el teclado que no se detecta al arrancar, y el costo de correr en el navegador del usuario.
+- `docs/GLOSARIO.md`: bajo fantasma, dispositivo real y puerto virtual del sistema.
+
+**La regla de la entrada nueva ya estaba escrita a medias.** La entrada del 2026-08-11 "Dos requisitos
+de cualquier trabajo que mande notas MIDI" dice que un apagado se captura y no se lee después, y la
+escribió el mismo error del lado de la salida. No atrapó este caso porque estaba redactada como si
+fuera solo de MIDI de salida. La forma general es que nada que decida el destino de un evento se
+recalcula después de que el evento ocurrió.
+
+**No se agregó ningún reintento ni reenumeración de puertos.** La causa de que un teclado encendido
+antes de abrir la página no se detecte sigue sin resolver, con cuatro hipótesis descartadas y ninguna
+confirmada. El aviso dice apagar y encender el teclado porque es lo que el autor comprobó que
+funciona.
+
 ## v11.81 — 2026-08-19
 
 ### Added

@@ -91,9 +91,18 @@ evaluateMelody(note)
   → status = inScale||inChord ? 'good' : (isSensible ? 'tension' : 'bad')
   → si status !== 'good': se autolimpia a los errMs (1000ms por defecto)
 
+noteOff(note)
+  → keysDown.delete(note)
+  → si sustainActive: sale, y la nota se suelta después desde handleSustain
+  → isBass = activeBasses.has(note)   [de dónde quedó al apretarla, NO se recompara el split]
+  → releaseNoteInternal(note, isBass)
+
 releaseNoteInternal(note, isBass)  [al soltar la tecla]
+  → si isBass !== (note < splitNote): línea de aviso, el split se movió con la tecla apretada
   → duration = now - startTime
   → si status !== 'good' && duration < 180ms → status = 'passing' (INDULTO)
+  → si isBass: activeBasses.delete(note) → triggerContextTimeout()
+  → si no:     activeMelodies.delete(note)
 ```
 
 El indulto de 180ms aplica a cualquier estado que no sea `'good'`, o sea a `'bad'` y a

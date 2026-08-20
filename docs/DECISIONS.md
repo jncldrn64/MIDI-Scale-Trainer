@@ -2706,6 +2706,80 @@ un nivel arriba del puntero.
 
 ---
 
+## 2026-08-20 — Nada que decida el destino de un evento se recalcula después de que el evento ocurrió
+
+**Contexto:** `MIDI.noteOn` decidía a qué conjunto entra una nota comparándola contra el split, y
+`MIDI.noteOff` decidía de qué conjunto sale **haciendo la misma comparación otra vez**. Si el split se
+movía entre el apretar y el soltar, la nota entraba por una puerta y salía por la otra: se la
+intentaba borrar de un conjunto donde no estaba y quedaba encendida para siempre en el otro. Un bajo
+fantasma bloquea la liberación del contexto armónico, que exige cero bajos. Del registro del autor:
+tres bajos soltados, dos líneas de retención y la tercera nota sin ninguna, y dos segundos después
+"Retención vencida y el contexto se queda: todavía hay 1 bajo(s) apretado(s)".
+
+**Esta regla ya estaba escrita a medias.** La entrada del 2026-08-11 "Dos requisitos de cualquier
+trabajo que mande notas MIDI" dice, con estas palabras, que **un apagado se captura, no se lee
+después**, y la escribió el mismo error: en el diagnóstico el canal del apagado se leía cuando el
+temporizador corría en vez de cuando la nota se encendía, y las notas quedaban colgadas. No atrapó
+este caso porque estaba redactada como si fuera solo de MIDI de salida, y este es de entrada.
+
+**Decisión, en su forma general:** nada que decida el destino de un evento se recalcula después de
+que el evento ocurrió. Se captura cuando el evento sucede y se usa tal cual. Vale para el canal de un
+apagado, para la clasificación de una nota contra el split, y para lo que venga.
+
+**La prueba de si algo entra en la regla** es preguntarse de qué valor depende y si ese valor puede
+cambiar mientras el evento está en curso. El split lo puede cambiar el usuario desde Opciones sin
+soltar la tecla, así que entra. El pitch class de una nota MIDI no cambia nunca, así que no.
+
+**Razón de la forma elegida acá:** el conjunto ya es el registro de la decisión. `activeBasses.has(note)`
+lee dónde quedó la nota al apretarla, así que no hace falta un mapa aparte que haya que mantener
+sincronizado, ni un campo nuevo en `State`. La estructura que ya existía guardaba el dato; lo que
+faltaba era leerlo en vez de volver a derivarlo.
+
+**Lo que no cambia:** lo que se recuerda es la clasificación de una nota concreta, no el valor global.
+La marca del split sobre el teclado y los cuatro campos de Opciones siguen leyendo
+`State.config.splitNote` en el momento, que es lo correcto.
+
+**Y el desacuerdo se registra en vez de taparse.** Cuando la clasificación guardada y la que daría el
+split de hoy difieren, el log escribe la línea que lo dice. El defecto vivió desde el primer commit
+porque no dejaba rastro: la nota que fallaba no producía ninguna línea, y una línea que falta no se
+ve.
+
+**Estado:** vigente. Generaliza la primera mitad de la entrada del 2026-08-11 "Dos requisitos de
+cualquier trabajo que mande notas MIDI", que queda como estaba y sigue valiendo para la salida.
+
+---
+
+## 2026-08-20 — Un puerto virtual se distingue de un dispositivo por el fabricante, y es una heurística
+
+**Contexto:** cuando no se detecta ningún teclado, la app no decía nada: se tocaba y no pasaba nada,
+sin ninguna pista de por qué. El autor perdió una sesión averiguando si era un defecto del programa.
+Para avisarlo hay que saber si lo que se enumeró es un teclado o el puerto virtual que el sistema
+expone siempre, porque contar puertos a secas diría "encontré uno" cuando no hay ninguno usable.
+
+**El dato no existe en la interfaz.** `MIDIPort` expone siete campos y nada más: `id`, `name`,
+`manufacturer`, `version`, `type`, `state` y `connection`. Comprobado enumerando su prototipo en
+Chromium, no leído de una especificación. Ninguno declara si el puerto es un dispositivo o un puerto
+virtual, así que no hay forma de saberlo con certeza y hay que inferirlo.
+
+**Decisión:** se cuenta como dispositivo real el puerto que declara fabricante, y como puerto virtual
+del sistema el que no. Sale de la única diferencia observada entre los dos casos del registro del
+autor.
+
+**Y se declara heurística, no regla.** Nada obliga a un controlador a declarar fabricante, así que un
+teclado que no lo declare va a contarse mal. Por eso la línea del log imprime también `version` y
+`name` de cada puerto y dice en qué grupo lo puso y por qué: así la clasificación se puede auditar y
+desmentir con una corrida, en vez de quedar escondida en un conteo.
+
+**Lo que no se hace:** ningún reintento ni reenumeración. La causa de que un teclado encendido antes
+de abrir la página no se detecte sigue sin resolver, con cuatro hipótesis descartadas y ninguna
+confirmada, y programar un mecanismo contra una causa desconocida es prescribir sin evidencia, que es
+justo lo que la sección "Promesas y umbrales" de `CLAUDE.md` prohíbe. El aviso dice apagar y encender
+el teclado porque es lo que el autor comprobó que funciona, y es lo único que funciona.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas

@@ -1401,6 +1401,12 @@ prioridad, no porque la rueda la bloquee.
   los veredictos de melodía vivos" y "Un estilo por tipo de documento, verificable con un comando".
   **Por qué se anotó:** el trabajo se entregó y la comprobación pide hardware que esta sesión no
   tiene.
+  **Contestado en parte el 2026-08-20, y el tema volvió a discusión.** El autor probó, y la hipótesis
+  de la apertura implícita no explica el síntoma: el puerto del teclado no llega a enumerarse, así que
+  no hay nada que abrir. Descartó además otras tres causas con prueba. El tema vive ahora en
+  `docs/EN-DISCUSION.md`, "El teclado encendido antes de abrir la página no se detecta", que guarda
+  las cuatro hipótesis descartadas. Este ítem se queda anotado porque la apertura explícita sigue
+  entregada y sigue sin comprobarse contra el caso en que el puerto sí aparece.
 - **Un estilo por tipo de documento, verificable con un comando.** Los seis archivos de
   documentación no se parecen entre sí. Medido el 2026-08-19: `CHANGELOG.md` tiene 422 viñetas y cero
   negritas de apertura de párrafo; `DECISIONS.md` tiene 401 negritas de apertura y 41 viñetas;

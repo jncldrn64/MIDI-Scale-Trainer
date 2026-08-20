@@ -15,7 +15,13 @@ const MIDI = {
                     SysLog('SYS', `Puerto MIDI ${e.port.type} "${e.port.name}" (id ${e.port.id}): ${e.port.state}`);
                     this.bindDevices();
                 };
-            }).catch(e => SysLog('ERROR', 'MIDI denegado'));
+            }).catch(e => {
+                SysLog('ERROR', `⚠ MIDI denegado: ${e}. Ningún puerto se va a enumerar en esta carga.`);
+                Feedback.avisar('El navegador negó el acceso MIDI, así que no se puede leer ningún teclado. Recargá y aceptá el permiso. Mientras tanto, podés tocar con el ratón encendiendo "Teclas clicables" en Opciones.');
+            });
+        } else {
+            SysLog('ERROR', '⚠ Este navegador no expone navigator.requestMIDIAccess, así que no hay Web MIDI.');
+            Feedback.avisar('Este navegador no soporta Web MIDI, así que no puede leer un teclado. Podés tocar con el ratón encendiendo "Teclas clicables" en Opciones.');
         }
     },
     bindDevices() {
@@ -31,9 +37,20 @@ const MIDI = {
         // se registra. Sin esa línea el defecto era invisible, porque el log solo hablaba de
         // puertos cuando ya habían cambiado de estado.
         let vistos = 0;
+        const reales = [], virtuales = [];
         for (let input of State.midi.access.inputs.values()) {
             vistos++;
-            SysLog('MIDI', `Puerto de entrada "${input.name}" (id ${input.id}): estado ${input.state}, conexión ${input.connection}, fabricante ${input.manufacturer || 'sin declarar'}.`);
+            // Los siete campos que `MIDIPort` expone son id, name, manufacturer, version, type,
+            // state y connection, comprobado enumerando su prototipo en Chromium. Ninguno dice si
+            // el puerto es un dispositivo o un puerto virtual del sistema, así que no hay un dato
+            // que lo declare y hay que inferirlo. El único que separa los dos casos observados es
+            // el fabricante: un teclado real lo trae y un puerto virtual lo deja vacío. Es una
+            // heurística sobre una observación, no una garantía de la interfaz, así que la línea
+            // imprime también version y name para que la clasificación se pueda auditar y
+            // desmentir con una corrida.
+            const esReal = !!(input.manufacturer && input.manufacturer.trim());
+            (esReal ? reales : virtuales).push(input.name);
+            SysLog('MIDI', `Puerto de entrada "${input.name}" (id ${input.id}): estado ${input.state}, conexión ${input.connection}, fabricante ${input.manufacturer || 'sin declarar'}, versión ${input.version || 'sin declarar'}. Se cuenta como ${esReal ? 'dispositivo real, porque declara fabricante' : 'puerto virtual del sistema, porque no declara fabricante'}.`);
             if (!input.onmidimessage) {
                 input.onmidimessage = (msg) => this.processMsg(msg);
                 SysLog('MIDI', `Listo: ${input.name}`);
@@ -51,7 +68,22 @@ const MIDI = {
                 SysLog('MIDI', `Puerto "${input.name}" ya venía abierto, no se vuelve a abrir.`);
             }
         }
-        if (vistos === 0) SysLog('MIDI', '⚠ Ningún puerto de entrada MIDI enumerado. Sin dispositivo, las teclas clicables de Opciones son la única entrada.');
+        // El resumen al terminar de enganchar. Sin esto, no encontrar ningún teclado se veía
+        // exactamente igual que encontrarlo: se toca y no pasa nada, sin ninguna pista de por qué.
+        SysLog('MIDI', `Resumen de puertos de entrada: ${vistos} enumerado(s), ${reales.length} dispositivo(s) real(es)${reales.length ? ' (' + reales.join(', ') + ')' : ''} y ${virtuales.length} puerto(s) virtual(es) del sistema${virtuales.length ? ' (' + virtuales.join(', ') + ')' : ''}.`);
+        if (reales.length === 0) {
+            // El consejo es el único que se comprobó que funciona contra este síntoma. No se
+            // agrega ningún reintento ni reenumeración: la causa está sin resolver y programar un
+            // mecanismo contra una causa desconocida es prescribir sin evidencia.
+            Feedback.avisar('No se detectó ningún teclado MIDI. Apagalo y encendelo con esta página abierta, que suele alcanzar. Mientras tanto, podés tocar con el ratón encendiendo "Teclas clicables" en Opciones.');
+        } else if (this.avisoSinTeclado) {
+            // `bindDevices` vuelve a correr con cada onstatechange, así que un teclado que aparece
+            // después deja el aviso anterior en pantalla diciendo algo que ya es falso. El aviso se
+            // levanta con la misma llamada que lo puso. Solo se escribe si hubo aviso: pisar la
+            // caja de feedback cuando nadie avisó nada le robaría el lugar a otro mensaje.
+            Feedback.avisar(`Teclado detectado: ${reales.join(', ')}.`);
+        }
+        this.avisoSinTeclado = reales.length === 0;
     },
     // Entrada sustituta del teclado de pantalla. Fabrica los tres bytes y los mete por
     // `processMsg`, que es la misma puerta por la que entra el dispositivo físico y que no
@@ -106,11 +138,27 @@ const MIDI = {
         State.midi.keysDown.delete(note); 
         SysLog('MIDI', `UP: ${getNoteStr(note).name} (${note})`);
         if (State.midi.sustainActive) return; 
-        this.releaseNoteInternal(note, note < State.config.splitNote);
+        // La clasificación no se recalcula: se lee de dónde quedó la nota al apretarla. El
+        // conjunto es el registro de esa decisión, así que no hace falta guardar nada aparte.
+        // Recalcular `note < State.config.splitNote` acá era el defecto: si el split cambiaba
+        // con la tecla apretada, la nota entraba por una puerta y salía por la otra, se
+        // intentaba borrar de un conjunto donde no estaba y quedaba encendida para siempre en
+        // el otro. Un bajo fantasma bloquea la liberación del contexto, que exige cero bajos.
+        // Ver DECISIONS, 2026-08-20, "Nada que decida el destino de un evento se recalcula
+        // después de que el evento ocurrió".
+        this.releaseNoteInternal(note, State.midi.activeBasses.has(note));
         Teclado.renderKeyboard(); Readout.updateStatus();
     },
     releaseNoteInternal(note, isBass) {
         const ev = State.evaluations.get(note);
+
+        // El aviso que habría cazado el defecto el primer día. `isBass` viene de dónde está la
+        // nota; esta comparación dice de qué lado caería hoy. Cuando difieren, el split se movió
+        // con la tecla apretada, y la nota sale por donde entró.
+        const caeriaBajoAhora = note < State.config.splitNote;
+        if (isBass !== caeriaBajoAhora) {
+            SysLog('MIDI', `⚠ El split se movió mientras ${getNoteStr(note).name} (${note}) estaba apretada: entró como ${isBass ? 'bajo' : 'melodía'} y con el split en ${State.config.splitNote} caería como ${caeriaBajoAhora ? 'bajo' : 'melodía'}. Sale por donde entró.`);
+        }
 
         // El indulto solo aplica a la melodía, que es lo único que tiene evaluación. Un bajo
         // nunca crea una, porque noteOn solo llama a evaluateMelody para las notas de arriba.
