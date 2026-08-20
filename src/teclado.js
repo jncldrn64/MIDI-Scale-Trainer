@@ -8,8 +8,9 @@ const Teclado = {
     // dejaba una franja muerta debajo.
     //
     // El alto sale de la fórmula del lienzo aplicada a un solo número, los 140 px de
-    // lienzo que fija la entrada de decisiones del 2026-08-10 "Alto de la tecla
-    // blanca". Esto NO es la migración al lienzo, que es el primer trabajo declarado
+    // lienzo que fija la entrada de decisiones del 2026-08-10 "Geometría del teclado de 88
+    // teclas, y la barra no presenta lecturas", en su párrafo "Alto de la tecla blanca:
+    // 140 px de lienzo". Esto NO es la migración al lienzo, que es el primer trabajo declarado
     // de la Fase 5B: es la fórmula usada por adelantado para el único número que hoy
     // la necesita. El resto de las medidas sigue como está.
     buildKeyboard() {
