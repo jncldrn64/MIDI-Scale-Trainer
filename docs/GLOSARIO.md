@@ -331,6 +331,14 @@ verificó con `grep` contra el archivo antes de escribirse acá.
 
 ## Método
 
+- **piso de prosa**: las siete reglas propias de la sección "Prosa" de `CLAUDE.md`, que valen cuando
+  el material original de las dos skills no está disponible en la sesión. Si está, por el plugin o por
+  cualquier otra vía, ese material manda y el piso pasa a segundo plano. Cubre catorce de las
+  veinticuatro reglas del original, medido el 2026-08-20. Fuente: 2026-08-20, *El material original
+  manda si está, y el piso escrito cubre catorce de veinticuatro reglas*.
+- **prosa corrida**: el texto de un documento que no es viñeta, tabla, encabezado, cita ni línea de
+  glosario. Es lo único que alcanza el techo de cinco oraciones por párrafo de la regla 7, porque el
+  resto es lista por diseño. Fuente: la misma entrada.
 - **estado observable**: lo que vive en `State` y lo que persiste en `localStorage`. Es el disparador
   de la regla de verbosidad: una función que lo escribe deja su línea de `SysLog` en el mismo cuerpo.
   Lo que queda afuera es lo local a una función y lo que se deriva sin guardarse. Fuente: 2026-08-20,
