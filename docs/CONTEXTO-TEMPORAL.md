@@ -83,4 +83,32 @@ condición de estado se reconoce, los números no se usan nunca.
 
 ## Anotaciones
 
-*(vacío)*
+**2026-08-20, el autor.** El tema de los sonidos se conecta con otra fase. No dijo con cuál ni cómo.
+Decidió no abrirlo ahí para no diluir el trabajo que estaba en curso. Queda incompleto a propósito:
+lo que se pierde si no se anota es que la conexión existe, aunque no se sepa cuál.
+
+**2026-08-20, el autor.** Para las fixtures con partituras, ¿`.mid` o `.md`? Preguntó qué formato
+serviría mejor y quedó sin discutir. Va acá y no al BACKLOG porque el ítem "Fixtures derivadas de
+partituras de dominio público" ya dice que falta decidir el formato; lo que ese ítem no tiene son las
+dos opciones concretas que él barajó.
+
+**2026-08-20, el autor.** Quiere discutir las fixtures con partituras de dominio público. Esto es el
+estado de la discusión antes de empezarla, para que si la conversación se corta el punto de partida no
+se pierda. No se decide nada acá.
+
+- Que las 41 actuales vienen de una sesión con otro modelo y nadie verificó que representen lo que
+  esas canciones son: eso ya está escrito en el ítem del BACKLOG, no se repite.
+- Lo que agrega él: una partitura o un archivo MIDI sí es verificable, porque lo puede tocar y oír si
+  coincide. Eso convierte las fixtures de lo que un modelo creyó a lo que la música dice.
+- Lo separó explícito: la discusión es de método de prueba, no de implementación. No se está hablando
+  de las notas que caen ni de MIDI de salida, se está hablando de ampliar la cobertura de pruebas de
+  forma correcta.
+- Se toca con el ítem "Cubrir el manejo de eventos con pruebas", que hoy ninguna fixture alcanza.
+  Decidir el formato de las fixtures nuevas condiciona si ese otro ítem se resuelve con el mismo
+  mecanismo o pide uno aparte. Los dos ítems viven en el BACKLOG del `ROADMAP.md`.
+
+**2026-08-20, Claude.** Al medir el punto 3 del Criterio de la Fase 7 quedó a la vista algo que no es
+ese defecto y no tiene dónde ir: el momento de inicio de una nota se estampa antes de que corra el
+resto del manejador, así que cualquier cosa lenta que se meta en ese camino le come tiempo al indulto
+de 180 ms. Hoy el único caso es el contexto de audio y ya está en el BACKLOG. Lo que no se sabe es si
+conviene una regla que prohíba trabajo pesado en ese camino, o si con arreglar el caso alcanza.
