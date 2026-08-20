@@ -318,10 +318,16 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   todavía no sabía. Fuente: 2026-08-11, *El feedback de veredicto suena al apretar, y el indulto no
   lo corrige*.
 
-- **tema en discusión**: lo que se está debatiendo y todavía no es ni una decisión ni un ítem
-  parqueado. Vive en `docs/EN-DISCUSION.md` con cuatro campos fijos, y sale de ahí de una de dos
-  formas: decidido a `DECISIONS.md` o parqueado al BACKLOG. Si lleva cinco PR sin moverse, se va al
-  BACKLOG solo. Fuente: 2026-08-19, *Un tema en discusión tiene dónde vivir, y de dónde salir*.
+- **contexto temporal**: lo que se observó y se perdería si nadie lo escribe. Vive en
+  `docs/CONTEXTO-TEMPORAL.md`, entra con una línea, su fecha y quién la anotó, sin evidencia
+  obligatoria y sin campos, y sale a uno de cuatro destinos con el porqué que traía: un PR que la
+  ataque, el BACKLOG, una fase, o el descarte. Su estado normal es vacío y su métrica es la velocidad
+  de vaciado. Su prosa está exenta de las reglas de estilo. Reemplaza a **tema en discusión**, que
+  vivía en `EN-DISCUSION.md` y exigía cuatro campos: eso filtraba por madurez, y lo que se pierde es
+  lo crudo. Los cuatro campos siguen existiendo, pero como lo que una línea gana si se la promueve a
+  tema, no como requisito de entrada. Fuentes: 2026-08-19, *Un tema en discusión tiene dónde vivir, y
+  de dónde salir*, y 2026-08-20, *El archivo de tránsito filtraba por madurez, y lo que se pierde es
+  lo crudo*, que la reemplaza.
 
 ## Método
 

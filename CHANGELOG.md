@@ -2,6 +2,39 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.85 — 2026-08-20
+
+### Changed
+
+- `docs/EN-DISCUSION.md` pasa a `docs/CONTEXTO-TEMPORAL.md`. El criterio de entrada se invierte: deja de ser si el tema está maduro y pasa a ser si se pierde cuando nadie lo escribe.
+- Entrar cuesta una línea con su fecha y quién la anotó. Sin evidencia obligatoria, sin pregunta formulada y sin los cuatro campos, que eran un filtro de madurez.
+- Su prosa queda exenta de las reglas de estilo, a propósito y declarado en su encabezado: encarecer la escritura es lo que garantiza que no se escriba.
+- La disciplina se muda a la salida. Cada línea va a un PR, al BACKLOG, a una fase o al descarte, siempre con el porqué que traía.
+- Los cuatro campos no se pierden: dejan de ser requisito de entrada y pasan a ser lo que una línea gana si se la promueve a tema.
+- El archivo queda vacío de contenido, que es su estado normal. Su métrica es la velocidad de vaciado, no lo que contiene.
+
+### Added
+
+- `CLAUDE.md`: el orden de los disparadores, que es preguntar primero y anotar después. Al revés, el archivo se vuelve la excusa para no preguntar.
+- `CLAUDE.md`: la frontera con el BACKLOG. Ahí va lo que ya se sabe que se quiere, porque de ahí sale el próximo roadmap; acá lo que todavía no se sabe si se quiere.
+- `docs/DECISIONS.md`: el rediseño con los dos casos que prueban por qué el anterior estaba mal, y el costo de correr en el navegador del usuario.
+- `docs/ROADMAP.md`: los cinco temas colocados, con el porqué que cada uno traía.
+- `docs/GLOSARIO.md`: contexto temporal, que reemplaza a tema en discusión.
+
+**Los dos casos que prueban el error de diseño.** Los siete acordes de la rueda de quintas, discutidos
+con un modelo anterior, nunca llegaron a ninguna parte porque no eran un tema con pregunta abierta
+sino material de conversación. Y el panel de fijar acordes es herencia del primer commit sin propósito
+escrito: costó cinco PR descubrir de dónde venía, y una línea suelta los habría ahorrado. Ninguno de
+los dos habría pasado los cuatro campos.
+
+**Dos números de red de seguridad, y la razón de que existan.** Anotar si pasaron tres prompts sin
+anotar nada habiendo discusión, recoger si pasaron nueve PR sin fase activa con el archivo sin vaciar.
+La condición real es de estado, y un modelo con ventana grande la reconoce mientras uno con ventana
+chica no. La regla se escribe para el peor lector, no para el mejor.
+
+**El teclado que no se detecta se va al BACKLOG con sus seis hipótesis descartadas como su porqué.**
+Ese es todo el valor acumulado del tema, y sin él alguien las va a volver a probar.
+
 ## v11.84 — 2026-08-20
 
 ### Fixed

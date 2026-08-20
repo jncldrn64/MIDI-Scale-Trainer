@@ -1404,8 +1404,8 @@ prioridad, no porque la rueda la bloquee.
   **Contestado en parte el 2026-08-20, y el tema volvió a discusión.** El autor probó, y la hipótesis
   de la apertura implícita no explica el síntoma: el puerto del teclado no llega a enumerarse, así que
   no hay nada que abrir. Descartó además otras tres causas con prueba. El tema vive ahora en
-  `docs/EN-DISCUSION.md`, "El teclado encendido antes de abrir la página no se detecta", que guarda
-  las cuatro hipótesis descartadas. Este ítem se queda anotado porque la apertura explícita sigue
+  el ítem "El teclado encendido antes de abrir la página no se detecta" de esta misma lista, que
+  guarda las seis hipótesis descartadas. Este ítem se queda anotado porque la apertura explícita sigue
   entregada y sigue sin comprobarse contra el caso en que el puerto sí aparece.
 - **Un estilo por tipo de documento, verificable con un comando.** Los seis archivos de
   documentación no se parecen entre sí. Medido el 2026-08-19: `CHANGELOG.md` tiene 422 viñetas y cero
@@ -1442,10 +1442,13 @@ prioridad, no porque la rueda la bloquee.
   enfrentando las dos cascadas caso por caso. **El riesgo declarado:** el día que el motor cambie una
   regla, el log va a explicar el veredicto con la regla vieja, y ninguna fixture lo va a notar porque
   ninguna prueba la explicación. `grep -rn "razon" tests/` no devuelve nada. Un registro que miente se
-  cree más que uno que falta, así que el modo de falla es peor que el hueco. La forma de arreglarlo no
-  está decidida y se discute en `docs/EN-DISCUSION.md`, "El formato del registro, y una razón que se
-  calcula dos veces": hacer que el motor devuelva la razón cambia su forma de retorno y toca las 41
-  fixtures.
+  cree más que uno que falta, así que el modo de falla es peor que el hueco.
+  **Lo que lo arregla, agregado el 2026-08-20 al vaciar el archivo de tránsito:** que el motor
+  devuelva la razón junto con el veredicto, en vez de que quien registra la reconstruya, que es la
+  regla 2 de "Verbosidad del registro" de `CLAUDE.md`. **El costo, para que el ítem se pueda
+  evaluar:** cambia la forma de retorno de `Engine.evaluateMelodyStatus`, y eso toca las 41 fixtures.
+  Se decide junto con "Qué forma tiene una línea del registro" de esta misma lista, porque las dos
+  preguntas caen sobre la misma línea de log.
   **Entró:** 2026-08-20, PR "doc: la regla de verbosidad del log, y el reintento de puertos que ya se
   probó". Con ese mismo PR entró "Dejar el código conforme a la regla de verbosidad".
   **Por qué se anotó:** salió de buscar el caso concreto que hace urgente la regla de verbosidad.
@@ -1475,6 +1478,66 @@ prioridad, no porque la rueda la bloquee.
   **Entró:** 2026-08-20, PR "fix: la retención se re-arma con cualquier movimiento de bajos, y los
   subtítulos se vacían". Con ese mismo PR entró "La estrategia por contenido para soltar el contexto".
   **Por qué se anotó:** el autor lo pidió al notar que nada indica que las cajas sean arrastrables.
+- **El teclado encendido antes de abrir la página no se detecta, y el valor de este ítem son las seis
+  hipótesis ya descartadas.** Con el teclado prendido antes de cargar, la app no lo ve; hay que
+  apagarlo y encenderlo con la página corriendo. **Nada de esto hay que volver a probarlo:**
+  no es que el puerto quede tomado por la pestaña anterior, porque cerrar Chrome entero no cambia
+  nada; no es lentitud de la enumeración, porque el puerto virtual del sistema aparece en el mismo
+  segundo; no es el dispositivo, porque Qsynth lo reconoce apenas se conecta; no es algo que este
+  proyecto haya introducido, porque `git log -S"requestMIDIAccess"` devuelve dos commits, el primero
+  del repositorio y el de la partición que lo movió sin cambiarlo; no es falta de reintentos, porque
+  la versión 3.0 del programa tenía un monitor que reconsultaba cada segundo durante cinco y el CASIO
+  tampoco aparecía, con el mismo puerto virtual solo; y no es de esta app, porque el síntoma se
+  reprodujo en un segundo programa con otro código y otro camino de arranque. También cayeron
+  apretar el botón de conexión MIDI lo más rápido posible tras abrir la página, así que no es cuestión
+  de darle más tiempo al navegador, y cerrar todas las pestañas y reabrirlas con el navegador
+  corriendo. Seis descartadas y ninguna en pie. Lo entregado del lado de la app está: la apertura
+  explícita del puerto y el aviso en pantalla desde la v11.82. La causa apunta afuera, y la
+  consecuencia que la explica vive en `DECISIONS.md`, entrada del 2026-08-20 "Correr en el navegador
+  del usuario ata el programa a una versión que nadie controla". **Lo que falta decidir:** qué corrida
+  separa al navegador de una actualización del sistema.
+  **Entró:** 2026-08-20, PR "chg: el archivo de tránsito pasa a ser contexto temporal, y se vacía". Con ese mismo PR entraron los otros cuatro
+  temas que vaciaron el archivo de tránsito.
+  **Procedencia:** venía del archivo de tránsito, hoy `docs/CONTEXTO-TEMPORAL.md`, donde entró el 2026-08-19; las seis hipótesis se
+  acumularon entre ese día y el 2026-08-20.
+- **Qué forma tiene una línea del registro: prosa, datos estructurados, o las dos.** Decisión
+  pendiente, con la comparación hecha. El registro de la versión 3.0 del programa y el de hoy son de
+  dos clases distintas: `MIDI DEVICES_FOUND {"count":1,"devices":["Midi Through Port-0"]}` contra
+  `MIDI: Puerto de entrada "Midi Through Port-0" (id 1A0C…): estado connected…`. El de la v3.0 separa
+  nombre de evento y datos, así que se puede buscar por evento y comparar dos corridas de forma
+  automática; el de hoy es prosa, explica mejor el porqué y se compara peor. Los dos sirven para cosas
+  distintas y el repo tiene uno solo. **Y la mitad que falta ya está construida sin usarse:**
+  `SysLog(cat, msg, data = null)` acepta un tercer parámetro que serializa a JSON en su propia línea,
+  y de las 90 llamadas fuera de `src/log.js` lo usan cero. Ese conteo hay que hacerlo leyendo las
+  llamadas: contar comas con `grep` da tres falsos positivos, porque tres líneas de `src/layout.js`
+  llevan plantillas de texto anidadas con comas adentro. Así que la pregunta no es construir la forma
+  estructurada sino decidir si se usa la que está.
+  **Entró:** 2026-08-20, PR "chg: el archivo de tránsito pasa a ser contexto temporal, y se vacía".
+  **Procedencia:** venía del archivo de tránsito, hoy `docs/CONTEXTO-TEMPORAL.md`, donde entró el 2026-08-20.
+- **Fixtures derivadas de partituras de dominio público.** Las 41 fixtures actuales vienen de una
+  sesión con otro modelo cuyo contexto se perdió, y **nadie verificó que representen lo que esas
+  canciones son**: que estén verdes significa que el motor coincide consigo mismo, no que sea
+  correcto. Una partitura de dominio público sí es verificable contra algo externo al repo, y el autor
+  la puede tocar y comprobar de oído. Hoy lo que corre es `node tests/run.js` con un solo `require`,
+  el de `src/engine.js`. **Lo que falta decidir, y ninguna es obvia:** qué formato de entrada, cómo se
+  convierte a fixture sin volver a inventar la respuesta correcta, y qué pasa con las 41 actuales, si
+  se retiran, se conservan como regresión o se revisan una por una. **Bloquea a** "Análisis por
+  comportamiento".
+  **Entró:** 2026-08-20, PR "chg: el archivo de tránsito pasa a ser contexto temporal, y se vacía".
+  **Procedencia:** venía del archivo de tránsito, hoy `docs/CONTEXTO-TEMPORAL.md`, donde entró el 2026-08-19.
+- **Análisis por comportamiento: qué casos generales le faltan al motor.** Bloqueado por las fixtures
+  con partituras, porque sin una fuente externa no hay contra qué medir si un caso nuevo está bien
+  resuelto. **La acepción es la del antivirus: análisis genérico de lo que ocurre, en oposición a una
+  base de casos particulares. No la de regla aproximada que puede fallar**, y esto va escrito porque
+  esa confusión ya hizo que la idea se rechazara mal una vez, con una objeción que después quedó
+  retirada. El motor ya hace esto: la sensible, la dominante secundaria y el paso cromático son reglas
+  generales sobre relaciones y no una lista de canciones, y las tres viven en `src/engine.js`. No
+  choca con la entrada del 2026-08-11 "El motor no ejecuta lógica que venga de afuera": esa regla dice
+  de dónde viene la lógica, no cuán general puede ser. **Lo que falta:** qué casos concretos faltan.
+  La auditoría de las fases 2 a 4 se esperaba que lo contestara y no lo hizo, porque no encontró
+  ninguna regla de teoría perdida sino tres defectos de pintado.
+  **Entró:** 2026-08-20, PR "chg: el archivo de tránsito pasa a ser contexto temporal, y se vacía".
+  **Procedencia:** venía del archivo de tránsito, hoy `docs/CONTEXTO-TEMPORAL.md`, donde entró el 2026-08-19.
 - **Un widget de acompañamiento, con un propósito: liberar la mano izquierda para concentrarse en la
   melodía.** Reemplaza a los dos controles de acordes que hoy están partidos en dos, "Motor
   Automático" visible en el escenario y "Fijar Acordes" oculto a propósito. Es su propio widget

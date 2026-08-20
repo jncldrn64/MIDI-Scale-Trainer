@@ -2906,6 +2906,93 @@ hizo falta ningún mínimo de tamaño.
 
 ---
 
+## 2026-08-20 — El archivo de tránsito filtraba por madurez, y lo que se pierde es lo crudo
+
+**Contexto:** `EN-DISCUSION.md` se creó el 2026-08-19 y funcionó para lo que se llevó puesto, que
+fueron temas ya formados. El problema es lo que nunca entró.
+
+**El error de diseño, identificable:** pedía cuatro campos con evidencia medida y la pregunta abierta
+ya formulada. Eso es un filtro de madurez. Y lo que se pierde no es lo maduro, que por definición ya
+sobrevivió a que alguien lo pensara: **lo que se pierde es lo crudo**.
+
+**Dos casos que lo prueban, los dos del autor y los dos anteriores a este archivo.** Discutió con un
+modelo anterior los siete acordes de la rueda de quintas y nunca llegó a ninguna parte, porque no era
+un tema con pregunta abierta sino material de conversación. Y el panel de fijar acordes es herencia
+del primer commit sin propósito escrito en ningún lado: costó cinco PR de discusión descubrir de
+dónde venía, y una línea suelta en su momento los habría ahorrado. **Ninguno de los dos habría pasado
+los cuatro campos.**
+
+**Decisión: se invierte el criterio y el archivo se renombra a `CONTEXTO-TEMPORAL.md`.** El criterio
+de entrada deja de ser "¿está maduro?" y pasa a ser **"¿se pierde si no lo escribo?"**. El nombre
+viejo describía lo que el archivo ya no es y sugería el criterio equivocado.
+
+**Y la disciplina se muda de la entrada a la salida.** Entrar cuesta una línea con su fecha y quién
+la anotó. Salir cuesta colocarla en uno de cuatro destinos, con el porqué que traía: un PR que la
+ataque, el BACKLOG, una fase, o el descarte si es duplicada o irrelevante. La métrica del archivo es
+la velocidad con que se vacía, no lo que contiene.
+
+**Los cuatro campos no se tiran: cambian de lugar.** Dejan de ser requisito de entrada y pasan a ser
+lo que una línea gana si se la promueve a tema. Lo que antes cerraba la puerta ahora es un ascenso.
+
+**La prosa de ese archivo queda exenta de las reglas de "Prosa" y de "Guion largo" de `CLAUDE.md`,**
+y la exención es parte del diseño, no una concesión. Su único trabajo es que algo sobreviva, y
+encarecer la escritura es lo que garantiza que no se escriba. Por lo mismo queda fuera del corpus que
+esas reglas miden: medir un texto que nadie va a corregir no dice nada.
+
+**El orden de los disparadores importa y va escrito así: primero preguntar, después anotar.** Si el
+alcance se abre y lo anterior no quedó documentado, lo correcto es preguntarle al autor si conviene
+darle forma a lo abierto antes de seguir, porque eso manda la idea directo a su hogar sin pasar por el
+tránsito. El archivo es la red para cuando esa pregunta no se hace o no se acepta. Al revés, se vuelve
+la excusa para no preguntar y se acumula igual que el anterior.
+
+**Por qué hay números y por qué no son arbitrarios.** La condición real de anotar es que una rama de
+alcance se esté cerrando, y la de recoger es que se cierre. Esas condiciones son de estado, y un
+modelo con ventana grande las reconoce mientras uno con ventana chica no. Los números, tres prompts
+sin anotar habiendo discusión y nueve PR sin fase activa con el archivo sin vaciar, son la red para
+el segundo. **La regla se escribe para el peor lector, no para el mejor**, que es el criterio con el
+que este repo escribe todo desde el primer PR. Si la condición de estado se reconoce, los números no
+se usan nunca.
+
+**La frontera con el BACKLOG, escrita ahora para que no compitan.** Al BACKLOG va lo que ya se sabe
+que se quiere, porque de ahí sale el próximo roadmap y sus ítems tienen que poder evaluarse: qué
+bloquea a qué, qué se implementa y qué se posterga. Al contexto temporal va lo que todavía no se sabe
+si se quiere, que no se puede evaluar. Sin esta línea el archivo iba a competir con el backlog, que
+es exactamente el problema sin resolver que ya existe entre el BACKLOG y "Direcciones sin fase".
+
+**Estado:** vigente. Reemplaza a la entrada del 2026-08-19 "Un tema en discusión tiene dónde vivir, y
+de dónde salir", que queda escrita porque este archivo es append-only y porque su diagnóstico seguía
+siendo correcto: lo que falló fue el criterio de entrada, no la idea de que ese estado del trabajo
+necesitaba un lugar.
+
+---
+
+## 2026-08-20 — Correr en el navegador del usuario ata el programa a una versión que nadie controla
+
+**Contexto:** el proyecto corre desde `file://` en el navegador que el usuario ya tiene, sin empaquetar
+nada. Esa decisión está tomada hace tiempo y sigue siendo la correcta. Lo que nunca se escribió es su
+consecuencia.
+
+**La consecuencia:** el programa depende de una versión de navegador que cambia sin aviso y que nadie
+de este repo controla. No es una discusión pendiente ni un ítem para hacer: es una propiedad del
+sistema que faltaba registrar.
+
+**El ejemplo concreto que la hizo visible.** El teclado encendido antes de abrir la página no se
+detecta, con seis hipótesis descartadas y ninguna causa del lado del repo. Una de esas seis es que el
+síntoma se reprodujo en un segundo programa, con otro código y otro camino de arranque, así que no es
+de esta implementación. Cuando se agotan las causas propias, la que queda está afuera.
+
+**La alternativa y su costo, para que no haya que redescubrirlos.** Otros programas empaquetan el
+navegador junto con la aplicación. Eso ata la versión y elimina la clase entera de problema, y cuesta
+distribuir una entrega por sistema operativo. **Descartada por ese costo**, que hoy no se justifica.
+
+**Para qué sirve tener esto escrito:** la próxima vez que algo se rompa sin que nadie haya tocado
+nada, la sesión que lo investigue va a empezar buscando el error en este repo, que es donde no está.
+Con esta entrada empieza por el otro lado.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas
