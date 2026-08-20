@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIDI Scale Trainer Pro - V11.82 (Inteligencia Armónica)</title>
+    <title>MIDI Scale Trainer Pro - V11.84 (Inteligencia Armónica)</title>
     <link rel="stylesheet" href="src/estilos.css">
 </head>
 <body>
@@ -23,7 +23,7 @@
              título vive acá, ya no flota como overlay, así que no se pisa con el readout.
              Los bloques de adentro del menú NO se recrearon: se reubicaron con sus id. -->
         <nav class="menubar" id="menubar">
-            <h1>🎹 MIDI Scale Trainer Pro - V11.82</h1>
+            <h1>🎹 MIDI Scale Trainer Pro - V11.84</h1>
             <span class="credits">Desarrollado con asistencia de IA</span>
             <button id="btn-menu-opciones" aria-expanded="false">Opciones</button>
             <div class="menu-panel" id="menu-opciones" hidden>
@@ -164,10 +164,16 @@
 
         <!-- CAJAS DE SISTEMA (incremento 5.3): subtítulos centrados y feedback centrado
              debajo, como fija el estándar espacial. La guía nace bajo el tercer punto de
-             nacimiento y crece en vertical. Marcadores de posición sin lógica: cablearlas al
-             motor es trabajo posterior. El feedback sí muestra los avisos que genera el
+             nacimiento y crece en vertical. El feedback muestra los avisos que genera el
              chasis, que no vienen del motor. -->
-        <div class="box syswidget" id="sys-subtitles">Subtítulos del entrenamiento · por cablear</div>
+        <!-- Los subtítulos nacen vacíos. El texto de relleno que había acá decía algo que nadie
+             sostenía: la caja lo mostraba igual sin que ningún autor estuviera escribiendo, que es
+             lo mismo que hacía el acorde detectado cuando se quedaba pegado. Ver DECISIONS,
+             2026-08-10, "Dueño de superficie: cerrar el widget apaga su efecto". No lleva
+             expiración de mensajes: el sistema de entrenamientos que va a escribir acá no existe, y
+             recetar cómo caducan sus mensajes sería prescribir sobre algo que no está. Vacía mide
+             37.2 x 13.1 px de pantalla y se sigue arrastrando, comprobado. -->
+        <div class="box syswidget" id="sys-subtitles"></div>
         <div class="box syswidget" id="sys-feedback">Feedback del sistema · por cablear</div>
         <!-- La guía. La leyenda de colores se mudó acá desde el pie del teclado, según la
              entrada de decisiones del 2026-08-09 "Dónde vive la leyenda de colores". Cada fila

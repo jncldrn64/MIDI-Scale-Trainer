@@ -39,54 +39,12 @@ así que cinco abarca desde media jornada activa hasta una semana floja. Se recu
 
 ---
 
-## El acorde no se suelta mientras queden bajos apretados que no forman nada
-
-**Qué se discute.** Con uno o dos bajos apretados que no arman ningún acorde reconocible, el acorde
-anterior sigue vigente sin límite. La condición de liberar exige cero bajos y la de detectar exige al
-menos tres, así que entre uno y dos hay una zona donde no se libera lo viejo ni se detecta lo nuevo.
-
-**Qué ya se sabe, con evidencia.** Reproducido con registro del autor: seis segundos con el acorde
-pegado, y la línea "Retención vencida y el contexto se queda: todavía hay N bajo(s) apretado(s)"
-apareciendo justo al vencer el plazo. No hace falta equivocarse con el split para llegar acá: pasa
-igual soltando una nota de tres para reacomodar el dedo. Las dos condiciones están a la vista, la de
-liberar en `MIDI.triggerContextTimeout` y la de detectar en `MIDI.triggerAccumulation`. Y el mínimo
-de tres no es arbitrario: es la cantidad mínima de notas que puede formar un acorde, y
-`Engine.detectChord` abre con `if (notesArray.length < 3) return null`. El motor reconoce diecisiete
-plantillas, ocho de tres notas y nueve de cuatro, contadas sobre `CHORD_TEMPLATES` de
-`src/engine.js`.
-
-**Qué falta decidir.** Cuál de estas cuatro, sabiendo que la última es la más prometedora:
-
-- Liberar cuando los bajos bajen de tres. Rompe el reacomodo de dedos, que es un gesto normal.
-- Que la retención se re-arme al apretar un bajo, no solo al soltarlo. Hoy el reloj corre desde el
-  último soltado, así que apretar notas nuevas no lo reinicia.
-- Reevaluar cada vez que cambia el conjunto de bajos, en vez de solo al llegar a tres.
-- Mirar el contenido y no el conteo: si aparece una nota que no pertenece al acorde activo, eso es
-  evidencia directa de que el acorde cambió, y hoy esa evidencia se descarta. Con desvanecimiento
-  gradual en vez de interruptor, y soltando del todo al detectar otro acorde.
-
-Y debajo de las cuatro, la pregunta de fondo: **si "no reconozco" borra el acorde anterior o lo
-conserva.** Borrarlo es honesto y puede parpadear; conservarlo es estable y miente. Es el mismo
-dilema que la función tonal ya resolvió, diciendo "sin teoría escrita" en vez de forzar una función.
-
-**Esto se decide con un boceto, no discutiendo.** Es una pregunta de interacción y no de corrección:
-cuál se siente mejor se contesta tocando, no argumentando. Las teclas clicables de la v11.81 lo
-permiten sin hardware. El repo ya resolvió así el alto de la tecla blanca y la vista de fórmula.
-
-**Qué pasa si nadie decide.** El contexto sigue ensuciándose y las evaluaciones siguen dando falsos
-aciertos contra un acorde que ya no suena, que es lo que llevó al autor a creer que el coloreo había
-empeorado con el rediseño visual.
-
-**Entró:** 2026-08-20, PR "fix: el split se lee dos veces, y el fallo mudo cuando no hay teclado".
-
----
-
 ## El teclado encendido antes de abrir la página no se detecta
 
 **Qué se discute.** Con el teclado ya encendido, la app no lo detecta al cargar. Hay que apagarlo y
 encenderlo con la página corriendo.
 
-**Qué ya se sabe, con evidencia. Lo valioso son cinco hipótesis descartadas con prueba.**
+**Qué ya se sabe, con evidencia. Lo valioso son seis hipótesis descartadas y ninguna en pie: a esta altura el valor del tema es saber qué no volver a probar.**
 
 - No es que el puerto quede tomado por la pestaña anterior: cerrar Chrome entero no cambia nada.
 - No es lentitud de la enumeración: el puerto virtual del sistema aparece en el mismo segundo.
@@ -107,6 +65,13 @@ encenderlo con la página corriendo.
   **El defecto es de arrastre**, anterior a este repositorio y anterior a la reconstrucción, así
   que no es regresión de ningún PR de esta serie. Y **reintentar la enumeración no resuelve nada**,
   que es justo lo que alguien va a programar primero si este dato no está escrito.
+- **Y no es de esta app.** El síntoma se reprodujo en un segundo programa, un boceto de trabajo con
+  otro código, otro camino de arranque y otro momento de pedir el acceso MIDI. Dos implementaciones
+  independientes con el mismo síntoma no dejan lugar a que la causa esté en ninguna de las dos.
+  Junto con esto cayeron las dos últimas pruebas que quedaban por hacer: apretar el botón de conexión
+  MIDI lo más rápido posible tras abrir la página tampoco reconoce, así que **no es cuestión de darle
+  más tiempo al navegador**, que era la hipótesis que seguía viva; y cerrar todas las pestañas y
+  abrirlas de nuevo, con el navegador corriendo y el teclado encendido, tampoco.
 
 Y dos cosas más quedaron comprobadas por el camino: el enganche del manejador funciona, y los puertos
 que sí aparecen se abren bien, con su línea de apertura explícita desde la v11.81.

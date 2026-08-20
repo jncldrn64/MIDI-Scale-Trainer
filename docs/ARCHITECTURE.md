@@ -74,7 +74,7 @@ processMsg({data: [cmd, data1, data2]})   [única puerta de entrada]
 
 noteOn(note, vel)
   → keysDown.add(note)
-  → si note < splitNote:  activeBasses.add(note) → triggerAccumulation()
+  → si note < splitNote:  activeBasses.add(note) → triggerAccumulation() + triggerContextTimeout()
   → si note >= splitNote: activeMelodies.add(note) → evaluateMelody(note)
                                                     → Sonido.veredicto(status)  [si está encendido]
   → Teclado.renderKeyboard() + Readout.updateStatus()
@@ -83,6 +83,11 @@ triggerAccumulation()
   → espera accumMs (debounce, 120ms por defecto)
   → si activeBasses.size >= 3 → MathEngine.detectChord(activeBasses)
   → guarda en State.harmony.chord
+
+triggerContextTimeout(motivo)   [se re-arma con CUALQUIER movimiento de bajos, apretar o soltar]
+  → espera holdMs (2000ms por defecto) desde el último movimiento
+  → al vencer, si !isLocked && activeBasses.size < 3 → State.harmony.chord = null
+  → el 3 es el mismo mínimo de detectChord: con dos notas no hay acorde que sostener
 
 evaluateMelody(note)
   → inScale = pc está en validPitches
@@ -101,7 +106,7 @@ releaseNoteInternal(note, isBass)  [al soltar la tecla]
   → si isBass !== (note < splitNote): línea de aviso, el split se movió con la tecla apretada
   → duration = now - startTime
   → si status !== 'good' && duration < 180ms → status = 'passing' (INDULTO)
-  → si isBass: activeBasses.delete(note) → triggerContextTimeout()
+  → si isBass: activeBasses.delete(note) → triggerContextTimeout()   [la otra mitad del re-armado]
   → si no:     activeMelodies.delete(note)
 ```
 

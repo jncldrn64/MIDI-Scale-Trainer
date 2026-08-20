@@ -2833,6 +2833,79 @@ del motor.
 
 ---
 
+## 2026-08-20 — La retención se re-arma con cualquier movimiento de bajos, y libera por debajo de tres
+
+**Contexto:** el acorde detectado podía quedarse vigente sin límite. `MIDI.triggerContextTimeout` se
+llamaba solo al soltar un bajo, así que quien soltaba unos y apretaba otros dejaba el reloj corriendo
+desde el soltado viejo; al vencer encontraba bajos apretados y no liberaba nada. Y si esos bajos
+nuevos no llegaban a tres, tampoco se detectaba nada. Un acorde vigente contamina las evaluaciones,
+porque una nota del acorde vale aunque esté fuera del universo.
+
+**Cómo se eligió, y esto es método reutilizable: con un boceto, no discutiendo.** Es una pregunta de
+interacción y no de corrección, así que cuál se siente mejor se contesta tocando. El repo ya resolvió
+así el alto de la tecla blanca y la vista de fórmula. Se compararon dos estrategias con la misma
+entrada: **A**, re-armar la retención con cualquier movimiento de bajos; y **B**, tomar una nota que
+no pertenece al acorde activo como evidencia de que el acorde cambió y disparar un desvanecimiento.
+
+**Ganó A**, y la razón salió de probar, no de argumentar: B solo se separa de A en casos que hay que
+forzar. Una estrategia más compleja que gana en casos raros no se justifica todavía.
+
+**Decisión, y son dos mitades que se necesitan.** La retención se re-arma al apretar y al soltar un
+bajo, así que mide el tiempo desde que la mano izquierda se quedó quieta. Y libera con **menos de
+tres** bajos apretados, no con cero.
+
+**Por qué las dos juntas, con la medición que lo obliga.** Re-armar sin bajar el umbral no arregla
+nada: medido en Chromium, tres bajos que forman Do mayor, soltarlos, apretar dos nuevos, y el acorde
+seguía vigente a los 4800 ms, con la línea "Retención vencida y el contexto se queda: todavía hay 2
+bajo(s) apretado(s)". Y bajar el umbral sin re-armar rompería el reacomodo de dedos, porque soltar
+una nota de tres arrancaría un reloj que nadie reinicia al volver a apretarla. Re-armando, ese gesto
+tiene la ventana entera para volver a tres, comprobado: el acorde sobrevive.
+
+**El tres no es un umbral nuevo.** Es el mismo mínimo y por el mismo motivo que `Engine.detectChord`,
+que abre con `if (notesArray.length < 3) return null`: con dos notas no hay acorde que sostener, así
+que un acorde que sigue vigente con dos bajos apretados está vigente por inercia. No se toca el
+mínimo de detección.
+
+**El hueco que queda, medido y no tapado.** Tres o más bajos que no forman ningún acorde conservan el
+anterior. Reproducido: Do mayor detectado, soltarlo, apretar el racimo Do#-Re-Mib, y a los 2600 ms el
+readout sigue diciendo Do mayor, con `⚠️ Acorde no reconocido` en el log. Ese caso es exactamente
+donde el conteo no alcanza y haría falta mirar qué notas son, así que **es la condición de reapertura
+de B**, ahora escrita como un caso reproducible y no como "más adelante". B queda en el BACKLOG.
+
+**Y lo que el boceto dejó claro sin depender de cuál gane:** cuando aparece una nota que no pertenece
+al acorde activo, el motor lo sabe y descarta esa evidencia. Es información disponible que hoy no se
+usa.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-20 — Una superficie sin autor no muestra el último mensaje como si siguiera vigente
+
+**Contexto:** la caja de subtítulos mostraba "Subtítulos del entrenamiento · por cablear", un texto de
+relleno que nadie escribía y que nadie retiraba.
+
+**Decisión:** los subtítulos nacen vacíos. Cuando no hay actividad que los cambie, la caja no muestra
+nada.
+
+**Razón, y no es cosmética.** Es el mismo defecto que el acorde pegado de la otra entrada de hoy:
+algo que quedó de antes y sigue en pantalla sin que nadie lo sostenga. Se apoya en la entrada del
+2026-08-10 "Dueño de superficie: cerrar el widget apaga su efecto": si ningún autor está escribiendo
+ahí, la superficie no debería seguir mostrando lo último que se escribió.
+
+**Lo que esta decisión no hace, a propósito:** no inventa expiración de mensajes. El sistema de
+entrenamientos que va a escribir en esa caja no existe, y recetar hoy cómo caducan sus mensajes sería
+prescribir un mecanismo futuro, que es lo que "Promesas y umbrales" de `CLAUDE.md` prohíbe. Cuando ese
+sistema exista decidirá cómo retira lo que escribe.
+
+**Comprobado antes de darlo por bueno:** la caja vacía mide 37.2 por 13.1 px de pantalla, se sigue
+arrastrando agarrándola por el centro y sigue apareciendo como "Subtítulos" en el menú de Widgets. No
+hizo falta ningún mínimo de tamaño.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas
