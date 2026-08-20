@@ -120,6 +120,17 @@
 
 ## Motor
 
+- **bajo fantasma**: una nota que quedó en `State.midi.activeBasses` después de soltarla, porque se
+  la buscó en el conjunto equivocado. Bloquea la liberación del contexto armónico, que exige cero
+  bajos, así que el acorde detectado se queda vigente sin límite. La causaba recalcular la
+  clasificación contra el split al soltar, y se arregló leyéndola del conjunto. Fuente: 2026-08-20,
+  *Nada que decida el destino de un evento se recalcula después de que el evento ocurrió*.
+- **dispositivo real** y **puerto virtual del sistema**: los dos grupos en que la app reparte los
+  puertos MIDI de entrada que enumera. Real es el que declara fabricante, virtual el que no.
+  `MIDIPort` no expone ningún campo que lo diga, así que es una heurística sobre una observación y no
+  un dato de la interfaz; por eso el log imprime `manufacturer`, `version` y `name` de cada puerto y
+  en qué grupo lo puso. Fuente: 2026-08-20, *Un puerto virtual se distingue de un dispositivo por el
+  fabricante, y es una heurística*.
 - **entrada sustituta**: un mensaje MIDI que fabrica la app en vez de recibirlo de un dispositivo, y
   que entra por el mismo manejador, `MIDI.processMsg`. Hoy la produce una sola cosa, el clic sobre
   una tecla de la capa 0, con la función `MIDI.entradaSintetica`. No es un control: un control cambia
