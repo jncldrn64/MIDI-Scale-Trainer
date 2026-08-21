@@ -156,6 +156,37 @@ function runPassingCase(fx, universePitches, c) {
         `status: esperaba '${c.expected.status}', obtuve '${status}'`);
 }
 
+// Resolución: un acorde se vuelve dominante secundaria por dónde resuelve, y hasta ahora ninguna
+// fixture probaba el vínculo. Se probaban el Re7 y el Sol por separado, cada uno correcto por su
+// cuenta, y nada decía que uno lleva al otro. Este caso toma los dos acordes y afirma que el
+// objetivo que el motor le deriva al primero es la raíz del segundo.
+//
+// Es puro y barato: dos llamadas a detectChord y una a classifyChordRelation, sin tiempo ni DOM.
+// No prueba que la secuencia haya ocurrido en el tiempo, que es otra cosa y pediría el arnés de
+// eventos que el BACKLOG tiene anotado. Prueba la relación armónica entre los dos acordes.
+function runResolutionCase(fx, universePitches, c) {
+    const exp = c.expected;
+    const desde = Engine.MathEngine.detectChord(c.fromNotes);
+    const hacia = Engine.MathEngine.detectChord(c.toNotes);
+    assert.ok(desde, `el acorde de partida no se reconoció: ${JSON.stringify(c.fromNotes)}`);
+    assert.ok(hacia, `el acorde de llegada no se reconoció: ${JSON.stringify(c.toNotes)}`);
+
+    assert.strictEqual(desde.type, exp.fromType,
+        `tipo del acorde de partida: esperaba '${exp.fromType}', obtuve '${desde.type}'`);
+    assert.strictEqual(hacia.rootPC, exp.toRootPC,
+        `raíz del acorde de llegada: esperaba ${pcName(exp.toRootPC)}, obtuve ${pcName(hacia.rootPC)}`);
+
+    const rel = Engine.classifyChordRelation(desde, universePitches);
+    assert.strictEqual(rel.relation, exp.fromRelation,
+        `relación del acorde de partida: esperaba '${exp.fromRelation}', obtuve '${rel.relation}'`);
+
+    // Lo que este tipo de caso existe para probar: el objetivo derivado del primero es la raíz
+    // del segundo. Si el motor cambia cómo deriva el objetivo, esto se cae acá y no en la UI.
+    assert.strictEqual(rel.targetPC, hacia.rootPC,
+        `el objetivo de la dominante secundaria debería ser la raíz del acorde de llegada: ` +
+        `esperaba ${pcName(hacia.rootPC)}, el motor derivó ${pcName(rel.targetPC)}`);
+}
+
 function runFixture(file) {
     const fx = JSON.parse(fs.readFileSync(path.join(FIXTURES_DIR, file), 'utf8'));
     const universePitches = Engine.scalePitches(fx.universe.root, fx.universe.type);
@@ -170,6 +201,7 @@ function runFixture(file) {
             else if (c.kind === 'passing') runPassingCase(fx, universePitches, c);
             else if (c.kind === 'roman') runRomanCase(fx, c);
             else if (c.kind === 'function') runFunctionCase(fx, c);
+            else if (c.kind === 'resolution') runResolutionCase(fx, universePitches, c);
             else throw new Error(`kind desconocido: '${c.kind}'`);
         });
         const last = failures.length && failures[failures.length - 1].label === c.label;

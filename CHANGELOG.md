@@ -2,6 +2,34 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.91 — 2026-08-21
+
+### Added
+
+- `tests/fixtures/oda-a-la-alegria.json`: cinco casos corroborados contra una corrida real. El autor tocó la pieza entera con su teclado y el registro quedó, con 62 evaluaciones de melodía y las 62 en `good`. Es la primera fixture del repo corroborada así.
+- El Re7 sin quinta, `Fa#-Re-Do`, que es la forma que el autor toca. El motor la lee con la plantilla `7(no5)` y la clasifica igual como dominante secundaria que empuja a Sol.
+- El Si disminuido, que el registro reveló y que ninguna fixture cubría. Es el `vii°` diatónico de Do mayor, con función dominante. Sus notas son inferidas y la etiqueta del caso lo dice.
+- `tests/run.js`: el tipo de caso `resolution`, que toma dos acordes y afirma que el objetivo derivado del primero es la raíz del segundo. Es lo que vuelve dominante secundaria a un acorde y no se probaba.
+- `docs/DECISIONS.md`: el método de corroborar contra una corrida real, que las dos formas de un acorde conviven, la hipótesis equivocada sobre el "SI", y por qué el caso de resolución entra al arnés.
+
+### Changed
+
+- El campo `source` de esa fixture distingue sus dos procedencias. Antes decía "Caso real del historial", que no dice de dónde salió ni quién lo verificó.
+- `docs/ROADMAP.md`: el estado de la auditoría de fixtures. Dos auditadas, una corroborada, dos esperando a que el autor las toque.
+
+**Las dos formas del acorde conviven en vez de reemplazarse.** La fixture probaba el Re7 completo y el
+autor toca la forma sin quinta. La fixture no estaba mal: probaba otro acorde, y los dos son válidos.
+Verificado que las dos dan el mismo análisis, raíz Re, objetivo Sol, numeral `II7`.
+
+**Auditar y corroborar son dos cosas distintas.** Auditar contesta si los valores esperados son
+correctos según la teoría; corroborar contesta si el caso es el que alguien toca. Una fixture puede
+pasar la primera y fallar la segunda.
+
+**El caso de resolución no pasa por casualidad**, comprobado: cambiando el acorde de llegada a Fa
+mayor falla con `raíz del acorde de llegada: esperaba Sol, obtuve Fa`.
+
+**Las fixtures pasan de 41 a 46 casos.**
+
 ## v11.90 — 2026-08-20
 
 ### Added
