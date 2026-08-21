@@ -3129,6 +3129,86 @@ momento y sus razones; este trabajo arregla cuánto tarda, no cuándo.
 
 ---
 
+## 2026-08-21 — Una fixture se corrobora contra una corrida real, y las dos formas de un acorde conviven
+
+**Contexto:** las cinco fixtures del repo vienen de sesiones con otro modelo cuyo contexto se perdió.
+Que estén verdes significa que el motor coincide consigo mismo. Nadie había comprobado que sus notas
+fueran las que alguien toca de verdad.
+
+**El autor tocó la Oda a la Alegría entera con su teclado y el registro quedó.** 1052 líneas, 62
+evaluaciones de melodía, las 62 en `good`. La progresión que el motor detectó coincide con su
+partitura: Do, Si disminuido, La menor y Sol en las partes 1, 2 y 4; Sol alternando con Do en la
+parte 3, y un Re7 sin quinta resolviendo a Sol como cierre de esa parte.
+
+**Primera decisión: corroborar contra una corrida real es un método, y se distingue de auditar la
+teoría.** Auditar contesta si los valores esperados son correctos según la teoría; corroborar
+contesta si el caso es el que alguien toca. Son dos preguntas distintas y una fixture puede pasar la
+primera y fallar la segunda.
+
+**Segunda decisión: las dos formas del mismo acorde conviven en vez de reemplazarse.** La fixture
+probaba el Re7 completo, `Re-Fa#-La-Do`. El autor toca `Fa#-Re-Do`, sin la quinta, que el motor
+reconoce con la plantilla `7(no5)`. **La fixture no estaba mal: probaba otro acorde**, y los dos son
+válidos.
+
+La completa se queda porque alguien la va a tocar, y la del autor entra porque es la que se toca.
+Verificado que las dos dan el mismo análisis: raíz Re, dominante secundaria, objetivo Sol, numeral
+`II7`, función `no_diatonica`.
+
+**Y el campo `source` de una fixture dice de dónde viene cada grupo de casos.** El de esta decía
+"Caso real del historial", que no dice ni de dónde salió ni quién lo verificó. Ahora distingue los
+cuatro casos auditados de los cinco corroborados, con su fecha. Esa distinción es la que va a hacer
+falta cuando se auditen las otras cuatro.
+
+---
+
+## 2026-08-21 — El acorde que el autor anotaba como "SI" es `vii°`, y la hipótesis del revisor era falsa
+
+**Contexto:** en la progresión de la Oda el autor anotaba un acorde como "SI" y no estaba escrito qué
+acorde era.
+
+**La hipótesis que se había propuesto era que fuera Sol en primera inversión.** El registro la
+desmintió: el motor detecta Si disminuido, que es el `vii°` diatónico de Do mayor, con función
+dominante.
+
+**Por qué queda escrito un error que ya se corrigió.** La hipótesis era razonable y era de quien
+revisaba, no del autor. Sin el registro se habría escrito en una fixture como Sol invertido y habría
+quedado verde defendiendo un acorde que nadie tocó. Es el caso concreto de por qué el paso de
+registro a fixture no puede ser automático.
+
+**Lo que se agregó:** un caso que prueba el Si disminuido, que ninguna fixture cubría. **Sus notas
+son inferidas, no leídas del registro**, y eso va escrito en la etiqueta del caso: el registro que
+llegó a esta sesión son fragmentos citados, no el archivo. La tríada `Si-Re-Fa` en el registro grave
+del autor es lo que se usó.
+
+**Estado:** vigente.
+
+---
+
+## 2026-08-21 — Un acorde se vuelve dominante secundaria por dónde resuelve, y eso ahora se prueba
+
+**Contexto:** las fixtures probaban el Re7 por un lado y el Sol por el otro, cada uno correcto por su
+cuenta. **Nada probaba el vínculo**, que es justamente lo que vuelve dominante secundaria al primero.
+Es la pregunta con la que el autor empezó el proyecto: por qué una nota fuera de la escala está bien.
+La respuesta es la resolución.
+
+**Decisión: el arnés gana un tipo de caso, `resolution`.** Toma dos acordes, `fromNotes` y `toNotes`,
+y afirma que el objetivo que el motor le deriva al primero es la raíz del segundo.
+
+**Por qué se agregó al arnés en vez de dejarlo en el BACKLOG.** Es puro y barato: dos llamadas a
+`detectChord` y una a `classifyChordRelation`, sin tiempo ni DOM, o sea que no toca ninguna de las
+tres cosas que faltan para cubrir el manejo de eventos. Son treinta líneas y no reescriben nada.
+
+**Lo que este tipo de caso no prueba, y conviene decirlo para que nadie lo confunda:** no prueba que
+la secuencia haya ocurrido en el tiempo. Prueba la relación armónica entre dos acordes. Probar la
+secuencia real pide el arnés de eventos con tiempo simulable que el BACKLOG tiene anotado.
+
+**Comprobado que no pasa por casualidad:** cambiando el acorde de llegada a Fa mayor el caso falla
+con `raíz del acorde de llegada: esperaba Sol, obtuve Fa`.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas

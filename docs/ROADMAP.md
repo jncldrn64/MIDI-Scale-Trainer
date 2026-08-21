@@ -1572,6 +1572,14 @@ prioridad, no porque la rueda la bloquee.
   convierte a fixture sin volver a inventar la respuesta correcta, y qué pasa con las 41 actuales, si
   se retiran, se conservan como regresión o se revisan una por una. **Bloquea a** "Análisis por
   comportamiento".
+  **Estado de la auditoría al 2026-08-21**, que empezó a contestar la tercera de esas preguntas.
+  `grados-romanos` y `raiz-ambigua` están auditadas y su teoría es correcta. `oda-a-la-alegria` está
+  **corroborada contra una corrida real**, que es más fuerte que auditada: el autor tocó la pieza
+  entera y sus cinco casos nuevos salen de ese registro. `blues` y `bad-apple` siguen sin corroborar y
+  esperan a que el autor las toque. Auditar y corroborar son dos cosas distintas: la primera pregunta
+  si los valores esperados son correctos según la teoría, la segunda si el caso es el que alguien
+  toca. Las razones viven en `DECISIONS.md`, entrada del 2026-08-21 "Una fixture se corrobora contra
+  una corrida real, y las dos formas de un acorde conviven".
   **Entró:** 2026-08-20, PR "chg: el archivo de tránsito pasa a ser contexto temporal, y se vacía".
   **Procedencia:** venía del archivo de tránsito, hoy `docs/CONTEXTO-TEMPORAL.md`, donde entró el 2026-08-19.
 - **Análisis por comportamiento: qué casos generales le faltan al motor.** Bloqueado por las fixtures
