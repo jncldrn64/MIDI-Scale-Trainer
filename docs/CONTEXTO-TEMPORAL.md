@@ -125,3 +125,21 @@ acepta por ese camino no dice por qué se aceptó. Material para los modos de en
 fixtures. Es material para los modos de entrenamiento, y el ítem de esos modos acaba de entrar al
 BACKLOG con su pregunta abierta, así que esta anotación se coloca cuando esa pregunta se conteste.
 
+**2026-08-21, el modelo que implementa.** Un entrenamiento que trae sus propios widgets choca con una
+regla que ya está escrita. La visión entró hoy a "Direcciones sin fase" del ROADMAP; la regla es la
+entrada del 2026-08-11 "El motor no ejecuta lógica que venga de afuera", que dice que el motor
+consume datos y no ejecuta lógica que no esté en `src/engine.js` y cubierta por las fixtures.
+
+El choque: si un entrenamiento de un tercero trae un widget, ese widget es código. Corriendo desde
+`file://`, sin aislamiento, con acceso al estado. La regla protege al motor y no dice nada de la
+interfaz, así que hoy no hay nada escrito que impida eso, ni nada escrito que lo autorice.
+
+Salida candidata, que es la misma que ya se eligió una vez: un entrenamiento aporta datos, no lógica.
+Un widget traído por un entrenamiento sería una composición de piezas que ya existen (qué vistas usa,
+qué valores muestra, cómo se ordenan), no una pieza nueva con código propio. Es el mismo movimiento
+que el ejemplo de esa entrada, donde un universo nuevo es una entrada en `SCALES` y no un algoritmo.
+
+**No se resuelve acá a propósito.** Va anotado porque el día que alguien diseñe el formato de
+entrenamiento va a tener que elegir, y si esto no está escrito va a elegir lo fácil.
+**Por qué sigue acá (2026-08-21):** nace acá. No se coloca todavía porque colocarla sería resolverla,
+y quien la resuelva tiene que ser quien diseñe el formato.

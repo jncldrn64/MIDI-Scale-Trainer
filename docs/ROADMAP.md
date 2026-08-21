@@ -1703,6 +1703,70 @@ prioridad, no porque la rueda la bloquee.
   Con ese mismo PR entraron "Que el coloreo del teclado obedezca de verdad", "La precedencia entre
   el widget de escala", "La rama del preveredicto de `renderKeyboard`", "El split como rango" y
   "Que el widget de feedback del sistema se abra solo".
+- **Cargar un archivo MIDI y analizarlo armónicamente.** Hoy la única fuente de notas es lo que el
+  usuario toca con las manos. Un archivo cargado le daría al motor, que ya existe entero, material
+  que nadie tiene que ejecutar: mirar una pieza y ver qué hizo quien la escribió, en vez de buscarlo
+  tecla por tecla.
+
+  **No es el caso del SoundFont, y conviene decir por qué**, porque los dos se leen como "cargar un
+  archivo" y aquel se descartó. Un archivo MIDI es una lista de eventos con tiempos; un SoundFont es
+  un contenedor con muestras, mapeos de tecla y envolventes, que es la frase con la que la entrada
+  del 2026-08-11 "El SoundFont no entra por el camino del audio, y MIDI de salida lo reemplaza" lo
+  mató. Ninguna de esas razones alcanza a un MIDI: no hay que decodificar audio, no hay archivos de
+  cientos de megabytes, y el evento de nota es el mismo que el manejador de Web MIDI ya recibe.
+
+  **Se toca con el ítem "Fixtures derivadas de partituras de dominio público"**, que declara pendiente
+  el formato de las fixtures nuevas. Si el programa lee archivos MIDI, ese es el formato natural para
+  derivarlas y las dos decisiones dejan de ser dos.
+
+  **Contra qué se distingue, para que nadie lo lea como duplicado.** "Modo canción" de este mismo
+  BACKLOG carga un MIDI para reproducir el bajo y evaluar la melodía en vivo, o sea que el archivo es
+  acompañamiento y el juicio sigue siendo sobre lo que tocás. Acá el juicio es sobre el archivo. Y la
+  Nota del 2026-07-30 de la Fase 8 parquea un tercer caso, entregarle al motor una línea de acordes
+  ajena para que la descomponga, que es lo mismo salvo que la entrada no es un archivo.
+  **Entró:** 2026-08-21, PR "doc: lo que salió de mirar qué hace la competencia".
+  **Procedencia:** el autor encargó una investigación sobre qué hace el software que ya existe, y las
+  tres herramientas cercanas que aparecieron traen reproductor de archivos MIDI para análisis. El
+  ítem sale de ahí, no de una necesidad interna del código.
+- **Colorear el teclado por función tonal.** El teclado se colorea hoy por universo, por acorde y por
+  veredicto. Tónica, subdominante y dominante son una vista más del mismo dato: `getTonalFunction` en
+  `src/engine.js` ya la devuelve desde la Fase 4, y hoy se muestra en el panel de Análisis y en
+  ninguna tecla.
+
+  No es un motor nuevo, es una vista, en el sentido exacto de la entrada del 2026-08-11 "Una vista es
+  cómo se mira, un widget es quién tiene el permiso": cambia cómo se mira el mismo dato y no cambia
+  qué puede tocar la caja.
+
+  **Lo que hay que decidir es el color, y no es un detalle.** La regla 1 de "Colores" de `CLAUDE.md`
+  reserva los seis hexadecimales de la paleta de veredicto para las teclas y la leyenda, y prohíbe
+  que otro elemento los use. Una segunda familia de colores sobre las mismas teclas necesita valores
+  propios y necesita que se resuelva qué gana cuando las dos quieren pintar la misma tecla.
+  **Entró:** 2026-08-21, PR "doc: lo que salió de mirar qué hace la competencia".
+  **Procedencia:** de la misma investigación. Una de las tres herramientas colorea el teclado por
+  función armónica, y eso mostró que el dato que este motor ya calcula tiene una superficie que acá
+  no se está usando.
+- **La enarmonía: el nombre de una nota depende de la tonalidad.** Medido en el código. `getNoteStr`
+  en `src/state.js` deriva el nombre de una tabla de doce entradas indexada por el resto de dividir
+  por doce, así que **Fa# y Solb son el mismo nombre para el programa**:
+
+  ```js
+  function getNoteStr(midi) {
+      const pc = midi % 12;
+      return { name: State.config.latino ? NOTES_ES[pc] : NOTES_EN[pc], oct: Math.floor(midi/12)-1, pc };
+  }
+  ```
+
+  Musicalmente no son lo mismo: en Sol mayor va Fa# y en Reb mayor va Solb, y en un análisis correcto
+  el nombre sale de la tonalidad y de la función, no del pitch class solo. Para un programa que
+  enseña teoría eso importa, porque escribir mal el nombre de una nota es un error de ortografía
+  musical y el programa lo comete doce veces de doce.
+
+  No bloquea nada y no es urgente. Lo que lo hace valer como ítem es que hoy no está anotado en
+  ninguna parte y que arreglarlo más tarde sale más caro: el nombre se usa en el registro, en el
+  readout y en las etiquetas de las teclas.
+  **Entró:** 2026-08-21, PR "doc: lo que salió de mirar qué hace la competencia".
+  **Procedencia:** de la misma investigación. La herramienta de pago muestra la notación con
+  enarmonía correcta, y comparar contra eso fue lo que hizo mirar la función que nombra las notas.
 
 ---
 
@@ -1777,6 +1841,29 @@ decirlo, así que se leen juntos o no se leen.
   el buffer; el ítem pregunta lo mismo para los efectos del fondo, que también son salida del
   motor. El CHANGELOG lo anota como idea capturada con su bloqueo y sin razón, así que esto se
   puede discutir.
+- **El programa como armazón: entrenamientos que traen lo suyo.** Es visión, no plan, y va escrita
+  como visión a propósito. Del mismo modo que hoy hay dos widgets de andamiaje para poder ejercer el
+  cap antes de que exista una característica de verdad, habría **un entrenamiento de muestra** que
+  sirva de referencia del formato. El usuario podría cargar entrenamientos de otras fuentes, en el
+  formato que se defina. **Un entrenamiento traería sus propios widgets.** Y a futuro, un lugar donde
+  buscar entrenamientos hechos por otros.
+
+  El encuadre del autor conviene conservarlo tal cual, porque es lo que le da sentido a la fase en
+  curso: **hoy se está construyendo el esqueleto.** Si eso llega a existir, el programa deja de ser
+  una aplicación y pasa a ser el armazón sobre el que otros construyen.
+
+  Va acá y no al BACKLOG por la frontera que `CLAUDE.md` declara: un ítem del BACKLOG tiene que poder
+  evaluarse, qué bloquea a qué y qué se posterga, y esto todavía no se puede evaluar. Se lee junto con
+  los primeros cuatro de esta sección, por el mismo motivo que la nota de arriba da: son caras del
+  mismo sistema de entrenamientos, que no existe.
+
+  **La parte que ya choca con una regla escrita está anotada aparte**, en
+  `docs/CONTEXTO-TEMPORAL.md`: un widget traído por un entrenamiento es código, y el motor no ejecuta
+  lógica que venga de afuera.
+  **Entró:** 2026-08-21, PR "doc: lo que salió de mirar qué hace la competencia".
+  **Procedencia:** el autor lo describió al cerrar la investigación sobre qué hace el software que ya
+  existe. Ninguna de las tres herramientas cercanas que aparecieron es un armazón: las tres son
+  aplicaciones cerradas, y eso es lo que hizo que la idea se dijera.
 
 ---
 

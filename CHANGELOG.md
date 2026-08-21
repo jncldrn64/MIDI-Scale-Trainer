@@ -2,6 +2,27 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.93 — 2026-08-21
+
+### Added
+
+- `docs/ROADMAP.md`, BACKLOG: cargar un archivo MIDI y analizarlo armónicamente. Trae escrito por qué no es el caso del SoundFont, que se descartó porque `decodeAudioData` devolvió `EncodingError` sobre un contenedor de muestras. Un MIDI es una lista de eventos con tiempos y ninguna de esas razones lo alcanza.
+- El mismo ítem enlaza con "Fixtures derivadas de partituras de dominio público", que tiene el formato pendiente: si el programa lee MIDI, ese es el formato natural para derivarlas.
+- `docs/ROADMAP.md`, BACKLOG: colorear el teclado por función tonal. `getTonalFunction` existe en el motor desde la Fase 4 y hoy se muestra en el panel de Análisis, en ninguna tecla. Es una vista, no un motor nuevo, y necesita colores propios porque la paleta de veredicto no se reusa.
+- `docs/ROADMAP.md`, BACKLOG: la enarmonía. `getNoteStr` en `src/state.js` deriva el nombre de una tabla de doce entradas indexada por `midi % 12`, así que Fa# y Solb son el mismo nombre para el programa. La función va pegada en el ítem.
+- `docs/ROADMAP.md`, Direcciones sin fase: el programa como armazón. Un entrenamiento de muestra, entrenamientos cargados de otras fuentes, un entrenamiento que trae sus propios widgets, y un lugar donde buscar los de otros. Va acá y no al BACKLOG porque todavía no se puede evaluar.
+- `docs/CONTEXTO-TEMPORAL.md` sube de cuatro anotaciones a cinco. La nueva declara una tensión sin resolver: un widget traído por un entrenamiento es código, y la entrada del 2026-08-11 "El motor no ejecuta lógica que venga de afuera" protege al motor y no cubre la interfaz.
+
+Los tres ítems del BACKLOG y la visión son nuevos, no refuerzos. El `grep` lo sostiene: "enarmon" no
+aparecía en ningún archivo de `docs/` ni en el CHANGELOG, y de las 14 líneas del ROADMAP que
+nombran la función tonal, ninguna hablaba de colorear teclas. El de MIDI se distingue de dos vecinos que sí existen y
+lo dice: "Modo canción" carga un MIDI para acompañar y sigue juzgando lo que tocás, y la Nota del
+2026-07-30 de la Fase 8 parquea entregarle al motor una línea de acordes ajena, sin archivo.
+
+Este PR no escribe ninguna entrada de `docs/DECISIONS.md`. Coloca ideas y no decide ninguna, y la
+tensión del entrenamiento con widgets queda declarada sin resolver a propósito: la resuelve quien
+diseñe el formato de entrenamiento.
+
 ## v11.92 — 2026-08-21
 
 ### Changed
