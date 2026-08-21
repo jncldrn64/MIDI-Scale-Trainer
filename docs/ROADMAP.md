@@ -1363,6 +1363,34 @@ prioridad, no porque la rueda la bloquee.
   desaparecer antes de que el usuario lo lea.
   **Entró:** 2026-08-20, PR "doc: lo que salió de discutir teoría musical y fixtures".
   **Por qué se anotó:** el autor lo pidió y el trabajo anterior resolvió otra cosa.
+- **Los modos de entrenamiento exponen la teoría en un orden, y ese orden no está escrito.** Los cinco
+  ítems de entrenamiento que hay dicen qué entrena cada modo; ninguno dice en qué orden se le muestra
+  la teoría a quien está aprendiendo. Comprobado el 2026-08-21: de las 30 menciones a entrenamiento en
+  este archivo, ninguna habla del orden. **Por qué importa, con el caso que lo trajo:** el autor
+  empezó este proyecto porque las salidas de la escala lo dejaban mal, y lo dejaban mal porque nadie
+  se las había nombrado. Un modo que muestre todos los recursos de una vez repite ese problema. **Lo
+  que falta decidir:** si el orden lo fija cada modo, si sale del universo activo, o si lo elige quien
+  practica.
+  **Entró:** 2026-08-21, PR "chg: vaciar del contexto temporal lo que ya tiene destino". Con ese mismo PR entró "El momento de
+  inicio de una nota se estampa antes que el resto del manejador".
+  **Procedencia:** venía de `docs/CONTEXTO-TEMPORAL.md`, donde entró el 2026-08-20.
+- **El momento de inicio de una nota se estampa antes que el resto del manejador, así que lo que corra
+  ahí le come tiempo al indulto.** `MIDI.evaluateMelody` guarda `startTime: Date.now()` y recién
+  después corre el resto: la cascada de la razón, la línea de `SysLog` que crea un elemento y lo mete
+  en el DOM, `Sonido.veredicto`, y de vuelta en `noteOn` el repintado de las 88 teclas y la
+  actualización del readout. Todo eso pasa dentro de los 180 ms del indulto y se descuenta de la
+  duración que el motor lee al soltar. **Medido el 2026-08-21, después del arreglo del contexto de
+  audio:** el manejador tarda entre 0,7 y 1,1 ms, o sea menos del 1% del umbral. **No es urgente y por
+  eso es un ítem y no un arreglo.** Lo que lo vuelve un ítem y no una anotación suelta es que la
+  trampa es estructural y ya tiene cuatro ocupantes: cualquier cosa que se agregue a `SysLog`, a
+  `renderKeyboard` o al readout entra en esa ventana sin que nadie lo note. El caso que lo mostró, el
+  contexto de audio, costaba 52,5 ms de los 180 y está cerrado. **Lo que falta decidir:** si se estampa
+  el momento antes de todo lo demás, si se toma del evento en vez de `Date.now()`, o si con vigilar el
+  número alcanza.
+  **Entró:** 2026-08-21, PR "chg: vaciar del contexto temporal lo que ya tiene destino". Con ese mismo PR entró "Los modos de
+  entrenamiento exponen la teoría en un orden".
+  **Procedencia:** venía de `docs/CONTEXTO-TEMPORAL.md`, donde entró el 2026-08-20. Salió de medir el
+  punto 3 del Criterio de la Fase 7.
 - **Ajustar los tiempos del motor desde la interfaz, en vivo.** Los cuatro umbrales que gobiernan la
   evaluación son el indulto de paso cromático, la acumulación, la retención del contexto y el error
   visual. Tres de los cuatro ya se editan desde el menú de Opciones, `cfg-accum`, `cfg-hold` y
@@ -1572,6 +1600,23 @@ prioridad, no porque la rueda la bloquee.
   convierte a fixture sin volver a inventar la respuesta correcta, y qué pasa con las 41 actuales, si
   se retiran, se conservan como regresión o se revisan una por una. **Bloquea a** "Análisis por
   comportamiento".
+  **Criterio de tamaño, aportado el 2026-08-21:** un fragmento que ejerce un recurso concreto vale más
+  que una canción completa. Dos compases con una dominante secundaria aíslan el caso y se pueden
+  nombrar; una pieza entera arrastra material que no prueba nada y, si es de otro, arrastra su
+  licencia.
+  **Condición sobre de dónde pueden venir, y va como distinción que aportó el autor, no como
+  asesoramiento:** los términos de un sitio son contractuales y el estado de la obra es otra cosa. Una
+  obra en dominio público lo sigue siendo aunque el sitio imponga condiciones; lo que el sitio puede
+  reclamar es su edición, no la música. Y un archivo MIDI no tiene licencia por ser MIDI: hereda el
+  estado de lo que representa, y la transcripción puede tener derechos propios aunque la obra no los
+  tenga.
+  **Y una condición del método de corroboración, medida el 2026-08-21:** un registro no se puede leer
+  sin saber con qué configuración se grabó. El registro de la Oda muestra `DOWN: Do (60)`,
+  `DOWN: Re (50)` y `DOWN: Fa# (42)` seguidos de `Contexto: Re7(no5)`, y con el split en su valor de
+  fábrica eso no puede pasar: 60 no es menor que 60, así que el Do va a melodía y quedan dos bajos,
+  con los que `detectChord` devuelve null. El autor tenía el split por encima de 60, y eso no está en
+  el registro. Si corroborar contra una corrida real es el método, el registro tiene que anotar la
+  configuración al arrancar o los casos no se pueden reconstruir.
   **Estado de la auditoría al 2026-08-21**, que empezó a contestar la tercera de esas preguntas.
   `grados-romanos` y `raiz-ambigua` están auditadas y su teoría es correcta. `oda-a-la-alegria` está
   **corroborada contra una corrida real**, que es más fuerte que auditada: el autor tocó la pieza
@@ -1588,7 +1633,14 @@ prioridad, no porque la rueda la bloquee.
   base de casos particulares. No la de regla aproximada que puede fallar**, y esto va escrito porque
   esa confusión ya hizo que la idea se rechazara mal una vez, con una objeción que después quedó
   retirada. El motor ya hace esto: la sensible, la dominante secundaria y el paso cromático son reglas
-  generales sobre relaciones y no una lista de canciones, y las tres viven en `src/engine.js`. No
+  generales sobre relaciones y no una lista de canciones, y las tres viven en `src/engine.js`.
+  **El inventario de lo que cubre hoy, leído del código el 2026-08-21**, que es la mitad que le
+  faltaba a este ítem para poder contestar qué falta: `Engine.evaluateMelodyStatus` acepta la nota que
+  está en el universo o en el acorde activo, el tono conductor de una dominante secundaria, y la
+  sensible en menor; aparte, al soltar, `applyPassingTone` indulta el paso cromático por duración. De
+  lo que la teoría tonal tiene además, el intercambio modal es la Fase 11, y los modos griegos y el
+  blues ya están en este BACKLOG desde el primer commit que tocó el ROADMAP. Es una lista de lo que
+  hay, no un plan. No
   choca con la entrada del 2026-08-11 "El motor no ejecuta lógica que venga de afuera": esa regla dice
   de dónde viene la lógica, no cuán general puede ser. **Lo que falta:** qué casos concretos faltan.
   La auditoría de las fases 2 a 4 se esperaba que lo contestara y no lo hizo, porque no encontró
