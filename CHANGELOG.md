@@ -2,6 +2,25 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.90 — 2026-08-20
+
+### Added
+
+- `docs/CONTEXTO-TEMPORAL.md`: siete observaciones de la conversación sobre teoría musical y fixtures, más la distinción de licencias que condiciona de dónde pueden venir las fixtures nuevas.
+- `docs/ROADMAP.md`: el ítem del aviso del feedback que no caduca, que reabre una decisión tomada el mismo día.
+- El ítem de ajustar los tiempos del motor gana su argumento medido: el acorde cambia cada dos pulsos en una parte de la partitura del autor, y a tempo lento eso queda por debajo de los 2000 ms de retención.
+- El ítem de pentatónicas y blues gana el caso que le faltaba: la séptima menor del blues no es una excepción dentro de mayor, es que el universo es otro, y `SCALES` tiene tres tipos que no lo contienen.
+
+**Dos afirmaciones del prompt no resolvieron contra el repo, y las dos por el mismo motivo.** Los
+modos griegos y el blues como universos propios ya están en el BACKLOG desde el 2026-07-04, no fuera
+de él. Y la observación de que una salida de la escala puede significar que la escala era otra es lo
+mismo que el ítem de pentatónicas ya decía con la frase "no como parches de excepción", así que en
+vez de anotarla como nueva se le sumó al ítem como el caso que le faltaba.
+
+**El desvanecimiento del feedback no estaba resuelto.** `Feedback.avisar` asigna el texto y ahí queda
+hasta el aviso siguiente. La v11.89 le puso la hora delante, que permite ver si es viejo, pero no lo
+retira.
+
 ## v11.89 — 2026-08-20
 
 ### Fixed

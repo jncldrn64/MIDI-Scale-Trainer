@@ -107,6 +107,45 @@ se pierda. No se decide nada acá.
   Decidir el formato de las fixtures nuevas condiciona si ese otro ítem se resuelve con el mismo
   mecanismo o pide uno aparte. Los dos ítems viven en el BACKLOG del `ROADMAP.md`.
 
+**2026-08-20, el autor.** Los modos de entrenamiento deben exponer la teoría de forma gradual. Es la
+conexión entre los ítems de entrenamientos del BACKLOG y el problema que lo trajo al proyecto: las
+salidas de la escala lo dejaban mal porque nadie se las había nombrado. Ninguno de los cinco ítems de
+entrenamiento que hay dice esto: hablan de qué entrena cada modo, no de en qué orden se muestra la
+teoría.
+
+**2026-08-20, el autor.** El motor cubre unos pocos recursos de un catálogo más grande. Lo que hoy
+reconoce `Engine.evaluateMelodyStatus`, leído del código: la nota que está en el universo o en el
+acorde activo, el tono conductor de una dominante secundaria, y la sensible en menor. Aparte, al
+soltar, `applyPassingTone` indulta el paso cromático por duración. La teoría tonal tiene más recursos
+para salir de la escala. El intercambio modal es la Fase 11; los modos griegos y el blues ya están en
+el BACKLOG desde el primer commit que tocó el ROADMAP. Esto es una lista de lo que hay, no un plan.
+
+**2026-08-20, el autor.** Confundir una dominante secundaria con un intercambio modal es un error
+didáctico esperable. Lo vivió: tocaba Re7 en Do mayor, sentía que algo pasaba, y creyó que era
+intercambio modal cuando era una dominante secundaria. El programa hoy lo indulta y no lo nombra: el
+readout dice `II7 (V del V) empuja a G`, o sea que el dato está, pero la nota de melodía que se
+acepta por ese camino no dice por qué se aceptó. Material para los modos de entrenamiento.
+
+**2026-08-20, el autor.** Auditar las fixtures que ya están y agregar casos nuevos son dos trabajos
+distintos, y se venían tratando como uno. El primero contesta si lo que se arrastra tiene validez; el
+segundo agrega cobertura. Se pueden hacer en cualquier orden y ninguno reemplaza al otro.
+
+**2026-08-20, el autor.** Una fixture generada de un registro sin revisar congela los errores como
+correctos. Si se hubieran generado fixtures de una corrida antes de arreglar el acorde que quedaba
+pegado, hoy habría pruebas verdes defendiendo el defecto. El paso de registro a fixture no puede ser
+automático.
+
+**2026-08-20, el autor.** Un fragmento que ejerce un recurso concreto vale más que una canción
+completa. Dos compases con una dominante secundaria aíslan el caso y se pueden nombrar; una pieza
+entera arrastra material que no prueba nada y, si es de otro, arrastra su licencia.
+
+**2026-08-20, el autor.** Sobre de dónde pueden venir las fixtures nuevas, y va como distinción que
+él aportó, no como asesoramiento: los términos de un sitio son contractuales y el estado de la obra es
+otra cosa. Una obra en dominio público lo sigue siendo aunque el sitio imponga condiciones; lo que el
+sitio puede reclamar es su edición, no la música. Y un archivo MIDI no tiene licencia por ser MIDI:
+hereda el estado de lo que representa, y la transcripción puede tener derechos propios aunque la obra
+no los tenga.
+
 **2026-08-20, Claude.** Al medir el punto 3 del Criterio de la Fase 7 quedó a la vista algo que no es
 ese defecto y no tiene dónde ir: el momento de inicio de una nota se estampa antes de que corra el
 resto del manejador, así que cualquier cosa lenta que se meta en ese camino le come tiempo al indulto

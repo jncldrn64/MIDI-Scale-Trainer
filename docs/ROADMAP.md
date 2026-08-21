@@ -887,6 +887,11 @@ prioridad, no porque la rueda la bloquee.
   calidades de la rueda no se les extiende tal cual. Antes de programarlas hay que decidir qué
   significa ahí un acorde por grado, o si en esos universos la vista muestra otra cosa. Eso es lo
   que las vuelve universos propios y no una escala más en la lista.
+  **El argumento que le faltaba, aportado el 2026-08-20:** una salida de la escala puede significar
+  que la escala era otra. La séptima menor del blues no es una excepción dentro de mayor: es que el
+  universo es otro. El motor la marca como error porque `SCALES` tiene tres tipos, `major`, `minor` y
+  `harmonic_minor`, y ninguno la contiene. Eso es exactamente lo que quiere decir "no como parches de
+  excepción", que hasta hoy estaba dicho sin su caso.
   **Entró:** 2026-07-04, PR "doc: reescribir docs y comentarios en la voz Rossmann". Ese es el
   primer commit que toca `docs/ROADMAP.md`, así que este ítem está desde que el archivo existe y
   `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Modos griegos (Dórico,
@@ -1342,12 +1347,34 @@ prioridad, no porque la rueda la bloquee.
   desde la interfaz".
   **Por qué se anotó:** salió de decidir dónde vive el feedback sonoro, con la analogía de los
   sonidos del sistema operativo.
+- **Que el aviso del feedback del sistema no quede en pantalla para siempre.** Hoy no caduca:
+  `Feedback.avisar` escribe el texto y ahí queda hasta que otro aviso lo reemplace, comprobado
+  leyendo la función, que solo asigna `textContent`. La v11.89 le puso la hora delante, así que se
+  puede saber si es viejo, pero sigue visible sin límite.
+  **Esto reabre una decisión, y conviene decirlo así.** La entrada del 2026-08-20 "El aviso del
+  chasis se marca con su hora, no se borra ni caduca" eligió marcarlo en vez de borrarlo. El autor
+  pidió el desvanecimiento después de esa entrega, así que lo que se decidió no es lo que él quería.
+  **Las tres salidas que se discutieron**, con lo que cuesta cada una: que caduque tras un tiempo
+  declarado, y hay que elegir ese número sin ninguna medición que lo respalde; que se borre cuando
+  ocurre lo que lo vuelve obsoleto, y con seis llamadores eso pide saber por cada mensaje qué lo
+  vuelve falso; o que se marque como viejo, que es lo que la hora ya hace a medias y que necesita un
+  umbral para decir desde cuándo.
+  **El riesgo declarado, que es lo que frenó la primera vez:** un aviso que se borra solo puede
+  desaparecer antes de que el usuario lo lea.
+  **Entró:** 2026-08-20, PR "doc: lo que salió de discutir teoría musical y fixtures".
+  **Por qué se anotó:** el autor lo pidió y el trabajo anterior resolvió otra cosa.
 - **Ajustar los tiempos del motor desde la interfaz, en vivo.** Los cuatro umbrales que gobiernan la
   evaluación son el indulto de paso cromático, la acumulación, la retención del contexto y el error
   visual. Tres de los cuatro ya se editan desde el menú de Opciones, `cfg-accum`, `cfg-hold` y
   `cfg-err`; el indulto de 180 ms está fijo en `src/engine.js` y no es configurable. Ajustarlos y ver
   el efecto en el momento es lo que permite entender qué hace cada uno, que es lo que costó la sesión
   del acorde pegado.
+  **Y no es comodidad: un valor fijo no puede servir a dos densidades armónicas distintas.** Medido
+  el 2026-08-20 sobre una partitura del autor: en su parte 3 el acorde cambia cada dos pulsos, y a
+  tempo lento ese cambio queda por debajo de la retención del contexto, que viene en 2000 ms en
+  `State.config.holdMs`. Con esa densidad el contexto anterior sigue vigente cuando ya sonó el
+  siguiente acorde. La densidad la pone la música, no el usuario, así que el número tiene que poder
+  moverse.
   **Entró:** 2026-08-19, PR "add: dónde vive lo que se está discutiendo". Con ese mismo PR entraron
   "Submenús para alterar los valores y los sonidos del feedback" y "Cada widget elige qué sonido
   usa".
