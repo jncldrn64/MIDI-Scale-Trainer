@@ -2,6 +2,33 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.92 — 2026-08-21
+
+### Changed
+
+- `docs/CONTEXTO-TEMPORAL.md` baja de diez anotaciones a cuatro, y de 152 líneas a 127. Es el primer vaciado parcial desde que el archivo existe.
+- Las cuatro que quedan llevan una línea que dice qué las bloquea. Sin esa línea parecen olvidadas en vez de esperando algo.
+
+### Added
+
+- `docs/ROADMAP.md`: dos ítems nuevos. El orden en que los modos de entrenamiento exponen la teoría, y el momento de inicio de la nota que se estampa antes que el resto del manejador.
+- El ítem de fixtures gana tres cosas que le faltaban: el criterio de tamaño, la condición sobre de dónde pueden venir, y que un registro no se puede leer sin saber con qué configuración se grabó.
+- El ítem de análisis por comportamiento gana el inventario de lo que el motor cubre hoy, que es la mitad que le faltaba para poder contestar qué falta.
+
+**Cuatro anotaciones se reforzaron sobre ítems que ya existían y dos crearon ítems nuevos.** El
+`grep` lo sostiene: de las 30 menciones a entrenamiento en el ROADMAP, ninguna habla del orden en que
+se muestra la teoría, así que ese es nuevo; el ítem de fixtures no decía nada de tamaño ni de
+licencias, así que se le sumaron.
+
+**El ítem del contexto de audio ya estaba cerrado con la v11.89**, así que la observación sobre el
+momento de inicio quedaba huérfana. No se convirtió en regla: se convirtió en ítem, porque la trampa
+es estructural y ya tiene cuatro ocupantes, pero hoy cuesta entre 0,7 y 1,1 ms de los 180 del indulto.
+Una regla necesitaría un umbral que ninguna medición respalda.
+
+**La cuarta salida del archivo, el descarte, queda armada por primera vez.** La anotación de la
+conexión entre los sonidos y otra fase espera a que el autor recuerde de qué se trataba; si no lo
+recuerda, se descarta.
+
 ## v11.91 — 2026-08-21
 
 ### Added

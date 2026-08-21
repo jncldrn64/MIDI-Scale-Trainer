@@ -86,11 +86,17 @@ condición de estado se reconoce, los números no se usan nunca.
 **2026-08-20, el autor.** El tema de los sonidos se conecta con otra fase. No dijo con cuál ni cómo.
 Decidió no abrirlo ahí para no diluir el trabajo que estaba en curso. Queda incompleto a propósito:
 lo que se pierde si no se anota es que la conexión existe, aunque no se sepa cuál.
+**Por qué sigue acá (2026-08-21):** no se puede colocar porque no se sabe qué dice. Espera a que el
+autor recuerde de qué se trataba; si no lo recuerda, se descarta, que es la cuarta salida que las
+reglas de arriba contemplan y que todavía no se ejerció ninguna vez.
 
 **2026-08-20, el autor.** Para las fixtures con partituras, ¿`.mid` o `.md`? Preguntó qué formato
 serviría mejor y quedó sin discutir. Va acá y no al BACKLOG porque el ítem "Fixtures derivadas de
 partituras de dominio público" ya dice que falta decidir el formato; lo que ese ítem no tiene son las
 dos opciones concretas que él barajó.
+**Por qué sigue acá (2026-08-21):** su destino depende de una decisión en curso. El autor está tocando
+las piezas y corrigiendo las fixtures una por una, y hasta que eso avance no se sabe si el formato es
+un ítem, una decisión o nada.
 
 **2026-08-20, el autor.** Quiere discutir las fixtures con partituras de dominio público. Esto es el
 estado de la discusión antes de empezarla, para que si la conversación se corta el punto de partida no
@@ -107,46 +113,15 @@ se pierda. No se decide nada acá.
   Decidir el formato de las fixtures nuevas condiciona si ese otro ítem se resuelve con el mismo
   mecanismo o pide uno aparte. Los dos ítems viven en el BACKLOG del `ROADMAP.md`.
 
-**2026-08-20, el autor.** Los modos de entrenamiento deben exponer la teoría de forma gradual. Es la
-conexión entre los ítems de entrenamientos del BACKLOG y el problema que lo trajo al proyecto: las
-salidas de la escala lo dejaban mal porque nadie se las había nombrado. Ninguno de los cinco ítems de
-entrenamiento que hay dice esto: hablan de qué entrena cada modo, no de en qué orden se muestra la
-teoría.
-
-**2026-08-20, el autor.** El motor cubre unos pocos recursos de un catálogo más grande. Lo que hoy
-reconoce `Engine.evaluateMelodyStatus`, leído del código: la nota que está en el universo o en el
-acorde activo, el tono conductor de una dominante secundaria, y la sensible en menor. Aparte, al
-soltar, `applyPassingTone` indulta el paso cromático por duración. La teoría tonal tiene más recursos
-para salir de la escala. El intercambio modal es la Fase 11; los modos griegos y el blues ya están en
-el BACKLOG desde el primer commit que tocó el ROADMAP. Esto es una lista de lo que hay, no un plan.
+**Por qué sigue acá (2026-08-21):** es el estado de una discusión que está corriendo. Colocarlo ahora
+la congelaría antes de que termine.
 
 **2026-08-20, el autor.** Confundir una dominante secundaria con un intercambio modal es un error
 didáctico esperable. Lo vivió: tocaba Re7 en Do mayor, sentía que algo pasaba, y creyó que era
 intercambio modal cuando era una dominante secundaria. El programa hoy lo indulta y no lo nombra: el
 readout dice `II7 (V del V) empuja a G`, o sea que el dato está, pero la nota de melodía que se
 acepta por ese camino no dice por qué se aceptó. Material para los modos de entrenamiento.
+**Por qué sigue acá (2026-08-21):** depende de la misma decisión en curso que las otras dos de
+fixtures. Es material para los modos de entrenamiento, y el ítem de esos modos acaba de entrar al
+BACKLOG con su pregunta abierta, así que esta anotación se coloca cuando esa pregunta se conteste.
 
-**2026-08-20, el autor.** Un fragmento que ejerce un recurso concreto vale más que una canción
-completa. Dos compases con una dominante secundaria aíslan el caso y se pueden nombrar; una pieza
-entera arrastra material que no prueba nada y, si es de otro, arrastra su licencia.
-
-**2026-08-20, el autor.** Sobre de dónde pueden venir las fixtures nuevas, y va como distinción que
-él aportó, no como asesoramiento: los términos de un sitio son contractuales y el estado de la obra es
-otra cosa. Una obra en dominio público lo sigue siendo aunque el sitio imponga condiciones; lo que el
-sitio puede reclamar es su edición, no la música. Y un archivo MIDI no tiene licencia por ser MIDI:
-hereda el estado de lo que representa, y la transcripción puede tener derechos propios aunque la obra
-no los tenga.
-
-**2026-08-21, Claude.** El registro de la Oda muestra `DOWN: Do (60)`, `DOWN: Re (50)` y
-`DOWN: Fa# (42)`, y enseguida `Contexto: Re7(no5)`. Con el split en su valor de fábrica eso no puede
-pasar: 60 no es menor que 60, así que el Do va a melodía, quedan dos bajos y `detectChord` devuelve
-null con menos de tres notas. **Inferencia, con su base:** el autor tenía el split por encima de 60 en
-esa sesión. No cambia nada de las fixtures, que llaman a `detectChord` directo y no pasan por el
-split, pero sí quiere decir que un registro no se puede leer sin saber con qué configuración se grabó.
-Lo que no se sabe es si conviene que el registro anote la configuración al arrancar.
-
-**2026-08-20, Claude.** Al medir el punto 3 del Criterio de la Fase 7 quedó a la vista algo que no es
-ese defecto y no tiene dónde ir: el momento de inicio de una nota se estampa antes de que corra el
-resto del manejador, así que cualquier cosa lenta que se meta en ese camino le come tiempo al indulto
-de 180 ms. Hoy el único caso es el contexto de audio y ya está en el BACKLOG. Lo que no se sabe es si
-conviene una regla que prohíba trabajo pesado en ese camino, o si con arreglar el caso alcanza.
