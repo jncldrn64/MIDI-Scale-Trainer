@@ -360,6 +360,12 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   código nuevo lo trae solo si alguien se acuerda de pedirlo. Se mide contra la línea base de 94
   llamadas a `SysLog` del 2026-08-20: si un PR agrega funciones que escriben estado y ese total no se
   mueve, está pasando. Fuente: la misma entrada.
+- **gap**: algo que falta o que está limitado en el código, confirmado leyéndolo y con el comando que
+  lo comprueba escrito al lado. Vive en el §6 de `ARCHITECTURE.md` y **se poda**: se borra en el PR
+  que lo cierra, porque ese documento guarda el presente y el CHANGELOG guarda la historia. No es lo
+  mismo que un ítem del BACKLOG, que es algo que se quiere hacer; un gap es algo que hoy es cierto
+  del código. Fuente: 2026-08-21, *El §6 se poda en el PR que cierra el gap, y los números del §7 se
+  recalculan con el mismo comando que declaran*.
 
 
 

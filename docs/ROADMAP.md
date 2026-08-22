@@ -400,7 +400,7 @@ cosmético, cada uno un PR de código que se puede ver y corroborar por separado
   entregó en tres: el corte es si toca el motor. El **5.5.1**, entregado, muestra la función tonal
   y no toca `src/engine.js`. El **5.5.2**, entregado, hizo el relabel del tercer valor de la
   clasificación y es el primero y único de toda la Fase 5 que tocó el motor: una sola línea, el
-  `return` final de `classifyChordRelation`, con las 41 fixtures como red. La subdivisión no
+  `return` final de `classifyChordRelation`, con las 41 fixtures de entonces como red. La subdivisión no
   renumera nada: el 5.5 sigue existiendo y la fase sigue cerrando con el 5.6.
   El alcance original: la función tonal que la Fase 4 dejó en el buffer se muestra en
   el panel de Análisis junto al numeral y la relación, y la etiqueta del tercer caso de la cascada se
@@ -476,7 +476,7 @@ una fase de interfaz admita tocar el motor no es un descuido: está decidido y c
 `DECISIONS.md`, entrada del 2026-08-11 "El Criterio de aceptación de la Fase 5 decía que el motor
 queda intacto, y envejeció". Ahí están las dos pruebas que reemplazan a la palabra "intactos", un
 `diff` sobre `src/engine.js` que muestre solo cambios de nombre de un valor de salida, y las 41
-fixtures en verde.
+fixtures de entonces en verde.
 
 **Nota de reapertura (2026-07-25):** el primer intento, apilado, se construyó y quedó en
 V11.19. Sirvió para ver que el modelo real es de capas, no de pila. Se reabre la fase para
@@ -601,7 +601,7 @@ en vez de inventarle volumen a la pieza vive en `DECISIONS.md`, entrada del 2026
 pieza de la Fase 5B era chica, y se dice".
 
 **Criterio de aceptación:** el contrato está escrito y mergeado antes del primer PR de código, las
-41 fixtures siguen pasando, la app abre desde `file://` sin servidor, el autor la corrobora en
+41 fixtures de entonces siguen pasando, la app abre desde `file://` sin servidor, el autor la corrobora en
 Chrome con el piano físico, y ningún archivo de código pasa las 1000 líneas contadas como las cuenta
 el §7. El motor y `renderKeyboard` no cambian de comportamiento.
 
@@ -662,7 +662,7 @@ escrito después del trabajo y a su medida no verifica nada. Los cuatro puntos s
 4. **Panel de acordes:** `document.getElementById('lock-chords-panel')` devuelve `null`, y nada más
    se rompe: las 88 teclas siguen dibujadas y la consola no tira errores.
 
-Más, para toda la fase: las 41 fixtures en verde, `node --check` sobre los catorce archivos de
+Más, para toda la fase: las 41 fixtures de entonces en verde, `node --check` sobre los catorce archivos de
 `src/`, `src/engine.js` y `tests/` sin tocar, y redimensionar la ventana sin que ninguna caja se
 mueva ni cambie la cobertura.
 
@@ -700,7 +700,7 @@ un criterio escrito después del trabajo no verifica nada:
 3. El paso cromático, que dura 180 ms, no alcanza a disparar un sonido que se corte a sí mismo: se
    comprueba tocando una nota fuera del universo por menos de ese umbral y verificando en el log que
    el veredicto llegó a `passing` sin que el sonido quede colgado.
-4. Con el sonido apagado la app se comporta igual que hoy: las 41 fixtures verdes y el coloreo del
+4. Con el sonido apagado la app se comporta igual que hoy: las 41 fixtures de entonces verdes y el coloreo del
    teclado sin cambios.
 
 **Entregado el 2026-08-11 con la v11.78**, salvo el punto 1 del Criterio, que pide comprobar de oído
@@ -1409,7 +1409,7 @@ prioridad, no porque la rueda la bloquee.
   **Por qué se anotó:** salió de intentar entender los cuatro umbrales editando el código y perder
   tiempo en cada iteración.
 - **Cubrir el manejo de eventos con pruebas.** Hoy `tests/run.js` hace un solo `require`, el de
-  `src/engine.js`, así que las 41 fixtures prueban lógica pura y nada de `src/midi.js`. El caso que
+  `src/engine.js`, así que las 46 fixtures prueban lógica pura y nada de `src/midi.js`. El caso que
   lo justifica: el acorde detectado nunca se liberaba, porque el temporizador de liberación vivía en
   una rama inalcanzable para las notas de bajo, y el defecto sobrevivió desde el primer commit del
   repositorio sin que ninguna prueba lo tocara. Cubrirlo pide tres cosas que no existen: `src/midi.js`
@@ -1523,7 +1523,7 @@ prioridad, no porque la rueda la bloquee.
   **Lo que lo arregla, agregado el 2026-08-20 al vaciar el archivo de tránsito:** que el motor
   devuelva la razón junto con el veredicto, en vez de que quien registra la reconstruya, que es la
   regla 2 de "Verbosidad del registro" de `CLAUDE.md`. **El costo, para que el ítem se pueda
-  evaluar:** cambia la forma de retorno de `Engine.evaluateMelodyStatus`, y eso toca las 41 fixtures.
+  evaluar:** cambia la forma de retorno de `Engine.evaluateMelodyStatus`, y eso toca las 46 fixtures.
   Se decide junto con "Qué forma tiene una línea del registro" de esta misma lista, porque las dos
   preguntas caen sobre la misma línea de log.
   **Entró:** 2026-08-20, PR "doc: la regla de verbosidad del log, y el reintento de puertos que ya se
@@ -1591,13 +1591,16 @@ prioridad, no porque la rueda la bloquee.
   estructurada sino decidir si se usa la que está.
   **Entró:** 2026-08-20, PR "chg: el archivo de tránsito pasa a ser contexto temporal, y se vacía".
   **Procedencia:** venía del archivo de tránsito, hoy `docs/CONTEXTO-TEMPORAL.md`, donde entró el 2026-08-20.
-- **Fixtures derivadas de partituras de dominio público.** Las 41 fixtures actuales vienen de una
+- **Fixtures derivadas de partituras de dominio público.** El conteo vivo sale de
+  `node tests/run.js | tail -1`, y las cinco apariciones de "41 fixtures de entonces" que quedan en
+  este archivo son criterios de fases cerradas antes de la v11.91, no el número de hoy. Las 46
+  fixtures actuales vienen de una
   sesión con otro modelo cuyo contexto se perdió, y **nadie verificó que representen lo que esas
   canciones son**: que estén verdes significa que el motor coincide consigo mismo, no que sea
   correcto. Una partitura de dominio público sí es verificable contra algo externo al repo, y el autor
   la puede tocar y comprobar de oído. Hoy lo que corre es `node tests/run.js` con un solo `require`,
   el de `src/engine.js`. **Lo que falta decidir, y ninguna es obvia:** qué formato de entrada, cómo se
-  convierte a fixture sin volver a inventar la respuesta correcta, y qué pasa con las 41 actuales, si
+  convierte a fixture sin volver a inventar la respuesta correcta, y qué pasa con las 46 actuales, si
   se retiran, se conservan como regresión o se revisan una por una. **Bloquea a** "Análisis por
   comportamiento".
   **Criterio de tamaño, aportado el 2026-08-21:** un fragmento que ejerce un recurso concreto vale más
