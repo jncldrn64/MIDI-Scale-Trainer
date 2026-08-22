@@ -93,6 +93,34 @@ obsoleta; se agrega una nueva que la reemplaza y la referencia. Cada entrada abr
 `## YYYY-MM-DD — <título>`. La v11.5 se perdió por no tener este registro; por eso la
 historia acá no se reescribe.
 
+## Mantenimiento de ARCHITECTURE
+
+`docs/ARCHITECTURE.md` es el primero del orden de lectura y el único que promete, en su encabezado,
+que todo lo que dice se verificó línea por línea contra el código. Es también el único de los cinco
+que no tenía ninguna regla de mantenimiento, y el resultado se midió el 2026-08-21: de los tres gaps
+que listaba su §6, los tres eran falsos, y el más viejo llevaba muerto desde la v11.76.
+
+**Un gap se borra en el PR que lo cierra.** Si un PR entrega lo que un punto del §6 declaraba
+faltante, ese punto se saca en el mismo PR, no en el siguiente ni cuando alguien lo note. El rastro
+de que existió queda en el CHANGELOG y en `docs/DECISIONS.md`, que son los archivos que guardan
+historia; el §6 guarda el presente y por eso se poda.
+
+**El disparador es mecánico:** el PR ya está tocando el CHANGELOG para anunciar lo que entregó, así
+que la pregunta es una sola, si lo que se anuncia aparece en el §6. Tres de tres se escaparon porque
+nadie tenía que hacerse esa pregunta.
+
+**Y un gap nuevo entra con el comando que lo comprueba**, igual que cualquier número bajo la regla 6
+de "Prosa". Un gap sin comando es una afirmación que nadie puede reconfirmar, que es exactamente el
+estado en que los tres muertos sobrevivieron.
+
+Los números del §7 caen bajo la misma disciplina y su falla fue distinta, así que conviene decirla:
+ese párrafo ya traía los tres comandos que recalculan el conteo de `index.html` y el número igual
+quedó viejo, 217 contra 226 reales. **Escribir el comando no es correrlo.** Un PR que toca
+`index.html` o agrega un archivo a `src/` recalcula los números del §7 antes de cerrar.
+
+La razón completa vive en `docs/DECISIONS.md`, entrada del 2026-08-21 "El §6 se poda en el PR que
+cierra el gap, y los números del §7 se recalculan con el mismo comando que declaran".
+
 ## Referencia cruzada a DECISIONS
 
 Un texto de un archivo operativo lleva puntero a la entrada de `docs/DECISIONS.md` que lo

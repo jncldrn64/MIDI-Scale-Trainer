@@ -3209,6 +3209,63 @@ con `raíz del acorde de llegada: esperaba Sol, obtuve Fa`.
 
 ---
 
+## 2026-08-21 — El §6 se poda en el PR que cierra el gap, y los números del §7 se recalculan con el mismo comando que declaran
+
+**Contexto:** un modelo externo leyó el repo y encontró que los tres puntos del §6 de
+`docs/ARCHITECTURE.md`, la sección "Gaps confirmados leyendo el código", eran falsos contra el código
+actual. Se verificaron uno por uno antes de escribir esta entrada.
+
+```
+$ grep -rn "saveUniverse\|loadUniverse" src/
+src/escala.js:42:        saveUniverse();
+src/state.js:44:function saveUniverse() {
+src/state.js:47:function loadUniverse() {
+src/arranque.js:25:    const guardadoUniverso = loadUniverse();
+
+$ grep -rn "AudioContext" src/*.js
+src/sonido.js:31:        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+```
+
+El primero decía que el universo no se persiste, y se persiste desde que existen `saveUniverse` y
+`loadUniverse`. El segundo decía "cero feedback sonoro, no hay una sola llamada a Web Audio API", y
+la Fase 7 lo entregó. El tercero decía que "Fijar Acordes" hardcodea dos acordes, y ese panel se
+retiró en la v11.76, cosa que el propio `index.html` dice en un comentario.
+
+**Lo que hace grave al caso no es que envejecieran.** Es que ese documento abre prometiendo que todo
+lo que dice se verificó línea por línea contra el código, y que es el primero del orden de lectura de
+`CLAUDE.md`. Un lector nuevo llega ahí antes que a ningún otro archivo, con la promesa a la vista.
+
+**Decisión: un gap se borra en el PR que lo cierra, y los números del §7 se recalculan en el PR que
+los mueve.** Las dos reglas viven en `CLAUDE.md`, sección "Mantenimiento de ARCHITECTURE". El §6
+guarda el presente y se poda; el rastro de que un gap existió queda en el CHANGELOG y acá, que son
+los archivos que guardan historia.
+
+**Razón, con los dos modos de falla separados, porque son distintos.** El §6 falló por no tener
+ninguna regla: `CLAUDE.md` nombra `ARCHITECTURE.md` como "el estado real del sistema... y qué gaps
+quedan" y después no dice nada de mantenerlo, así que cerrar un gap y borrarlo nunca fueron el mismo
+acto.
+
+El §7 falló distinto y peor: ese párrafo **ya traía** los tres comandos que recalculan el
+conteo de `index.html`, y el número igual quedó viejo, 217 declarado contra 226 reales, más
+`src/layout.js` declarado en 304 líneas contra 316. Escribir el comando no es correrlo. La regla 6 de
+"Prosa" pide que un número vaya con su comando y eso sigue siendo necesario; lo que este caso muestra
+es que no alcanza.
+
+**Los otros cinco errores que la misma pasada encontró**, para que quede el inventario y no solo los
+tres del hallazgo original: el bloque de `State` del §1 no listaba `clicTeclas` ni la rama `ui`, y el
+§7 contaba dieciséis archivos donde hay diecisiete, quince bajo `src/` donde hay dieciséis, y trece
+en el reparto donde hay catorce. Ocho errores en un documento de 264 líneas que promete verificación
+línea por línea.
+
+**Lo que no se cambia, y por qué.** El encabezado del §6 se queda con su título, aunque el texto
+adentro cambie entero: `CLAUDE.md` cita "el §7 de `docs/ARCHITECTURE.md`" por número en la sección
+"Promesas y umbrales", y renumerar secciones rompe esa cita y cualquier otra. La misma razón por la
+que la regla 4 de "Prosa" trata los encabezados del ROADMAP con cuidado.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas

@@ -2,6 +2,30 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.94 — 2026-08-21
+
+### Fixed
+
+- `docs/ARCHITECTURE.md`, §6: los tres gaps que listaba eran falsos contra el código. El universo sí se persiste (`saveUniverse`/`loadUniverse`), el feedback sonoro existe desde la Fase 7 (`src/sonido.js` crea un `AudioContext`), y el panel "Fijar Acordes" se retiró en la v11.76.
+- `docs/ARCHITECTURE.md`, §1: el bloque de `State` no listaba `clicTeclas` dentro de `config` ni la rama `ui`, y atribuía `harmony.function` a la Fase 4 en vez de a `Readout.updateStatus`, que es quien la escribe.
+- `docs/ARCHITECTURE.md`, §7: contaba dieciséis archivos donde hay diecisiete, quince bajo `src/` donde hay dieciséis, y trece en el reparto donde hay catorce. `src/layout.js` decía 304 líneas y tiene 316.
+- `docs/ROADMAP.md`: las nueve apariciones de "41 fixtures". Las cuatro que describen hoy pasan a 46; las cinco que son criterio de una fase cerrada antes de la v11.91 dicen "de entonces", para que se lean como historia.
+
+### Added
+
+- `CLAUDE.md`, sección "Mantenimiento de ARCHITECTURE": un gap se borra en el PR que lo cierra, un gap nuevo entra con el comando que lo comprueba, y los números del §7 se recalculan en el PR que los mueve.
+- `docs/ARCHITECTURE.md`, §6: cuatro gaps reales en su lugar, cada uno con el comando que lo verifica. Entre ellos uno que no estaba escrito en ninguna parte del repo: la sensible se deriva de `universeRoot`, no del acorde que suena.
+- `docs/DECISIONS.md`: la entrada que separa los dos modos de falla, el §6 sin regla y el §7 con el comando escrito y sin correr.
+- `docs/GLOSARIO.md`: el término "gap", que el repo usaba desde siempre y no tenía definición.
+
+**El §6 falló por no tener regla y el §7 falló teniendo el comando escrito.** Ese párrafo ya traía
+los tres comandos que recalculan el conteo de `index.html` y declaraba 217 contra 226 reales.
+Escribir el comando no es correrlo, y esa distinción es la mitad de la regla nueva.
+
+**Ocho errores en un documento de 264 líneas que promete verificación línea por línea en su
+encabezado.** Tres los encontró un modelo externo leyendo el repo; los otros cinco salieron de
+auditar el resto del archivo después. Ningún error estaba en el código: todos en la descripción.
+
 ## v11.93 — 2026-08-21
 
 ### Added

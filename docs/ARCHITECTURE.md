@@ -24,12 +24,13 @@ se reconstruye hacia adelante, versionado desde ahora.
 
 ```js
 State = {
-  config: { latino, nombresTecla, accumMs, holdMs, errMs, splitNote, sonido },  // persistido
+  config: { latino, nombresTecla, accumMs, holdMs, errMs, splitNote, sonido, clicTeclas },  // persistido
   universe: { root, type, validPitches: Set },             // root y type persistidos; el Set se reconstruye
   midi: { access, activeBasses: Set, activeMelodies: Set, keysDown: Set, sustainActive },
-  harmony: { chord, isLocked, function },                  // function la escribe la Fase 4
+  harmony: { chord, isLocked, function },                  // function la escribe Readout.updateStatus
   evaluations: Map<midiNote, {status, timeout, startTime}>,
   timers: { accumulation, contextHold },
+  ui: { marcaSplit },                                      // no persiste
   logHistory: []
 }
 ```
@@ -199,16 +200,41 @@ la renombró a "Sensible (empuja a la tónica)", con la razón medida contra el 
 
 ## 6. Gaps confirmados leyendo el código
 
-- `State.universe` (tonalidad y escala elegidas) no se persiste. Solo se persiste
-  `State.config`. Recargás la página y perdés la tonalidad.
-- Cero feedback sonoro. No hay una sola llamada a Web Audio API en el código.
-- "Fijar Acordes" hardcodea dos acordes: Do Mayor y Re m7.
+Esta lista se poda: un gap que se cierra se borra en el PR que lo cierra, y el CHANGELOG queda como
+su rastro. La regla vive en `CLAUDE.md`, sección "Mantenimiento de ARCHITECTURE", y existe porque los
+tres gaps que había acá antes del 2026-08-21 estaban los tres muertos, uno de ellos desde la v11.76.
+Ver `DECISIONS.md`, entrada del 2026-08-21 "El §6 se poda en el PR que cierra el gap, y los números
+del §7 se recalculan con el mismo comando que declaran".
+
+Cada uno va con el comando que lo comprueba, medido el 2026-08-21.
+
+- **`Armonia.lockChord` no tiene llamador activo.** Quedó sin ninguno desde la v11.76, que retiró el
+  panel "Fijar Acordes", y el propio código lo dice en su comentario. La consecuencia real es que
+  `State.harmony.isLocked` no puede volverse verdadero, así que la detección automática nunca se
+  pausa y las tres ramas que preguntan por `isLocked` en `src/midi.js` toman siempre la misma salida.
+  Se comprueba con `grep -rn "lockChord" src/ index.html`: aparece la definición, aparece
+  `unlockChord` colgado del botón, y no aparece nadie llamando a `lockChord`.
+- **Nada fuera del motor tiene cobertura de pruebas.** `tests/run.js` hace un solo `require`, el de
+  `src/engine.js`, así que las fixtures prueban teoría musical pura y ni una línea de `src/midi.js`,
+  `src/layout.js` o el resto. Se comprueba con `grep -n "require(" tests/run.js`. El costo de
+  cubrirlo está medido y el ítem vive en el BACKLOG del `ROADMAP.md`, "Cubrir el manejo de eventos
+  con pruebas".
+- **`Armonia.clearEvaluations` borra todos los veredictos vivos sin escribir una línea de log.** Es
+  la excepción viva a la regla 1 de "Verbosidad del registro" de `CLAUDE.md`, y ya costó: el símbolo
+  que desaparecía antes de tiempo se atribuyó al rediseño visual durante semanas porque el borrado
+  no dejaba rastro. Se comprueba leyendo la línea que define `clearEvaluations` en `src/armonia.js`,
+  que hace `forEach` y `clear` y nada más.
+- **La sensible está anclada al universo, no al acorde que suena.** En `evaluateMelodyStatus`, la
+  línea que calcula `sensiblePC` lo deriva de `universeRoot`, así que la regla 3 de la jerarquía del
+  §5 solo reconoce la sensible de la tonalidad global. Una sensible del acorde que está sonando, y
+  que no sea el tono conductor de una dominante secundaria, cae a `bad`. No está decidido si esto es
+  un límite aceptado o algo a cambiar, y por eso figura acá y no como decisión.
 
 ## 7. No framework, por ahora
 
-Desde la v11.78 el código son dieciséis archivos: `index.html`, que quedó como markup, más quince
+Desde la v11.78 el código son diecisiete archivos: `index.html`, que quedó como markup, más dieciséis
 bajo `src/`. El motor puro sigue en `src/engine.js` (`MathEngine` y las funciones de teoría), los
-estilos en `src/estilos.css`, y el script que vivía adentro de `index.html` se repartió en trece
+estilos en `src/estilos.css`, y el script que vivía adentro de `index.html` se repartió en catorce
 archivos, cargados como scripts clásicos en este orden: `config.js`, `state.js`, `log.js`,
 `sonido.js`, `midi.js`, `armonia.js`, `escala.js`, `teclado.js`, `readout.js`, `cajas.js`,
 `lienzo.js`, `layout.js`, `widgets.js` y `arranque.js`. Cada uno toma el nombre de lo que define, y
@@ -244,8 +270,9 @@ gatillo que este párrafo tenía, "o el estado se vuelve difícil de razonar", p
 2026-08-11: `index.html` tenía 1524 líneas totales, 126 vacías y 227 de comentario, o sea 1171 de
 código y markup. Después de la v11.78: 252 totales, 9 vacías y 27 de comentario, o sea 216. Y
 después de la v11.81, que le sumó el interruptor de teclas clicables: 256 totales, 9 vacías y 30 de
-comentario, o sea 217. El
-archivo más grande es `src/layout.js` con 304 líneas, y ninguno se acerca a las 1000. El
+comentario, o sea 217. Y medido el 2026-08-21, con todo lo que la Fase 7 y los PR de audio
+le sumaron: 265 totales, 9 vacías y 30 de comentario, o sea 226. El
+archivo más grande es `src/layout.js` con 316 líneas, y ninguno se acerca a las 1000. El
 gatillo se cumplió durante la Fase 5, con el trabajo visual en curso, y se decidió terminar esa
 fase antes de tocarlo. La partición es la Fase 5B del `ROADMAP.md`, entre la Fase 5 y la Fase 6.
 La 5B cerró el 2026-08-11 con la v11.70, así que este párrafo queda como el registro de que
