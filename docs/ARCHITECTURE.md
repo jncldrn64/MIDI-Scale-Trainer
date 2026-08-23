@@ -219,11 +219,6 @@ Cada uno va con el comando que lo comprueba, medido el 2026-08-21.
   `src/layout.js` o el resto. Se comprueba con `grep -n "require(" tests/run.js`. El costo de
   cubrirlo está medido y el ítem vive en el BACKLOG del `ROADMAP.md`, "Cubrir el manejo de eventos
   con pruebas".
-- **`Armonia.clearEvaluations` borra todos los veredictos vivos sin escribir una línea de log.** Es
-  la excepción viva a la regla 1 de "Verbosidad del registro" de `CLAUDE.md`, y ya costó: el símbolo
-  que desaparecía antes de tiempo se atribuyó al rediseño visual durante semanas porque el borrado
-  no dejaba rastro. Se comprueba leyendo la línea que define `clearEvaluations` en `src/armonia.js`,
-  que hace `forEach` y `clear` y nada más.
 - **La sensible está anclada al universo, no al acorde que suena.** En `evaluateMelodyStatus`, la
   línea que calcula `sensiblePC` lo deriva de `universeRoot`, así que la regla 3 de la jerarquía del
   §5 solo reconoce la sensible de la tonalidad global. Una sensible del acorde que está sonando, y

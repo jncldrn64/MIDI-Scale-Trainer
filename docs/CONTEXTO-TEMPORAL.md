@@ -148,15 +148,10 @@ y quien la resuelva tiene que ser quien diseñe el formato.
 leído: `GLOSARIO.md` completo, `tests/README.md`, el §"Deuda de método" del ROADMAP, y el resto del
 BACKLOG por muestreo. Salieron siete hallazgos del mismo patrón que el PR #97, documentación que
 afirma algo del código y el código dice otra cosa. Las tres contradicciones de `GLOSARIO.md` las
-cerró la v11.95, las cuatro de `docs/ROADMAP.md` la v11.96 y la de `tests/README.md` la v11.97. **Queda lo de abajo**, cada uno con el
-comando que lo comprueba. **Se recogen cuando se ejecute su PR y esta anotación se borra entera.**
-
-- **`src/armonia.js` viola la regla 1 de "Verbosidad del registro", y el comando que la detecta tiene
-  un falso positivo.** El archivo tiene 4 escrituras a `State` y cero `SysLog`; `unlockChord` está
-  colgado de `btn-lock`, escribe `isLocked` y `chord`, y no registra nada. Aparte, el detector cuenta
-  `State.config.accumMs === p.accumMs` de `src/widgets.js` como escritura, porque el regex
-  `State\.[a-zA-Z.]+ *=` atrapa el primer `=` de un `===`. Toca código, así que va con las fixtures
-  como red y su propio PR.
+cerró la v11.95, las cuatro de `docs/ROADMAP.md` la v11.96, la de `tests/README.md` la v11.97 y la
+de `src/armonia.js` la v11.98. **Los siete están cerrados.** Queda solo lo de abajo, que no son
+correcciones sino dos preguntas abiertas que pide decidir el autor, no auditar. Esta anotación se
+borra entera cuando las dos se contesten o se descarten.
 
 **Y dos cosas de análisis, que son lo que más se pierde si nadie las escribe.**
 

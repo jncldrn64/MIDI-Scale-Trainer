@@ -191,7 +191,7 @@ const MIDI = {
         if(State.midi.activeBasses.size >= 3 && !State.harmony.isLocked) {
             State.timers.accumulation = setTimeout(() => {
                 const chord = MathEngine.detectChord(Array.from(State.midi.activeBasses));
-                if(chord) { State.harmony.chord = chord; Armonia.clearEvaluations(); SysLog('MATH', 'Contexto: ' + getNoteStr(chord.rootPC).name + chord.type); }
+                if(chord) { State.harmony.chord = chord; Armonia.clearEvaluations(`se detectó el acorde ${getNoteStr(chord.rootPC).name}${chord.type} y el contexto cambió`); SysLog('MATH', 'Contexto: ' + getNoteStr(chord.rootPC).name + chord.type); }
                 else { SysLog('MATH', '⚠️ Acorde no reconocido'); }
                 Teclado.renderKeyboard(); Readout.updateStatus();
             }, State.config.accumMs); 
@@ -220,7 +220,7 @@ const MIDI = {
             if(!State.harmony.isLocked && State.midi.activeBasses.size < 3) {
                 const c = State.harmony.chord;
                 const bajos = State.midi.activeBasses.size;
-                State.harmony.chord = null; Armonia.clearEvaluations(); Teclado.renderKeyboard(); Readout.updateStatus();
+                State.harmony.chord = null; Armonia.clearEvaluations(`venció la retención de ${State.config.holdMs} ms y el contexto se liberó`); Teclado.renderKeyboard(); Readout.updateStatus();
                 SysLog('MATH', `Contexto liberado tras ${State.config.holdMs} ms sin movimiento: ${c ? getNoteStr(c.rootPC).name + c.type : 'no había acorde'}. Quedaban ${bajos} bajo(s) apretado(s), menos de los 3 que hacen falta para formar un acorde. El motor vuelve a evaluar solo contra el universo.`);
             } else {
                 SysLog('MATH', `Retención vencida y el contexto se queda: ${State.harmony.isLocked ? 'el acorde está fijado a mano' : `todavía hay ${State.midi.activeBasses.size} bajo(s) apretado(s), suficientes para sostener un acorde`}.`);

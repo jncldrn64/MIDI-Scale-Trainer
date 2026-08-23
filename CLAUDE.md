@@ -443,7 +443,7 @@ la línea se gana su lugar. Se comprueba enfrentando dos conteos por archivo:
 
 ```sh
 for f in src/*.js; do
-  esc=$(grep -cE "State\.[a-zA-Z.]+ *=|State\.[a-zA-Z.]+\.(add|delete|clear|set)\(" "$f")
+  esc=$(grep -cE "State\.[a-zA-Z.]+ *=[^=]|State\.[a-zA-Z.]+\.(add|delete|clear|set)\(" "$f")
   log=$(grep -c "SysLog" "$f")
   printf "%-18s escrituras a State: %-3s  SysLog: %s\n" "$(basename $f)" "$esc" "$log"
 done
@@ -451,6 +451,12 @@ done
 
 Un archivo con escrituras y cero `SysLog` es una violación segura. Que los dos números se parezcan no
 prueba que la regla se cumpla, así que el comando detecta el caso peor y no certifica el bueno.
+
+**El `[^=]` de la primera rama se agregó el 2026-08-23 y no es cosmético.** Sin él, ` *=` atrapa el
+primer signo de un `===`, así que una comparación cuenta como escritura. El caso vivo era
+`State.config.accumMs === p.accumMs` en `src/widgets.js`, que hacía aparecer a ese archivo como
+violación con una escritura y cero `SysLog` cuando no escribe nada. Un detector que marca inocentes
+enseña a ignorarlo, que es la forma en que una regla se muere sin que nadie la derogue.
 
 **La excepción es `src/engine.js`, y es la única.** El motor es puro y corre en Node desde
 `tests/run.js`, donde `SysLog` no existe. No escribe `State` ni nada más, así que la regla no lo

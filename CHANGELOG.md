@@ -2,6 +2,35 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.98 — 2026-08-23
+
+### Fixed
+
+- `src/armonia.js` no escribía una sola línea de registro con cuatro escrituras a `State`. Es el archivo que la sección "Verbosidad del registro" de `CLAUDE.md` nombra como el caso que motivó la regla, y era el único que su propio comando marcaba como violación segura.
+- `CLAUDE.md`, el comando que detecta esas violaciones: ` *=` atrapaba el primer signo de un `===`, así que contaba una comparación como escritura. Marcaba `src/widgets.js`, que no escribe nada. Queda ` *=[^=]`.
+
+### Added
+
+- `Armonia.clearEvaluations` registra cuántas teclas pierden su símbolo y su color, y por qué. El motivo llega del llamador y no se recalcula, que es la regla 2 de la misma sección; los cuatro lo pasan.
+- `Armonia.lockChord` y `Armonia.unlockChord` registran qué acorde se fijó o se liberó y qué le pasa a la detección automática.
+
+### Changed
+
+- `docs/ARCHITECTURE.md`, §6: se poda el gap de `clearEvaluations`, que este PR cierra. Es la primera vez que se ejerce la regla que el PR #97 escribió, y baja de cuatro gaps a tres.
+- La versión mostrada pasa de V11.89 a V11.98. El desfase venía de nueve PR doc-only seguidos y lo cierra este, que es de código.
+
+**Comprobado en Chromium desde `file://`, no deducido.** Con tres notas fuera del universo sonando y
+un cambio de acorde encima, el registro escribe `Veredictos borrados: 3 tecla(s) pierden su símbolo y
+su color, porque se detectó el acorde DM y el contexto cambió`. Las cuatro ramas de motivo se
+ejercieron una por una.
+
+**Un detalle del motor que salió de esa corrida y conviene dejar escrito:** un veredicto `good` se
+guarda con `timeoutTime = 0`, así que se borra en el tick siguiente. `State.evaluations` sostiene en
+la práctica solo los veredictos que no son `good`, y por eso la primera corrida de prueba daba cero.
+
+**Las llamadas a `SysLog` pasan de 96 a 99**, con `EVAL` de 2 a 3 y `MATH` de 6 a 8. El total sube
+con cada PR de código, y este agrega tres funciones que escriben estado.
+
 ## v11.97 — 2026-08-23
 
 ### Fixed
