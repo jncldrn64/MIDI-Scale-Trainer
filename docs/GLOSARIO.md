@@ -121,10 +121,15 @@
 ## Motor
 
 - **bajo fantasma**: una nota que quedó en `State.midi.activeBasses` después de soltarla, porque se
-  la buscó en el conjunto equivocado. Bloquea la liberación del contexto armónico, que exige cero
-  bajos, así que el acorde detectado se queda vigente sin límite. La causaba recalcular la
-  clasificación contra el split al soltar, y se arregló leyéndola del conjunto. Fuente: 2026-08-20,
-  *Nada que decida el destino de un evento se recalcula después de que el evento ocurrió*.
+  la buscó en el conjunto equivocado. Cuenta contra el mínimo de tres bajos que la retención exige
+  para liberar el contexto, así que el acorde detectado se queda vigente sin límite. La causaba
+  recalcular la clasificación contra el split al soltar, y se arregló leyéndola del conjunto.
+  **Corregido el 2026-08-22:** esta línea decía que la liberación "exige cero bajos", que fue cierto
+  hasta el PR que agregó la segunda mitad de la retención. `triggerContextTimeout` en `src/midi.js`
+  libera con `activeBasses.size < 3`, y la entrada **retención del contexto** de este mismo archivo
+  ya lo decía bien: las dos se contradecían. Fuentes: 2026-08-20, *Nada que decida el destino de un
+  evento se recalcula después de que el evento ocurrió*, y 2026-08-20, *La retención se re-arma con
+  cualquier movimiento de bajos, y libera por debajo de tres*.
 - **dispositivo real** y **puerto virtual del sistema**: los dos grupos en que la app reparte los
   puertos MIDI de entrada que enumera. Real es el que declara fabricante, virtual el que no.
   `MIDIPort` no expone ningún campo que lo diga, así que es una heurística sobre una observación y no
@@ -241,9 +246,14 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   opciones cambian de nombre con la nomenclatura elegida.
 - **selector de tipo**: el desplegable que elige mayor, menor natural o menor armónica,
   `scale-select`. Escribe `State.universe.type`.
-- **panel de fijar acordes**: `lock-chords-panel`, oculto a propósito desde la Fase 5 con el
-  atributo `hidden` y un comentario que pide no borrarlo. Ofrece dos acordes fijos, Do Mayor y
-  Re m7, para practicar sobre ellos.
+- **panel de fijar acordes**: **artefacto retirado.** Fue `lock-chords-panel`, con dos acordes fijos,
+  Do Mayor y Re m7, para practicar sobre ellos. La v11.76 lo sacó del markup y hoy
+  `grep -rn "lock-chords-panel" index.html src/` no devuelve nada. El término se queda porque el
+  BACKLOG lo nombra al pedir que se junte con el botón de bloqueo en un widget de acompañamiento, y
+  quien lea ese ítem necesita saber qué era. Lo que sobrevive del panel es `Armonia.lockChord`, sin
+  llamador activo, que el §6 de `ARCHITECTURE.md` lista como gap. **Corregido el 2026-08-22:** esta
+  línea lo daba por existente y oculto con `hidden`, la misma afirmación muerta que el PR #97 sacó
+  del §6 sin mirar acá.
 - **lock de acorde**: fijar un acorde para que el motor deje de redetectarlo y evalúe la melodía
   contra él. Hasta el 2026-08-11 nombraba un botón; hoy nombra el caso más simple de una función,
   liberar la mano izquierda para concentrarse en la melodía. Un acorde, sostenido, sin ritmo; arpegio,
@@ -284,8 +294,10 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   precedencia escrita del repo*.
 - **precedencia de efecto**: el orden fijo que decide qué dueño gana cuando dos widgets comparten un
   efecto. Compartir está permitido si la precedencia está escrita, y prohibido si no. La única
-  escrita es la cascada de cuatro ramas de `UI.renderKeyboard`: acorde, veredicto, nota activa,
-  escala. Fuente: 2026-08-11, *Los efectos sobre las teclas, y la primera precedencia escrita del
+  escrita es la cascada de cuatro ramas de `Teclado.renderKeyboard`: acorde, veredicto, nota activa,
+  escala. **Corregido el 2026-08-22:** decía `UI.renderKeyboard`, y la entrada *`Escala`, `Teclado`,
+  `Readout` y `Armonia`* de este mismo archivo dice que `UI` ya no existe. Las cuatro ramas sí son
+  las que están en `src/teclado.js`; el objeto que las contiene era el nombre viejo. Fuente: 2026-08-11, *Los efectos sobre las teclas, y la primera precedencia escrita del
   repo*.
 
 - **`Escala`, `Teclado`, `Readout` y `Armonia`**: los cuatro objetos en que se disolvió `UI` al
