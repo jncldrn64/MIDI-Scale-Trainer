@@ -2,6 +2,29 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.96 — 2026-08-23
+
+### Fixed
+
+- `docs/ROADMAP.md`, ítem de persistencia del BACKLOG: decía "dos cosas con dos claves de `localStorage`" y son tres. Falta `midiTrainerUniverse`, que la Fase 6 agregó el 2026-08-12, un día después de que ese ítem se escribiera. Es el otro hecho muerto que el PR #97 sacó del §6 de `ARCHITECTURE.md` y dejó vivo acá.
+- `docs/ROADMAP.md`, §"Documento de requisitos": afirmaba, como verificable en dos comandos, que cuatro términos no aparecen en ningún documento. "requisito" aparece 42 veces en seis archivos, 7 de ellas en `DECISIONS.md`. La otra mitad de la frase, que no hay `README.md`, sigue siendo cierta y se queda con su comando.
+- `docs/ROADMAP.md`, §"Deuda de método": su condición de arranque decía "hasta terminar la Fase 5, con sus cinco incrementos" y esa fase cerró el 2026-08-11 con seis. La sección se leía bloqueada y estaba libre.
+- `docs/ROADMAP.md`: el conteo de incrementos de la Fase 5 decía cinco en tres lugares y seis en otros tres. Queda seis, con cómo creció. El ítem de lineamientos para partir una fase decía además que uno se entregó partido, y fueron dos, el 5.3 en tres PR y el 5.5 en dos.
+
+### Changed
+
+- `docs/ROADMAP.md`, §"Glosario vivo en vez de glosario congelado": queda marcado como ejecutado. `docs/GLOSARIO.md` existe desde el 2026-08-09 y `CLAUDE.md` adoptó además la regla que ese mismo párrafo llamó "más frágil".
+- `docs/CONTEXTO-TEMPORAL.md`: se recogen las cuatro líneas que este PR cierra. Quedan cuatro de las ocho que la anotación del 2026-08-22 trajo.
+
+**La subsección del glosario predijo su propia factura.** Escribió que exigir que cada entrada
+reescriba la línea del glosario "es más frágil, porque depende de que nadie se olvide", el repo
+adoptó esa regla igual, y el 2026-08-22 aparecieron tres afirmaciones falsas en `GLOSARIO.md`. El
+ítem no se borra: se cierra citando la predicción cumplida, y lo que queda abierto es si esa
+dependencia necesita disparador mecánico propio.
+
+**Cinco de los seis arreglos son el mismo modo de falla, y ninguno era difícil de ver.** Los cinco se
+caen con un `grep` de una línea, y los cinco vivían en el archivo del que un modelo saca qué hacer.
+
 ## v11.95 — 2026-08-22
 
 ### Fixed

@@ -308,8 +308,10 @@ Quinto, la etiqueta naranja de la leyenda entra a la lista de renombres. Nombra 
 único, la sensible en universo menor, y se lee como si nombrara una familia de tensiones
 permitidas. El nombre nuevo se decide junto con los otros de esta subsección.
 
-**Incrementos de entrega.** La fase se entrega en cinco incrementos, del más estructural al más
-cosmético, cada uno un PR de código que se puede ver y corroborar por separado.
+**Incrementos de entrega.** La fase se entregó en seis incrementos, del más estructural al más
+cosmético, cada uno un PR de código que se puede ver y corroborar por separado. Nació con cinco: el
+5.6 se sumó cuando el umbral de las 1000 líneas se disparó a mitad de fase, y ese crecimiento sin
+regla escrita es el ítem "Reglas para reabrir una fase cerrada" del BACKLOG.
 
 - Incremento 5.1, **entregado en la v11.32**, fondo único: el teclado y las notas ocupan todo el ancho y alto como una sola
   capa de fondo, las notas pasan por detrás de los overlays, y la disposición apilada actual pasa
@@ -1027,8 +1029,8 @@ prioridad, no porque la rueda la bloquee.
   **Por qué se anotó:** el CHANGELOG v11.45 lo dice, "anotado como idea y no como decisión, con
   las preguntas que abre". El mismo commit fijó el molde uniforme con números en el Alcance de la
   Fase 5, así que el ítem es la contrapregunta que ese molde abre al fijarse.
-- Lineamientos para partir una fase. La Fase 5 tiene cinco incrementos y uno de ellos se entrega en
-  dos PR de código, y esa estructura creció sin regla: no hay escrito cuándo un incremento se parte
+- Lineamientos para partir una fase. La Fase 5 tiene seis incrementos y dos de ellos se entregaron
+  partidos, el 5.3 en tres PR de código y el 5.5 en dos, y esa estructura creció sin regla: no hay escrito cuándo un incremento se parte
   ni hasta qué profundidad. Sin lineamiento, el trabajo se subdivide tarde, cuando ya se empezó a
   construir. Va junto con la crítica obligatoria del diseño de fase, que ya está parqueada, porque
   es el mismo problema visto desde el otro lado. **Origen anterior a la sesión de la v11.53 a la
@@ -1262,11 +1264,18 @@ prioridad, no porque la rueda la bloquee.
   ese conflicto declarado en vez de como pedido limpio. El CHANGELOG no lo dice, así que esto se
   puede discutir.
 - Una regla de persistencia: qué merece guardarse, dónde vive y qué pasa cuando la forma de lo
-  guardado cambia. Hoy no hay ninguna escrita. Persisten dos cosas con dos claves de `localStorage`:
-  `midiTrainerCfg` guarda `State.config` y `midiTrainerLayout` guarda `Layout.estado`. Funciona por
-  dos comportamientos que conviene documentar en vez de dejar como accidente: `loadConfig` fusiona lo
-  guardado sobre los valores por defecto, así que agregar un campo nuevo no rompe nada; y `loadLayout`
-  descarta el estado entero con un aviso si es ilegible o si viola el cap. Lo que cuesta no tenerla ya
+  guardado cambia. Hoy no hay ninguna escrita. Persisten tres cosas con tres claves de `localStorage`,
+  y el conteo sale de
+  `grep -rn "localStorage" src/*.js | grep -o "'midiTrainer[A-Za-z]*'" | sort -u`:
+  `midiTrainerCfg` guarda `State.config`, `midiTrainerLayout` guarda `Layout.estado` y
+  `midiTrainerUniverse` guarda la tónica y el tipo del universo. **Corregido el 2026-08-23:** este
+  ítem decía dos y dos, escrito el 2026-08-11, un día antes de que la Fase 6 agregara la tercera
+  clave. Es la misma afirmación muerta que el PR #97 sacó del §6 de `ARCHITECTURE.md`, sobreviviendo
+  acá. Funciona por
+  tres comportamientos que conviene documentar en vez de dejar como accidente: `loadConfig` fusiona lo
+  guardado sobre los valores por defecto, así que agregar un campo nuevo no rompe nada; `loadLayout`
+  descarta el estado entero con un aviso si es ilegible o si viola el cap; y `loadUniverse` hace lo
+  mismo si el tipo no está en `SCALES` o la tónica cae fuera de las doce, sin migrar nada. Lo que cuesta no tenerla ya
   pasó: el comentario de `src/state.js` dice que renombrar el campo `latino` dejaría a medias una
   migración de `midiTrainerCfg`, o sea que una migración que no existe frenó un renombre. Nueve ítems
   parqueados van a necesitarla, y dos de ellos ya traen la pregunta adentro sin respuesta: el alto del
@@ -1897,10 +1906,13 @@ es una dirección pendiente". Adónde fue cada uno:
 ## Deuda de método y documentación (no es fase, y altera el estándar)
 
 Esta sección parquea trabajo sobre cómo se documenta y se versiona el proyecto, no sobre lo que
-hace la app. Nada de acá se ejecuta hasta terminar la Fase 5 completa, con sus cinco incrementos
-entregados y corroborados. Varios de estos puntos cambian el estándar compartido que vive en
+hace la app. **Su condición de arranque se cumplió:** decía que nada de acá se ejecuta hasta terminar
+la Fase 5 completa, y esa fase cerró el 2026-08-11 con sus seis incrementos entregados y corroborados.
+Lo que sigue frenando a estos puntos no es la Fase 5 sino que cada uno pide su propia discusión.
+
+Varios de estos puntos cambian el estándar compartido que vive en
 `CLAUDE.md`, así que no tocan solo este repo: tocan también los otros que siguen ese estándar. Por
-eso se parquean juntos y se ejecutan de a uno, con su propia discusión.
+eso se parquean juntos y se ejecutan de a uno.
 
 El motivo de fondo es uno solo. Un modelo no lee la conversación completa: lee un resumen
 comprimido donde los matices se pierden, y lo que se perdió no vuelve. El repo, en cambio, lo lee
@@ -1978,11 +1990,17 @@ lo que ese archivo guarda.
 
 ### Documento de requisitos, propósito y público objetivo
 
-El faltante es concreto y se verifica en dos comandos: hoy no existe `README.md` en el repo, y los
-términos "público objetivo", "requisito", "requerimiento" y "no funcional" no aparecen en ningún
-documento. El repo documenta el plan en el ROADMAP y el porqué de cada decisión en DECISIONS, pero
-no documenta para quién es la app, cuál es su propósito, cuál es su alcance, ni qué tiene que ser
-verdad para que esté bien hecha.
+El faltante es que no existe `README.md` en el repo, comprobable con `ls *.md` en la raíz, que
+devuelve `CHANGELOG.md` y `CLAUDE.md` y nada más. El repo documenta el plan en el ROADMAP y el porqué
+de cada decisión en DECISIONS, pero no documenta para quién es la app, cuál es su propósito, cuál es
+su alcance, ni qué tiene que ser verdad para que esté bien hecha.
+
+**Corregido el 2026-08-23:** este párrafo decía además que los términos "público objetivo",
+"requisito", "requerimiento" y "no funcional" no aparecen en ningún documento, y lo presentaba como
+verificable en dos comandos. El segundo no se cumple:
+`grep -rci "requisito" CLAUDE.md CHANGELOG.md docs/*.md` da 42 apariciones en seis archivos, 7 de
+ellas en `DECISIONS.md`, o sea que no es este párrafo citándose a sí mismo. Lo que falta no es el
+vocabulario sino el documento que lo ordene, que es lo que esta subsección pide de verdad.
 
 No es redundante con lo que ya hay, porque los tres documentos responden preguntas distintas. El
 ROADMAP dice qué sigue. DECISIONS dice por qué esta forma y no otra, y es historia append-only que
@@ -2055,6 +2073,21 @@ glosario del flujo append-only y volverlo un documento vivo y editable, dejando 
 siendo el historial de por qué cambió cada cosa. La alternativa es exigir que toda entrada que
 refine un término reescriba también la línea del glosario, pero es más frágil, porque depende de que
 nadie se olvide.
+
+**Ejecutado, y las dos mitades se hicieron.** `docs/GLOSARIO.md` existe como documento vivo y
+editable desde el 2026-08-09, con su propio encabezado declarando que dice qué significa un término
+hoy y que acá se corrige. Y `CLAUDE.md` adoptó además la alternativa, en la regla de glosario de su
+sección "Documentación": toda entrada de `DECISIONS.md` que introduzca o refine un término escribe
+también su línea en `GLOSARIO.md`, en el mismo PR.
+
+**La predicción de fragilidad se cumplió, y conviene dejarla escrita en vez de borrar el ítem.** El
+2026-08-22 se encontraron tres afirmaciones falsas en `GLOSARIO.md`, dos de ellas contradichas por
+otra entrada del mismo archivo, y una de ellas era el nombre `UI.renderKeyboard` copiado desde una
+entrada congelada de `DECISIONS.md` que lo usaba antes de que `UI` se disolviera. Es exactamente el
+"depende de que nadie se olvide" de este párrafo. Lo que queda abierto no es si el glosario debe
+vivir aparte, que ya está decidido y hecho, sino si esa dependencia necesita su propio disparador
+mecánico, como el que "Mantenimiento de ARCHITECTURE" le puso al §6. Anotado en
+`docs/CONTEXTO-TEMPORAL.md` el 2026-08-22, sin decidir.
 
 ### El material de referencia que vive fuera del repo (sugerencia del revisor)
 
