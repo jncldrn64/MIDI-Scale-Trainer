@@ -143,3 +143,58 @@ que el ejemplo de esa entrada, donde un universo nuevo es una entrada en `SCALES
 entrenamiento va a tener que elegir, y si esto no está escrito va a elegir lo fácil.
 **Por qué sigue acá (2026-08-21):** nace acá. No se coloca todavía porque colocarla sería resolverla,
 y quien la resuelva tiene que ser quien diseñe el formato.
+
+**2026-08-22, el modelo que implementa.** Barrida de auditoría sobre lo que ninguna sesión había
+leído: `GLOSARIO.md` completo, `tests/README.md`, el §"Deuda de método" del ROADMAP, y el resto del
+BACKLOG por muestreo. Salieron siete hallazgos del mismo patrón que el PR #97, documentación que
+afirma algo del código y el código dice otra cosa. **Tres los cierra este mismo PR** (las
+contradicciones de `GLOSARIO.md`). Los otros cuatro van acá para que no se pierdan si la sesión se
+corta, cada uno con el comando que lo comprueba. **Se recogen cuando se ejecute su PR y esta
+anotación se borra entera.**
+
+- **`docs/ROADMAP.md`, ítem de persistencia del BACKLOG: dice "dos claves de `localStorage`" y son
+  tres.** Falta `midiTrainerUniverse`, que entró el 2026-08-12 con la Fase 6, un día después de que
+  ese ítem se escribiera. Comando:
+  `grep -rn "localStorage" src/*.js | grep -o "'midiTrainer[A-Za-z]*'" | sort -u`. Es la misma
+  afirmación muerta que el PR #97 sacó del §6 de `ARCHITECTURE.md`, sobreviviendo en otro archivo.
+- **`docs/ROADMAP.md`, §"Deuda de método": su portón venció.** Abre con "Nada de acá se ejecuta hasta
+  terminar la Fase 5 completa, con sus cinco incrementos". La Fase 5 cerró el 2026-08-11 con seis, y
+  el propio archivo lo dice en tres lugares. La sección entera se lee bloqueada y está libre.
+  Comando: `grep -n "cinco incrementos\|seis incrementos" docs/ROADMAP.md`.
+- **`docs/ROADMAP.md`, §"Documento de requisitos": afirma algo verificable que es falso.** Dice que
+  "público objetivo", "requisito", "requerimiento" y "no funcional" no aparecen en ningún documento.
+  "requisito" aparece 42 veces en seis archivos, 7 de ellas en `DECISIONS.md`, o sea que no es
+  autorreferencia. La otra mitad de la frase, que no hay `README.md`, sigue siendo cierta. Comando:
+  `grep -rci "requisito" CLAUDE.md CHANGELOG.md docs/*.md`.
+- **`docs/ROADMAP.md`, §"Glosario vivo en vez de glosario congelado": está resuelto y no está
+  marcado.** `docs/GLOSARIO.md` existe. Y esa subsección llamó "más frágil" a la regla que el repo
+  después adoptó en `CLAUDE.md`: las tres contradicciones que este PR arregla son la factura de esa
+  fragilidad, así que el ítem se cierra citando su propia predicción cumplida.
+- **`tests/README.md` documenta la mitad del arnés.** Dice "Hay tres tipos de caso" y `tests/run.js`
+  despacha seis: los tres sin documentar (`roman`, `function`, `resolution`) cubren 22 de los 46
+  casos. Su tabla "Fixtures actuales" lista tres archivos y hay cinco. Comandos:
+  `grep -n "kind ===" tests/run.js` y `ls tests/fixtures/`.
+- **`src/armonia.js` viola la regla 1 de "Verbosidad del registro", y el comando que la detecta tiene
+  un falso positivo.** El archivo tiene 4 escrituras a `State` y cero `SysLog`; `unlockChord` está
+  colgado de `btn-lock`, escribe `isLocked` y `chord`, y no registra nada. Aparte, el detector cuenta
+  `State.config.accumMs === p.accumMs` de `src/widgets.js` como escritura, porque el regex
+  `State\.[a-zA-Z.]+ *=` atrapa el primer `=` de un `===`. Toca código, así que va con las fixtures
+  como red y su propio PR.
+
+**Y dos cosas de análisis, que son lo que más se pierde si nadie las escribe.**
+
+- **El mecanismo detrás de casi todos estos casos.** `DECISIONS.md` es append-only, así que congela
+  nombres que después mueren; la entrada del 2026-08-11 del contrato de permisos usa `UI.updateStatus`
+  y `UI.lockChord`, y `UI` se disolvió el mismo día en otra entrada del mismo archivo. Correcto que
+  se quede. El problema es que la regla de glosario de `CLAUDE.md` **empuja texto desde el archivo
+  congelado hacia el vivo**, y así llegó `UI.renderKeyboard` a `GLOSARIO.md`. No se sabe todavía si
+  esto pide una regla nueva o si alcanza con la disciplina que ya existe.
+- **"El sistema es un solo autor con varias manos" describe y no prohíbe.** Esa acotación del contrato
+  de permisos del 2026-08-11 es legítima como límite de alcance, la regla de autoría se escribió sobre
+  widgets. Falla como justificación: afirma que varios escritores sobre una rama del estado son
+  inocuos adentro del sistema, y el repo pagó esa suposición dos veces, las dos en las dos ramas que
+  esa misma entrada enumera. El bajo fantasma en `State.midi.activeBasses` y el acorde pegado en
+  `State.harmony.chord`, los dos vivos desde el primer commit, los dos encontrados por síntoma y no
+  por el contrato. La forma que sí prohíbe algo ya está escrita, es la entrada del 2026-08-20 "Nada
+  que decida el destino de un evento se recalcula después de que el evento ocurrió". Si el contrato
+  necesita una invariante escrita entre sus escritores, o si con esa entrada alcanza, no se decidió.

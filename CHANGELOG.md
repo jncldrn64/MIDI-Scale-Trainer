@@ -2,6 +2,26 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.95 — 2026-08-22
+
+### Fixed
+
+- `docs/GLOSARIO.md`, **bajo fantasma**: decía que la liberación del contexto "exige cero bajos". `triggerContextTimeout` libera con `activeBasses.size < 3` desde el PR que agregó la segunda mitad de la retención, y la entrada **retención del contexto** del mismo archivo ya lo decía bien.
+- `docs/GLOSARIO.md`, **panel de fijar acordes**: lo daba por existente y oculto con `hidden`. La v11.76 lo sacó del markup. El término se queda porque el BACKLOG lo nombra, marcado como artefacto retirado.
+- `docs/GLOSARIO.md`, **precedencia de efecto**: decía `UI.renderKeyboard`. `UI` se disolvió en la Fase 5B y el mismo archivo lo dice dos entradas más abajo. Las cuatro ramas de la cascada sí son las que están en `src/teclado.js`.
+
+### Added
+
+- `docs/CONTEXTO-TEMPORAL.md`: los cuatro hallazgos de la misma barrida que este PR no cierra, cada uno con el comando que lo comprueba, más el mecanismo que los explica y la lectura crítica del contrato de permisos.
+
+**El archivo se contradecía a sí mismo dos veces**, y las dos contradicciones tenían la versión
+correcta escrita en el mismo archivo, a doce líneas y a setenta de distancia. Ninguna era una
+afirmación difícil de comprobar: las tres se caen con un `grep`.
+
+**Dos de las tres son afirmaciones que el PR #97 ya había matado en `ARCHITECTURE.md`.** Ese PR
+corrigió una copia de cada hecho muerto y no preguntó si había otras. Es el mismo modo de falla que
+corregía, un nivel más arriba.
+
 ## v11.94 — 2026-08-21
 
 ### Fixed
