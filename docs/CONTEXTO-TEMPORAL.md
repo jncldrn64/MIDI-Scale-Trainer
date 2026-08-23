@@ -148,13 +148,9 @@ y quien la resuelva tiene que ser quien diseñe el formato.
 leído: `GLOSARIO.md` completo, `tests/README.md`, el §"Deuda de método" del ROADMAP, y el resto del
 BACKLOG por muestreo. Salieron siete hallazgos del mismo patrón que el PR #97, documentación que
 afirma algo del código y el código dice otra cosa. Las tres contradicciones de `GLOSARIO.md` las
-cerró la v11.95, y las cuatro de `docs/ROADMAP.md` la v11.96. **Queda lo de abajo**, cada uno con el
+cerró la v11.95, las cuatro de `docs/ROADMAP.md` la v11.96 y la de `tests/README.md` la v11.97. **Queda lo de abajo**, cada uno con el
 comando que lo comprueba. **Se recogen cuando se ejecute su PR y esta anotación se borra entera.**
 
-- **`tests/README.md` documenta la mitad del arnés.** Dice "Hay tres tipos de caso" y `tests/run.js`
-  despacha seis: los tres sin documentar (`roman`, `function`, `resolution`) cubren 22 de los 46
-  casos. Su tabla "Fixtures actuales" lista tres archivos y hay cinco. Comandos:
-  `grep -n "kind ===" tests/run.js` y `ls tests/fixtures/`.
 - **`src/armonia.js` viola la regla 1 de "Verbosidad del registro", y el comando que la detecta tiene
   un falso positivo.** El archivo tiene 4 escrituras a `State` y cero `SysLog`; `unlockChord` está
   colgado de `btn-lock`, escribe `isLocked` y `chord`, y no registra nada. Aparte, el detector cuenta
