@@ -2,6 +2,27 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.97 — 2026-08-23
+
+### Fixed
+
+- `tests/README.md` decía "Hay tres tipos de caso" y `tests/run.js` despacha seis. Los tres sin documentar, `roman`, `function` y `resolution`, cubren 22 de los 46 casos, o sea casi la mitad del arnés.
+- La tabla "Fixtures actuales" listaba tres archivos y hay cinco. Faltaban `grados-romanos.json`, que solo aporta 23 casos, y `raiz-ambigua.json`.
+
+### Added
+
+- Las tres secciones que faltaban, cada una con su ejemplo real sacado de una fixture y con qué prueba que los otros tipos no prueban.
+- El campo `universe` por caso, que pisa el de la fixture y hoy usan 7 casos de `grados-romanos.json` para probar que el mismo Re Mayor es `V` en Sol Mayor y `II` en Do Mayor. No estaba documentado.
+- Los tres campos opcionales de un caso `chord` que las Fases 3 y 4 le sumaron: `numeral`, `targetNumeral` y `function`. La tabla de fixtures gana la columna de casos, y los dos conteos van con el comando que los recalcula.
+
+**Lo que hace grave a este caso es qué archivo es.** `tests/README.md` explica la única garantía dura
+del proyecto, y describía la mitad de ella. Un modelo que llega a agregar una fixture y lee esto
+concluye que solo puede probar acordes, melodías y el indulto.
+
+**El tipo `resolution` era el más caro de perder.** Es el único que toma dos acordes y afirma que el
+objetivo derivado del primero es la raíz del segundo, que es lo que vuelve dominante secundaria a un
+acorde. Sin esa línea en el README, la forma de probar un vínculo entre acordes queda invisible.
+
 ## v11.96 — 2026-08-23
 
 ### Fixed
