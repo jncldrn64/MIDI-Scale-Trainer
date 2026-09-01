@@ -2,6 +2,33 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.102 — 2026-09-01
+
+### Added
+
+- `docs/CONTEXTO-TEMPORAL.md`: el testimonio de un segundo modelo, de otro proveedor, con su contaminación declarada. No tuvo sistema de archivos y le faltaban tres archivos centrales, así que las preguntas sobre orden de lectura no aplicaban en ese montaje.
+- Su umbral, que es el dato más útil de los dos testimonios juntos: pudo operar con seguridad al integrar `CLAUDE.md` y `ROADMAP.md`, o sea método y fase actual. Eso define qué tendría que lograr un punto de entrada, llevar a esos dos.
+- El patrón de RustDesk, verificado contra el repositorio público: su `CLAUDE.md` tiene once bytes y dice `@AGENTS.md`, su `AGENTS.md` tiene 112 líneas de contenido real, y su `GEMINI.md` tiene diez bytes.
+- La conclusión de método de que el caso limpio no es reproducible, con su razón: los modelos que reciben texto pegado no pueden explorar, y los que exploran necesitan herramientas de archivo que no todos tienen.
+
+### Changed
+
+- Queda desmentida la anotación de que lo que falta es saber qué documento manda sobre cuál. El segundo modelo extrajo esa jerarquía de `CLAUDE.md` sin ayuda. **Lo que falta no es la jerarquía escrita, es que alguien abra el archivo donde está.**
+- El descarte del enlace simbólico se acota: la razón era correcta, pero se descartó la idea sin conocer su versión buena, un archivo de texto de una línea que logra lo mismo sin symlink.
+
+**Siete de las diecinueve secciones de `CLAUDE.md` dependen de correr algo**, y son Mantenimiento de
+ARCHITECTURE, Fechas, Commits, Prosa, Honestidad de estado, Promesas y umbrales, y Verbosidad del
+registro. Un modelo sin terminal entiende esas reglas y no puede obedecerlas, así que queda abierta
+una pregunta que el repo nunca se hizo: para quién está escrito ese archivo.
+
+**El patrón de RustDesk resultó más fuerte de lo observado.** Su `GEMINI.md` dice `AGENTS.md` sin
+arroba, mientras que su `CLAUDE.md` dice `@AGENTS.md` con la sintaxis de importación de su
+herramienta. No es un archivo repetido tres veces: cada uno usa la convención de su propia
+herramienta para apuntar al único que tiene el contenido.
+
+**Y lo único que aguanta las dos contaminaciones: el nombre `CLAUDE.md` no dispara el reflejo de
+abrirlo primero.** Dos testimonios de dos, con montajes opuestos, coinciden en eso y en nada más.
+
 ## v11.101 — 2026-09-01
 
 ### Added
