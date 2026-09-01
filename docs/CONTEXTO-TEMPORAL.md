@@ -170,3 +170,99 @@ borra entera cuando las dos se contesten o se descarten.
   por el contrato. La forma que sí prohíbe algo ya está escrita, es la entrada del 2026-08-20 "Nada
   que decida el destino de un evento se recalcula después de que el evento ocurrió". Si el contrato
   necesita una invariante escrita entre sus escritores, o si con esa entrada alcanza, no se decidió.
+
+**2026-08-23, el autor, con lectura del revisor. Bloque A: puntos de entrada y paridad entre repos.**
+Nada de esto se resuelve acá, es el paso 1 de ocho de un plan del autor y los pasos 2, 4 y 5 son
+auditorías que van en sus propios PR.
+
+- **El repo no tiene punto de entrada para un modelo, y lo comprobé.** `CLAUDE.md` abre con "Reglas
+  que valen en cada sesión", o sea que es manual de operación: dice cómo escribir antes de decir qué
+  es esto. `ARCHITECTURE.md` abre con su regla de verificación y su §0 es "Punto de partida real",
+  que habla de la v11.0 y de la v11.5 perdida, no de qué hace la app ni para quién. `ROADMAP.md` abre
+  con cómo usarlo con Claude Code, `DECISIONS.md` con su regla append-only y `GLOSARIO.md` con la
+  suya. Ninguno de los cinco contesta qué es el repo y por qué existe. Lo más cerca es la "Orden de
+  lectura" de `CLAUDE.md`, que es un mapa de cuándo leer cada archivo y nada más.
+- **El repo hermano del autor, TL-FCCU, tiene un `AGENTS.md` que sí cumple esa función.** Según el
+  autor su encabezado dice "start here" y cubre cuatro cosas: qué es el repo y por qué existe,
+  restricciones duras, mapa de qué archivo sirve para qué y cuándo leerlo, y gaps conocidos. Ahí la
+  división es que `AGENTS.md` orienta y `DESIGN.md` norma. **No lo verifiqué: este repo es el único
+  destino de escritura de la sesión y no tengo el otro a mano.** El paso 4 pide esa auditoría y hace
+  falta acceso a los dos.
+- **El autor intentó traer `AGENTS.md` acá y Claude Code se negó**, con razón parcial, porque
+  `CLAUDE.md` prohíbe crear documentación nueva sin preguntar primero. **Comprobado: esa negativa no
+  quedó registrada en ninguna parte.** `grep -rn "AGENTS" docs/ CLAUDE.md CHANGELOG.md` devuelve una
+  sola línea, la de `CLAUDE.md` que dice "Este repo no tiene `AGENTS.md`", que constata la ausencia y
+  no cuenta el intento ni por qué se frenó. Vivió solo en conversación hasta esta anotación.
+- **La asimetría, según el autor:** este repo tiene mejores reglas de escritura, medidas con
+  comandos, y tiene `CONTEXTO-TEMPORAL.md`; el otro tiene `AGENTS.md` y no tiene ninguna de las dos.
+- **Y una lectura del revisor, que es opinión y no decisión:** no todo debería estandarizarse entre
+  los dos repos. La estructura de carpetas sigue al contenido, no a la simetría. Lo que sí valdría
+  propagar es el método, las reglas de prosa y el archivo de contexto hacia el otro repo, y el punto
+  de entrada hacia este.
+- **El `README.md` no compite con esto.** El autor decidió que es para humanos y que espera a la
+  versión mayor siguiente. Un punto de entrada para modelos es otra audiencia.
+
+**2026-08-23, el autor y el revisor. Bloque B: teoría musical, sin verificar contra fuentes.** Todo
+lo de acá espera al paso 6. **Las correcciones del revisor están tan sin verificar como lo que
+corrigen**, y eso lo señaló el propio autor: usar memoria introduce alucinaciones, y esa advertencia
+alcanza también a quien corrige. Lo único que comprobé es lo que el motor puede contestar solo.
+
+Lo que el autor descubrió:
+
+- El VI grado de una escala mayor es la tónica de su relativo menor, y las dos comparten las siete
+  notas. **Verificado contra el motor**, corrida abajo.
+- Desde la menor se construye la armónica sostiendo el VII. **Verificado contra el motor.**
+- Desde la menor se construye la melódica sostiendo el VI y el VII. **No se puede verificar acá: la
+  menor melódica no existe en `SCALES`**, que tiene tres entradas, `major`, `minor` y
+  `harmonic_minor`.
+- Su lectura general: de la mayor sale la menor, y de la menor salen las otras dos, como una
+  recursión. La rueda de quintas muestra la relación entre mayor y menor y no muestra esas dos.
+- Un caso que le llamó la atención: viniendo de La mayor aparece un Mi mayor con Sol#, fuera de la
+  escala, y suena bien. Lo asoció con la sensible.
+
+Las correcciones del revisor, sin verificar salvo donde se diga:
+
+- El VI no es la dominante sino la submediante; la dominante es el V.
+- El relativo mayor de una menor está en el III grado, no en el VI. **Verificado contra el motor:**
+  el III de La menor es Do y los dos conjuntos coinciden.
+- Mi# no es Fa. Suenan igual y no son la misma nota escrita, que es el problema de enarmonía ya
+  anotado en el BACKLOG.
+- Lo de ascendente y descendente es de la melódica, no de la armónica. La armónica lleva el VII
+  sostenido siempre; la melódica clásica sube con VI y VII sostenidos y baja como menor natural.
+- Sobre el Mi mayor con Sol#: dijo que es la sensible y que esa es la razón de existir de la menor
+  armónica, tener una dominante que resuelva. **Sin verificar.**
+
+El hallazgo que es del código y no de la teoría:
+
+- **El universo del motor es un conjunto de alturas sin dirección. Verificado**, la firma es
+  `evaluateMelodyStatus({ pc, universePitchesSet, chordObj, universeType, universeRoot })`: recibe un
+  conjunto y no sabe qué nota vino antes.
+- **La menor melódica clásica no se puede representar en un conjunto**, porque la misma nota es
+  válida subiendo e inválida bajando. No se arregla agregando una fila a `SCALES`, como sí pasa con
+  los modos griegos: es un parámetro más en la firma del motor, y eso toca las 46 fixtures.
+- **Y hay una salida barata que puede ser la correcta:** la melódica ascendente sola es una escala de
+  siete notas como cualquier otra y entra en `SCALES` sin cambiar nada. Según el revisor, en el jazz
+  y en buena parte de la música moderna se usa solo esa forma en las dos direcciones, mientras que la
+  asimétrica es la regla clásica. **Sin verificar, y es justo lo que el paso 6 tiene que resolver**,
+  porque de eso depende si el ítem es barato o caro.
+- Quedan tres casos ambiguos que la memoria de una nota no resuelve sola: la primera nota de todas,
+  una nota repetida, y un salto grande que no es una línea melódica.
+- **Una precisión del revisor que conviene guardar:** saber la dirección no es heurística. Comparar
+  la nota actual con la anterior es determinista, igual que el indulto de 180 ms ya usa el pasado sin
+  serlo. Lo que falta no es una estimación, es memoria.
+
+Lo que el autor propone construir, sin colocar todavía:
+
+- Un botón que salte al relativo desde el selector de escala, sin pasar por el desplegable. Lo quiere
+  antes de la rueda de quintas.
+- Que la guía muestre formas alternativas de leer lo mismo, que es el propósito que le ve a la rueda.
+- Mejorar la descripción de los elementos en pantalla.
+
+**2026-08-23, el autor, aceptado por el revisor. Bloque C: lo que este repo hace es FDD, no TDD.**
+Entrega por características completas y verificables, con fases e incrementos, y las fixtures llegan
+después o junto, no antes. TDD estricto exige escribir la prueba primero y acá casi nunca pasó.
+**Comprobado antes de escribir esto: `grep -ri "TDD" docs/ CLAUDE.md` devolvía 0, y "FDD" tampoco
+aparecía en ningún archivo.** O sea que la confusión vivió solo en conversación, y esta anotación
+existe para que no vuelva. Corrido ahora ese grep devuelve 3 y las tres son estas líneas, así que el
+número queda fechado en vez de escrito como si fuera permanente: es la misma trampa que el §"Documento
+de requisitos" del ROADMAP tenía y que la v11.96 corrigió.

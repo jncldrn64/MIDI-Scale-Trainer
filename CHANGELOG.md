@@ -2,6 +2,27 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.99 — 2026-08-23
+
+### Added
+
+- `docs/CONTEXTO-TEMPORAL.md`: tres anotaciones que vuelcan lo que se dijo en sesión y todavía no tiene destino. Puntos de entrada y paridad con el repo hermano, teoría musical sin verificar, y que el método de este repo es FDD y no TDD.
+- El bloque de teoría entra marcado como pendiente, y las correcciones del revisor entran tan sin verificar como lo que corrigen. Lo señaló el autor: usar memoria introduce alucinaciones, y eso alcanza a quien corrige.
+- Lo poco que el motor puede contestar solo va verificado y separado del resto: que el VI de una mayor es la tónica de su relativa menor con las mismas siete notas, que el III de una menor es su relativo mayor, y que la armónica es la natural con el VII sostenido.
+
+**El archivo sube de 6 anotaciones a 9 y de 156 a 266 líneas, y eso es lo contrario de su métrica.**
+Está declarado: es el paso 1 de ocho de un plan del autor, y los pasos 3, 7 y 8 lo vacían. Que crezca
+ahora no es que el vaciado se dejó de hacer, es que se está usando para lo que existe.
+
+**Tres afirmaciones del volcado se comprobaron contra el repo y una no resolvió.** Que el repo no
+tiene punto de entrada para un modelo, que "TDD" no aparecía en ningún archivo antes de esta anotación, y que la negativa a
+traer un `AGENTS.md` no quedó registrada: `grep -rn "AGENTS"` devuelve una sola línea, la de
+`CLAUDE.md` que constata la ausencia. Lo del repo hermano no se verificó, porque este es el único
+destino de escritura de la sesión y el otro no está a mano.
+
+**La menor melódica no existe en `SCALES`**, que tiene tres entradas. Por eso la parte del bloque que
+la describe queda sin comprobar, y ese hueco es parte de lo que el paso 6 tiene que resolver.
+
 ## v11.98 — 2026-08-23
 
 ### Fixed
