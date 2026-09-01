@@ -391,6 +391,13 @@ Lo que contestó, con sus palabras:
   `ARCHITECTURE.md` puede quedar desactualizado, que `DECISIONS.md` es la fuente append-only real y
   que `CLAUDE.md` es el estándar operativo. Un archivo corto con eso "probablemente me habría hecho
   abrir `CLAUDE.md` completo mucho antes".
+  **Corregido el 2026-09-01 por el segundo lector:** esa información **sí está escrita y sí es
+  extraíble**. El segundo modelo la sacó de `CLAUDE.md` sin ayuda, identificando que
+  `ARCHITECTURE.md` es el estado real, `DECISIONS.md` las restricciones append-only, `ROADMAP.md` las
+  fases, y que el código obedece a la documentación y no al revés. La diferencia entre los dos no es
+  el repo: el primero leyó de `CLAUDE.md` un fragmento buscado por grep, el segundo lo leyó entero
+  porque le llegó completo. **Lo que falta no es la jerarquía escrita, es que alguien abra el archivo
+  donde está.**
 - **Y su advertencia, que acota lo que el paso 3 puede prometer:** eso funciona "solo si de verdad
   sigo la instrucción de ir a leer 490 líneas más, y esa es una pregunta de esfuerzo, no solo de
   documentación. El problema no está en un solo lugar." **Un archivo corto no garantiza que alguien
@@ -429,6 +436,13 @@ estaba escrita en el repo, así que entran directamente como descartadas y no co
   reflejo no es `AGENTS.md`, es `README.md`, que es justo el que el autor reservó para humanos y
   pospuso a la versión mayor siguiente. **Esa colisión es material para el paso 3 y no se resuelve
   acá.**
+  **Acotado el 2026-09-01:** el descarte del symlink se hizo por la razón correcta, apuntaba al
+  archivo que nadie abría, y además los enlaces simbólicos dan problemas en Windows y con
+  herramientas que no los resuelven. Pero se descartó la idea **sin conocer su versión buena**: un
+  archivo de texto común de una línea logra lo mismo sin symlink, sin problema de plataforma y
+  legible por cualquier herramienta. Ver la anotación de RustDesk más abajo. Lo que sigue en pie del
+  descarte es que un puntero solo resuelve descubribilidad, no que alguien lea las 524 líneas que hay
+  del otro lado.
 
 **2026-09-01, el autor, reforzado por el testimonio. Reglas en el prompt en vez de archivos.** Para el
 caso observado el testimonio le da la razón: si el prompt hubiera dicho que el repo manda y que el
@@ -438,3 +452,75 @@ material previo es historia, el modelo no habría dejado que el PDF le dirigiera
 alguien la escribe cada vez. **Un archivo en el repo viaja con el repo; una regla de prompt no.**
 Sirven para casos distintos, el archivo para quien llega solo y la regla para cuando el autor arma el
 contexto.
+
+**2026-09-01, segundo testimonio, recogido por el autor.** Le dio el repo a un modelo de otro
+proveedor. **Ese montaje también salió contaminado, de otra forma**, y va declarado antes que nada.
+
+- **No tuvo sistema de archivos.** Sus palabras: procesó los archivos "en el orden en que estaban en
+  el volcado de texto" y "dependo del orden de inyección de los datos". No exploró, no eligió, no vio
+  un árbol.
+- **Le faltaban tres archivos centrales:** `docs/ARCHITECTURE.md`, `docs/DECISIONS.md` y
+  `src/engine.js`. Él mismo lo marcó como su pregunta crítica sin responder.
+- Por eso **las preguntas sobre orden de lectura y sobre buscar un punto de entrada no son
+  contestables en ese montaje.** No las contestó mal: no aplicaban.
+
+Lo que sí vale:
+
+- **Extrajo la jerarquía documental de `CLAUDE.md` sin ayuda**, y eso desmiente la anotación del
+  primer testimonio, corregida arriba.
+- **Su umbral, que es el dato más útil de los dos testimonios juntos.** Dijo que pudo operar con
+  seguridad al integrar `CLAUDE.md` y `ROADMAP.md`, o sea el método de trabajo y la fase actual. Eso
+  define qué tendría que lograr un punto de entrada: **llevar a esos dos**, no explicar el proyecto.
+- **Y una limitación que ningún caso anterior mostró:** "como modelo de lenguaje estático, no puedo
+  ejecutar procesos de terminal en tiempo real para certificar esos umbrales". **Un modelo sin
+  terminal entiende las reglas de `CLAUDE.md` y no puede obedecerlas.** Medido el 2026-09-01: de sus
+  19 secciones, **siete dependen de correr algo**, y son Mantenimiento de ARCHITECTURE, Fechas,
+  Commits, Prosa, Honestidad de estado, Promesas y umbrales, y Verbosidad del registro. El archivo
+  trae tres bloques de comandos, en Prosa y en Verbosidad del registro. Eso abre una pregunta que el
+  repo nunca se hizo: **para quién está escrito `CLAUDE.md`.** Si es para quien puede correr comandos,
+  hoy no lo dice en ninguna parte.
+
+**2026-09-01, el autor. Cómo lo resuelve RustDesk, verificado contra el repositorio público.** Traído
+con `curl` sobre las URL crudas de `raw.githubusercontent.com`, sin usar herramientas de GitHub sobre
+ese repo.
+
+- **`CLAUDE.md` tiene once bytes y una sola línea: `@AGENTS.md`.** Confirmado, `http 200`, 11 bytes.
+- **`AGENTS.md` tiene el contenido real, 112 líneas.** Confirmado, 5847 bytes.
+- **`GEMINI.md` existe y tiene diez bytes, y acá aparece algo que la observación del autor no traía:
+  dice `AGENTS.md` sin la arroba.** O sea que los tres archivos no son iguales: `CLAUDE.md` usa la
+  sintaxis de importación de su herramienta y `GEMINI.md` usa una mención simple. **El patrón es más
+  fuerte de lo anotado:** no solo hay un archivo por convención de cada herramienta, sino que cada uno
+  usa la sintaxis de su propia herramienta para apuntar al único que tiene el contenido.
+- **No verificado:** el mensaje de commit que el autor cita, "Update reference from AGENTS.md to
+  @AGENTS...". No lo comprobé porque habría que consultar el historial de un repositorio fuera del
+  alcance de esta sesión, y con los tres archivos a la vista no hace falta para el punto.
+- **Una diferencia de propósito que conviene no perder.** El `AGENTS.md` de RustDesk no es un
+  documento de orientación: abre con "Project Layout" y sigue con reglas de Rust, de Tokio, de higiene
+  al editar y de cómo revisar un PR. Es una guía de código. **RustDesk resuelve descubribilidad, no
+  orientación**, y son dos problemas distintos. El `AGENTS.md` de TL-FCCU resuelve el otro.
+- **La diferencia con este repo, que el paso 3 tiene que decidir y este PR no:** allá el contenido
+  vive en `AGENTS.md` y `CLAUDE.md` es el puntero. Acá `CLAUDE.md` tiene 524 líneas de método. Cuál
+  sería el puntero y cuál el contenido está sin decidir.
+
+**2026-09-01, el autor. Sobre el estándar, y son dos cosas distintas.**
+
+- **No existe un estándar formal.** Cada herramienta busca su archivo por costumbre, no por
+  especificación. El autor lo llamó un acuerdo entre caballeros.
+- **Pero la costumbre existe y es medible**, y RustDesk la demuestra: alguien creó tres archivos para
+  tres herramientas, y eso no se hace por gusto.
+- **Estandarizar entre los dos repos del autor no tiene mucho sentido**, porque la estructura sigue al
+  contenido y no a la simetría. **Adoptar la costumbre externa sí lo tiene**, porque es lo único que
+  hace que una herramienta encuentre el archivo sin que alguien se lo indique. Son dos decisiones
+  separadas y solo la segunda se apoya en evidencia.
+
+**2026-09-01, conclusión de método: el caso limpio no es reproducible, y eso es un resultado.** Dos
+intentos, dos contaminaciones distintas. El primero recibió material previo que le dirigió la lectura;
+el segundo no tuvo sistema de archivos y le faltaban tres archivos centrales. Y ahora se sabe por qué:
+**los modelos que reciben texto pegado no pueden explorar, y los que exploran necesitan herramientas
+de archivo que no todos tienen.** Se anota para que nadie intente una tercera vez esperando otro
+resultado, y para que la decisión del paso 3 se tome sabiendo que se apoya en dos casos parciales.
+
+**Y lo único que aguanta las dos contaminaciones, que por eso es lo más sólido que hay: el nombre
+`CLAUDE.md` no dispara el reflejo de abrirlo primero.** El primero lo dijo comparándolo con la
+convención de `README.md`; el segundo dijo que un nombre como `README.md` o `LEER_PRIMERO.md` habría
+forzado su apertura prioritaria. **Dos de dos, con montajes opuestos.**
