@@ -185,8 +185,7 @@ auditorías que van en sus propios PR.
 - **Ampliado el 2026-09-01, paso 2: el repo ya pidió este documento y nadie lo relacionó.** La
   subsección "Documento de requisitos, propósito y público objetivo" de "Deuda de método y
   documentación" del ROADMAP existe desde antes de toda esta conversación, la citan **seis** lugares
-  del mismo archivo como hogar definitivo de lo que hoy está parqueado en otro lado, y su último
-  párrafo ya se hace la pregunta que el autor está haciendo ahora. El conteo sale de
+  del mismo archivo como hogar definitivo de lo que hoy está parqueado en otro lado. El conteo sale de
   `grep -n -i "documento de requisitos" docs/ROADMAP.md`, que da ocho líneas: seis citas desde otras
   partes del archivo (243, 252, 260, 501, 1101 y 2099), el encabezado de la subsección (1991) y una
   línea de adentro del propio ítem (2007), que no es cita. El mismo grep sin `-i` da dos, porque
@@ -259,7 +258,12 @@ auditorías que van en sus propios PR.
   versión mayor siguiente. Un punto de entrada para modelos es otra audiencia. **Y el ítem del ROADMAP
   dice lo mismo por su cuenta**, que los dos lectores quieren documentos distintos, así que las dos
   lecturas coinciden sin haberse consultado.
-- **Qué lee hoy un modelo que llega sin contexto, siguiendo la "Orden de lectura" de `CLAUDE.md`.**
+- **Desmentido el 2026-09-01 por el testimonio de abajo, y conviene decir qué falló.** Lo que sigue
+  supone que un modelo que llega abre `CLAUDE.md` y sigue su orden de lectura. **El único modelo
+  observado no abrió `CLAUDE.md` nunca**, así que jamás vio esa orden. La descripción de abajo no
+  describe lo que pasa: describe lo que pasaría si alguien siguiera la ruta declarada, que es otra
+  cosa y es más optimista. Se queda escrita porque sigue valiendo como el mejor caso.
+- **Qué leería un modelo que sí siguiera la "Orden de lectura" de `CLAUDE.md`.**
   Primero `ARCHITECTURE.md`, que arranca con la promesa de verificación y con la v11.5 perdida, y
   recién en su §1 y §2 aparece qué hace el programa, deducido del modelo de estado y de la tabla de
   módulos. Después `DECISIONS.md`, 3200 líneas de por qué. Después `ROADMAP.md`, qué sigue. Y último
@@ -355,3 +359,82 @@ aparecía en ningún archivo.** O sea que la confusión vivió solo en conversac
 existe para que no vuelva. Corrido ahora ese grep devuelve 3 y las tres son estas líneas, así que el
 número queda fechado en vez de escrito como si fuera permanente: es la misma trampa que el §"Documento
 de requisitos" del ROADMAP tenía y que la v11.96 corrigió.
+
+**2026-09-01, testimonio de un tercero, recogido por el autor.** El autor le pasó el repo a un modelo
+distinto, que lo leyó sin conocer el proyecto, y después le preguntó por su experiencia. **Es la única
+fuente de primera mano sobre cómo se lee este repo desde afuera**; todo lo demás anotado sobre puntos
+de entrada es inferencia. Va entre el paso 2 y el 3 porque cambia lo que el paso 3 tiene que hacer.
+
+**No es medición del repo, es lo que un tercero recuerda de su propia lectura**, y el experimento
+estaba contaminado. Va declarado antes que los hallazgos, porque condiciona a todos.
+
+- **El autor no le pasó el repo solo.** Antes le dio cuatro documentos previos, entre ellos un informe
+  de campo, una versión vieja monolítica del programa y un documento de arquitectura. Se los dio
+  suponiendo que el modelo no iba a poder leer el zip entero.
+- **Esa suposición salió parcialmente cierta.** El modelo descomprimió y navegó, pero reportó que su
+  herramienta de lectura truncaba archivos largos, con sus palabras "44 líneas truncadas en el medio,
+  no vistas".
+- **Y el remedio causó el hallazgo más incómodo: el material previo le sustituyó el criterio de
+  exploración.** Sus palabras: fue directo a `src/engine.js` "porque el PDF me dijo que era el centro
+  de gravedad, no porque yo lo dedujera del árbol de archivos". O sea que dar contexto previo para
+  ayudar a un modelo a entrar puede reemplazar su forma de explorar. No es culpa de nadie y va a
+  volver a pasar cada vez que se quiera facilitar la entrada.
+- **Nada de esto es un caso limpio de modelo que llega solo al repo. Ese caso todavía no existe.**
+
+Lo que contestó, con sus palabras:
+
+- **Nunca abrió `CLAUDE.md`.** "Lo único que toqué de `CLAUDE.md` fue un fragmento acotado, buscado
+  por grep con una palabra clave puntual. Nunca abrí el archivo desde el principio." Su diagnóstico:
+  "el problema no fue el contenido de `CLAUDE.md`, fue que su nombre no dispara el reflejo de leer
+  primero, de la forma en que sí lo hace `README.md` por convención de todo el ecosistema."
+- **Qué le faltó, en sus términos: saber qué documento manda sobre cuál.** Concretamente que
+  `ARCHITECTURE.md` puede quedar desactualizado, que `DECISIONS.md` es la fuente append-only real y
+  que `CLAUDE.md` es el estándar operativo. Un archivo corto con eso "probablemente me habría hecho
+  abrir `CLAUDE.md` completo mucho antes".
+- **Y su advertencia, que acota lo que el paso 3 puede prometer:** eso funciona "solo si de verdad
+  sigo la instrucción de ir a leer 490 líneas más, y esa es una pregunta de esfuerzo, no solo de
+  documentación. El problema no está en un solo lugar." **Un archivo corto no garantiza que alguien
+  lea lo que sigue.**
+- **El archivo más útil fue el que nadie le señaló**, `docs/DECISIONS.md`: "nadie me señaló de entrada
+  que ese archivo específico era el de mayor densidad de información real del proyecto; lo descubrí
+  leyéndolo, no antes". Lo leyó completo recién en la tercera pasada, priorizando código sobre
+  documentación.
+- **Las tres afirmaciones falsas del §6 casi lo hacen mentir, y esto es lo que más vale del
+  testimonio**, porque mide el costo de una documentación desactualizada. Sus palabras: "cuando choqué
+  con la afirmación 'no persiste' ya tenía la evidencia contraria fresca. Si hubiera leído
+  `ARCHITECTURE.md` primero y el código después, es bastante probable que hubiera repetido esas tres
+  afirmaciones como hecho en mi primer resumen." Lo llama un "orden casual que resultó protector". Las
+  tres se corrigieron en la v11.94 del 2026-08-21, con el PR #97. **Una afirmación muerta no confunde
+  al lector: lo hace propagar el error**, y eso es un argumento independiente para la regla de podar
+  el §6 que ese mismo PR escribió.
+
+**Dos trabas mecánicas, anotadas aparte porque ningún archivo nuevo las resuelve.** Su herramienta de
+lectura truncaba archivos largos y tuvo que releer rangos. Y un grep suyo sobre `CLAUDE.md` con cinco
+patrones devolvió vacío antes de encontrar lo que buscaba ampliando el patrón. Es comportamiento de
+herramienta, no de documentación.
+
+**Un detalle del testimonio que no resuelve contra el repo.** Citó haber leído "líneas 505 a 540" de
+`CLAUDE.md`. Ese archivo nunca pasó de 524 líneas: 524 hoy, 518 el 2026-08-22 y 490 antes de eso,
+según `git log` sobre el archivo. O sea que el rango cae parcial o enteramente después del final. No
+cambia nada de lo que dijo, y se anota porque el propio repo prohíbe anclar una afirmación en un
+número de línea, que es justo lo que ese fragmento hace.
+
+**2026-09-01, el revisor. Dos hipótesis suyas que este testimonio descarta.** Ninguna de las dos
+estaba escrita en el repo, así que entran directamente como descartadas y no corrigen ningún texto.
+
+- **"La primera línea de `CLAUDE.md` desorienta a quien llega."** Falso en el caso observado: el
+  modelo nunca leyó esa línea. Reordenar un archivo que nadie abre no arregla nada.
+- **"Un enlace simbólico de `AGENTS.md` a `CLAUDE.md` daría descubribilidad."** Descartada por el
+  mismo motivo, apunta al archivo que no se abre. Y el nombre que el modelo dice que dispara el
+  reflejo no es `AGENTS.md`, es `README.md`, que es justo el que el autor reservó para humanos y
+  pospuso a la versión mayor siguiente. **Esa colisión es material para el paso 3 y no se resuelve
+  acá.**
+
+**2026-09-01, el autor, reforzado por el testimonio. Reglas en el prompt en vez de archivos.** Para el
+caso observado el testimonio le da la razón: si el prompt hubiera dicho que el repo manda y que el
+material previo es historia, el modelo no habría dejado que el PDF le dirigiera la lectura.
+
+**Con su límite, que es lo que la hace no reemplazar al archivo:** una regla de prompt existe solo si
+alguien la escribe cada vez. **Un archivo en el repo viaja con el repo; una regla de prompt no.**
+Sirven para casos distintos, el archivo para quien llega solo y la regla para cuando el autor arma el
+contexto.
