@@ -2,6 +2,34 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.101 — 2026-09-01
+
+### Added
+
+- `docs/CONTEXTO-TEMPORAL.md`: el testimonio de un modelo que leyó el repo por primera vez sin conocerlo. Es la única fuente de primera mano sobre cómo se lee este repo desde afuera; todo lo demás anotado sobre puntos de entrada es inferencia.
+- La contaminación del experimento va escrita antes que los hallazgos, porque los condiciona: el modelo recibió cuatro documentos previos, y eso le sustituyó el criterio de exploración. Sus palabras, fue a `src/engine.js` "porque el PDF me dijo que era el centro de gravedad, no porque yo lo dedujera del árbol de archivos".
+- El hallazgo que más vale: las tres afirmaciones falsas del §6 casi lo hacen propagarlas. Dijo que si hubiera leído `ARCHITECTURE.md` antes que el código "es bastante probable que hubiera repetido esas tres afirmaciones como hecho". Se corrigieron en la v11.94 con el PR #97.
+- Dos trabas mecánicas anotadas aparte, truncado de archivos largos y un grep que volvió vacío, porque son comportamiento de herramienta y ningún archivo nuevo las resuelve.
+
+### Changed
+
+- Queda desmentida la anotación que describía qué lee un modelo siguiendo la orden de lectura de `CLAUDE.md`. **El único modelo observado no abrió `CLAUDE.md` nunca**, así que nunca vio esa orden. El texto se queda, reetiquetado como el mejor caso y no como lo que pasa.
+- Dos hipótesis del revisor quedan descartadas por el mismo motivo, que la primera línea de `CLAUDE.md` desorienta y que un enlace simbólico daría descubribilidad: las dos apuntan al archivo que no se abre.
+- Se saca una frase duplicada que el PR anterior dejó en la anotación del bloque A al insertar un comando.
+
+**Una afirmación muerta no confunde al lector: lo hace propagar el error.** El testimonio es la
+primera evidencia de eso, y es un argumento independiente para la regla de podar el §6 que el PR #97
+escribió por otras razones.
+
+**Un archivo corto no garantiza que alguien lea lo que sigue.** El propio modelo lo dijo, que
+funciona "solo si de verdad sigo la instrucción de ir a leer 490 líneas más, y esa es una pregunta de
+esfuerzo, no solo de documentación". Queda escrito para que el paso 3 no se venda como más de lo que
+puede lograr.
+
+**Y el nombre que dispara el reflejo de leer primero es `README.md`**, que es justo el que el autor
+reservó para humanos y pospuso a la versión mayor siguiente. Esa colisión es material del paso 3 y no
+se resuelve acá.
+
 ## v11.100 — 2026-09-01
 
 ### Changed
