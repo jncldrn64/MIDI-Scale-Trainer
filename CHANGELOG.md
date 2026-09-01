@@ -2,6 +2,31 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.100 — 2026-09-01
+
+### Changed
+
+- `docs/CONTEXTO-TEMPORAL.md`, bloque A: la parte sobre el `AGENTS.md` del repo hermano se había escrito de una captura parcial y esta es su primera verificación, leído el archivo real en el commit `e7e9c7b`.
+- Lo que resultó impreciso: "`AGENTS.md` orienta y `DESIGN.md` norma" es una división de dos y allá los archivos de documentación son cuatro. Su mapa lista `DESIGN.md`, `CHANGELOG.md` y `ROADMAP.md`, y deja afuera a `CLAUDE.md`, que existe en ese repo.
+- Y "cuatro cosas" hacía pensar en cuatro partes parejas: `Known gaps` ocupa 290 de sus 320 líneas y es un diario de entradas fechadas, más cerca de un `DECISIONS.md` que de una lista de pendientes.
+
+### Added
+
+- El hallazgo principal de la auditoría: el ROADMAP ya pide este documento desde antes de la conversación que lo motivó, en "Documento de requisitos, propósito y público objetivo", y **seis** lugares del mismo archivo lo citan como hogar definitivo de cosas parqueadas. Los seis quedan enumerados.
+- Que el último párrafo de ese ítem ya se hace la misma pregunta que el autor: dice que un modelo que grepea y una persona que quiere orientarse en treinta segundos "quieren documentos distintos, y eso puede empujar a que sean dos y no uno".
+- Qué lee hoy un modelo siguiendo la orden de lectura, y en qué punto entiende qué es el programa: a mitad del primer documento y por deducción, nunca porque alguien se lo diga.
+- Ocho preguntas que el paso 3 tiene que contestar, incluidas dos que la auditoría reveló y no estaban en la lista: cómo se llama el archivo, y si va con disciplina de mantenimiento o envejece.
+
+**Un punto de entrada no cae bajo ninguna excepción existente.** `CLAUDE.md` declara cinco documentos
+canónicos y una sola excepción por categoría, el `README.md` de subcarpeta que describe su propia
+carpeta. Un archivo en la raíz o un sexto en `docs/` pide autorización explícita, igual que la tuvo
+`CONTEXTO-TEMPORAL.md`.
+
+**Del repo hermano se leyó un solo archivo y no se tocó nada.** La paridad entre los dos es el paso 4
+y el autor ya la declaró un trabajo grande por sí mismo. Lo único que se trajo de ahí es la forma, no
+el contenido: casi todo ese archivo habla de firejail, de Byte Buddy y de los tres JVM de TLauncher,
+y nada de eso se traslada.
+
 ## v11.99 — 2026-08-23
 
 ### Added

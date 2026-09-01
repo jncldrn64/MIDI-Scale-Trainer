@@ -182,17 +182,73 @@ auditorías que van en sus propios PR.
   con cómo usarlo con Claude Code, `DECISIONS.md` con su regla append-only y `GLOSARIO.md` con la
   suya. Ninguno de los cinco contesta qué es el repo y por qué existe. Lo más cerca es la "Orden de
   lectura" de `CLAUDE.md`, que es un mapa de cuándo leer cada archivo y nada más.
-- **El repo hermano del autor, TL-FCCU, tiene un `AGENTS.md` que sí cumple esa función.** Según el
-  autor su encabezado dice "start here" y cubre cuatro cosas: qué es el repo y por qué existe,
-  restricciones duras, mapa de qué archivo sirve para qué y cuándo leerlo, y gaps conocidos. Ahí la
-  división es que `AGENTS.md` orienta y `DESIGN.md` norma. **No lo verifiqué: este repo es el único
-  destino de escritura de la sesión y no tengo el otro a mano.** El paso 4 pide esa auditoría y hace
-  falta acceso a los dos.
+- **Ampliado el 2026-09-01, paso 2: el repo ya pidió este documento y nadie lo relacionó.** La
+  subsección "Documento de requisitos, propósito y público objetivo" de "Deuda de método y
+  documentación" del ROADMAP existe desde antes de toda esta conversación, la citan **seis** lugares
+  del mismo archivo como hogar definitivo de lo que hoy está parqueado en otro lado, y su último
+  párrafo ya se hace la pregunta que el autor está haciendo ahora. El conteo sale de
+  `grep -n -i "documento de requisitos" docs/ROADMAP.md`, que da ocho líneas: seis citas desde otras
+  partes del archivo (243, 252, 260, 501, 1101 y 2099), el encabezado de la subsección (1991) y una
+  línea de adentro del propio ítem (2007), que no es cita. El mismo grep sin `-i` da dos, porque
+  cinco de las citas escriben el nombre en minúscula, así que ese es el número que engaña. Su último
+  párrafo ya se hace la pregunta que el autor está haciendo ahora, con estas palabras: "el lector que
+  más lo necesita es un modelo que grepea texto plano, no una persona que quiere orientarse en
+  treinta segundos. Esos dos lectores quieren documentos distintos, y eso puede empujar a que sean
+  dos y no uno". O sea que el repo ya se inclinó a que sean dos, sin decidirlo.
+- **Los seis que lo citan, para que el paso 3 sepa qué arrastra:** tres convenciones visuales del
+  Alcance de la Fase 5, que se declaran requisitos no funcionales sin hogar (el presupuesto visual,
+  el minimalismo funcional y la convención de estados excluyentes); el Alcance de la Fase 5B, que
+  dice que lo que esa fase pedía era el contrato de widgets y entrenamientos "que la subsección ya
+  reclama"; el ítem del BACKLOG "Levantar los requisitos y requerimientos antes de seguir
+  programando", que dice estar parqueado ahí; y la subsección del material de referencia externo, que
+  propone que el destino visual acordado viva "en el mismo documento de requisitos o en uno propio".
+- **Comprobado el 2026-09-01: un punto de entrada no cae bajo ninguna excepción existente.**
+  `CLAUDE.md` declara cinco documentos canónicos en `docs/` y que no se crea ninguno nuevo sin
+  preguntar. Su única excepción por categoría es un `README.md` de subcarpeta que describa su propia
+  carpeta, y nombra dos casos, `tests/README.md` y un futuro `src/README.md`. Un archivo en la raíz o
+  un sexto en `docs/` no entra ahí: pide autorización explícita, igual que la tuvo
+  `CONTEXTO-TEMPORAL.md`.
+- **El repo hermano del autor, TL-FCCU, tiene un `AGENTS.md` que sí cumple esa función. Leído el
+  2026-09-01 en el commit `e7e9c7b`, y esta es su primera verificación**: la descripción de abajo se
+  había escrito de una captura parcial.
+
+  **Lo que se confirmó.** El encabezado es `# AGENTS.md: start here`. Tiene exactamente cuatro
+  secciones y en este orden: un párrafo de apertura sin encabezado que dice qué es el repo y por qué
+  existe, `## Hard constraints (don't break these)`, `## Map of the repo` y
+  `## Known gaps / not verified against real data`. Lo que lo hace funcionar como punto de entrada es
+  ese orden: contesta qué es esto antes de decir ninguna regla, y en el párrafo de apertura dice
+  también qué **no** es, que el repo no es un launcher de producción.
+
+  **Lo que la descripción anterior tenía mal o incompleto, y conviene decirlo.**
+  Primero, "`AGENTS.md` orienta y `DESIGN.md` norma" es una división de dos y allá los archivos de
+  documentación son cuatro. El `Map of the repo` lista `DESIGN.md`, `CHANGELOG.md` y `ROADMAP.md`,
+  y **no lista `CLAUDE.md`**, que existe en ese repo y aparece citado una sola vez en todo el archivo,
+  de pasada, por su sección "Displayed version". O sea que allá `CLAUDE.md` está fuera del mapa que el
+  punto de entrada ofrece, y eso es justo lo que acá habría que decidir, porque acá `CLAUDE.md` es el
+  archivo central.
+  Segundo, "cuatro cosas" hace pensar en cuatro partes parejas y no lo son: `Known gaps` ocupa 290
+  de las 320 líneas. No es una lista corta sino un diario de entradas fechadas, con hipótesis,
+  procedencia y supersesiones, más cerca de un `DECISIONS.md` que de una lista de pendientes.
+  Tercero, su última línea trae la misma prohibición que acá: "Don't add a fourth doc file on your
+  own."
+
+  **Qué de ese archivo no es trasladable, que la descripción anterior no decía.** Casi todo el
+  contenido: firejail, `ss -tnp`, Byte Buddy, los tres JVM de TLauncher, los dominios de riesgo. Lo
+  único que se traslada es la forma, o sea abrir contestando qué es esto y qué no es, poner las
+  restricciones duras antes del mapa, y que el mapa diga cuándo leer cada archivo y no solo qué es.
+
+  **Y un dato que el paso 4 va a necesitar, anotado sin desarrollarlo acá:** ese `AGENTS.md` declara
+  que su disciplina de fases salió de este repo, "the blueprint is the MIDI-Scale-Trainer repo... 
+  copied for its phase discipline, not its folder structure". La influencia ya iba en las dos
+  direcciones, y esa frase apoya sola la lectura del revisor de que no todo debería estandarizarse.
 - **El autor intentó traer `AGENTS.md` acá y Claude Code se negó**, con razón parcial, porque
   `CLAUDE.md` prohíbe crear documentación nueva sin preguntar primero. **Comprobado: esa negativa no
   quedó registrada en ninguna parte.** `grep -rn "AGENTS" docs/ CLAUDE.md CHANGELOG.md` devuelve una
   sola línea, la de `CLAUDE.md` que dice "Este repo no tiene `AGENTS.md`", que constata la ausencia y
   no cuenta el intento ni por qué se frenó. Vivió solo en conversación hasta esta anotación.
+  **Precisión del 2026-09-01:** esa línea abre la sección "Orden de lectura" y su trabajo ahí es
+  aclarar por qué el orden se declara en `CLAUDE.md` y no en otro archivo. Es una constatación de
+  ausencia y no una decisión de no tenerlo, así que nada escrito se opone hoy a que exista.
 - **La asimetría, según el autor:** este repo tiene mejores reglas de escritura, medidas con
   comandos, y tiene `CONTEXTO-TEMPORAL.md`; el otro tiene `AGENTS.md` y no tiene ninguna de las dos.
 - **Y una lectura del revisor, que es opinión y no decisión:** no todo debería estandarizarse entre
@@ -200,7 +256,40 @@ auditorías que van en sus propios PR.
   propagar es el método, las reglas de prosa y el archivo de contexto hacia el otro repo, y el punto
   de entrada hacia este.
 - **El `README.md` no compite con esto.** El autor decidió que es para humanos y que espera a la
-  versión mayor siguiente. Un punto de entrada para modelos es otra audiencia.
+  versión mayor siguiente. Un punto de entrada para modelos es otra audiencia. **Y el ítem del ROADMAP
+  dice lo mismo por su cuenta**, que los dos lectores quieren documentos distintos, así que las dos
+  lecturas coinciden sin haberse consultado.
+- **Qué lee hoy un modelo que llega sin contexto, siguiendo la "Orden de lectura" de `CLAUDE.md`.**
+  Primero `ARCHITECTURE.md`, que arranca con la promesa de verificación y con la v11.5 perdida, y
+  recién en su §1 y §2 aparece qué hace el programa, deducido del modelo de estado y de la tabla de
+  módulos. Después `DECISIONS.md`, 3200 líneas de por qué. Después `ROADMAP.md`, qué sigue. Y último
+  este archivo. **El punto en que un modelo entiende qué es este programa es a mitad del primer
+  documento y por deducción**, leyendo que hay un teclado de 88 teclas y un motor que clasifica notas,
+  nunca porque alguien se lo diga. Nada le dice para quién es, ni qué tiene que ser verdad para que
+  esté bien hecho.
+- **Y un humano que llega por GitHub**, sin `README.md`, ve la lista de archivos y nada más: dos
+  `.md` en la raíz, `docs/`, `src/`, `tests/`, `index.html` y el LICENSE. Comprobado con `ls *.md`,
+  que devuelve `CHANGELOG.md` y `CLAUDE.md`.
+
+**Las preguntas que el paso 3 tiene que contestar, y que este paso deja abiertas a propósito:**
+
+1. ¿Un punto de entrada para modelos y el documento de requisitos parqueado son el mismo trabajo o
+   dos? El ítem del ROADMAP ya se inclina a que sean dos, sin decidirlo.
+2. Si son dos, cuál va primero. El de requisitos tiene seis lugares esperándolo; el punto de entrada
+   no tiene ninguno todavía.
+3. Dónde vive: la raíz o `docs/`. Si va en `docs/` pasa a ser el sexto canónico y cambia la lista que
+   `CLAUDE.md` declara; si va en la raíz convive con `CLAUDE.md` y `CHANGELOG.md`.
+4. Qué contiene, dado que `CLAUDE.md` ya cubre el método y `ARCHITECTURE.md` la estructura. Lo que
+   hoy no cubre nadie es qué es el programa, para quién, y qué no es.
+5. Se lee antes o después de los cinco actuales, y si se lee antes, si la "Orden de lectura" de
+   `CLAUDE.md` pasa a vivir ahí o se queda donde está.
+6. Cómo se llama. `AGENTS.md` es una convención que varias herramientas leen sola, y eso puede ser
+   ventaja o efecto no querido; el archivo del repo hermano se llama así.
+7. Qué pasa con las tres convenciones visuales de la Fase 5 y con las otras cinco cosas que los seis
+   lugares del ROADMAP parquean ahí. Se mudan al documento nuevo, se quedan, o se reparten.
+8. Y la que condiciona a todas: si el documento se escribe una vez y envejece, o si va con la misma
+   disciplina de mantenimiento que el §6 de `ARCHITECTURE.md` ganó el 2026-08-21. Un punto de entrada
+   desactualizado es peor que ninguno, porque el que llega le cree.
 
 **2026-08-23, el autor y el revisor. Bloque B: teoría musical, sin verificar contra fuentes.** Todo
 lo de acá espera al paso 6. **Las correcciones del revisor están tan sin verificar como lo que
