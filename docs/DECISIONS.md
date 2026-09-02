@@ -3327,6 +3327,55 @@ herramienta**, no que exista la convención.
 
 ---
 
+## 2026-09-02 — La teoría se verificó contra fuentes, incluidas las correcciones, y la menor melódica clásica cuesta la firma del motor
+
+**Contexto:** `docs/CONTEXTO-TEMPORAL.md` juntó teoría musical de dos procedencias, lo que el autor
+dedujo tocando y lo que el revisor le corrigió. Todo entró marcado como pendiente de verificar, y las
+correcciones **también**, con esta razón escrita: venían de memoria, y usar memoria introduce
+alucinaciones tanto en quien afirma como en quien corrige.
+
+**El método, que es lo reutilizable de esta entrada.** Se verificó contra fuentes lo que era
+verificable contra fuentes, contra el motor lo que el motor podía contestar solo, y quedó declarado lo
+que ninguna de las dos cosas alcanza. Las tres categorías se mantuvieron separadas hasta el final.
+Que una corrección venga de quien revisa no la exime: **marcar las correcciones como dudosas fue lo
+que hizo que se verificaran**, y las cuatro salieron ciertas, cosa que nadie sabía cuando se
+escribieron.
+
+**Las cuatro correcciones del revisor, confirmadas.** El VI grado es la submediante y no la dominante.
+El VI de una mayor es la tónica de su relativo menor. El relativo mayor de una menor está en el III,
+una tercera menor por debajo de la tónica mayor. Y la menor armónica existe para tener una dominante
+que resuelva.
+
+**Ese último trae su mecanismo, que es lo que lo hace útil y no un dato suelto.** La séptima menor de
+la natural está a un tono de la tónica, un tirón demasiado débil para sentirse como resolución.
+Elevarla a sensible convierte el V en mayor y habilita la séptima de dominante, que sí resuelve con
+fuerza. Sin sensible, el V en menor natural es menor y casi no empuja.
+
+**Valida una intuición del autor que estaba anotada sin explicación:** había notado un Mi mayor con
+Sol# apareciendo fuera de la escala y sonando bien, y lo asoció con la sensible sin saber que esa es
+la razón de existir de la escala entera.
+
+**Y explica de dónde salió su confusión, que vale por lo pedagógico.** Al VI se lo llama
+ocasionalmente superdominante, el grado por encima de la dominante, y ese es su nombre normal en
+francés. Existe un nombre con "dominante" adentro que nunca es la dominante.
+
+**Decisión sobre la menor melódica: se elige la forma clásica, y eso decide su costo.** Existen dos
+escalas distintas y las dos son legítimas: la clásica sube con sexta y séptima elevadas y baja como
+menor natural; la de jazz usa la forma ascendente en las dos direcciones. El autor eligió la clásica
+porque está tomando clases de piano y quiere adelantar lo que va a ver, y porque sostiene que la
+música regional latinoamericana usa esa forma.
+
+**La de jazz habría sido una entrada más en `SCALES`. La clásica no.** La misma nota es válida
+subiendo e inválida bajando, y `evaluateMelodyStatus` recibe
+`{ pc, universePitchesSet, chordObj, universeType, universeRoot }`: un conjunto de alturas sin
+dirección, donde ningún campo dice qué nota vino antes. Agregarlo cambia la firma de la función que
+las 46 fixtures prueban, así que el ítem deja de ser barato. Esta entrada no lo implementa ni decide
+cuándo.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas

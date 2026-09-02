@@ -2,6 +2,33 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.104 — 2026-09-02
+
+### Added
+
+- `docs/DECISIONS.md`: la teoría del bloque B verificada contra fuentes, con el método adelante. Las correcciones del revisor entraron marcadas como dudosas por venir de memoria, y **marcarlas así fue lo que hizo que se verificaran**: las cuatro salieron ciertas, cosa que nadie sabía al escribirlas.
+- Las cuatro confirmadas: el VI es la submediante, el VI de una mayor es la tónica de su relativo menor, el relativo mayor está en el III, y la menor armónica existe para tener una dominante que resuelva. Esta última va con su mecanismo, que es lo que la vuelve útil.
+- `docs/GLOSARIO.md`: submediante, relativo menor y relativo mayor, y la distinción entre menor melódica clásica y menor de jazz. La entrada de sensible gana por qué existe la menor armónica.
+- `docs/ROADMAP.md`, BACKLOG: dos ítems nuevos. Que el vocabulario del motor parece un hueco del roadmap, y que el orden en que se amplía lo decide la clase de piano del autor y no el costo.
+
+### Changed
+
+- `docs/ROADMAP.md`, el ítem de la menor melódica: se elige la forma clásica y con eso deja de ser barato. La de jazz habría sido una fila en `SCALES`; la clásica necesita saber qué nota vino antes y eso cambia la firma de `evaluateMelodyStatus`, que las 46 fixtures prueban.
+- `docs/ROADMAP.md`, el ítem del blues: se corrige la afirmación de que era una fila en `SCALES`. El propio ítem lo desmentía desde que se escribió, porque no son escalas de siete notas.
+- `docs/CONTEXTO-TEMPORAL.md` baja de 272 líneas a 235. El bloque B se reduce a dos ideas de interfaz que ninguna fuente contesta.
+
+**Ninguna de las trece fases agrega un universo al motor.** Comprobado: las cuatro menciones a
+`SCALES` en el ROADMAP caen todas dentro del BACKLOG y ninguna en el Alcance de una fase. El motor va
+a cerrar el roadmap con las mismas tres escalas que tiene hoy.
+
+**Y la Fase 11 lo asume sin contemplarlo.** Su Objetivo es reconocer préstamos de otro modo y su
+Alcance dice que la teoría define de qué modo se prestan, pero ninguna línea pide que el motor conozca
+los modos antes. Hoy no los conoce.
+
+**La confusión del autor sobre el VI tiene una explicación que vale por lo pedagógico.** Al VI se lo
+llama ocasionalmente superdominante, y ese es su nombre normal en francés: existe un nombre con
+"dominante" adentro que nunca es la dominante.
+
 ## v11.103 — 2026-09-02
 
 ### Added

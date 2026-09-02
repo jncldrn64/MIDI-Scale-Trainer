@@ -196,61 +196,22 @@ tiene que ser verdad para que el programa esté bien hecho.
   programando", que dice estar parqueado ahí; y la subsección del material de referencia externo, que
   propone que el destino visual acordado viva "en el mismo documento de requisitos o en uno propio".
 
-**2026-08-23, el autor y el revisor. Bloque B: teoría musical, sin verificar contra fuentes.** Todo
-lo de acá espera al paso 6. **Las correcciones del revisor están tan sin verificar como lo que
-corrigen**, y eso lo señaló el propio autor: usar memoria introduce alucinaciones, y esa advertencia
-alcanza también a quien corrige. Lo único que comprobé es lo que el motor puede contestar solo.
+**2026-08-23, el autor. Bloque B, lo que queda: dos ideas de vista, sin destino.** La teoría de este
+bloque la recogió la v11.104, que la verificó contra fuentes; el resultado vive en `docs/DECISIONS.md`,
+entrada del 2026-09-02, en `docs/GLOSARIO.md` y en el ítem de la menor melódica del ROADMAP. La línea
+sobre Mi# y Fa se descartó por duplicada: el ítem de enarmonía del BACKLOG ya la cubre. Queda esto,
+que no es teoría y no lo contesta ninguna fuente:
 
-Lo que el autor descubrió:
-
-- El VI grado de una escala mayor es la tónica de su relativo menor, y las dos comparten las siete
-  notas. **Verificado contra el motor**, corrida abajo.
-- Desde la menor se construye la armónica sostiendo el VII. **Verificado contra el motor.**
-- Desde la menor se construye la melódica sostiendo el VI y el VII. **No se puede verificar acá: la
-  menor melódica no existe en `SCALES`**, que tiene tres entradas, `major`, `minor` y
-  `harmonic_minor`.
-- Su lectura general: de la mayor sale la menor, y de la menor salen las otras dos, como una
-  recursión. La rueda de quintas muestra la relación entre mayor y menor y no muestra esas dos.
-- Un caso que le llamó la atención: viniendo de La mayor aparece un Mi mayor con Sol#, fuera de la
-  escala, y suena bien. Lo asoció con la sensible.
-
-Las correcciones del revisor, sin verificar salvo donde se diga:
-
-- El VI no es la dominante sino la submediante; la dominante es el V.
-- El relativo mayor de una menor está en el III grado, no en el VI. **Verificado contra el motor:**
-  el III de La menor es Do y los dos conjuntos coinciden.
-- Mi# no es Fa. Suenan igual y no son la misma nota escrita, que es el problema de enarmonía ya
-  anotado en el BACKLOG.
-- Lo de ascendente y descendente es de la melódica, no de la armónica. La armónica lleva el VII
-  sostenido siempre; la melódica clásica sube con VI y VII sostenidos y baja como menor natural.
-- Sobre el Mi mayor con Sol#: dijo que es la sensible y que esa es la razón de existir de la menor
-  armónica, tener una dominante que resuelva. **Sin verificar.**
-
-El hallazgo que es del código y no de la teoría:
-
-- **El universo del motor es un conjunto de alturas sin dirección. Verificado**, la firma es
-  `evaluateMelodyStatus({ pc, universePitchesSet, chordObj, universeType, universeRoot })`: recibe un
-  conjunto y no sabe qué nota vino antes.
-- **La menor melódica clásica no se puede representar en un conjunto**, porque la misma nota es
-  válida subiendo e inválida bajando. No se arregla agregando una fila a `SCALES`, como sí pasa con
-  los modos griegos: es un parámetro más en la firma del motor, y eso toca las 46 fixtures.
-- **Y hay una salida barata que puede ser la correcta:** la melódica ascendente sola es una escala de
-  siete notas como cualquier otra y entra en `SCALES` sin cambiar nada. Según el revisor, en el jazz
-  y en buena parte de la música moderna se usa solo esa forma en las dos direcciones, mientras que la
-  asimétrica es la regla clásica. **Sin verificar, y es justo lo que el paso 6 tiene que resolver**,
-  porque de eso depende si el ítem es barato o caro.
-- Quedan tres casos ambiguos que la memoria de una nota no resuelve sola: la primera nota de todas,
-  una nota repetida, y un salto grande que no es una línea melódica.
-- **Una precisión del revisor que conviene guardar:** saber la dirección no es heurística. Comparar
-  la nota actual con la anterior es determinista, igual que el indulto de 180 ms ya usa el pasado sin
-  serlo. Lo que falta no es una estimación, es memoria.
-
-Lo que el autor propone construir, sin colocar todavía:
-
-- Un botón que salte al relativo desde el selector de escala, sin pasar por el desplegable. Lo quiere
-  antes de la rueda de quintas.
-- Que la guía muestre formas alternativas de leer lo mismo, que es el propósito que le ve a la rueda.
-- Mejorar la descripción de los elementos en pantalla.
+- **Su lectura general de cómo se encadenan las escalas:** de la mayor sale la menor, y de la menor
+  salen las otras dos, como una recursión. Y la observación que trae pegada, que la rueda de quintas
+  muestra la relación entre mayor y menor y no muestra esas dos. Se toca con la Fase 10 y con lo de
+  abajo, así que se leen juntas.
+- **Lo que propone construir, sin colocar todavía:** un botón que salte al relativo desde el selector
+  de escala, sin pasar por el desplegable, que lo quiere antes de la rueda de quintas; que la guía
+  muestre formas alternativas de leer lo mismo, que es el propósito que le ve a la rueda; y mejorar la
+  descripción de los elementos en pantalla.
+- **Por qué sigue acá:** las tres son de interfaz y las tres tocan la Fase 10, que está pendiente.
+  Colocarlas pide decidir si son alcance de esa fase o ítems aparte, y eso no se decidió.
 
 **2026-08-23, el autor, aceptado por el revisor. Bloque C: lo que este repo hace es FDD, no TDD.**
 Entrega por características completas y verificables, con fases e incrementos, y las fixtures llegan
