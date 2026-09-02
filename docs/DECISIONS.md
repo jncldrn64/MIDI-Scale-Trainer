@@ -3266,6 +3266,67 @@ que la regla 4 de "Prosa" trata los encabezados del ROADMAP con cuidado.
 
 ---
 
+## 2026-09-02 — `AGENTS.md` es el punto de entrada, y adoptarlo no garantiza que un modelo lo lea
+
+**Contexto:** el repo no tenía ningún archivo que contestara qué es el proyecto. Los cinco documentos
+de `docs/` y `CLAUDE.md` abren declarando su propia regla de formato, y ninguno dice qué hace el
+programa ni para quién es. Se comprobó leyendo las seis aperturas.
+
+**Y hay dos casos medidos de lo que eso cuesta**, los dos anotados en `docs/CONTEXTO-TEMPORAL.md` con
+su contaminación declarada. Un modelo leyó de `CLAUDE.md` un fragmento buscado por grep y nunca lo
+abrió entero; su diagnóstico fue que el nombre del archivo no dispara el reflejo de leerlo primero.
+Otro, de otro proveedor, sí extrajo la jerarquía documental completa, y por lo tanto lo que faltaba no
+era la información sino que alguien abriera el archivo donde está.
+
+**Decisión: se crea `AGENTS.md` en la raíz, corto, con lo que `CLAUDE.md` no dice.** Qué es el
+proyecto, qué documento manda cuando dos se contradicen, las restricciones que un recién llegado
+podría romper en su primera acción, y el puntero al método. Nada del método se mueve: sigue en
+`CLAUDE.md`.
+
+**Lo que habilita el archivo es el permiso del autor y nada más.** `CLAUDE.md` prohíbe crear
+documentación nueva sin preguntar, y esto es documentación nueva. No entra por la excepción de los
+`README.md` de subcarpeta, que existe para archivos que describen su propia carpeta. Buscarle una
+excepción técnica habría sido peor que pedir permiso, porque una excusa floja acá deja la puerta
+abierta al que venga después.
+
+**Razón para elegir ese nombre, con lo que se pudo verificar y lo que no.** `AGENTS.md` es la
+convención que varias herramientas buscan por su cuenta. Claude Code no la lee: lee `CLAUDE.md`, que
+es lo que hace que el método se quede donde está en vez de mudarse. El patrón de un archivo por
+herramienta apuntando a uno solo con el contenido se comprobó contra un repositorio público grande,
+RustDesk, cuyo `CLAUDE.md` tiene once bytes y dice `@AGENTS.md`, cuyo `AGENTS.md` tiene 112 líneas y
+cuyo `GEMINI.md` dice `AGENTS.md` sin arroba. La procedencia del estándar y su volumen de adopción
+son datos que aportó el autor y que esta sesión no verificó.
+
+**Acá la cadena va al revés que en RustDesk, y conviene decirlo:** allá el contenido vive en
+`AGENTS.md` y `CLAUDE.md` es el puntero de una línea. Acá `CLAUDE.md` tiene el método entero y
+`AGENTS.md` es la puerta. Las dos formas cumplen la convención; se eligió esta porque mover
+quinientas líneas de método a otro archivo es un cambio grande sin beneficio.
+
+**Tres capas con tres audiencias, que es lo que evita que se dupliquen.** `AGENTS.md` es para quien
+llega sin contexto y necesita orientarse. `CLAUDE.md` es para quien va a escribir en el repo y puede
+correr comandos. `docs/` es para quien ya está trabajando y necesita el detalle. Ninguna repite a
+otra, y eso se comprobó: no hay una sola secuencia de cinco palabras compartida entre `AGENTS.md` y
+`CLAUDE.md`.
+
+**Y la advertencia, que es parte de la decisión y no un descargo:** esto no garantiza que ningún
+modelo lo lea. Los dos casos observados eligieron su propio orden y ninguno abrió primero el archivo
+que el repo señalaba. Lo que se gana es que el repo cumpla la convención, y eso es todo lo que se
+gana.
+
+**Y un tercer caso más limpio no se puede conseguir, lo que convierte a esos dos en toda la evidencia
+que va a haber.** Los dos salieron contaminados de formas opuestas y ahora se sabe por qué: un modelo
+que recibe el repo como texto pegado no puede explorar y depende del orden en que le llegan los
+archivos, y uno que sí explora necesita herramientas de archivo que no todos tienen y que truncan lo
+que leen. Se deja escrito para que nadie repita el experimento esperando otro resultado.
+
+**No se crean archivos por herramienta**, ni `GEMINI.md` ni ningún otro. Serían punteros hacia otro
+archivo para herramientas que nadie usa acá. **El criterio para que nazca uno es que aparezca la
+herramienta**, no que exista la convención.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas

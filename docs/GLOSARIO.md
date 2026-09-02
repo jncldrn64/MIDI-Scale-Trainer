@@ -372,6 +372,16 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   código nuevo lo trae solo si alguien se acuerda de pedirlo. Se mide contra la línea base de 94
   llamadas a `SysLog` del 2026-08-20: si un PR agrega funciones que escriben estado y ese total no se
   mueve, está pasando. Fuente: la misma entrada.
+- **punto de entrada**: el archivo que contesta qué es el proyecto y hacia dónde ir, para quien llega
+  sin contexto. Es `AGENTS.md`, en la raíz, y su trabajo termina cuando el lector llegó a `CLAUDE.md`
+  y a `docs/ROADMAP.md`: no explica el método ni el estado, remite. No es un `README.md`, que sería
+  para personas y que el autor pospuso, ni cuenta el estado del proyecto, que vive en el ROADMAP.
+  Fuente: 2026-09-02, *`AGENTS.md` es el punto de entrada, y adoptarlo no garantiza que un modelo lo
+  lea*.
+- **documentación canónica**: los seis archivos que afirman algo del repo y que por eso envejecen y se
+  corrigen. Cinco en `docs/`, más `AGENTS.md` en la raíz. Crear uno nuevo pide permiso del autor; la
+  única excepción escrita es el `README.md` de subcarpeta que describe su propia carpeta, y
+  `AGENTS.md` no entró por ahí. Fuente: la misma entrada.
 - **gap**: algo que falta o que está limitado en el código, confirmado leyéndolo y con el comando que
   lo comprueba escrito al lado. Vive en el §6 de `ARCHITECTURE.md` y **se poda**: se borra en el PR
   que lo cierra, porque ese documento guarda el presente y el CHANGELOG guarda la historia. No es lo
