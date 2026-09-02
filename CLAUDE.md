@@ -4,8 +4,12 @@ Reglas que valen en cada sesión. Se leen antes de tocar nada.
 
 ## Orden de lectura
 
-Este repo no tiene `AGENTS.md`. Antes de tocar código se leen cuatro archivos de `docs/`, en
-este orden:
+Este repo tiene `AGENTS.md` en la raíz, y es el punto de entrada para quien llega sin contexto: dice
+qué es el proyecto, qué documento manda cuando dos se contradicen, y hacia acá. Es corto a propósito y
+no repite nada de este archivo. Existe porque `AGENTS.md` es la convención que otras herramientas
+buscan solas, y Claude Code no la lee: lee este archivo, así que el método sigue viviendo acá.
+
+Antes de tocar código se leen cuatro archivos de `docs/`, en este orden:
 
 1. `ARCHITECTURE.md`: el estado real del sistema, qué módulo vive en qué archivo y qué gaps
    quedan.
@@ -21,9 +25,14 @@ Recién después se toca código.
 
 ## Documentación
 
-La documentación canónica vive en `docs/` y son cinco archivos: `ARCHITECTURE.md`,
-`ROADMAP.md`, `DECISIONS.md`, `GLOSARIO.md` y `CONTEXTO-TEMPORAL.md`. No se crea ningún archivo de
-documentación nuevo sin preguntar primero.
+La documentación canónica son seis archivos. Cinco viven en `docs/`: `ARCHITECTURE.md`,
+`ROADMAP.md`, `DECISIONS.md`, `GLOSARIO.md` y `CONTEXTO-TEMPORAL.md`. El sexto es `AGENTS.md`, en la
+raíz, y está en la cuenta con todas las obligaciones: afirma cosas del repo, así que envejece igual
+que los demás y se corrige igual que los demás.
+
+`AGENTS.md` no entra por la excepción de los `README.md` de subcarpeta, porque no describe una
+carpeta. Entra porque el autor autorizó crearlo. No se crea ningún archivo de documentación nuevo sin
+preguntar primero.
 
 `docs/CONTEXTO-TEMPORAL.md` guarda lo que se observó y se perdería si nadie lo escribe. Se lee al
 empezar a trabajar, junto con los otros cuatro. Reemplaza a `EN-DISCUSION.md`, que pedía cuatro

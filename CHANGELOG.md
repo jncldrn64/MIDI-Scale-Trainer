@@ -2,6 +2,34 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.103 — 2026-09-02
+
+### Added
+
+- `AGENTS.md` en la raíz, el punto de entrada para quien llega sin contexto. Dice qué es el proyecto, qué documento manda cuando dos se contradicen, lo que no se rompe, y hacia dónde seguir. No repite nada de `CLAUDE.md`: no comparten una sola secuencia de cinco palabras.
+- Es documentación canónica y lo que lo habilita es el permiso del autor, no una excepción técnica. No entra por la excepción de los `README.md` de subcarpeta, que existe para archivos que describen su propia carpeta.
+- `docs/DECISIONS.md`: la entrada con la decisión, las tres capas y sus audiencias, por qué acá la cadena va al revés que en RustDesk, y que adoptar la convención no garantiza que un modelo la siga.
+- `docs/GLOSARIO.md`: los términos "punto de entrada" y "documentación canónica".
+
+### Changed
+
+- `CLAUDE.md`: la primera línea de "Orden de lectura" decía que este repo no tiene `AGENTS.md` y quedó falsa. Ahora dice qué es ese archivo, para quién, y que el método sigue viviendo donde está.
+- `CLAUDE.md`: la documentación canónica pasa de cinco archivos a seis, cinco en `docs/` y uno en la raíz, con las mismas obligaciones de mantenimiento.
+- `docs/CONTEXTO-TEMPORAL.md` baja de 16 anotaciones a 10 y de 526 líneas a 272. Es el primer vaciado grande desde que el archivo existe, y el paso 3 del plan tenía eso como trabajo declarado.
+
+**Lo que no se hizo, y va escrito para que no se lea como olvido.** No se crean archivos por
+herramienta: serían punteros hacia otro archivo para herramientas que nadie usa acá, y el criterio
+para que nazca uno es que aparezca la herramienta. No se movió nada del método a `AGENTS.md`. Y no se
+buscó paridad con el repo hermano, porque cada repo tiene que bastarse solo.
+
+**La advertencia va dentro del archivo y no solo en las decisiones.** Que exista no hace que nadie lo
+lea: los dos modelos que leyeron este repo desde afuera eligieron su propio orden. Lo que se gana es
+que el repo cumpla la convención.
+
+**Y queda escrito que un tercer caso más limpio no se puede conseguir**, con su razón: un modelo que
+recibe el repo como texto pegado no puede explorar, y uno que explora necesita herramientas de archivo
+que truncan lo que leen. Esos dos casos son toda la evidencia que va a haber.
+
 ## v11.102 — 2026-09-01
 
 ### Added
