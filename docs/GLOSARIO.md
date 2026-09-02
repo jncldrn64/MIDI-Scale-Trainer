@@ -77,9 +77,29 @@
 - **salida del motor**: el dato que el motor deriva y deja en el buffer. Lo consume cualquier
   superficie, el teclado incluido, y presentar no es recalcular. Fuente: 2026-08-09, *Mapa de
   términos*.
+- **submediante**: el VI grado. Se llama así porque su posición debajo de la tónica es simétrica a la
+  de la mediante por encima. **No es la dominante, que es el V**, y conviene decirlo porque al VI se
+  lo llama ocasionalmente superdominante, el grado por encima de la dominante, que es su nombre normal
+  en francés: hay un nombre con "dominante" adentro que nunca es la dominante. En tonalidad mayor su
+  tríada es menor y es el mismo acorde que la tónica del relativo menor. Fuente: 2026-09-02, *La
+  teoría se verificó contra fuentes, incluidas las correcciones, y la menor melódica clásica cuesta la
+  firma del motor*.
+- **relativo menor** y **relativo mayor**: dos tonalidades que comparten las siete notas y la
+  armadura. El relativo menor de una mayor está en su VI grado; el relativo mayor de una menor está en
+  su III, una tercera menor por encima. Comprobado contra el motor además de contra teoría. Fuente: la
+  misma entrada.
+- **menor melódica clásica** y **menor de jazz**: dos escalas distintas y las dos legítimas. La
+  clásica es asimétrica, sube con sexta y séptima elevadas y baja como menor natural; la de jazz usa
+  la forma ascendente en las dos direcciones y es a lo que "melódica" se refiere casi siempre en
+  música moderna. **La distinción no es cosmética: decide el costo.** La de jazz entra en `SCALES`
+  como una fila más; la clásica necesita saber qué nota vino antes y eso cambia la firma de
+  `evaluateMelodyStatus`. El proyecto eligió la clásica. Fuente: la misma entrada.
 - **sensible**: la nota a un semitono por debajo de la tónica, la que hace que el oído espere volver
   a ella. En la leyenda aparece como "Sensible (empuja a la tónica)"; antes se llamaba "Tensión
-  Legal", nombre que prometía una familia de tensiones y nombraba una sola nota. **Cuándo la pinta
+  Legal", nombre que prometía una familia de tensiones y nombraba una sola nota. **Por qué existe la
+  menor armónica, verificado el 2026-09-02:** la séptima menor de la natural está a un tono de la
+  tónica y ese tirón es demasiado débil para sentirse como resolución. Elevarla a sensible convierte
+  el V en mayor y habilita la séptima de dominante, que sí resuelve con fuerza. **Cuándo la pinta
   este programa:** solo con las cuatro condiciones que `evaluateMelodyStatus` exige a la vez, que el
   universo sea menor, que el pitch class esté un semitono debajo de la tónica, que la nota no
   pertenezca al universo y que no pertenezca al acorde que suena. Por eso en un universo mayor ese

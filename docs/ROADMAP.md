@@ -894,6 +894,16 @@ prioridad, no porque la rueda la bloquee.
   universo es otro. El motor la marca como error porque `SCALES` tiene tres tipos, `major`, `minor` y
   `harmonic_minor`, y ninguno la contiene. Eso es exactamente lo que quiere decir "no como parches de
   excepción", que hasta hoy estaba dicho sin su caso.
+
+  **Corrección del 2026-09-02, con su origen.** En la conversación que precedió a este PR el revisor
+  afirmó que el blues era barato, una entrada más en `SCALES`. **El propio ítem lo desmiente** desde
+  que se escribió: no son escalas de siete notas, así que no producen una escalera de siete tríadas
+  por grado, y antes de programarlas hay que decidir qué significa ahí un acorde por grado. Es más
+  barato que la menor melódica clásica, que cambia la firma del motor, y no es una fila. La corrección
+  queda anotada porque el error vino de memoria y el repo tenía la respuesta escrita.
+
+  **Y por qué sigue parqueado aunque sea más barato:** el criterio de orden del autor no es el costo.
+  Ver "El orden del vocabulario lo decide la clase, no el costo", más abajo en esta misma lista.
   **Entró:** 2026-07-04, PR "doc: reescribir docs y comentarios en la voz Rossmann". Ese es el
   primer commit que toca `docs/ROADMAP.md`, así que este ítem está desde que el archivo existe y
   `git log -S` no puede rastrearlo más atrás. Con ese mismo PR entraron "Modos griegos (Dórico,
@@ -931,8 +941,33 @@ prioridad, no porque la rueda la bloquee.
   **Sin origen recuperable.** Entró con el primer commit que toca `docs/ROADMAP.md`, así que `git
   log` no puede ir más atrás y ese commit no dejó ninguna razón escrita. Es una de las ideas con
   las que el roadmap nació, y no se sabe más que eso.
-- Menor melódica como escala disponible, junto a los modos griegos y las pentatónicas ya
-  listados. Cobra sentido si el jazz entra como objetivo.
+- **Menor melódica clásica como escala disponible**, junto a los modos griegos y las pentatónicas ya
+  listados. **Precisado el 2026-09-02, y deja de ser un ítem barato.** Son dos escalas distintas y las
+  dos son legítimas: la clásica sube con sexta y séptima elevadas y baja como menor natural, y la de
+  jazz usa la forma ascendente en las dos direcciones. La segunda es a lo que "melódica" se refiere
+  casi siempre en música moderna.
+
+  **El autor eligió la clásica**, y el criterio queda escrito porque no es un capricho: está tomando
+  clases de piano y quiere adelantar lo que va a ver ahí, y sostiene que la música regional
+  latinoamericana usa esa forma. La línea vieja de este ítem decía que cobraba sentido si el jazz
+  entraba como objetivo, y es al revés: la que sirve al jazz es la otra.
+
+  **Y esa elección decide el costo, que es lo que hay que evaluar antes de programarla.** La de jazz
+  sería una entrada más en `SCALES`, siete notas y nada que cambiar. La clásica no entra ahí: la misma
+  nota es válida subiendo e inválida bajando, y el motor no tiene con qué distinguirlo.
+  `evaluateMelodyStatus` recibe hoy
+  `{ pc, universePitchesSet, chordObj, universeType, universeRoot }`, un conjunto de alturas sin
+  dirección, y ninguno de esos cinco campos dice qué nota vino antes. Agregarlo cambia la firma de la
+  función que las 46 fixtures prueban.
+
+  **Tres casos ambiguos quedan sin respuesta, y no los contesta la teoría porque son de
+  implementación:** qué pasa con la primera nota de todas, con una nota repetida, y con un salto
+  grande que no es una línea melódica. **Saber la dirección no es heurística**: comparar la nota
+  actual con la anterior es determinista, igual que el indulto por paso cromático ya usa el pasado sin
+  serlo. Lo que falta no es una estimación, es memoria.
+
+  **Y no llega sola.** La menor melódica es la escala madre de la alterada, su séptimo modo, y de la
+  lidia dominante, su cuarto modo.
   **Entró:** 2026-07-30, PR "doc: enriquecer la rueda de quintas, la regla de animación y el
   backlog". Con ese mismo PR entraron "Calibración de tiempos por tapping" y "Lectura de partitura
   como vista futura".
@@ -1779,6 +1814,42 @@ prioridad, no porque la rueda la bloquee.
   **Entró:** 2026-08-21, PR "doc: lo que salió de mirar qué hace la competencia".
   **Procedencia:** de la misma investigación. La herramienta de pago muestra la notación con
   enarmonía correcta, y comparar contra eso fue lo que hizo mirar la función que nombra las notas.
+
+- **El vocabulario del motor parece un hueco del roadmap, no cinco ítems sueltos.** Anotado el
+  2026-09-02 al revisar las fases contra la teoría verificada, y comprobado: **ninguna de las trece
+  fases agrega un universo al motor.** `grep -n "SCALES" docs/ROADMAP.md` devuelve cuatro líneas y las
+  cuatro caen dentro de este BACKLOG, ninguna en el Alcance de una fase. O sea que el motor va a
+  cerrar el roadmap conociendo las mismas tres escalas que conoce hoy, `major`, `minor` y
+  `harmonic_minor`, que se recuentan con `grep -A5 "const SCALES" src/engine.js`.
+
+  **Los cinco ítems que lo componen están acá desde el primer commit que tocó este archivo**, sin fase
+  asignada: los modos griegos, las pentatónicas, el blues, la menor melódica y el glosario in-app que
+  los nombraría. Los cuatro primeros son vocabulario del motor y llegaron juntos.
+
+  **Y la Fase 11 lo necesita para significar algo.** Su Objetivo es que el motor reconozca los
+  préstamos de otro modo, y su Alcance dice que la teoría define "de qué modo se prestan". Leído
+  entero: **lo asume y no lo contempla.** No hay una línea que diga que el motor tiene que conocer los
+  modos antes, y hoy no los conoce.
+
+  **Va anotado como hallazgo y no como decisión.** Dónde vive el vocabulario y en qué orden entra es
+  trabajo de la transición al roadmap siguiente, que el autor ya declaró que hará al pasar a la
+  versión mayor. Lo que este ítem hace es dejarlo escrito mientras la evidencia está fresca, que es
+  justo lo que no se hizo con los cinco sueltos.
+  **Entró:** 2026-09-02, PR "doc: la teoría verificada, y el vocabulario del motor como hueco del
+  roadmap".
+  **Por qué se anotó:** salió de verificar la teoría musical contra fuentes. Al mirar qué fase
+  entregaría la menor melódica se vio que ninguna entrega ninguna escala.
+- **El orden del vocabulario lo decide la clase, no el costo.** Criterio que el autor declaró el
+  2026-09-02 y que va escrito porque se aparta del que el repo venía usando, donde el costo y los
+  bloqueos ordenaban el trabajo. Acá manda lo que el autor esté tocando en sus clases de piano.
+
+  **El caso que lo muestra:** el blues es más barato que la menor melódica clásica y queda parqueado
+  igual, porque no lo está tocando ahora. Y trae su propia observación, que el blues abre camino al
+  jazz, que es un mundo aparte que hoy no le interesa.
+  **Entró:** 2026-09-02, PR "doc: la teoría verificada, y el vocabulario del motor como hueco del
+  roadmap".
+  **Por qué se anotó:** el autor lo dijo al explicar por qué elegía la menor melódica clásica sobre la
+  de jazz, siendo la clásica la cara.
 
 ---
 
