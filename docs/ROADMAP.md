@@ -2122,7 +2122,28 @@ lo que ese archivo guarda.
 
 ### Documento de requisitos, propósito y público objetivo
 
-El faltante es que no existe `README.md` en el repo, comprobable con `ls *.md` en la raíz, que
+**Entregado el 2026-09-06 como `docs/REQUISITOS.md`.** Va en `docs/` y no en la raíz, porque
+`AGENTS.md` ya ocupa el papel de punto de entrada y un `README.md` es para personas que llegan por
+GitHub, que el autor dejó para la versión mayor siguiente. La razón entera vive en `DECISIONS.md`,
+entrada del 2026-09-06 "El fin y el medio se separan en cada requisito no funcional, y el
+entrenamiento mecánico es capacidad y no propósito".
+
+**Lo que el documento absorbió**, de los seis lugares de este archivo que lo citaban como su hogar:
+las tres convenciones visuales del Alcance de la Fase 5, o sea el presupuesto visual, el minimalismo
+funcional y la señal de lo activo por opacidad, que ahora viven ahí como un requisito no funcional
+con su fin y su medio; y el motivo pedagógico de que la disposición se pueda rearmar, que esta misma
+subsección declaraba sin hogar.
+
+**Lo que no absorbió, y por qué.** El Alcance de la Fase 5B y el ítem del BACKLOG "Levantar los
+requisitos y requerimientos antes de seguir programando" pedían el contrato de qué puede alterar un
+entrenamiento y qué un widget: el documento lo declara pendiente en vez de improvisarlo, porque la
+Nota del 2026-07-25 de la Fase 9 dice que sin una característica real que lo fuerce cualquier
+estándar sería una adivinanza. Y la subsección del material de referencia externo proponía que el
+destino visual acordado viviera ahí o en un documento propio; eso sigue sin decidirse y sin escribirse.
+
+**El texto que sigue es el pedido original y se conserva como registro de qué se pidió.**
+
+El faltante era que no existía `README.md` en el repo, comprobable con `ls *.md` en la raíz, que
 devuelve `CHANGELOG.md` y `CLAUDE.md` y nada más. El repo documenta el plan en el ROADMAP y el porqué
 de cada decisión en DECISIONS, pero no documenta para quién es la app, cuál es su propósito, cuál es
 su alcance, ni qué tiene que ser verdad para que esté bien hecha.

@@ -23,7 +23,9 @@ cicatriz define la jerarquía. De arriba hacia abajo:
    siempre, así que una entrada vieja puede describir un estado que hoy no existe: eso es correcto y
    no es un defecto a corregir.
 3. **`CLAUDE.md`.** El método de trabajo vigente. Manda sobre cómo se escribe, se mide y se entrega.
-4. **`docs/ARCHITECTURE.md`, `docs/ROADMAP.md` y `docs/GLOSARIO.md`.** Describen el presente y se
+4. **`docs/REQUISITOS.md`.** Dice qué tiene que ser verdad para que el programa esté bien hecho, y
+   para quién. No lleva fechas ni orden de trabajo.
+5. **`docs/ARCHITECTURE.md`, `docs/ROADMAP.md` y `docs/GLOSARIO.md`.** Describen el presente y se
    corrigen cuando envejecen. El primero promete en su encabezado estar verificado contra el código,
    y esa promesa ya falló una vez.
 

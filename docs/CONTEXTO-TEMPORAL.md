@@ -260,3 +260,15 @@ alguien la escribe cada vez. **Un archivo en el repo viaja con el repo; una regl
 Sirven para casos distintos, el archivo para quien llega solo y la regla para cuando el autor arma el
 contexto.
 
+
+**2026-09-06, el autor.** Recordó que su profesor de piano, en la Oda a la Alegría, tocaba un acorde
+distinto entre los acordes regulares. Eso tiene nombre: acorde de paso, o acorde intermedio. Y su
+propio Re7 es uno de ellos, porque no pertenece a Do mayor, aparece entre dos que sí, y existe para
+llevar de uno al otro.
+
+**Lo que revela, y es lo que se anota:** al motor no le falta vocabulario de escalas, le falta
+vocabulario de tránsito. Son dos cosas distintas y el repo solo tiene anotada la primera, en el ítem
+del BACKLOG sobre el vocabulario del motor como hueco del roadmap.
+
+**Sin decidir nada.** No se sabe todavía si eso es una fase, un ítem, o una lente más del motor como
+la función tonal.

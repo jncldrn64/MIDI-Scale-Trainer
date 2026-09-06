@@ -25,10 +25,10 @@ Recién después se toca código.
 
 ## Documentación
 
-La documentación canónica son seis archivos. Cinco viven en `docs/`: `ARCHITECTURE.md`,
-`ROADMAP.md`, `DECISIONS.md`, `GLOSARIO.md` y `CONTEXTO-TEMPORAL.md`. El sexto es `AGENTS.md`, en la
-raíz, y está en la cuenta con todas las obligaciones: afirma cosas del repo, así que envejece igual
-que los demás y se corrige igual que los demás.
+La documentación canónica son siete archivos. Seis viven en `docs/`: `ARCHITECTURE.md`,
+`ROADMAP.md`, `DECISIONS.md`, `GLOSARIO.md`, `REQUISITOS.md` y `CONTEXTO-TEMPORAL.md`. El séptimo es
+`AGENTS.md`, en la raíz, y está en la cuenta con todas las obligaciones: afirma cosas del repo, así
+que envejece igual que los demás y se corrige igual que los demás.
 
 `AGENTS.md` no entra por la excepción de los `README.md` de subcarpeta, porque no describe una
 carpeta. Entra porque el autor autorizó crearlo. No se crea ningún archivo de documentación nuevo sin
@@ -274,7 +274,7 @@ medible.
 8. Tres oraciones seguidas de largo parecido son la señal de que el texto se está alisando, y la
    regla 7 no la detecta: cuatro oraciones de 17 palabras cumplen su techo y son planas. La medida es
    qué porcentaje de las ternas consecutivas de un párrafo cae dentro de un rango de 3 palabras.
-   Medido el 2026-09-06 sobre 1179 ternas: **4,1%**. Antes del PR que escribió esta regla eran 4,1%
+   Medido el 2026-09-06 sobre 1218 ternas: **3,9%**. Antes del PR que escribió esta regla eran 4,1%
    de 1154, repartido en `AGENTS.md` 0%, `CHANGELOG.md` 2,5%, `docs/DECISIONS.md` 3,8%,
    `docs/ROADMAP.md` 4,9% y `docs/ARCHITECTURE.md` 6,2%. Ese número no debe subir. La señal sale del perfil de voz del original, que la nombra primera entre sus
    signos de deriva.
@@ -301,7 +301,7 @@ grep -E "^- \`" CHANGELOG.md | awk '{print NF}' | sort -n
 grep -rcE "^#{1,4} .*\(.*\)" CHANGELOG.md docs/*.md tests/README.md
 
 # Ternas planas de la regla 8, y de paso la varianza de largo de oración. El mismo extractor.
-python3 - CHANGELOG.md AGENTS.md docs/ARCHITECTURE.md docs/DECISIONS.md docs/ROADMAP.md <<'EOF'
+python3 - CHANGELOG.md AGENTS.md docs/ARCHITECTURE.md docs/DECISIONS.md docs/REQUISITOS.md docs/ROADMAP.md <<'EOF'
 import io,re,sys,statistics as st
 P,L=[],[]
 for f in sys.argv[1:]:
