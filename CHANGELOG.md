@@ -2,6 +2,35 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.106 — 2026-09-06
+
+### Added
+
+- `CLAUDE.md`, regla 8 de "Prosa": el porcentaje de ternas planas, o sea tres oraciones seguidas cuyos largos caben en un rango de 3 palabras. Medido el 2026-09-06 da 4,1% sobre 1168 ternas, y ese número no debe subir. Va con su comando, que mide también el CV.
+- `docs/DECISIONS.md`: la evaluación entera, incluida la serie de nueve commits que muestra por qué el piso de CV que se propuso no se puede disparar.
+- `docs/GLOSARIO.md`: terna plana, y el CV de largo de oración marcado como contexto y no como regla.
+
+### Changed
+
+- La regla que entró no es la que se propuso. La propuesta era un piso de CV en 0,58; se rechazó el instrumento y se conservó el hueco que había encontrado.
+
+**Un piso de CV con dos decimales no cambia de estado nunca.** Se corrió el comando sobre los nueve
+commits anteriores: el valor fue de 0,5808 a 0,5786, un movimiento de 0,0022 en total, y los nueve
+redondean a 0,58. Con más decimales el cambio sería de diezmilésimas, indistinguible del ruido.
+
+**Medirlo por PR tampoco alcanza.** De esos nueve, seis aportan menos de diez oraciones de prosa
+corrida, porque casi todo lo que agregan son viñetas que el extractor descuenta.
+
+**Y la premisa estaba a medias.** El repo no es plano según la prueba que el propio perfil del
+original nombra primera: 4,1% de ternas planas. Lo que tiene bajo es la tasa de oraciones cortas, 6,5%
+contra 10,8%, y eso es registro y no uniformidad. La documentación técnica en español usa menos
+fragmentos que un blog personal en inglés, y forzarlos para subir un número sería escribir para el
+medidor.
+
+**Lo que la revisión externa acertó se conserva:** la regla 7 pone techo a las oraciones por párrafo y
+no detecta el alisado, y ninguna de las siete reglas medía uniformidad. El hueco era real y la regla 8
+lo cubre con otro instrumento.
+
 ## v11.105 — 2026-09-03
 
 ### Added

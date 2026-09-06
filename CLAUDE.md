@@ -265,6 +265,13 @@ medible.
    Este archivo también lo rompe, y se dice en vez de esconderlo detrás de estar fuera del corpus:
    **8 párrafos por encima del techo el 2026-08-20**, el peor de diez oraciones. Son deuda tolerada y
    el número no debe subir. Un techo que su propio archivo viola en silencio no gobierna nada.
+8. Tres oraciones seguidas de largo parecido son la señal de que el texto se está alisando, y la
+   regla 7 no la detecta: cuatro oraciones de 17 palabras cumplen su techo y son planas. La medida es
+   qué porcentaje de las ternas consecutivas de un párrafo cae dentro de un rango de 3 palabras.
+   Medido el 2026-09-06 sobre 1168 ternas: **4,1%**. Antes del PR que escribió esta regla eran 4,1%
+   de 1154, repartido en `AGENTS.md` 0%, `CHANGELOG.md` 2,5%, `docs/DECISIONS.md` 3,8%,
+   `docs/ROADMAP.md` 4,9% y `docs/ARCHITECTURE.md` 6,2%. Ese número no debe subir. La señal sale del perfil de voz del original, que la nombra primera entre sus
+   signos de deriva.
 
 Los números de arriba son de la prosa que ya está escrita y sirven de línea base. Se recalculan
 con estos comandos, desde la raíz del repo, para que una sesión que no tenga este historial pueda
@@ -286,6 +293,30 @@ grep -E "^- \`" CHANGELOG.md | awk '{print NF}' | sort -n
 
 # Encabezados con paréntesis, por archivo, regla 4.
 grep -rcE "^#{1,4} .*\(.*\)" CHANGELOG.md docs/*.md tests/README.md
+
+# Ternas planas de la regla 8, y de paso la varianza de largo de oración. El mismo extractor.
+python3 - CHANGELOG.md AGENTS.md docs/ARCHITECTURE.md docs/DECISIONS.md docs/ROADMAP.md <<'EOF'
+import io,re,sys,statistics as st
+P,L=[],[]
+for f in sys.argv[1:]:
+    out,inc=[],False
+    for l in io.open(f,encoding='utf-8').read().split('\n'):
+        if l.strip().startswith('```'): inc=not inc; out.append(''); continue
+        if inc or re.match(r'^\s*[|#>]',l) or re.match(r'^\s*[-*+] ',l) \
+           or re.match(r'^\s{2,}\S',l) or re.match(r'^\s*\d+\. ',l):
+            out.append(''); continue
+        out.append(l)
+    for p in re.split(r'\n\s*\n','\n'.join(out)):
+        if len(p.split())>15:
+            o=[len(x.split()) for x in re.split(r'(?<=[.:;!?])\s+',p) if x.strip()]
+            L+=o
+            if len(o)>=3: P.append(o)
+t=sum(len(o)-2 for o in P)
+pl=sum(1 for o in P for i in range(len(o)-2) if max(o[i:i+3])-min(o[i:i+3])<=3)
+m,d=st.mean(L),st.pstdev(L)
+print(f"ternas {t}, planas {pl} = {100*pl/t:.1f}%")
+print(f"{len(L)} oraciones, media {m:.1f}, CV {d/m:.2f}, bajo 5 palabras {100*sum(1 for x in L if x<5)/len(L):.1f}%")
+EOF
 
 # Párrafos de prosa corrida por encima de las cinco oraciones, regla 7. Descuenta bloques de
 # código, tablas, encabezados, citas, viñetas y sus continuaciones indentadas.

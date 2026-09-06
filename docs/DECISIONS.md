@@ -3445,6 +3445,67 @@ no tiene escrita.
 
 ---
 
+## 2026-09-06 — La regla 8 mide ternas planas y no un piso de CV, porque un piso de CV no se puede disparar
+
+**Contexto:** una revisión externa midió la varianza de largo de oración del repo y propuso una regla
+8 con forma de piso: CV 0,58 medido, y un PR que lo baje está alisando el texto. La medición se
+confirmó. La regla no entró como se propuso, y las tres razones son medidas.
+
+**Lo que se confirmó.** El comando propuesto da 2598 oraciones, media 17,2, desviación 9,9, CV 0,58 y
+un 6,5% de oraciones por debajo de 5 palabras. El perfil del original declara CV 0,83 con 10,8% de
+oraciones cortas.
+
+**Primera razón para no escribirlo como piso: no se puede disparar.** Se corrió el mismo comando
+sobre los nueve commits anteriores.
+
+| Commit | Oraciones | CV |
+|---|---|---|
+| 4041fa9 | 2393 | 0,5808 |
+| d224a34 | 2400 | 0,5800 |
+| d8c8512 | 2408 | 0,5797 |
+| 8180d30 | 2413 | 0,5792 |
+| 6505736 | 2419 | 0,5794 |
+| 50dbc07 | 2427 | 0,5792 |
+| 31ec964 | 2499 | 0,5789 |
+| 08e1e58 | 2533 | 0,5787 |
+| 74bd1f3 | 2598 | 0,5786 |
+
+Nueve PR reales movieron el CV 0,0022 en total, y los nueve valores redondean a 0,58. Una regla que
+declara el piso con dos decimales no cambia de estado nunca. Con más decimales cambiaría por
+diezmilésimas, indistinguible de ruido de muestreo.
+
+**Segunda razón: medirlo por PR tampoco alcanza.** Se calculó el CV de la prosa que agrega cada uno de
+esos nueve, y seis aportan menos de diez oraciones de prosa corrida, porque casi todo lo que agregan
+son viñetas que el extractor descuenta. Un CV sobre seis oraciones no dice nada.
+
+**Tercera razón, y es la que corrige la premisa: el repo no es plano según la prueba que el propio
+original nombra.** Ese perfil llama primera señal de deriva a tres oraciones seguidas dentro de 3
+palabras entre sí. Medido acá antes de este PR: 4,1% de 1154 ternas. El repo escribe oraciones de
+largo variado.
+
+Lo que sí tiene bajo respecto del original es otra cosa, la tasa de oraciones cortas, 6,5% contra
+10,8%. Ese hueco es de registro y no de uniformidad: la documentación técnica en español usa menos
+fragmentos que un blog personal en inglés, y forzarlos para subir un número sería escribir para el
+medidor.
+
+**Decisión: la regla 8 mide el porcentaje de ternas planas, con piso de 4,1% que no debe subir.** Es
+local, se dispara en un párrafo y no depende del tamaño del corpus. El CV queda escrito en esta
+entrada como contexto medido, y no como regla.
+
+**Lo que la revisión externa acertó, y conviene decirlo porque el rechazo del instrumento no lo
+borra:** la regla 7 pone techo a las oraciones por párrafo y no detecta el alisado, y ninguna de las
+siete reglas del piso medía uniformidad. El hueco existía. Y el CV bajó en los nueve commits
+seguidos, monótono, que no es ruido aunque sea chico.
+
+**La advertencia que la revisión pidió no publicar, y que se respeta.** En esa misma sesión se comparó
+el corpus contra un perfil del autor medido sobre 582 palabras de chat. Comparar chat contra
+documentación mide registro y no autoría, y esa muestra está por debajo de lo que la estilometría
+pide. Ese dato no sostiene nada sobre la voz del repo y no se cita como si lo hiciera.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas
