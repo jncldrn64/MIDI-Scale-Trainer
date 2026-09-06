@@ -2,6 +2,34 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.108 — 2026-09-06
+
+### Added
+
+- `docs/REQUISITOS.md`, nuevo y canónico. Dice para quién es el programa, qué tiene que ser verdad, qué no es, los requisitos no funcionales y qué recursos armónicos reconoce el motor. Va en `docs/` porque `AGENTS.md` ya es el punto de entrada y el `README.md` quedó para la versión mayor.
+- Cada requisito no funcional se escribe **separando el fin del medio**. El fin es que el usuario abra el programa sin instalar ni compilar nada; `file://` es el medio y es discutible.
+- `docs/DECISIONS.md`: la entrada con esa distinción y con que el entrenamiento mecánico es una capacidad que se apoya en el propósito, no el propósito.
+- `docs/GLOSARIO.md`: "fin y medio", y "capacidad" contra "propósito".
+- `docs/CONTEXTO-TEMPORAL.md`: el acorde de paso. Al motor no le falta vocabulario de escalas, le falta vocabulario de tránsito, y son dos cosas distintas.
+
+### Changed
+
+- `CLAUDE.md` y `AGENTS.md`: la documentación canónica pasa de seis archivos a siete, y el corpus de la regla 8 incluye el archivo nuevo.
+- `docs/ROADMAP.md`: la subsección que pedía el documento queda marcada como entregada, con qué absorbió y qué no.
+
+**Una comodidad venía gobernando la arquitectura sin estar escrita como restricción.** El autor eligió
+`file://` por simplicidad. Con eso se descartaron los ES Modules, se reformuló el umbral de las 1000
+líneas del §7 y cayó el SoundFont, que son tres decisiones grandes. Separar fin de medio evita que la
+próxima se tome contra un medio creyendo que se toma contra un requisito.
+
+**Los recursos que el motor reconoce son reglas y no una lista de casos.** La prueba está en las
+fixtures: en Sol mayor un Do# se acepta y un Re# no. Do# empuja a Re, y la tríada de Re está entera en
+la escala de Sol; Re# empuja a Mi, cuya tercera mayor no. Ninguna lista de casos produce esa
+diferencia.
+
+**Y la lista de lo que reconoce está incompleta a propósito.** Hay un catálogo de formas de salir de
+la escala y el motor conoce dos. El documento dice cuáles y no promete completarlo.
+
 ## v11.107 — 2026-09-06
 
 ### Added

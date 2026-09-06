@@ -442,6 +442,17 @@ verificó con `grep` contra el archivo antes de escribirse acá.
 
 
 
+- **fin y medio**: la distinción con que se escribe cada requisito no funcional en
+  `docs/REQUISITOS.md`. El fin es lo que hay que conseguir y no se negocia; el medio es con qué se
+  consigue hoy y se puede cambiar. El caso que la motivó: el fin es que el usuario abra el programa
+  sin instalar ni compilar nada, y `file://` es el medio. Confundirlos convierte una comodidad en
+  restricción, que es lo que ya pasó con los ES Modules y el SoundFont. Fuente: 2026-09-06, *El fin y
+  el medio se separan en cada requisito no funcional, y el entrenamiento mecánico es capacidad y no
+  propósito*.
+- **capacidad**, contra **propósito**: el propósito es entender por qué la música hace lo que hace
+  mientras se toca. Una capacidad se apoya en él y no lo reemplaza; el caso vivo es el entrenamiento
+  mecánico por tempo y figura. La jerarquía existe para que ninguna decisión futura se justifique
+  apelando al uso que convenga. Fuente: la misma entrada.
 - **umbral**: una alarma escrita que obliga a abrir una decisión cuando se cumple. Obliga a decidir
   y no decide: no receta un mecanismo. El único vivo es el de las 1000 líneas de código y markup de
   `index.html`, en el §7 de `ARCHITECTURE.md`. Fuente: 2026-08-11, *Los ES Modules no cargan desde

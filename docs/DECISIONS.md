@@ -3573,6 +3573,62 @@ reconstruirlas sería inventar una cita, que es peor que no tenerla.
 
 ---
 
+## 2026-09-06 — El fin y el medio se separan en cada requisito no funcional, y el entrenamiento mecánico es capacidad y no propósito
+
+**Contexto:** el ROADMAP pedía un documento de requisitos desde hace tiempo, y seis lugares del mismo
+archivo lo citaban como el hogar definitivo de cosas que estaban sin lugar. Se entrega como
+`docs/REQUISITOS.md`. Esta entrada guarda lo que se decidió al escribirlo, no lo que el documento
+dice.
+
+**Decisión sobre la ubicación: va en `docs/` y no en la raíz.** La subsección dejaba abierto entre un
+`README.md` y un documento aparte, con el criterio de quién lo lee. Ese criterio ya está satisfecho
+por otro par: `AGENTS.md` es el punto de entrada de quien llega sin contexto, y un `README.md` es para
+personas que llegan por GitHub, que el autor dejó para la versión mayor siguiente. Este documento
+tiene un tercer lector, el que ya está trabajando, y ese lee `docs/`.
+
+**Decisión: el entrenamiento mecánico es una capacidad que se apoya en el propósito, no el
+propósito.** Al escribir para quién es el programa apareció un segundo uso, subir de 60 a 200 BPM con
+distintas figuras por escala y por mano. El propósito sigue siendo entender por qué la música hace lo
+que hace mientras se toca.
+
+**La jerarquía no es cosmética.** Un documento que declare los dos usos como iguales deja justificar
+cualquier decisión futura apelando al que convenga, y un documento de requisitos existe justamente
+para que eso no pase.
+
+**Decisión, y es la que más cambia el repo: cada requisito no funcional se escribe separando el fin
+del medio.** El caso que la motiva estaba a la vista y nadie lo había nombrado. El autor eligió abrir
+desde `file://` por simplicidad, sin pensarlo mucho, y esa preferencia terminó gobernando decisiones
+grandes.
+
+**Con sus dos casos medidos.** Los ES Modules se descartaron porque no cargan desde `file://`, y con
+ellos se reformuló el umbral de las 1000 líneas del §7 de `ARCHITECTURE.md`; ver la entrada del
+2026-08-11 "Los ES Modules no cargan desde `file://`, y el umbral deja de prescribir". El SoundFont
+cayó por un camino parecido, en la entrada del mismo día. **Una comodidad se volvió restricción sin
+que nadie lo escribiera como tal.**
+
+**El fin real es que el usuario abra el programa sin instalar ni compilar nada.** `file://` es el
+medio actual y es discutible: el propio autor mencionó empaquetar un navegador. Escribirlo así evita
+que la próxima decisión se tome contra un medio creyendo que se toma contra un requisito.
+
+**Y una consecuencia que conviene dejar dicha: el repo público es la situación de hoy y no un
+requisito.** Nada del diseño depende de eso.
+
+**Decisión: la sección del contrato de entrenamientos se declara pendiente en vez de improvisarse.**
+Lo que ya vale es que un entrenamiento aporta datos y no lógica, que sale de la entrada del
+2026-08-11 "El motor no ejecuta lógica que venga de afuera". Lo demás espera a la primera
+característica de verdad, porque la Nota del 2026-07-25 de la Fase 9 dice que sin un caso real que lo
+fuerce, cualquier estándar sería una adivinanza.
+
+**Lo que el documento afirma del motor y no decide nada nuevo**, porque ya estaba en el código: los
+recursos que reconoce son reglas y no una lista de casos. `isSecondaryDominantLeadingTone` pide que la
+nota esté fuera del universo, que la de un semitono arriba pertenezca, y que esa destino arme tríada
+mayor con notas del universo. En Sol mayor eso acepta Do# y rechaza Re#, y las dos fixtures existen en
+`tests/fixtures/grados-romanos.json`.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas
