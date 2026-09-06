@@ -3376,6 +3376,75 @@ cuándo.
 
 ---
 
+## 2026-09-03 — Las reglas de la guía, la superficie que se oculta cuando no tiene nada que decir, y la excepción del readout
+
+**Contexto:** el ítem "La guía compuesta por secciones que aporta cada widget" está en el BACKLOG
+bloqueado por otro, el de la nota fuera del universo que sale verde sin explicación, y el propio
+ROADMAP dice que las dos cambian qué muestra la guía y conviene decidirlas juntas. El repo ya hizo
+esto una vez y funcionó: los widgets se definieron por sus reglas antes de que existiera el código.
+
+**Decisión: una sección de guía por widget abierto, con tres partes colapsables por separado.** Qué es
+y para qué sirve. Qué efectos aplica y sobre qué superficies. Y cómo se llega a lo que muestra, con
+las cuentas, lo que hace cada botón y las formas de obtener el mismo resultado a mano.
+
+**Esa tercera parte es la que ninguna herramienta cercana tiene.** El BACKLOG guarda la investigación
+de competencia que encontró tres: las tres analizan el acorde que sostenés y ninguna explica cómo se
+llega al resultado. Un usuario que quiere entender el porqué necesita ver la cuenta sin la máquina.
+
+**El orden es alfabético por título, y la guía tiene su propia sección.** El orden por posición se
+descartó porque los widgets se mueven y ese orden cambiaría solo mientras alguien trabaja. La guía es
+un widget de sistema y puede hablar de sí misma.
+
+**Decisión, y sale de una corrección del propio autor: una superficie de texto aparece mientras tenga
+algo que decir, y se oculta cuando no. La guía es la excepción y se queda.** Empezó diciendo que la
+guía sin secciones se cerrara, se corrigió solo, y de ahí salió la regla general.
+
+**Ocultar no es cerrar, y confundirlas rompería el modelo de widgets.** Un widget cerrado es una
+decisión del usuario, que el sistema respeta y que persiste en `midiTrainerLayout`; la caja sigue en
+el menú y vuelve cuando el usuario la abre. Una superficie oculta por no tener contenido no es una
+decisión de nadie: la caja sigue abierta y reaparece sola en cuanto haya qué mostrar. Un widget
+cerrado que reapareciera solo sería el sistema desobedeciendo.
+
+**Estado medido de las tres superficies de texto**, el 2026-09-03: los subtítulos del entrenamiento no
+la cumplen y son el caso extremo, porque ninguna función escribe ahí y la caja se muestra igual. El
+feedback del sistema tampoco, porque nace visible con su rótulo antes de que el chasis tenga algo que
+decir. La guía la cumple por excepción declarada.
+
+**La regla no absorbe el ítem del aviso que no caduca.** Ese ítem pregunta cuándo un aviso deja de
+valer la pena, que es una pregunta sobre el contenido envejeciendo; esta regla pregunta si hay
+contenido. Un aviso viejo sigue siendo contenido, así que las dos conviven y el ítem sigue abierto con
+sus tres salidas.
+
+**Decisión: la explicación de la nota verde va en la sección del motor.** Quien indulta el tono
+conductor de una dominante secundaria es `isSecondaryDominantLeadingTone`, dentro de `src/engine.js`,
+no el selector de universo. El contrato de permisos del 2026-08-11 ya lo resuelve: un dato tiene un
+autor y muchos lectores.
+
+**El autor había dudado, y las dos cosas son ciertas a la vez.** Dijo que los widgets no son
+subsistemas separados sino el mismo programa, y como implementación tiene razón: hay una sola función
+que pinta las teclas. De quién es el dato es otra pregunta, y esa la contesta el contrato. Esta entrada
+no escribe el texto de la explicación.
+
+**El readout no cumple los lineamientos de widget, y la excepción se declara en vez de forzarse.** Los
+demás producen una cosa y la muestran. El readout presenta seis lecturas que salen de cálculos
+distintos: bajos activos, melodías activas, acorde detectado, su inversión, su función tonal y su
+relación con el universo. Su tercera parte de guía serían seis explicaciones, no una.
+
+**Su sección queda como pregunta abierta.** El autor planteó una salida y no la decidió: que sus
+salidas se separen en varios widgets, cada uno con su explicación, dejando el general disponible. Y
+dijo que eso probablemente tenga sentido cuando lleguen las progresiones. Si se escribiera una regla
+que el readout no puede cumplir, la regla nacería rota.
+
+**El nombre en verbo es aspiración y no requisito**, y el autor lo dijo con su razón: no sabe si puede
+comprometer a los widgets futuros. La razón técnica lo confirma. Los nombres viven en `CAJAS` de
+`src/cajas.js` y la identidad se persiste por `id` en `midiTrainerLayout`, así que renombrar un
+título es barato y renombrar un `id` arrastra migración de lo guardado, que es una regla que el repo
+no tiene escrita.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas

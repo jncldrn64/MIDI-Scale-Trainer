@@ -1183,7 +1183,20 @@ prioridad, no porque la rueda la bloquee.
   dueño y su propósito, y cerrar un widget cierra su sección. Absorbe lo que este ítem pedía antes,
   que la leyenda se filtrara sola: filtrar filas de una tabla fija es menos que componer la guía con
   lo que cada widget trae, y el resultado visible es el mismo. Sigue bloqueado por el ítem anterior,
-  el de la nota fuera del universo que sale verde sin explicación. **Procedencia:** la formulación
+  el de la nota fuera del universo que sale verde sin explicación.
+
+  **Sus reglas quedaron escritas el 2026-09-03, antes del código**, y viven en `DECISIONS.md`, entrada
+  de ese día. En resumen: tres partes colapsables por separado, orden alfabético por título, la guía
+  con su propia sección, y la explicación de la nota verde en la sección del motor porque el dato es
+  suyo. El inventario de superficies que la segunda parte necesitaba está medido en el §5.2 de
+  `ARCHITECTURE.md`.
+
+  **Lo que le falta para construirse, y es lo que este ítem espera.** Tres cosas. El texto de la
+  explicación de la nota verde, que las reglas ubican y no escriben. La forma de la sección del
+  readout, que es pregunta abierta porque ese widget muestra seis lecturas y no una. Y el mecanismo de
+  colapsar, que hoy no existe en ninguna caja: `CAJAS` guarda abierto o cerrado por instancia y nada
+  por sección.
+  **Procedencia:** la formulación
   amplia, con el propósito de cada widget y no solo su dueño, se escribió al revisar la guía después
   de la primera sesión con el teclado conectado. Entró con la v11.68.
   **Entró:** 2026-08-11, PR "add: el contrato de permisos, primer trabajo de la Fase 5B". Con ese
@@ -1259,6 +1272,14 @@ prioridad, no porque la rueda la bloquee.
   no tiene regla escrita. **Procedencia:** salió de notar que el selector de universo también produce
   error: una nota se pinta roja por estar fuera de la escala, y esa decisión depende del universo
   aunque el color pertenezca al widget de salida del motor.
+  **Precisado el 2026-09-03 con el inventario del §5.2 de `ARCHITECTURE.md`, y el conflicto no es el
+  que parecía.** De las seis categorías de la leyenda, el widget de escala es dueño de una sola,
+  "Escala", que pinta `#bae6fd`; las otras cinco son salida del motor, el rojo incluido. Los dos
+  widgets nunca reclaman el mismo color. Lo que sí es cierto es lo que este ítem ya decía en su
+  procedencia: la decisión de pintar rojo depende del universo y el color pertenece al motor, así que
+  el conflicto es de dato contra color y no de dos dueños sobre el rojo. El autor propuso elegir
+  colores a mano para distinguirlos y descartó él mismo una interfaz común para detectar
+  coincidencias; las dos cosas quedan anotadas y ninguna se decide acá.
   **Entró:** 2026-08-10, PR "doc: dueno de superficie, lienzo de referencia y el glosario vivo".
   Con ese mismo PR entraron "Que el coloreo del teclado obedezca de verdad", "La rama del
   preveredicto de `renderKeyboard`", "El split como rango", "Que el widget de feedback del sistema
@@ -1405,6 +1426,15 @@ prioridad, no porque la rueda la bloquee.
   umbral para decir desde cuándo.
   **El riesgo declarado, que es lo que frenó la primera vez:** un aviso que se borra solo puede
   desaparecer antes de que el usuario lo lea.
+
+  **Acotado el 2026-09-03: la regla nueva de superficies no lo absorbe, y conviene decir por qué.**
+  Esa regla dice que una superficie de texto se oculta cuando no tiene nada que decir, y alcanza al
+  feedback en un solo momento, antes del primer aviso, cuando la caja está visible con su rótulo y
+  nada más. Este ítem pregunta otra cosa, cuándo un aviso deja de valer la pena, que es el contenido
+  envejeciendo y no la ausencia de contenido. Las dos conviven.
+
+  **Y una medición que el ítem no tenía:** `Feedback.avisar` asigna `textContent`, así que el primer
+  aviso borra el `span` de rótulo que traía el markup. Después de eso la caja no dice qué es.
   **Entró:** 2026-08-20, PR "doc: lo que salió de discutir teoría musical y fixtures".
   **Por qué se anotó:** el autor lo pidió y el trabajo anterior resolvió otra cosa.
 - **Los modos de entrenamiento exponen la teoría en un orden, y ese orden no está escrito.** Los cinco
@@ -1850,6 +1880,37 @@ prioridad, no porque la rueda la bloquee.
   roadmap".
   **Por qué se anotó:** el autor lo dijo al explicar por qué elegía la menor melódica clásica sobre la
   de jazz, siendo la clásica la cara.
+
+- **Un nombre en verbo por widget, como aspiración y no como requisito.** El autor lo propuso y al
+  preguntarle si era requisito contestó que aspiración, porque no sabe si puede comprometer a los
+  widgets futuros.
+
+  **La razón técnica lo confirma.** Los títulos viven en `CAJAS` de `src/cajas.js` y la identidad se
+  persiste por `id` en `midiTrainerLayout`, así que cambiar un título es barato y cambiar un `id`
+  arrastra migración de lo guardado, que es una regla que el repo no tiene escrita y que ya está
+  parqueada en este mismo BACKLOG.
+
+  **Los siete nombres de hoy, medidos con `grep -n "nombre:" src/cajas.js`:** Escala, Readout del
+  motor, Tercer widget · andamiaje, Widget de prueba · andamiaje, Subtítulos, Feedback del sistema y
+  Guía. **Ninguno es un verbo.** Los dos de andamiaje se nombran por lo que son, andamiaje, y no
+  tienen función que nombrar. El del readout tiene su propia excepción declarada. Los otros cuatro son
+  los candidatos reales, y no se renombran acá.
+  **Entró:** 2026-09-03, PR "doc: las reglas de la guía, y qué superficie escribe quién".
+  **Por qué se anotó:** salió de escribir las reglas de la guía, porque la primera parte de cada
+  sección dice para qué sirve un widget y un título en verbo ya lo diría.
+- **La sección de guía del readout, que es la única que no tiene forma.** El readout muestra seis
+  lecturas que salen de cálculos distintos, contadas en `Readout.updateStatus`: bajos activos,
+  melodías activas, acorde detectado, inversión, función tonal y relación con el universo. La tercera
+  parte de su sección serían seis explicaciones, no una.
+
+  **La salida que el autor propuso y no decidió:** que sus salidas se separen en varios widgets, cada
+  uno con su explicación, dejando el general disponible. Dijo que eso probablemente tenga sentido
+  cuando lleguen las progresiones, o sea las Fases 8 y 9.
+
+  **Bloquea** a la guía compuesta, porque una regla que el readout no puede cumplir nace rota.
+  **Entró:** 2026-09-03, PR "doc: las reglas de la guía, y qué superficie escribe quién".
+  **Por qué se anotó:** el autor declaró la excepción al escribir las reglas, en vez de forzar al
+  readout a una forma que no le entra.
 
 ---
 

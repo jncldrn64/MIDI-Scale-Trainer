@@ -2,6 +2,35 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.105 — 2026-09-03
+
+### Added
+
+- `docs/ARCHITECTURE.md`, §5.2: el inventario de superficies de feedback. Son siete y ninguna tiene dos autores, lo que confirma la cascada de precedencia del 2026-08-11 en vez de contradecirla.
+- `docs/DECISIONS.md`: las reglas de la guía antes del código, la regla de que una superficie de texto se oculta cuando no tiene nada que decir, dónde va la explicación de la nota verde, y la excepción del readout.
+- `docs/ROADMAP.md`: dos ítems nuevos. El nombre en verbo como aspiración con su razón técnica, y la sección de guía del readout como pregunta abierta que bloquea a la guía compuesta.
+- `docs/GLOSARIO.md`: sección de la guía, superficie de feedback, y la distinción entre ocultar y cerrar.
+
+### Changed
+
+- `docs/ROADMAP.md`, el ítem de la guía compuesta: gana sus reglas y las tres cosas que le faltan para construirse, entre ellas el mecanismo de colapsar, que hoy no existe en ninguna caja.
+- `docs/ROADMAP.md`, el ítem de la precedencia sobre el rojo: el conflicto no es el que parecía. El widget de escala es dueño de una sola de las seis categorías y no es el rojo.
+- `docs/ROADMAP.md`, el ítem del aviso que no caduca: la regla nueva no lo absorbe, y queda escrito por qué.
+- `docs/CONTEXTO-TEMPORAL.md` baja de 10 anotaciones a 9 y de 235 líneas a 227.
+
+**El color y el símbolo de una tecla son una sola superficie, no dos.** El símbolo sale de un
+`::before` de CSS colgado de la misma clase que pinta el color. Cambiar uno sin el otro pide tocar el
+CSS y no el JavaScript.
+
+**Ocultar no es cerrar, y la diferencia sostiene el modelo de widgets.** Cerrar es una decisión del
+usuario que persiste; ocultar es lo que hace una superficie sin contenido, con la caja abierta y
+volviendo sola. Un widget cerrado que reapareciera solo sería el sistema desobedeciendo.
+
+**De las tres superficies de texto, dos no cumplen la regla nueva.** Los subtítulos del entrenamiento
+son el caso extremo, porque ninguna función escribe ahí. El feedback nace visible con su rótulo antes
+de tener nada que decir, y ese rótulo lo borra su primer aviso, porque `Feedback.avisar` asigna
+`textContent`.
+
 ## v11.104 — 2026-09-02
 
 ### Added
