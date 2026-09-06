@@ -379,6 +379,12 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   todavía no sabía. Fuente: 2026-08-11, *El feedback de veredicto suena al apretar, y el indulto no
   lo corrige*.
 
+- **cita textual**: lo que alguien dijo, con sus palabras y sin corregir, guardado junto al resumen en
+  una anotación de `docs/CONTEXTO-TEMPORAL.md`. **Es obligatoria cuando la anotación nombra algo que
+  todavía no tiene línea en este glosario**, porque ahí el resumen estrena vocabulario y puede
+  estrenarlo mal. Se va con la línea cuando la anotación se coloca, salvo que haya mostrado que el
+  resumen leyó la idea por el lado equivocado, en cuyo caso esa corrección viaja al destino. Fuente:
+  2026-09-06, *La cita textual entra cuando la anotación estrena vocabulario*.
 - **contexto temporal**: lo que se observó y se perdería si nadie lo escribe. Vive en
   `docs/CONTEXTO-TEMPORAL.md`, entra con una línea, su fecha y quién la anotó, sin evidencia
   obligatoria y sin campos, y sale a uno de cuatro destinos con el porqué que traía: un PR que la

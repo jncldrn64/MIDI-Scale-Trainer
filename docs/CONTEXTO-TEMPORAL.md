@@ -22,7 +22,34 @@ no viene del autor. Que un archivo del código no registre nada por consola, que
 mezclen idiomas: nada de eso justifica interrumpir una conversación, y todo eso se pierde si no hay
 dónde ponerlo.
 
-**Lo único obligatorio es la fecha y quién lo anotó.**
+**Lo obligatorio es la fecha y quién lo anotó. Y a veces una cosa más.**
+
+## La cita textual, y cuándo es obligatoria
+
+El campo de quién anotó registra de quién fue la observación, no de quién son las palabras. **Toda
+anotación es el resumen que un modelo hizo de lo que alguien dijo.** Cuando el autor describe algo
+que quiere y todavía no sabe nombrar, su frase es ambigua, y esa ambigüedad es el estado real de la
+idea. Un resumen limpio decide qué quiso decir. Al escribirlo desaparece la ambigüedad y también
+desaparece que la hubo.
+
+**El disparador, y es mecánico a propósito: la cita textual es obligatoria cuando la anotación nombra
+algo que todavía no tiene línea en `docs/GLOSARIO.md`.** Si el término ya está definido hubo acuerdo
+previo y el resumen es seguro. Si no está, la anotación estrena vocabulario, y estrenar vocabulario
+mal es lo que cuesta una sesión de corregir.
+
+Ese archivo tiene 80 términos, contados con `grep -c "^- \*\*" docs/GLOSARIO.md`. El disparador no se
+activa seguido, entonces: cubre el vocabulario que el proyecto ya fijó y deja afuera lo que recién
+aparece, que es lo que lo vuelve barato de cumplir.
+
+**Va sin corregir.** Ortografía, puntuación, todo como salió. El archivo está exento de las reglas de
+"Prosa" y de "Guion largo", así que una cita cruda no incumple nada. Corregirla sería el mismo error
+que resumir: limpiar es decidir.
+
+**Se acota a la observación técnica.** Lo que se cita es lo que se dijo sobre el producto, no la
+conversación. Esto no convierte el archivo en un corpus de nadie.
+
+**Las anotaciones ya escritas no se tocan.** Nadie tiene las palabras originales de las nueve que hay,
+y reconstruirlas sería inventar una cita, que es peor que no tenerla.
 
 ## La prosa acá está exenta
 
@@ -42,6 +69,14 @@ Cada línea se coloca o se descarta. Cuatro destinos y ninguno más:
   de nada.
 - **Una fase.**
 - **El descarte**, si resulta duplicada o irrelevante. Se borra sin dejar rastro.
+
+**La cita se va con la línea, y eso no es una pérdida.** Su trabajo es que quien coloca la anotación
+pueda comprobar si el resumen decía lo que el autor decía. Cumplido eso, el destino es el registro y
+la cita ya no aporta. Este archivo tiende a cero y la cita tiende a cero con él.
+
+**Con una excepción que es justo el caso que la justifica.** Si al colocar la línea la cita muestra
+que el resumen había leído la idea por el lado equivocado, esa corrección va escrita en el destino.
+Ahí la cita no se descarta: se convirtió en el motivo de que la colocación fuera una y no otra.
 
 **Los cuatro campos del archivo viejo no se perdieron: dejaron de ser requisito de entrada y pasaron
 a ser lo que una línea gana si se la promueve.** Qué se discute, qué se sabe con evidencia, qué falta
