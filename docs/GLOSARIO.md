@@ -72,6 +72,22 @@
 - **leyenda de colores**: la explicación de las seis categorías de color del teclado. Es contenido
   que vive dentro de la guía. No es una caja ni un widget. Fuente: 2026-08-09, *Dónde vive la
   leyenda de colores*.
+- **sección de la guía**: lo que un widget abierto aporta a la guía. Tres partes colapsables por
+  separado: qué es y para qué sirve, qué efectos aplica y sobre qué superficies, y cómo se llega a lo
+  que muestra, con las cuentas y las formas de obtener lo mismo a mano. Se ordenan alfabéticamente por
+  título, y la guía tiene la suya. Fuente: 2026-09-03, *Las reglas de la guía, la superficie que se
+  oculta cuando no tiene nada que decir, y la excepción del readout*.
+- **superficie de feedback**: cada lugar donde el programa deja algo visible para el usuario. Son
+  siete, medidas en el §5.2 de `ARCHITECTURE.md`: color y símbolo de la tecla, que son una sola
+  porque el símbolo sale de un `::before` colgado de la misma clase; la etiqueta con el nombre de la
+  nota; la marca del split; las seis lecturas del readout; los subtítulos del entrenamiento; el
+  feedback del sistema; y el log. Ninguna tiene dos autores. Fuente: la misma entrada.
+- **ocultar** contra **cerrar**: dos cosas distintas y confundirlas rompe el modelo de widgets.
+  **Cerrar** es una decisión del usuario que el sistema respeta y que persiste; la caja queda en el
+  menú y vuelve cuando él la abre. **Ocultar** es lo que hace una superficie de texto que no tiene
+  nada que decir; la caja sigue abierta y reaparece sola en cuanto haya contenido. Un widget cerrado
+  que reapareciera solo sería el sistema desobedeciendo. La guía es la excepción a ocultarse y se
+  queda. Fuente: la misma entrada.
 - **dueño de superficie**: el widget al que pertenece un efecto visible. Cerrar al dueño apaga su
   efecto, porque el efecto no tiene autor en pantalla. Fuente: 2026-08-10, *Dueño de superficie*.
 - **salida del motor**: el dato que el motor deriva y deja en el buffer. Lo consume cualquier

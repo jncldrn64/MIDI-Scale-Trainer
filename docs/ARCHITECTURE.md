@@ -198,6 +198,38 @@ tensiones permitidas. Se llamaba "Tensión Legal" y prometía más de lo que cub
 la renombró a "Sensible (empuja a la tónica)", con la razón medida contra el motor en
 `DECISIONS.md`, entrada del 2026-08-10.
 
+## 5.2. Inventario de superficies de feedback
+
+Medido el 2026-09-03 leyendo `src/teclado.js`, `src/readout.js`, `src/layout.js`, `src/log.js` y
+`index.html`. Existe porque la segunda parte de cada sección de la guía tiene que decir qué efectos
+aplica un widget y sobre qué, y eso no se puede escribir sin la lista.
+
+| Superficie | Quién escribe | Autores |
+|---|---|---|
+| Color y símbolo de la tecla | `Teclado.renderKeyboard`, en la línea que arma `key.className` | 1 |
+| Etiqueta con el nombre de la nota | `Teclado.renderKeyboard`, en la línea que arma `key.innerHTML` | 1 |
+| Marca del split | `Teclado.renderKeyboard`, la clase `split-mark` en el mismo `className` | 1 |
+| Seis lecturas del readout | `Readout.updateStatus` | 1 |
+| Subtítulos del entrenamiento | nadie | 0 |
+| Feedback del sistema | `Feedback.avisar` | 1 |
+| Log | `SysLog` | 1 |
+
+**El color y el símbolo son una sola superficie, no dos.** El símbolo sale de un `::before` de CSS
+colgado de la misma clase que pinta el color, uno por cada una de las seis categorías. Cambiar el
+color sin cambiar el símbolo pide tocar el CSS, no el JavaScript.
+
+**Ninguna superficie tiene dos autores, y eso confirma la cascada de precedencia** que fija
+`DECISIONS.md` en la entrada del 2026-08-11 "Los efectos sobre las teclas, y la primera precedencia
+escrita del repo". Lo que hay es una sola función que escribe y cuatro ramas que deciden qué escribe:
+acorde, veredicto, nota activa, escala.
+
+**Los subtítulos son el único caso de cero autores.** La caja existe, se mueve y se cierra como
+cualquier otra, y ninguna función escribe adentro. Muestra su rótulo y nada más.
+
+**Y el feedback borra su propio rótulo al escribir.** `Feedback.avisar` asigna `textContent`, que
+reemplaza el `span` con la clase `widget-tag` que traía el markup. Después del primer aviso la caja
+deja de decir qué es.
+
 ## 6. Gaps confirmados leyendo el código
 
 Esta lista se poda: un gap que se cierra se borra en el PR que lo cierra, y el CHANGELOG queda como

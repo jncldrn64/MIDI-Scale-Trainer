@@ -116,15 +116,6 @@ se pierda. No se decide nada acá.
 **Por qué sigue acá (2026-08-21):** es el estado de una discusión que está corriendo. Colocarlo ahora
 la congelaría antes de que termine.
 
-**2026-08-20, el autor.** Confundir una dominante secundaria con un intercambio modal es un error
-didáctico esperable. Lo vivió: tocaba Re7 en Do mayor, sentía que algo pasaba, y creyó que era
-intercambio modal cuando era una dominante secundaria. El programa hoy lo indulta y no lo nombra: el
-readout dice `II7 (V del V) empuja a G`, o sea que el dato está, pero la nota de melodía que se
-acepta por ese camino no dice por qué se aceptó. Material para los modos de entrenamiento.
-**Por qué sigue acá (2026-08-21):** depende de la misma decisión en curso que las otras dos de
-fixtures. Es material para los modos de entrenamiento, y el ítem de esos modos acaba de entrar al
-BACKLOG con su pregunta abierta, así que esta anotación se coloca cuando esa pregunta se conteste.
-
 **2026-08-21, el modelo que implementa.** Un entrenamiento que trae sus propios widgets choca con una
 regla que ya está escrita. La visión entró hoy a "Direcciones sin fase" del ROADMAP; la regla es la
 entrada del 2026-08-11 "El motor no ejecuta lógica que venga de afuera", que dice que el motor
@@ -206,11 +197,12 @@ que no es teoría y no lo contesta ninguna fuente:
   salen las otras dos, como una recursión. Y la observación que trae pegada, que la rueda de quintas
   muestra la relación entre mayor y menor y no muestra esas dos. Se toca con la Fase 10 y con lo de
   abajo, así que se leen juntas.
-- **Lo que propone construir, sin colocar todavía:** un botón que salte al relativo desde el selector
-  de escala, sin pasar por el desplegable, que lo quiere antes de la rueda de quintas; que la guía
-  muestre formas alternativas de leer lo mismo, que es el propósito que le ve a la rueda; y mejorar la
-  descripción de los elementos en pantalla.
-- **Por qué sigue acá:** las tres son de interfaz y las tres tocan la Fase 10, que está pendiente.
+- **Lo que propone construir. Dos de las tres se colocaron el 2026-09-03**, en las reglas de la guía:
+  que la guía muestre formas alternativas de leer lo mismo es la tercera parte de cada sección, y
+  mejorar la descripción de los elementos es la primera. Ver `DECISIONS.md`, entrada de ese día.
+- **Queda una: un botón que salte al relativo** desde el selector de escala, sin pasar por el
+  desplegable. Lo quiere antes de la rueda de quintas.
+- **Por qué siguen acá:** las dos que quedan son de interfaz y tocan la Fase 10, que está pendiente.
   Colocarlas pide decidir si son alcance de esa fase o ítems aparte, y eso no se decidió.
 
 **2026-08-23, el autor, aceptado por el revisor. Bloque C: lo que este repo hace es FDD, no TDD.**
