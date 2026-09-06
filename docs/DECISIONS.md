@@ -3506,6 +3506,73 @@ pide. Ese dato no sostiene nada sobre la voz del repo y no se cita como si lo hi
 
 ---
 
+## 2026-09-06 — La cita textual entra cuando la anotación estrena vocabulario
+
+**Contexto:** una revisión externa midió `docs/CONTEXTO-TEMPORAL.md` y encontró que no se parece a lo
+que declara ser. El archivo dice que su prosa puede ser fea, telegráfica y desprolija. No lo es.
+
+**Las cuatro mediciones se confirmaron una por una**, con el extractor de la regla 7 más la media de
+comas.
+
+| Corpus | Oraciones | Palabras | CV | Comas |
+|---|---|---|---|---|
+| Anotaciones completas | 69 | 15,2 | 0,56 | 0,90 |
+| Firmadas por el autor | 48 | 14,0 | 0,56 | 0,77 |
+| Firmadas por el modelo | 21 | 18,2 | 0,51 | 1,19 |
+| `docs/DECISIONS.md`, control | 1675 | 17,0 | 0,57 | 0,88 |
+
+El archivo exento mide igual que el que no lo está, y las anotaciones firmadas por el autor miden
+igual que las firmadas por el modelo. **Exentar de reglas permite escribir en crudo; no lo produce.**
+Quien escribe es un modelo y escribe articulado aunque le den permiso de no hacerlo.
+
+**El problema que eso destapa no es de estilo.** El campo de quién anotó registra de quién fue la
+observación, no de quién son las palabras. Toda anotación es un resumen, y un resumen de algo que su
+autor todavía no sabe nombrar decide qué quiso decir.
+
+**El repo ya pagó ese costo una vez, y está escrito.** La sección "Promesas y umbrales" de `CLAUDE.md`
+cuenta el análisis por comportamiento, rechazado con la acepción de regla aproximada cuando la
+propuesta usaba la del antivirus. Lo que faltaba es el mecanismo en el momento de capturar, no en el
+de decidir.
+
+**Y hay un antecedente exacto en este mismo archivo.** `EN-DISCUSION.md` filtraba por madurez y se
+reemplazó porque lo que se pierde es lo crudo. `CONTEXTO-TEMPORAL.md` abarató la entrada y no tocó la
+redacción, así que siguió filtrando, ahora por articulación.
+
+**Decisión: la cita textual es obligatoria cuando la anotación nombra algo que todavía no tiene línea
+en `docs/GLOSARIO.md`.** Va sin corregir. El resumen se queda debajo, sin cambios.
+
+**El disparador es mecánico y engancha con la regla de glosario que ya existe.** No depende de
+reconocer la intención de nadie, que es el criterio con el que está escrito el resto del repo. Tiene
+un punto blando y conviene decirlo: exige identificar cuál es el término nuevo, que es más de lo que
+piden disparadores como "si la función asigna a `State.algo`". Se acepta porque quien escribe la
+anotación sabe qué palabra acaba de usar.
+
+**Y el volumen del glosario es lo que lo vuelve barato.** Tiene 80 términos. La revisión contó 7,
+porque el comando que propuso, `grep -c "^### \|^## "`, cuenta las secciones del archivo y no sus
+líneas de término, que salen de `grep -c "^- \*\*"`. Con 80 el disparador cubre el vocabulario ya
+fijado y se activa solo cuando aparece uno nuevo.
+
+**La pregunta de diseño real era el choque con "tiende a cero", y se resuelve así: la cita se va con
+la línea.** Su trabajo es que quien coloca la anotación compruebe si el resumen decía lo que el autor
+decía. Cumplido eso, el destino es el registro y la cita ya no aporta.
+
+**Con la excepción que la justifica.** Si al colocar la línea la cita muestra que el resumen había
+leído la idea por el lado equivocado, esa corrección va escrita en el destino. Ahí la cita no se
+descarta: se convirtió en el motivo de que la colocación fuera una y no otra.
+
+**Dónde vive la regla, sin crear dos fuentes.** El mecanismo entero va en
+`docs/CONTEXTO-TEMPORAL.md`, que es donde están las reglas de entrada y donde mira quien escribe una
+anotación. `CLAUDE.md` se toca por otro motivo: su sección "Documentación" decía "sin campos" y "lo
+único obligatorio es la fecha y quién anotó", y las dos frases quedaban falsas. Se corrigen y se
+apunta acá.
+
+**Las nueve anotaciones que ya existen no se tocan.** Nadie tiene las palabras originales, y
+reconstruirlas sería inventar una cita, que es peor que no tenerla.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas

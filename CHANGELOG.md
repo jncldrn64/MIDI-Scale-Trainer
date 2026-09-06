@@ -2,6 +2,35 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.107 — 2026-09-06
+
+### Added
+
+- `docs/CONTEXTO-TEMPORAL.md`: la cita textual, obligatoria cuando una anotación nombra algo que todavía no tiene línea en `docs/GLOSARIO.md`. Va sin corregir y el resumen se queda debajo.
+- La regla de salida de esa cita: se va con la línea cuando la anotación se coloca, salvo que haya mostrado que el resumen leyó la idea por el lado equivocado.
+- `docs/DECISIONS.md`: la entrada con las cuatro mediciones que motivaron la regla y la resolución del choque con "tiende a cero".
+- `docs/GLOSARIO.md`: el término "cita textual", que el propio disparador necesita tener definido.
+
+### Changed
+
+- `CLAUDE.md`, sección "Documentación": decía "sin campos" y "lo único obligatorio es la fecha y quién anotó". Las dos frases quedaban falsas y se corrigen, con puntero al mecanismo en vez de repetirlo.
+
+**El archivo exento mide igual que el que no lo está.** Sus anotaciones dan 15,2 palabras por oración
+y CV 0,56, contra 17,0 y 0,57 de `docs/DECISIONS.md`. Y las firmadas por el autor miden como las
+firmadas por el modelo. Exentar de reglas permite escribir en crudo, no lo produce.
+
+**El problema que eso destapa no es de estilo.** El campo de quién anotó dice de quién fue la
+observación, no de quién son las palabras, y un resumen de algo que su autor todavía no sabe nombrar
+decide qué quiso decir. El repo ya pagó ese costo con el análisis por comportamiento, rechazado por la
+acepción equivocada de una palabra.
+
+**El glosario tiene 80 términos, no 7.** El comando que la revisión propuso cuenta secciones. Con 80
+el disparador cubre el vocabulario ya fijado y se activa solo cuando aparece uno nuevo, que es lo que
+lo vuelve barato de cumplir.
+
+**Las nueve anotaciones que ya existen no se tocan**, porque nadie tiene sus palabras originales y
+reconstruirlas sería inventar una cita.
+
 ## v11.106 — 2026-09-06
 
 ### Added

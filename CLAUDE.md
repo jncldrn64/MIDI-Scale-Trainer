@@ -41,11 +41,17 @@ maduro sino lo crudo. Ver `docs/DECISIONS.md`, entrada del 2026-08-20 "El archiv
 filtraba por madurez, y lo que se pierde es lo crudo".
 
 **Entrar cuesta una línea y salir cuesta la disciplina entera.** Se anota qué se observó, quién lo
-aportó y por qué podría importar, sin evidencia obligatoria y sin campos; si no se sabe por qué
+aportó y por qué podría importar, sin evidencia obligatoria; si no se sabe por qué
 importa, se dice. Cualquiera anota, el que implementa y el que revisa, y también lo que no viene del
 autor. **La prosa de ese archivo está exenta de las reglas de "Prosa" y de "Guion largo"**, a
-propósito: encarecer la escritura es lo que garantiza que no se escriba. Lo único obligatorio es la
-fecha y quién anotó.
+propósito: encarecer la escritura es lo que garantiza que no se escriba. Obligatorios son la fecha y
+quién anotó.
+
+**Y un campo más, solo cuando se dispara.** Si la anotación nombra algo que todavía no tiene línea en
+`docs/GLOSARIO.md`, va también la cita textual de lo que se dijo, sin corregir. El mecanismo entero
+vive en `docs/CONTEXTO-TEMPORAL.md`, en su sección "La cita textual, y cuándo es obligatoria", y la
+razón en `docs/DECISIONS.md`, entrada del 2026-09-06 "La cita textual entra cuando la anotación
+estrena vocabulario". Acá se nombra para que nadie lea que el archivo no tiene campos.
 
 Y cada línea sale a uno de cuatro destinos, con el porqué que traía: un PR que la ataque, el BACKLOG,
 una fase, o el descarte si es duplicada o irrelevante. **El archivo tiende a cero**, y uno grande
@@ -268,7 +274,7 @@ medible.
 8. Tres oraciones seguidas de largo parecido son la señal de que el texto se está alisando, y la
    regla 7 no la detecta: cuatro oraciones de 17 palabras cumplen su techo y son planas. La medida es
    qué porcentaje de las ternas consecutivas de un párrafo cae dentro de un rango de 3 palabras.
-   Medido el 2026-09-06 sobre 1168 ternas: **4,1%**. Antes del PR que escribió esta regla eran 4,1%
+   Medido el 2026-09-06 sobre 1179 ternas: **4,1%**. Antes del PR que escribió esta regla eran 4,1%
    de 1154, repartido en `AGENTS.md` 0%, `CHANGELOG.md` 2,5%, `docs/DECISIONS.md` 3,8%,
    `docs/ROADMAP.md` 4,9% y `docs/ARCHITECTURE.md` 6,2%. Ese número no debe subir. La señal sale del perfil de voz del original, que la nombra primera entre sus
    signos de deriva.
