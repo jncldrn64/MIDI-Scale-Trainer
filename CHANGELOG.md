@@ -2,6 +2,48 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.109 — 2026-09-17
+
+### Fixed
+
+- `src/engine.js`: dos comentarios nombraban `UI.buildUniverse` y `UI.updateStatus`, y los ubicaban en `index.html`. `UI` se disolvió el 2026-08-11 y ese archivo no se volvió a abrir desde trece horas antes. Ahora nombran `Escala.buildUniverse`, en `src/escala.js`, y `Readout.updateStatus`, en `src/readout.js`. No se tocó una línea de código.
+- El segundo de esos comentarios describía además una duplicación que ya no existe. `Readout.updateStatus` llama a `classifyChordRelation` en vez de reimplementarla, y el comentario lo dice así.
+- `docs/GLOSARIO.md`: faltaban "auditar" y "corroborar". La entrada del 2026-08-21 que los distingue no escribió sus líneas, contra la regla de glosario de `CLAUDE.md`. El glosario pasa de 82 términos a 85.
+
+### Added
+
+- `docs/DECISIONS.md`: un comentario que nombra un objeto del repo se comprueba contra los objetos que existen, con el barrido que vuelve mecánico el chequeo. Va con su medición antes y después, y con por qué descarta los globales del lenguaje y los nombres de archivo: sin ese filtro marcaba once inocentes.
+- `docs/GLOSARIO.md`: el término "referencia muerta".
+
+### Changed
+
+- `index.html`: la versión mostrada pasa de V11.98 a V11.109. Cierra el desfase con el CHANGELOG que la regla "Versión mostrada" deja abierto hasta el próximo PR que toca código.
+
+**Una orden correcta con la dirección equivocada cuesta más que un dato falso.** El comentario decía
+"si tocás uno, tocás el otro", y eso sigue siendo verdad. `Escala.buildUniverse` recorre la misma
+fórmula interválica que `scalePitches` y las dos leen la misma constante. Lo muerto era el domicilio:
+quien obedeciera abría `index.html`, donde `grep -c "buildUniverse" index.html` devuelve 0.
+
+**Ninguna fixture habría avisado.** Las 46 prueban `src/engine.js`, ninguna toca `src/escala.js`, y
+un derivado tocado de un solo lado deja el motor partido en verde.
+
+**Comprobado en Chromium desde `file://`, que es más fuerte que el grep.**
+`State.universe.validPitches`, que llena `Escala.buildUniverse`, y `Engine.scalePitches(0, 'major')`
+devuelven los dos `0,2,4,5,7,9,11`. El duplicado existe y hoy está sincronizado. Cero errores de
+consola, con la versión nueva en el título.
+
+**Eran las dos únicas referencias muertas de los quince archivos de `src/`.** El barrido que la
+entrada nueva declara las encontró a las dos, y corrido después del arreglo no devuelve nada.
+
+**Los números del §7 de `ARCHITECTURE.md` se comprobaron y no se movieron.** `index.html` sigue en
+265 líneas totales, 9 vacías y 30 de comentario, o sea 226 de código y markup. Este PR le cambió dos
+líneas y ninguna suma ni resta.
+
+**Lo que no se arregla, con su motivo.** La v11.96 dice que `docs/GLOSARIO.md` "existe desde el
+2026-08-09"; el archivo nació el 2026-08-10, que es la fecha del encabezado de la v11.55, la sección
+que lo anuncia. Esa sección está publicada y no se reescribe, así que la corrección vive acá. El dato
+falso no se propagó a ningún archivo operativo.
+
 ## v11.108 — 2026-09-06
 
 ### Added

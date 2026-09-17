@@ -274,7 +274,7 @@ medible.
 8. Tres oraciones seguidas de largo parecido son la señal de que el texto se está alisando, y la
    regla 7 no la detecta: cuatro oraciones de 17 palabras cumplen su techo y son planas. La medida es
    qué porcentaje de las ternas consecutivas de un párrafo cae dentro de un rango de 3 palabras.
-   Medido el 2026-09-06 sobre 1218 ternas: **3,9%**. Antes del PR que escribió esta regla eran 4,1%
+   Medido el 2026-09-17 sobre 1234 ternas: **3,9%**. Antes del PR que escribió esta regla eran 4,1%
    de 1154, repartido en `AGENTS.md` 0%, `CHANGELOG.md` 2,5%, `docs/DECISIONS.md` 3,8%,
    `docs/ROADMAP.md` 4,9% y `docs/ARCHITECTURE.md` 6,2%. Ese número no debe subir. La señal sale del perfil de voz del original, que la nombra primera entre sus
    signos de deriva.

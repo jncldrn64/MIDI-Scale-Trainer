@@ -76,10 +76,10 @@
     };
 
     // Pitch classes de un universo (root más tipo de escala).
-    // Espejo puro de UI.buildUniverse en index.html: mismo recorrido de la
-    // fórmula interválica, sin armar el HTML. Es el único derivado que queda por
-    // duplicado. Los dos leen la misma constante SCALES, así que si tocás uno,
-    // tocás el otro.
+    // Espejo puro de Escala.buildUniverse, en src/escala.js: mismo recorrido de
+    // la fórmula interválica, sin armar el HTML. Es el único derivado que queda
+    // por duplicado, y los dos leen la misma constante SCALES, la que declara
+    // este archivo. Si tocás uno, tocás el otro.
     function scalePitches(root, type) {
         const scaleDef = SCALES[type];
         const set = new Set();
@@ -93,8 +93,8 @@
     }
 
     // Relación del acorde con el universo activo.
-    // Espejo puro de UI.updateStatus (heurística de dominante secundaria e
-    // intercambio modal). Devuelve un código estable, no el texto de la UI.
+    // No tiene espejo: Readout.updateStatus la llama desde src/readout.js y se
+    // queda con el texto. Devuelve un código estable, no el texto de pantalla.
     function classifyChordRelation(chordObj, universePitchesSet) {
         if (MathEngine.isDiatonic(chordObj, universePitchesSet)) {
             return { relation: 'diatonic', targetPC: null };

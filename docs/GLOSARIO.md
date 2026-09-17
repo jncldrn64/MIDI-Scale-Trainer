@@ -461,3 +461,16 @@ verificó con `grep` contra el archivo antes de escribirse acá.
   por lo tanto puede ser falsa aunque el repo entero sea coherente. Un número se recalcula con un
   comando; una promesa solo se comprueba corriéndola. Fuente: 2026-08-11, *Los ES Modules no cargan
   desde `file://`, y el umbral deja de prescribir*.
+- **auditar** una fixture: contestar si sus valores esperados son correctos según la teoría. Se hace
+  leyendo el caso contra el motor, sin tocar el piano. Estado al 2026-08-21: `grados-romanos` y
+  `raiz-ambigua` están auditadas. Fuente: 2026-08-21, *Una fixture se corrobora contra una corrida
+  real, y las dos formas de un acorde conviven*.
+- **corroborar** una fixture: contestar si el caso es el que alguien toca, comparándolo con el
+  registro de una corrida real. Es más fuerte que auditar y no la reemplaza, porque una fixture
+  auditada puede describir una pieza que nadie tocó nunca. Estado al 2026-08-21:
+  `oda-a-la-alegria` está corroborada; `blues` y `bad-apple` no. Fuente: la misma entrada.
+- **referencia muerta**: un nombre que el texto conserva y el código ya no define. Nace de un
+  refactor que renombra o disuelve un objeto sin abrir los archivos que lo mencionaban. Es peor que
+  una afirmación falsa cuando el texto ordena algo, porque la orden puede seguir siendo correcta y
+  mandar a una dirección que no existe. Fuente: 2026-09-17, *Un comentario que nombra un objeto se
+  comprueba contra los objetos que existen*.
