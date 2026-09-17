@@ -3629,6 +3629,64 @@ mayor con notas del universo. En Sol mayor eso acepta Do# y rechaza Re#, y las d
 
 ---
 
+## 2026-09-17 — Un comentario que nombra un objeto se comprueba contra los objetos que existen
+
+**Contexto:** `src/engine.js` conservaba dos comentarios que nombraban `UI.buildUniverse` y
+`UI.updateStatus`, y los ubicaban en `index.html`. `UI` se disolvió el 2026-08-11 a las 16:10:46,
+con la segunda parte de la partición. El último commit que había tocado `engine.js` era de trece
+horas antes, y ese archivo no se volvió a abrir, así que los dos comentarios sobrevivieron
+veinticinco días.
+
+**Por qué esto es peor que un dato falso.** El primero no afirmaba: ordenaba. Decía "si tocás uno,
+tocás el otro", y esa orden sigue siendo correcta, porque `Escala.buildUniverse` recorre la misma
+fórmula interválica que `scalePitches` y las dos leen la misma constante `SCALES`. Lo único muerto
+era la dirección.
+
+**El costo lo paga quien obedece.** Abre `index.html`, donde `grep -c "buildUniverse" index.html`
+devuelve 0, y de ahí salen dos lecturas malas: que el duplicado ya no existe, o que el comentario
+miente entero. La segunda es la cara: el duplicado es real y tocarlo de un solo lado rompe el motor
+sin que ninguna fixture lo note, porque las 46 prueban `src/engine.js` y ninguna toca
+`src/escala.js`.
+
+**El segundo comentario estaba muerto dos veces.** `Readout.updateStatus` no es espejo de
+`classifyChordRelation`: la llama. El propio `src/readout.js` ya lo decía en su comentario, "lógica
+en `src/engine.js`, acá el texto de la UI y el log". La duplicación que el comentario de `engine.js`
+describía se había disuelto en la misma partición que mató a `UI`.
+
+**Decisión: un comentario que nombra un objeto del repo se comprueba contra los objetos que
+existen**, con un barrido y no con criterio:
+
+```sh
+for n in $(grep -rhoE "\b[A-Z][a-zA-Z]+\.[a-zA-Z]+" src/*.js | sort -u); do
+  case "$n" in *.md|*.js|*.json) continue;; esac
+  o=${n%%.*}
+  grep -q "const $o\|root\.$o\|$o = {" src/*.js && continue
+  node -e "if (typeof globalThis.$o === 'undefined') process.exit(1)" 2>/dev/null && continue
+  echo "no resuelve: $n"
+done | sort -u
+```
+
+**Las tres primeras líneas del cuerpo no son adorno.** Sin ellas el barrido devolvía once
+inocentes: `JSON.parse`, `Object.entries`, `Date.now` y el resto de los globales del lenguaje, más
+`ARCHITECTURE.md` y `CLAUDE.md`, que son nombres de archivo citados en comentarios. El `case` saca
+las extensiones. El `node -e` pregunta si el objeto es un global del lenguaje, en vez de mantener una
+lista escrita a mano que envejece con cada versión de JavaScript. Un detector que marca inocentes
+enseña a ignorarlo, que es la misma razón por la que el `[^=]` entró al detector de verbosidad el
+2026-08-23.
+
+**Medido el 2026-09-17, antes y después.** Sobre el árbol anterior devuelve `UI.buildUniverse` y
+`UI.updateStatus`, y son las dos únicas de los quince archivos de `src/`. Sobre el árbol de este PR
+no devuelve nada.
+
+**El disparador es el PR que disuelve o renombra un objeto**, que es el único momento en que alguien
+sabe que el nombre viejo quedó colgado. La regla 6 de "Prosa" cubre el caso vecino, el número de
+línea que se pudre, y no alcanzaba acá. Un nombre de objeto sobrevive al refactor como texto y muere
+como referencia, y esa muerte no se ve leyendo.
+
+**Estado:** vigente.
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas
