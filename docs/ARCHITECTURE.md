@@ -1,5 +1,9 @@
-# ARCHITECTURE.md: MIDI Scale Trainer Pro
+# ARCHITECTURE.md: qué es el código hoy
 
+> **Rol:** el estado real del código y los gaps que quedan. Nivel 5 de la jerarquía de
+> `AGENTS.md`, debajo del código. **Régimen:** se corrige, y un gap se borra en el PR que lo
+> cierra. **Origen:** 2026-07-03, con la Fase 0.
+>
 > **Regla de este documento:** todo lo que está acá se verificó línea por línea contra
 > el código real. Lo que no se pudo verificar se marca como "no verificado" o "narrativa
 > no confirmada". Este proyecto ya perdió una versión, la v11.5, que existía solo como

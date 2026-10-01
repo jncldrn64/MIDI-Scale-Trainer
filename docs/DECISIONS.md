@@ -1,5 +1,8 @@
-# DECISIONS.md — MIDI Scale Trainer Pro
+# DECISIONS.md: por qué el repo es como es
 
+> **Rol:** por qué el código es como es. Nivel 2 de la jerarquía de `AGENTS.md`, debajo del
+> código. **Régimen:** append-only. **Origen:** 2026-07-03, con la Fase 0.
+>
 > Registro append-only. No se borran entradas viejas aunque queden obsoletas — se agrega
 > una entrada nueva que referencia y reemplaza a la anterior. El objetivo es que nunca
 > más se pierda el "por qué" de una decisión, como pasó con v11.5.
@@ -3685,6 +3688,58 @@ como referencia, y esa muerte no se ve leyendo.
 
 **Estado:** vigente.
 
+## 2026-10-01: Formato común de los documentos, y el encabezado de una decisión pasa a dos puntos
+
+**Contexto:** la línea 1 no seguía una sola forma. `ARCHITECTURE.md`, `ROADMAP.md` y este archivo
+llevaban el nombre del proyecto, y `CHANGELOG.md` solo su nombre. Los bloques de cita del arranque
+decían cosas distintas en cada archivo, y ninguno decía su nivel en la jerarquía de `AGENTS.md`. El
+encabezado de una decisión era el único guion largo permitido fuera del CHANGELOG. El autor revisó
+el formato de los `.md` el 2026-10-01, en una auditoría de estándares hecha desde otro de sus repos,
+y aprobó corregir estos detalles.
+
+**Decisión:** `CLAUDE.md` gana la sección "Formato de los documentos". La línea 1 dice el papel del
+archivo. El bloque de cita abre con **Rol:**, **Régimen:** y **Origen:**, y el Rol nombra el nivel
+de la jerarquía de `AGENTS.md`. Una decisión nueva abre con dos puntos; las anteriores se quedan con
+guion largo, por append-only.
+
+**Lo que no entra:** la jerarquía de `AGENTS.md` no cambia, y ningún documento se mueve.
+
+**Estado:** vigente.
+
+## 2026-10-01: Los PR se abren como borrador, y una edición desde la web también lleva tipo
+
+**Contexto:** el autor tomó las dos decisiones el 2026-10-01, en la misma auditoría y para todos sus
+repos, eligiendo entre opciones y sin una frase propia que citar; hasta hoy vivían solo en
+`docs/CONTEXTO-TEMPORAL.md`. Tres commits hechos desde la web no llevan tipo (24950f2 y ec27961, del
+2026-07-04, y 7c080d6, del 2026-07-25), y son historia que no se reescribe.
+
+**Decisión:** un PR se abre como borrador, y el autor lo marca listo y lo mergea. Un commit hecho
+desde la web lleva su tipo como cualquier otro. Las dos reglas viven en `CLAUDE.md`, sección
+"Commits".
+
+**Estado:** vigente.
+
+## 2026-10-01: Las convenciones del código siguen en `CLAUDE.md`, por ahora
+
+**Contexto:** las reglas sobre cómo se escribe el código viven en `CLAUDE.md`, en "Iconos y emojis",
+"Colores" y "Verbosidad del registro", junto al método de trabajo. Una plantilla escrita el
+2026-10-01 para un repo nuevo del autor las pone en un `DESIGN.md` aparte. Llevarlas acá serían unas
+1.240 palabras, contadas con el comando de abajo, y cuatro citas vivas en `docs/ROADMAP.md`. El
+autor ya la había pausado, y el 2026-10-01 la volvió a frenar:
+
+> "sobre el desing preferira evitar solucionarlo, no se como pueda afectar o ser de caro solucionarlo"
+
+```sh
+awk '/^## /{s=$0} {w[s]+=NF} END{for(k in w) print w[k], k}' CLAUDE.md \
+  | grep -E "Iconos|Colores|Verbosidad"
+```
+
+**Decisión:** no se crea `docs/DESIGN.md`. Las tres secciones se quedan en `CLAUDE.md`, y la entrada
+de `docs/CONTEXTO-TEMPORAL.md` que las tenía en pausa se coloca acá. Se reabre solo con una razón
+nueva; que otro repo lo haga distinto no alcanza.
+
+**Estado:** vigente.
+
 ---
 
 ---
@@ -3692,7 +3747,7 @@ como referencia, y esa muerte no se ve leyendo.
 ### Plantilla para nuevas entradas
 
 ```
-## YYYY-MM-DD — Título corto de la decisión
+## YYYY-MM-DD: Título corto de la decisión
 
 **Contexto:** qué problema o pregunta motivó esto.
 

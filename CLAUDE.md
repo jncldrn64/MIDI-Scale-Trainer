@@ -1,5 +1,9 @@
 # CLAUDE.md: estándar del proyecto
 
+> **Rol:** el método de trabajo vigente: cómo se lee, se escribe, se mide y se entrega. Nivel 3 de
+> la jerarquía de `AGENTS.md`. **Régimen:** se corrige, y una regla que cambia lleva su entrada en
+> `docs/DECISIONS.md`. **Origen:** 2026-07-04, con el primer estándar del proyecto.
+
 Reglas que valen en cada sesión. Se leen antes de tocar nada.
 
 ## Orden de lectura
@@ -86,6 +90,22 @@ cuenta como doc canónico. `tests/README.md` explica cómo correr las fixtures; 
 `src/README.md` explicaría el motor. Mientras se queden en describir su carpeta, no piden
 permiso aparte.
 
+## Formato de los documentos
+
+Los documentos canónicos tienen la misma forma, para que un modelo sepa dónde mirar sin leerlos
+enteros:
+
+1. **Línea 1:** `# NOMBRE.md: qué guarda`. Dice el papel del archivo, no el nombre del proyecto.
+2. **Bloque de cita inmediato**, que abre con tres campos en negrita: **Rol:** (qué guarda y su
+   nivel en la jerarquía de `AGENTS.md`, o que no está en ella), **Régimen:** (se corrige,
+   append-only, crece por secciones o tiende a cero) y **Origen:** (cuándo nació y la entrada que
+   lo explica, si la hay).
+3. **Una decisión nueva** abre con `## YYYY-MM-DD: <título>`, con dos puntos (ver "DECISIONS").
+
+Lo que ya estaba escrito en cada bloque se queda debajo de esos tres campos. La razón vive en
+`docs/DECISIONS.md`, entrada del 2026-10-01 "Formato común de los documentos, y el encabezado de una
+decisión pasa a dos puntos".
+
 ## CHANGELOG
 
 `CHANGELOG.md` está en la raíz, en formato [Keep a Changelog](https://keepachangelog.com).
@@ -104,8 +124,9 @@ Una viñeta no pasa de 60 palabras: es la regla 3 de "Prosa", con su medición y
 ## DECISIONS
 
 `docs/DECISIONS.md` es append-only, estilo ADR. No se borra una entrada vieja aunque quede
-obsoleta; se agrega una nueva que la reemplaza y la referencia. Cada entrada abre con
-`## YYYY-MM-DD — <título>`. La v11.5 se perdió por no tener este registro; por eso la
+obsoleta; se agrega una nueva que la reemplaza y la referencia. Desde el 2026-10-01 cada entrada
+nueva abre con `## YYYY-MM-DD: <título>`; las anteriores abren con guion largo y se quedan así,
+porque el archivo es append-only. La v11.5 se perdió por no tener este registro; por eso la
 historia acá no se reescribe.
 
 ## Mantenimiento de ARCHITECTURE
@@ -188,6 +209,11 @@ El título del Pull Request usa el mismo formato que el commit, con el mismo tip
 de PR del repo se lee igual que el `git log` y se puede filtrar por tipo desde los dos lados.
 Estuvo vigente de hecho hasta el PR #48 y se cortó sin motivo en el #49, por no estar escrito.
 
+Un PR se abre como borrador; el autor lo marca listo y lo mergea. Un commit que el autor hace
+desde la web también lleva su tipo, aunque la web proponga otro mensaje. Ver `docs/DECISIONS.md`,
+entrada del 2026-10-01 "Los PR se abren como borrador, y una edición desde la web también lleva
+tipo".
+
 ## Prosa
 
 Docs y comentarios en español, en mi voz, aplicando dos skills:
@@ -211,7 +237,7 @@ la única vía que la regla nombraba era instalar el plugin.
 Lo que sigue es el mínimo para escribir acá cuando ese material no está. Son reglas propias,
 escritas con los números que salieron de medir este repo el 2026-08-09, no una copia del
 plugin: el texto de ese proyecto no se copia porque no trae licencia. Con el plugin instalado
-manda igual todo lo que dice; estas siete son el piso.
+manda igual todo lo que dice; estas ocho son el piso.
 
 **El piso es un resumen, no una reconstrucción, y conviene saber cuánto pesa.** Se escribió el
 2026-08-09 con el original abierto, diez minutos después de tenerlo a mano. Medido el 2026-08-20
@@ -347,7 +373,7 @@ EOF
 lo edita movería los números que él mismo declara.
 
 `docs/CONTEXTO-TEMPORAL.md` también queda fuera, y por el motivo contrario: su prosa está exenta de
-estas siete reglas por diseño, así que medirla sería medir algo que nadie va a corregir. Los comandos
+estas ocho reglas por diseño, así que medirla sería medir algo que nadie va a corregir. Los comandos
 de abajo lo alcanzan por el `docs/*.md`, así que hay que descontarlo a mano, igual que se descuentan
 las viñetas del CHANGELOG que citan la regla 1. Mientras el archivo esté vacío, que es su estado
 normal, el descuento es cero.
@@ -404,9 +430,9 @@ la función tonal. Los seis valores quedaron solo en las clases del teclado y en
 ## Guion largo
 
 Guion largo (`—`): prohibido en toda la prosa (regla 1 de no-ai-slop). Se permite únicamente
-como token de formato en los encabezados de fecha de CHANGELOG (`## vX.Y — YYYY-MM-DD`) y
-DECISIONS (`## YYYY-MM-DD — <título>`). La historia no se normaliza: los encabezados ya
-escritos quedan como están.
+como token de formato en los encabezados de fecha de CHANGELOG (`## vX.Y — YYYY-MM-DD`) y en los
+de DECISIONS escritos antes del 2026-10-01. Una decisión nueva usa dos puntos. La historia no se
+normaliza: los encabezados ya escritos quedan como están.
 
 La regla se adoptó en la v11.3 (ver CHANGELOG). La prosa escrita antes de esa versión queda
 como está, igual que los encabezados, aunque use guion largo en oración corrida o entre

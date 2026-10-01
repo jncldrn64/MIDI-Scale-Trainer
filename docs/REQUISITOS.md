@@ -1,5 +1,8 @@
 # REQUISITOS.md: qué tiene que ser verdad, y para quién
 
+> **Rol:** qué tiene que ser verdad para que el programa esté bien hecho. Nivel 4 de la jerarquía
+> de `AGENTS.md`. **Régimen:** se corrige. **Origen:** 2026-09-06, con la v11.108.
+>
 > Este archivo dice **qué tiene que ser verdad** para que el programa esté bien hecho, y para quién.
 > No lleva fechas ni orden de trabajo: eso es `ROADMAP.md`. No explica por qué se eligió una forma
 > sobre otra: eso es `DECISIONS.md`, que es append-only y guarda la historia. Acá se cita esa
