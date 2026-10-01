@@ -272,3 +272,31 @@ del BACKLOG sobre el vocabulario del motor como hueco del roadmap.
 
 **Sin decidir nada.** No se sabe todavía si eso es una fase, un ítem, o una lente más del motor como
 la función tonal.
+
+**2026-10-01, el modelo que implementa, en una sesión del otro repo del autor.** Una auditoría de
+estándares entre los dos repos encontró cuatro cosas de este. Ninguna se corrigió acá; se anotan para
+que no se pierdan con la sesión.
+
+- `CLAUDE.md` dice "estas siete son el piso" (línea 214) y "estas siete reglas" (línea 350), pero la
+  sección "Prosa" numera ocho. `docs/GLOSARIO.md` define **piso de prosa** como "las siete reglas".
+  No se sabe si la octava entró sin actualizar el número o si se quiso dejarla fuera del piso.
+- `CHANGELOG.md` línea 1685: la v11.32 usa `### Docs`, que no es una de las cuatro categorías de
+  Keep a Changelog. Commit 87eed36. Historia, no se normaliza; se anota por si alguien cuenta.
+- Tres commits del autor hechos desde la web no llevan tipo: 24950f2 "Update CLAUDE.md" y ec27961
+  "Add files via upload", los dos del 2026-07-04, y 7c080d6 "Update DECISIONS.md", del 2026-07-25.
+- Las líneas base de prosa se midieron ese día y siguen intactas: 66, 75 y 3,9 %.
+
+**2026-10-01, el autor, en la misma auditoría.** Dos reglas que el otro repo tiene y este no, elegidas
+para proponer acá. Lo que eligió fueron etiquetas de una pregunta de opciones, no palabras suyas, así
+que la cita es la etiqueta tal cual: "Repetir tests intermitentes" y "Trailer de autoría". Allá
+significan correr N veces una prueba que falla a veces antes de darla por verde, y cerrar cada commit
+con una línea que nombra al coautor y la sesión. No se decidió si entran ni cómo.
+
+**2026-10-01, el autor, en la misma auditoría.** Dos decisiones que tomó para los dos repos y que acá
+no están escritas: los PR se abren como borrador, y las ediciones hechas desde la web también llevan
+el tipo en el mensaje. Las dos salieron de opciones elegidas, no de una frase suya.
+
+**2026-10-01, el autor.** Un documento de diseño para este repo, más adelante. Cita textual: "te
+diria que tambien tengamos un desing en midi, pero viendo que todo esto toca mucho los archivos de
+mmala manera, mejor esperemos a ver que pasa con FCCU". O sea que la idea existe y está en pausa a
+propósito hasta ver cómo le va al otro repo.
