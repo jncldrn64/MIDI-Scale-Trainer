@@ -284,7 +284,12 @@ que no se pierdan con la sesión.
   Keep a Changelog. Commit 87eed36. Historia, no se normaliza; se anota por si alguien cuenta.
 - Tres commits del autor hechos desde la web no llevan tipo: 24950f2 "Update CLAUDE.md" y ec27961
   "Add files via upload", los dos del 2026-07-04, y 7c080d6 "Update DECISIONS.md", del 2026-07-25.
-- Las líneas base de prosa se midieron ese día y siguen intactas: 66, 75 y 3,9 %.
+- Las líneas base de prosa de `CLAUDE.md` no se movieron. **Corregido el 2026-10-01:** esta línea
+  daba tres números sin decir qué miden, y "intactas" venía de una medición previa a la v11.110.
+  Medido otra vez después de mergear esa versión, con los comandos de "Prosa": regla 3, 66 viñetas
+  del CHANGELOG sobre 60 palabras, la más larga de 204; regla 7, 75 párrafos sobre cinco oraciones;
+  regla 8, 48 ternas planas de 1235, 3,9 %. La regla 8 declara 1234 ternas: hay una más y el
+  porcentaje es el mismo.
 
 **2026-10-01, el autor, en la misma auditoría.** Dos reglas que el otro repo tiene y este no, elegidas
 para proponer acá. Lo que eligió fueron etiquetas de una pregunta de opciones, no palabras suyas, así

@@ -2,6 +2,14 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.111 — 2026-10-01
+
+Solo documentación. La versión mostrada sigue en V11.109 hasta el próximo PR de código.
+
+### Fixed
+
+- `docs/CONTEXTO-TEMPORAL.md`: la anotación de la auditoría del 2026-10-01 daba "66, 75 y 3,9 %" sin decir qué medían, y los declaraba intactos con una medición previa a la v11.110. Ahora nombra cada regla y trae la medición de después del merge.
+
 ## v11.110 — 2026-10-01
 
 Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en V11.109 hasta el próximo PR de código.
