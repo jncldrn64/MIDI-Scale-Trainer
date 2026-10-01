@@ -2,6 +2,14 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.110 — 2026-10-01
+
+Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en V11.109 hasta el próximo PR de código.
+
+### Added
+
+- `docs/CONTEXTO-TEMPORAL.md`: cuatro anotaciones de una auditoría de estándares hecha desde el otro repo del autor. Hallazgos sin corregir (el "siete" de la sección "Prosa" contra ocho reglas, el `### Docs` de la v11.32, tres commits sin tipo), dos reglas propuestas, dos decisiones sin escribir y la idea de un documento de diseño en pausa.
+
 ## v11.109 — 2026-09-17
 
 ### Fixed
