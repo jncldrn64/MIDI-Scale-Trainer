@@ -1,5 +1,10 @@
 # AGENTS.md: empezá acá
 
+> **Rol:** punto de entrada para quien llega sin contexto: qué es el proyecto, qué documento manda
+> cuando dos se contradicen, y hacia `CLAUDE.md`. No está en su propia jerarquía. **Régimen:** se
+> corrige. **Origen:** 2026-09-02, "`AGENTS.md` es el punto de entrada, y adoptarlo no garantiza
+> que un modelo lo lea".
+
 ## Qué es esto
 
 Un entrenador de armonía que corre en el navegador y escucha un teclado MIDI. Dibuja las 88 teclas,

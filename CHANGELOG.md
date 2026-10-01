@@ -1,6 +1,34 @@
-# CHANGELOG
+# CHANGELOG.md: qué cambió y cuándo
+
+> **Rol:** el registro de qué cambió y cuándo. **Régimen:** crece por secciones, lo más nuevo
+> arriba, y una sección publicada no se reescribe. **Origen:** 2026-07-04, con el primer estándar.
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
+
+## v11.112 — 2026-10-01
+
+Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
+V11.109 hasta el próximo PR de código.
+
+### Added
+
+- `CLAUDE.md`, sección "Formato de los documentos": la línea 1 dice el papel del archivo, y el bloque de cita abre con Rol, Régimen y Origen. El Rol nombra el nivel en la jerarquía de `AGENTS.md`.
+- `CLAUDE.md`, "Commits": los PR se abren como borrador, y un commit hecho desde la web lleva su tipo.
+- `docs/DECISIONS.md`: tres entradas, sobre el formato, sobre esas dos reglas y sobre las convenciones del código, que siguen en `CLAUDE.md`.
+- `docs/ROADMAP.md`, "Deuda de método y documentación": las dos reglas propuestas en la auditoría, sin decidir.
+
+### Changed
+
+- Los nueve documentos canónicos abren con el bloque Rol, Régimen y Origen. La línea 1 de `CHANGELOG.md`, `ARCHITECTURE.md`, `ROADMAP.md` y `DECISIONS.md` dice el papel del archivo.
+- Una decisión nueva abre con `## YYYY-MM-DD: <título>`. Las anteriores se quedan con guion largo.
+
+### Fixed
+
+- `CLAUDE.md` decía "estas siete" en dos lugares y `docs/GLOSARIO.md` "las siete reglas", con ocho reglas en "Prosa". Ahora dicen ocho.
+
+### Removed
+
+- `docs/CONTEXTO-TEMPORAL.md`: las cuatro anotaciones de la auditoría del 2026-10-01. Tres se colocaron arriba. Se descartan el `### Docs` de la v11.32 y los tres commits sin tipo, que son historia, y la medición de las líneas base, que no pedía nada.
 
 ## v11.111 — 2026-10-01
 

@@ -1,5 +1,9 @@
 # GLOSARIO.md: qué significa cada término hoy
 
+> **Rol:** qué significa cada término hoy. Nivel 5 de la jerarquía de `AGENTS.md`. **Régimen:** se
+> corrige. **Origen:** 2026-08-10, sobre el vocabulario de la entrada del 2026-07-25 "Glosario del
+> modelo: vocabulario de arquitectura".
+>
 > Este archivo dice **qué significa** un término hoy. `DECISIONS.md` dice **por qué** cambió, y es
 > append-only, así que una definición vieja se queda escrita ahí para siempre. Acá se corrige.
 >
@@ -398,7 +402,7 @@ verificó con `grep` contra el archivo antes de escribirse acá.
 
 ## Método
 
-- **piso de prosa**: las siete reglas propias de la sección "Prosa" de `CLAUDE.md`, que valen cuando
+- **piso de prosa**: las ocho reglas propias de la sección "Prosa" de `CLAUDE.md`, que valen cuando
   el material original de las dos skills no está disponible en la sesión. Si está, por el plugin o por
   cualquier otra vía, ese material manda y el piso pasa a segundo plano. Cubre catorce de las
   veinticuatro reglas del original, medido el 2026-08-20. Fuente: 2026-08-20, *El material original
