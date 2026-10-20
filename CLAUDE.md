@@ -13,15 +13,17 @@ qué es el proyecto, qué documento manda cuando dos se contradicen, y hacia ac�
 no repite nada de este archivo. Existe porque `AGENTS.md` es la convención que otras herramientas
 buscan solas, y Claude Code no la lee: lee este archivo, así que el método sigue viviendo acá.
 
-Antes de tocar código se leen cuatro archivos de `docs/`, en este orden:
+Antes de tocar código se leen cinco archivos de `docs/`, en este orden:
 
-1. `ARCHITECTURE.md`: el estado real del sistema, qué módulo vive en qué archivo y qué gaps
+1. `REQUISITOS.md`: qué tiene que ser verdad para que el programa esté bien hecho, y para quién.
+   Contra eso se mide lo que uno hace.
+2. `ARCHITECTURE.md`: el estado real del sistema, qué módulo vive en qué archivo y qué gaps
    quedan.
-2. `DECISIONS.md`: las restricciones vigentes. No es opcional y va en este orden.
+3. `DECISIONS.md`: las restricciones vigentes. No es opcional y va en este orden.
    Restricciones como "no migrar a framework" y "reconstruir desde v11.0, no desde v11.5"
    viven solo acá; un agente que las saltee puede proponer justo lo que ya está descartado.
-3. `ROADMAP.md`: la fase actual y qué sigue.
-4. `CONTEXTO-TEMPORAL.md`: lo que se observó y se perdería si nadie lo escribe. Va último
+4. `ROADMAP.md`: la fase actual y qué sigue.
+5. `CONTEXTO-TEMPORAL.md`: lo que se observó y se perdería si nadie lo escribe. Va último
    porque es lo más volátil, y se lee igual: una línea de acá puede contradecir lo que uno
    estaba por proponer. Su estado normal es vacío.
 
@@ -129,6 +131,13 @@ nueva abre con `## YYYY-MM-DD: <título>`; las anteriores abren con guion largo 
 porque el archivo es append-only. La v11.5 se perdió por no tener este registro; por eso la
 historia acá no se reescribe.
 
+Una entrada abre con **Contexto:** y cierra con **Estado:**. Lo del medio toma la forma que pida el
+caso, con un **Decisión:** o con la frase en negrita que dice lo decidido.
+
+Si reemplaza, refina o extiende a otra entrada, la nombra en su **Estado:**, después de "vigente",
+por fecha y título. La vieja no se edita y sigue diciendo vigente, así que la nueva es el único
+lugar donde el reemplazo queda escrito. La plantilla del final del archivo ya tiene esta forma.
+
 ## Mantenimiento de ARCHITECTURE
 
 `docs/ARCHITECTURE.md` es el primero del orden de lectura y el único que promete, en su encabezado,
@@ -147,7 +156,8 @@ nadie tenía que hacerse esa pregunta.
 
 **Y un gap nuevo entra con el comando que lo comprueba**, igual que cualquier número bajo la regla 6
 de "Prosa". Un gap sin comando es una afirmación que nadie puede reconfirmar, que es exactamente el
-estado en que los tres muertos sobrevivieron.
+estado en que los tres muertos sobrevivieron. Cada gap es una viñeta que abre con su título en
+negrita.
 
 Los números del §7 caen bajo la misma disciplina y su falla fue distinta, así que conviene decirla:
 ese párrafo ya traía los tres comandos que recalculan el conteo de `index.html` y el número igual
@@ -251,7 +261,8 @@ medible.
 1. Las listas de palabras vetadas del plugin están en inglés y acá se escribe en español, así
    que atrapan poco. No traducirlas. Lo que sí se busca antes de entregar: "muy",
    "absolutamente", "claramente", "simplemente", "probablemente". Medido el 2026-08-09: un solo
-   caso de prosa viva, `docs/DECISIONS.md:825`, que por append-only se queda. Los demás hits de
+   caso de prosa viva, "El movimiento es absolutamente libre" en `docs/DECISIONS.md`, que por
+   append-only se queda. Los demás hits de
    este grep, y los de "delve", "leverage" y "robust", caen todos en viñetas del CHANGELOG que
    citan estas mismas reglas. Se descuentan al contar.
 2. El paralelismo contrastivo, el "no es X, es Y", se usa como máximo una vez cada 500
@@ -305,33 +316,42 @@ medible.
    `docs/ROADMAP.md` 4,9% y `docs/ARCHITECTURE.md` 6,2%. Ese número no debe subir. La señal sale del perfil de voz del original, que la nombra primera entre sus
    signos de deriva.
 
-Los números de arriba son de la prosa que ya está escrita y sirven de línea base. Se recalculan
-con estos comandos, desde la raíz del repo, para que una sesión que no tenga este historial pueda
-comparar en vez de creer:
+Los números de arriba son de su fecha y cuentan cómo se llegó a cada regla. La línea base vigente
+es la tabla que sigue a los comandos. Se recalcula con ellos, desde la raíz del repo, para que una
+sesión que no tenga este historial pueda comparar en vez de creer:
 
 ```sh
-# Palabras de prosa, el total de la regla 1.
-wc -w CHANGELOG.md docs/*.md tests/README.md
+C=$(git ls-files '*.md' ':!:CLAUDE.md' ':!:*CONTEXTO-TEMPORAL.md')
 
-# Léxico de la regla 1. Descontar los de este archivo, que son la lista de la regla.
-grep -rniE "\b(muy |absolutamente|claramente|simplemente|probablemente)\b" \
-  CHANGELOG.md docs/*.md tests/README.md
+# Palabras del corpus.
+wc -w $C | tail -1
 
-# Paralelismos de la regla 2, por archivo. Dividir wc -w por este conteo.
-grep -cE "no (es|son|era|fue) [^,.;]{2,45}[,;] (es|sino|son)|[a-zá-úñ]+, no (un|una|el|la|de|por|lo|a|con) [a-zá-úñ]" docs/ROADMAP.md
+# Regla 1. Los casos del CHANGELOG que citan esta misma lista se descuentan al contar.
+grep -niwE "muy|absolutamente|claramente|simplemente|probablemente" $C
 
-# Palabras por viñeta del CHANGELOG, de la más corta a la más larga, regla 3.
-grep -E "^- \`" CHANGELOG.md | awk '{print NF}' | sort -n
+# Regla 2, por archivo: palabras y casos. Dividir el primero por el segundo.
+for f in $C; do printf '%s %s %s\n' "$f" "$(wc -w < "$f")" "$(grep -cE \
+  "no (es|son|era|fue) [^,.;]{2,45}[,;] (es|sino|son)|[a-zá-úñ]+, no (un|una|el|la|de|por|lo|a|con) [a-zá-úñ]" \
+  "$f")"; done
 
-# Encabezados con paréntesis, por archivo, regla 4.
-grep -rcE "^#{1,4} .*\(.*\)" CHANGELOG.md docs/*.md tests/README.md
+# Regla 3, viñetas del CHANGELOG de más de 60 palabras, con sus líneas de continuación.
+awk '/^- /{if(b)print w; b=1; w=NF; next} /^  [^ ]/ && b{w+=NF; next}
+     {if(b)print w; b=0} END{if(b)print w}' CHANGELOG.md | awk '$1>60' | wc -l
 
-# Ternas planas de la regla 8, y de paso la varianza de largo de oración. El mismo extractor.
-python3 - CHANGELOG.md AGENTS.md docs/ARCHITECTURE.md docs/DECISIONS.md docs/REQUISITOS.md docs/ROADMAP.md <<'EOF'
+# Regla 4, encabezados con paréntesis, por archivo.
+grep -cE "^#{1,4} .*\(.*\)" $C
+
+# Regla 6, anclas a número de línea, por archivo.
+grep -oE "\b[A-Za-z_./-]+\.[a-z]{1,4}:[0-9]+" $C | cut -d: -f1 | sort | uniq -c
+
+# Reglas 7 y 8, un solo extractor. Descarta bloques de código, tablas, encabezados, citas,
+# viñetas y sus continuaciones, y se queda con párrafos de más de 15 palabras. Con
+# `CLAUDE.md` como argumento da el conteo propio de este archivo.
+piso() { python3 - "$@" <<'EOF'
 import io,re,sys,statistics as st
-P,L=[],[]
+P,L,tot=[],[],0
 for f in sys.argv[1:]:
-    out,inc=[],False
+    out,inc,n=[],False,0
     for l in io.open(f,encoding='utf-8').read().split('\n'):
         if l.strip().startswith('```'): inc=not inc; out.append(''); continue
         if inc or re.match(r'^\s*[|#>]',l) or re.match(r'^\s*[-*+] ',l) \
@@ -339,48 +359,50 @@ for f in sys.argv[1:]:
             out.append(''); continue
         out.append(l)
     for p in re.split(r'\n\s*\n','\n'.join(out)):
-        if len(p.split())>15:
-            o=[len(x.split()) for x in re.split(r'(?<=[.:;!?])\s+',p) if x.strip()]
-            L+=o
-            if len(o)>=3: P.append(o)
+        if len(p.split())<=15: continue
+        o=[len(x.split()) for x in re.split(r'(?<=[.:;!?])\s+',p) if x.strip()]
+        L+=o
+        if len(o)>5: n+=1
+        if len(o)>=3: P.append(o)
+    if n: print(f"regla 7: {f}: {n} párrafos de más de cinco oraciones")
+    tot+=n
 t=sum(len(o)-2 for o in P)
 pl=sum(1 for o in P for i in range(len(o)-2) if max(o[i:i+3])-min(o[i:i+3])<=3)
 m,d=st.mean(L),st.pstdev(L)
-print(f"ternas {t}, planas {pl} = {100*pl/t:.1f}%")
-print(f"{len(L)} oraciones, media {m:.1f}, CV {d/m:.2f}, bajo 5 palabras {100*sum(1 for x in L if x<5)/len(L):.1f}%")
+print(f"regla 7: {tot} en total")
+print(f"regla 8: {pl} planas de {t} ternas = {100*pl/max(t,1):.2f}%")
+print(f"{len(L)} oraciones, media {m:.1f}, CV {d/m:.2f}")
 EOF
-
-# Párrafos de prosa corrida por encima de las cinco oraciones, regla 7. Descuenta bloques de
-# código, tablas, encabezados, citas, viñetas y sus continuaciones indentadas.
-python3 - CHANGELOG.md docs/*.md <<'EOF'
-import io,re,sys,statistics
-for f in sys.argv[1:]:
-    out, inc = [], False
-    for l in io.open(f, encoding='utf-8').read().split('\n'):
-        if l.strip().startswith('```'): inc = not inc; out.append(''); continue
-        if inc or re.match(r'^\s*[|#>]', l) or re.match(r'^\s*[-*+] ', l) \
-           or re.match(r'^\s{2,}\S', l) or re.match(r'^\s*\d+\. ', l):
-            out.append(''); continue
-        out.append(l)
-    p = [x for x in re.split(r'\n\s*\n', '\n'.join(out)) if len(x.split()) > 15]
-    if not p: print(f"{f}: sin prosa corrida"); continue
-    c = [len([o for o in re.split(r'(?<=[.:;!?])\s+', x) if o.strip()]) for x in p]
-    print(f"{f}: {len(p)} parrafos, media {statistics.mean(c):.1f}, sobre 5: {sum(1 for y in c if y>5)}")
-EOF
+}
+piso $C
+piso CLAUDE.md
 ```
+
+**Líneas base del 2026-10-20**, medidas con los comandos de arriba sobre 8 archivos y 115.339
+palabras. Un PR compara contra esta tabla.
+
+| Regla | Línea base |
+|---|---|
+| 1. Intensificadores | 5: 2 en viñetas del CHANGELOG que citan esta lista y se descuentan, 2 en `docs/DECISIONS.md` y 1 vivo en `docs/ROADMAP.md` |
+| 2. Paralelismo contrastivo | ningún archivo pasa el techo; el más cerca es `docs/DECISIONS.md`, con uno cada 723 palabras |
+| 3. Viñetas del CHANGELOG de más de 60 palabras | 66, todas en secciones publicadas |
+| 4. Encabezados con paréntesis | 18: `docs/ARCHITECTURE.md` 3, `docs/DECISIONS.md` 5, `docs/ROADMAP.md` 8 y `tests/README.md` 2 |
+| 5. "No verificado" | sin comando: se revisa a mano |
+| 6. Anclas a número de línea | 9, todas en historia: `docs/DECISIONS.md` 7 y `CHANGELOG.md` 2 |
+| 7. Párrafos de más de cinco oraciones | 76: `docs/DECISIONS.md` 41, `docs/ROADMAP.md` 29, `docs/ARCHITECTURE.md` 5 y `tests/README.md` 1; `CLAUDE.md`, fuera del corpus, 8 |
+| 8. Ternas planas | 48 de 1288 ternas, 3,73% |
 
 `CLAUDE.md` queda fuera del corpus a propósito: es el archivo del estándar, y cada vez que se
 lo edita movería los números que él mismo declara.
 
 `docs/CONTEXTO-TEMPORAL.md` también queda fuera, y por el motivo contrario: su prosa está exenta de
-estas ocho reglas por diseño, así que medirla sería medir algo que nadie va a corregir. Los comandos
-de abajo lo alcanzan por el `docs/*.md`, así que hay que descontarlo a mano, igual que se descuentan
-las viñetas del CHANGELOG que citan la regla 1. Mientras el archivo esté vacío, que es su estado
-normal, el descuento es cero.
+estas ocho reglas por diseño, así que medirla sería medir algo que nadie va a corregir. El corpus de
+los comandos lo deja afuera. Las viñetas del CHANGELOG que citan la lista de la regla 1 sí entran, y
+se descuentan a mano.
 
 El conteo de la regla 2 depende de su expresión regular: cambiarla cambia el número y rompe la
-comparación con la línea base. Si hace falta afinarla, se recalculan los tres archivos de una
-y se reescribe la regla con los valores nuevos y su fecha.
+comparación con la línea base. Si hace falta afinarla, se recalculan todos los archivos del corpus
+de una vez y se reescribe la tabla con los valores nuevos y su fecha.
 
 ## Iconos y emojis
 

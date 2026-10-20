@@ -3761,6 +3761,60 @@ barrido de la entrada del 2026-09-17; el resto se revisa a mano.
 
 **Estado:** vigente.
 
+
+## 2026-10-20: El piso de prosa mide un solo corpus, y sus líneas base se recuentan
+
+**Contexto:** "Prosa" declaraba líneas base de tres fechas distintas, y cada comando medía otra
+lista de archivos. La regla 6 ni siquiera tenía comando. Así, tres números subieron sin que nadie
+lo viera.
+
+La regla 1 ganó un caso vivo en `docs/ROADMAP.md` el 2026-09-06. La regla 4 sumó un encabezado de
+DECISIONS el 2026-08-10, y la regla 6 cinco anclas a número de línea el 2026-08-22, en texto que ya
+no se edita. La regla 2 había mejorado sin que nadie lo fijara: `docs/DECISIONS.md` pasaba el techo
+con un caso cada 419 palabras y hoy da uno cada 713. Y el único caso que declaraba la regla 1
+estaba anclado en un número de línea, que la regla 6 prohíbe y que ya apuntaba a otra.
+
+**Decisión:** los comandos miden un solo corpus, todos los `.md` versionados menos `CLAUDE.md` y
+`docs/CONTEXTO-TEMPORAL.md`, y la regla 6 gana el suyo. Las líneas base se recuentan con ellos y
+quedan en una tabla fechada debajo de los comandos. Los números de adentro de cada regla se quedan
+como la historia de cómo se llegó a ella. El ancla de la regla 1 pasa a ser una cita que se puede
+grepear, y `docs/GLOSARIO.md` corrige "piso de prosa" y "terna plana".
+
+**Estado:** vigente.
+
+## 2026-10-20: `REQUISITOS.md` entra al orden de lectura
+
+**Contexto:** `docs/REQUISITOS.md` existe desde el 2026-09-06, y la entrada de ese día le da un
+lector, el que ya está trabajando y necesita saber contra qué se mide lo que hace. "Orden de
+lectura", en `CLAUDE.md`, no lo nombraba. Ese lector no tenía cuándo encontrarlo.
+
+**Decisión:** el documento entra primero, antes de `ARCHITECTURE.md`, porque es la vara con que se
+mide todo lo demás, y la lista pasa de cuatro archivos a cinco. La jerarquía de `AGENTS.md` queda
+como está, porque el orden dice qué se lee primero y la jerarquía dice qué manda cuando dos
+documentos chocan.
+
+**Estado:** vigente. Extiende la entrada del 2026-09-06 "El fin y el medio se separan en cada
+requisito no funcional, y el entrenamiento mecánico es capacidad y no propósito".
+
+## 2026-10-20: La forma de una entrada queda escrita
+
+**Contexto:** una revisión de los documentos del 2026-10-20 encontró dos formas que el repo sigue
+sin que ninguna regla las nombre. Desde el 2026-08-20, 24 de las 26 entradas abren con
+**Contexto:** y cierran con **Estado:**, y las que reemplazan, refinan o extienden a otra la nombran
+en ese estado. Los tres gaps de `docs/ARCHITECTURE.md` son viñetas que abren con su título en
+negrita.
+
+La plantilla del final de este archivo pedía otra forma. Tenía **Razón:**, que ninguna entrada usa
+desde el 2026-08-19, y un estado "reemplazada por [fecha]" que el append-only no deja escribir en la
+entrada vieja.
+
+**Decisión:** la sección "DECISIONS" de `CLAUDE.md` dice cómo abre y cierra una entrada y dónde
+nombra a la que reemplaza. "Mantenimiento de ARCHITECTURE" dice que un gap es una viñeta con su
+título en negrita. La plantilla se corrige a esa forma; no es una entrada, así que corregirla no
+toca el append-only. Ninguna entrada escrita cambia.
+
+**Estado:** vigente.
+
 ---
 
 ---
@@ -3770,11 +3824,9 @@ barrido de la entrada del 2026-09-17; el resto se revisa a mano.
 ```
 ## YYYY-MM-DD: Título corto de la decisión
 
-**Contexto:** qué problema o pregunta motivó esto.
+**Contexto:** qué problema o pregunta motivó esto, y por qué esta opción y no otra.
 
 **Decisión:** qué se decidió, en una o dos frases.
 
-**Razón:** por qué esta opción y no otra (mencionar alternativas descartadas si aplica).
-
-**Estado:** vigente / reemplazada por [fecha] / obsoleta
+**Estado:** vigente. Si reemplaza, refina o extiende otra entrada, la nombra acá por fecha y título.
 ```
