@@ -5,6 +5,17 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.113 — 2026-10-20
+
+Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
+V11.109 hasta el próximo PR de código.
+
+### Added
+- `CLAUDE.md`, sección "Comentarios": un comentario que protege una línea nombra el fallo que la
+  trajo, y un comentario que afirma algo del código cambia en el mismo commit que ese código.
+- `docs/DECISIONS.md` dice por qué van en `CLAUDE.md` y no en un `DESIGN.md`, con la cita del
+  autor.
+
 ## v11.112 — 2026-10-01
 
 Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
