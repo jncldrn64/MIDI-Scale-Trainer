@@ -405,13 +405,17 @@ verificó con `grep` contra el archivo antes de escribirse acá.
 - **piso de prosa**: las ocho reglas propias de la sección "Prosa" de `CLAUDE.md`, que valen cuando
   el material original de las dos skills no está disponible en la sesión. Si está, por el plugin o por
   cualquier otra vía, ese material manda y el piso pasa a segundo plano. Cubre catorce de las
-  veinticuatro reglas del original, medido el 2026-08-20. Fuente: 2026-08-20, *El material original
-  manda si está, y el piso escrito cubre catorce de veinticuatro reglas*.
+  veinticuatro reglas del original, medido el 2026-08-20. Se mide sobre un solo corpus, todos los
+  `.md` versionados menos `CLAUDE.md` y `docs/CONTEXTO-TEMPORAL.md`, y sus líneas base viven en la
+  tabla de esa sección. Fuentes: 2026-08-20, *El material original manda si está, y el piso escrito
+  cubre catorce de veinticuatro reglas*, y 2026-10-20, *El piso de prosa mide un solo corpus, y sus
+  líneas base se recuentan*.
 - **terna plana**: tres oraciones seguidas de un párrafo cuyos largos caben en un rango de 3 palabras.
   Es la unidad que mide la regla 8 de "Prosa", y sale del perfil de voz del original, que la nombra
-  primera entre sus señales de deriva. El piso medido es 4,1% de las ternas del repo y no debe subir.
-  Fuente: 2026-09-06, *La regla 8 mide ternas planas y no un piso de CV, porque un piso de CV no se
-  puede disparar*.
+  primera entre sus señales de deriva. Su línea base está en la tabla de "Prosa" y no debe subir.
+  Fuentes: 2026-09-06, *La regla 8 mide ternas planas y no un piso de CV, porque un piso de CV no se
+  puede disparar*, y 2026-10-20, *El piso de prosa mide un solo corpus, y sus líneas base se
+  recuentan*.
 - **CV de largo de oración**: la desviación de largo dividida por la media, sobre la prosa corrida del
   repo. Medido el 2026-09-06 da 0,58 contra el 0,83 que declara el perfil del original. **No es una
   regla y no se usa como piso**, porque nueve PR seguidos lo movieron 0,0022 y ninguna medición lo

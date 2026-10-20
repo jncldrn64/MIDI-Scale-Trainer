@@ -1,9 +1,32 @@
 # CHANGELOG.md: qué cambió y cuándo
 
-> **Rol:** el registro de qué cambió y cuándo. **Régimen:** crece por secciones, lo más nuevo
-> arriba, y una sección publicada no se reescribe. **Origen:** 2026-07-04, con el primer estándar.
+> **Rol:** el registro de qué cambió y cuándo. No está en la jerarquía de `AGENTS.md`.
+> **Régimen:** crece por secciones, lo más nuevo arriba, y una sección publicada no se reescribe.
+> **Origen:** 2026-07-04, con el primer estándar.
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
+
+## v11.115 — 2026-10-20
+
+Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
+V11.109 hasta el próximo PR de código.
+
+### Added
+- `docs/DECISIONS.md`: tres entradas, "El piso de prosa mide un solo corpus, y sus líneas base se
+  recuentan", "`REQUISITOS.md` entra al orden de lectura" y "La forma de una entrada queda
+  escrita".
+
+### Changed
+- `CLAUDE.md`, "Prosa": los comandos miden un solo corpus y la regla 6 gana el suyo. Las líneas base
+  del 2026-10-20 quedan en una tabla, y la regla 1 cambia su ancla de número de línea por una cita.
+- `CLAUDE.md`, "Orden de lectura": `REQUISITOS.md` entra primero, y la lista pasa a cinco archivos.
+- `CLAUDE.md`, "DECISIONS" y "Mantenimiento de ARCHITECTURE": cómo abre y cierra una entrada, dónde
+  nombra a la que reemplaza, y que un gap es una viñeta con su título en negrita.
+- `docs/DECISIONS.md`: la plantilla de nuevas entradas deja **Razón:** y el estado "reemplazada
+  por".
+- `docs/GLOSARIO.md`: "piso de prosa" dice sobre qué corpus se mide, y "terna plana" cambia el 4,1%
+  de septiembre por la tabla de `CLAUDE.md`.
+- `CHANGELOG.md`: el bloque de cita dice que el archivo está fuera de la jerarquía de `AGENTS.md`.
 
 ## v11.114 — 2026-10-20
 
