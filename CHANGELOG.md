@@ -5,6 +5,16 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.114 — 2026-10-20
+
+Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
+V11.109 hasta el próximo PR de código.
+
+### Fixed
+- `CLAUDE.md`, "Guion largo": el primer párrafo se parte en dos. Desde el 2026-10-01 tenía seis
+  oraciones, y el archivo pasó a 9 párrafos por encima del techo de la regla 7 de "Prosa", contra
+  los 8 que declara y que no deben subir. Vuelve a 8.
+
 ## v11.113 — 2026-10-20
 
 Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
