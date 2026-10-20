@@ -431,8 +431,10 @@ la función tonal. Los seis valores quedaron solo en las clases del teclado y en
 
 Guion largo (`—`): prohibido en toda la prosa (regla 1 de no-ai-slop). Se permite únicamente
 como token de formato en los encabezados de fecha de CHANGELOG (`## vX.Y — YYYY-MM-DD`) y en los
-de DECISIONS escritos antes del 2026-10-01. Una decisión nueva usa dos puntos. La historia no se
-normaliza: los encabezados ya escritos quedan como están.
+de DECISIONS escritos antes del 2026-10-01.
+
+Una decisión nueva usa dos puntos. La historia no se normaliza: los encabezados ya escritos quedan
+como están.
 
 La regla se adoptó en la v11.3 (ver CHANGELOG). La prosa escrita antes de esa versión queda
 como está, igual que los encabezados, aunque use guion largo en oración corrida o entre
