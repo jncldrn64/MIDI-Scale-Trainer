@@ -3740,6 +3740,27 @@ nueva; que otro repo lo haga distinto no alcanza.
 
 **Estado:** vigente.
 
+## 2026-10-20: Los comentarios tienen dos reglas, en `CLAUDE.md`
+
+**Contexto:** "Prosa" le daba a los comentarios su idioma y su voz, y nada más. El 2026-10-20 el
+autor comparó varios de sus scripts de bash con TL-FCCU, otro repo suyo, y el hábito que se repetía
+era el de `Armonia.clearEvaluations`: la línea que evita un fallo trae un comentario que lo nombra.
+Pidió las dos reglas para todos sus repos, cada una con los lineamientos del suyo:
+
+> "vale si van a DESIGN.md, entonces hazlo en todos los respo, bajo sus lineamientos, pero creo que
+> DESIGN.md en midi esta pero en otro archivo, o tiene la obligacion de otro archivo...."
+
+Acá ese otro archivo es `CLAUDE.md`. La entrada del 2026-10-01 "Las convenciones del código siguen
+en `CLAUDE.md`, por ahora" dejó afuera `docs/DESIGN.md`, y solo se reabre con una razón nueva. Que
+otro repo lo tenga no cuenta como una.
+
+**Decisión:** `CLAUDE.md` gana la sección "Comentarios", junto a "Verbosidad del registro". Un
+comentario que protege una línea nombra el fallo que la trajo, y uno que afirma algo del código
+cambia en el mismo commit que ese código. Para los nombres de objetos el control sigue siendo el
+barrido de la entrada del 2026-09-17; el resto se revisa a mano.
+
+**Estado:** vigente.
+
 ---
 
 ---

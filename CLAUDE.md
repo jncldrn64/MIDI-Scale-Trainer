@@ -566,6 +566,27 @@ grep -o "SysLog('[A-Z]*'" src/*.js | sed "s/.*SysLog(//" | sort | uniq -c | sort
 El número sube con cada PR de código. Si un PR agrega funciones que escriben `State` y este total no
 se mueve, la regla se está erosionando otra vez.
 
+## Comentarios
+
+Dos reglas para los comentarios del código, que se suman a lo que "Prosa" dice de su idioma y su
+voz.
+
+**1. Un comentario que protege una línea nombra el fallo que la trajo.** Dice qué se rompió y qué
+costó, para que nadie la borre sin reproducir el fallo antes. El caso vivo es el de
+`Armonia.clearEvaluations` en `src/armonia.js`, que abre con "Por qué esta línea existe" y cuenta
+que el síntoma se atribuyó al rediseño visual durante semanas. La historia entera vive en el
+CHANGELOG y en `docs/DECISIONS.md`; el comentario trae lo justo para frenar el borrado.
+
+**2. Un comentario que afirma algo del código cambia en el mismo commit que ese código.** Para los
+nombres de objetos ya hay un barrido: `docs/DECISIONS.md`, entrada del 2026-09-17 "Un comentario
+que nombra un objeto se comprueba contra los objetos que existen", que se dispara en el PR que
+disuelve o renombra un objeto. El resto de lo que un comentario afirma, un orden, una medida o un
+motivo, no tiene comando que lo revise. Lo revisa quien toca la línea, leyendo los comentarios que
+tiene encima.
+
+La razón vive en `docs/DECISIONS.md`, entrada del 2026-10-20 "Los comentarios tienen dos reglas, en
+`CLAUDE.md`".
+
 ## Flujo de trabajo
 
 Se trabaja vía Pull Request. Si `push`, `branch` o `PR` devuelve `403`, se para y se avisa
