@@ -1,7 +1,7 @@
 # ROADMAP.md: qué sigue, y en qué orden
 
 > **Rol:** las fases, el BACKLOG y lo que todavía no es fase. Nivel 5 de la jerarquía de
-> `AGENTS.md`. **Régimen:** se corrige; una fase cerrada no se borra. **Origen:** 2026-07-03, con la
+> `CLAUDE.md`. **Régimen:** se corrige; una fase cerrada no se borra. **Origen:** 2026-07-03, con la
 > Fase 0.
 >
 > Cómo se usa este documento con Claude Code: una fase por sesión. No se pasa a la fase
@@ -2273,6 +2273,9 @@ que es la razón por la que este punto pide medidas y no descripciones.
 
 El autor las eligió para proponer acá como etiquetas de una pregunta de opciones, "Repetir tests
 intermitentes" y "Trailer de autoría", y no se decidió si entran ni cómo.
+
+**El trailer se decidió el 2026-10-25:** entra en `CLAUDE.md`, "Commits", y la razón vive en
+`docs/DECISIONS.md`, entrada de ese día "El commit conserva su trailer". Queda abierta la primera.
 
 La primera corre N veces, antes de darla por verde, una prueba que alguna vez falló de forma
 intermitente. La segunda cierra cada commit con una línea que nombra al coautor y la sesión. Cada una

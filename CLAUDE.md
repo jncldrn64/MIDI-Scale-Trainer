@@ -1,17 +1,13 @@
 # CLAUDE.md: estándar del proyecto
 
 > **Rol:** el método de trabajo vigente: cómo se lee, se escribe, se mide y se entrega. Nivel 3 de
-> la jerarquía de `AGENTS.md`. **Régimen:** se corrige, y una regla que cambia lleva su entrada en
+> la jerarquía que este archivo escribe en "Qué manda cuando dos documentos se contradicen".
+> **Régimen:** se corrige, y una regla que cambia lleva su entrada en
 > `docs/DECISIONS.md`. **Origen:** 2026-07-04, con el primer estándar del proyecto.
 
 Reglas que valen en cada sesión. Se leen antes de tocar nada.
 
 ## Orden de lectura
-
-Este repo tiene `AGENTS.md` en la raíz, y es el punto de entrada para quien llega sin contexto: dice
-qué es el proyecto, qué documento manda cuando dos se contradicen, y hacia acá. Es corto a propósito y
-no repite nada de este archivo. Existe porque `AGENTS.md` es la convención que otras herramientas
-buscan solas, y Claude Code no la lee: lee este archivo, así que el método sigue viviendo acá.
 
 Antes de tocar código se leen cinco archivos de `docs/`, en este orden:
 
@@ -19,9 +15,11 @@ Antes de tocar código se leen cinco archivos de `docs/`, en este orden:
    Contra eso se mide lo que uno hace.
 2. `ARCHITECTURE.md`: el estado real del sistema, qué módulo vive en qué archivo y qué gaps
    quedan.
-3. `DECISIONS.md`: las restricciones vigentes. No es opcional y va en este orden.
-   Restricciones como "no migrar a framework" y "reconstruir desde v11.0, no desde v11.5"
-   viven solo acá; un agente que las saltee puede proponer justo lo que ya está descartado.
+3. `DECISIONS.md`, por sus títulos: `grep -E '^#{2,3} ' docs/DECISIONS.md`, y se leen enteras
+   las entradas que toca el trabajo. No es opcional y va en este orden. Restricciones como "no
+   migrar a framework" y "reconstruir desde v11.0, no desde v11.5" viven solo acá; un agente que
+   las saltee puede proponer justo lo que ya está descartado. Los títulos de nivel 3 son las
+   entradas del 2026-07-03, y sin ellos esas dos no aparecen.
 4. `ROADMAP.md`: la fase actual y qué sigue.
 5. `CONTEXTO-TEMPORAL.md`: lo que se observó y se perdería si nadie lo escribe. Va último
    porque es lo más volátil, y se lee igual: una línea de acá puede contradecir lo que uno
@@ -29,16 +27,48 @@ Antes de tocar código se leen cinco archivos de `docs/`, en este orden:
 
 Recién después se toca código.
 
+## Qué manda cuando dos documentos se contradicen
+
+Este repo perdió una versión entera por documentar lo que nadie había leído en el código, y esa
+cicatriz define la jerarquía. De arriba hacia abajo:
+
+1. **El código.** Si un documento afirma algo del programa y el programa hace otra cosa, el documento
+   está mal. Pasó ocho veces en agosto de 2026 y las ocho se corrigieron contra el código, nunca al
+   revés.
+2. **`docs/DECISIONS.md`.** Guarda por qué el código es como es. Lo ya escrito ahí queda intacto para
+   siempre, así que una entrada vieja puede describir un estado que hoy no existe: eso es correcto y
+   no es un defecto a corregir.
+3. **Este archivo, `CLAUDE.md`.** El método de trabajo vigente. Manda sobre cómo se escribe, se mide
+   y se entrega.
+4. **`docs/REQUISITOS.md`.** Dice qué tiene que ser verdad para que el programa esté bien hecho, y
+   para quién. No lleva fechas ni orden de trabajo.
+5. **`docs/ARCHITECTURE.md`, `docs/ROADMAP.md` y `docs/GLOSARIO.md`.** Describen el presente y se
+   corrigen cuando envejecen. El primero promete en su encabezado estar verificado contra el código,
+   y esa promesa ya falló una vez.
+
+`docs/CONTEXTO-TEMPORAL.md` queda fuera de la escala: no afirma nada, guarda lo que todavía no tiene
+lugar. Las reglas de estilo del repo no lo alcanzan, y eso es deliberado.
+
+La jerarquía vivía en `AGENTS.md` hasta el 2026-10-25, y se mudó acá con estas mismas palabras. Ver
+`docs/DECISIONS.md`, entrada de ese día "La jerarquía se muda a `CLAUDE.md`, y `AGENTS.md` queda
+como isla".
+
+## Lo que no se rompe
+
+- **La app abre desde el sistema de archivos.** Nada de build, de servidor ni de dependencias que se
+  instalen. Eso descarta soluciones que en otro proyecto serían obvias, y la razón de cada descarte
+  está escrita.
+- **`docs/DECISIONS.md` no se edita.** Se agrega al final. Corregir una entrada vieja borra la única
+  prueba de que alguien pensó distinto antes.
+- **`src/engine.js` es puro y tiene pruebas.** Corre igual en el navegador y en Node. Cualquier
+  cambio ahí se comprueba con las fixtures antes de darse por hecho, y agregar teoría musical nueva
+  al resto del código en vez de al motor rompe esa garantía.
+
 ## Documentación
 
-La documentación canónica son siete archivos. Seis viven en `docs/`: `ARCHITECTURE.md`,
-`ROADMAP.md`, `DECISIONS.md`, `GLOSARIO.md`, `REQUISITOS.md` y `CONTEXTO-TEMPORAL.md`. El séptimo es
-`AGENTS.md`, en la raíz, y está en la cuenta con todas las obligaciones: afirma cosas del repo, así
-que envejece igual que los demás y se corrige igual que los demás.
-
-`AGENTS.md` no entra por la excepción de los `README.md` de subcarpeta, porque no describe una
-carpeta. Entra porque el autor autorizó crearlo. No se crea ningún archivo de documentación nuevo sin
-preguntar primero.
+La documentación canónica son seis archivos, todos en `docs/`: `ARCHITECTURE.md`, `ROADMAP.md`,
+`DECISIONS.md`, `GLOSARIO.md`, `REQUISITOS.md` y `CONTEXTO-TEMPORAL.md`. No se crea ningún archivo de
+documentación nuevo sin preguntar primero.
 
 `docs/CONTEXTO-TEMPORAL.md` guarda lo que se observó y se perdería si nadie lo escribe. Se lee al
 empezar a trabajar, junto con los otros cuatro. Reemplaza a `EN-DISCUSION.md`, que pedía cuatro
@@ -99,9 +129,9 @@ enteros:
 
 1. **Línea 1:** `# NOMBRE.md: qué guarda`. Dice el papel del archivo, no el nombre del proyecto.
 2. **Bloque de cita inmediato**, que abre con tres campos en negrita: **Rol:** (qué guarda y su
-   nivel en la jerarquía de `AGENTS.md`, o que no está en ella), **Régimen:** (se corrige,
-   append-only, crece por secciones o tiende a cero) y **Origen:** (cuándo nació y la entrada que
-   lo explica, si la hay).
+   nivel en la jerarquía de "Qué manda cuando dos documentos se contradicen", o que no está en
+   ella), **Régimen:** (se corrige, append-only, crece por secciones o tiende a cero) y
+   **Origen:** (cuándo nació y la entrada que lo explica, si la hay).
 3. **Una decisión nueva** abre con `## YYYY-MM-DD: <título>`, con dos puntos (ver "DECISIONS").
 
 Lo que ya estaba escrito en cada bloque se queda debajo de esos tres campos. La razón vive en
@@ -206,6 +236,10 @@ doc}`:
 El cuerpo del commit no vuelve a narrar el cambio: máximo 1 o 2 líneas y una referencia a
 la sección del CHANGELOG. El qué vive en el CHANGELOG, el porqué en DECISIONS, no en el
 mensaje del commit.
+
+El mensaje cierra con las dos líneas que agrega la herramienta, `Co-Authored-By` y
+`Claude-Session`, y se conservan: nombran al coautor y la sesión. Ver `docs/DECISIONS.md`, entrada
+del 2026-10-25 "El commit conserva su trailer".
 
 La tabla de archivo por archivo del cuerpo de un PR se copia de la salida de `git diff --numstat`
 corrida **como último paso antes de escribir el cuerpo**, no antes de los últimos retoques ni
@@ -469,6 +503,10 @@ violaría append-only.
 
 Nada se declara "funciona" o "probado" sin una corrida real. Si no se verificó, se dice
 con esas palabras.
+
+Buena parte de las reglas de este archivo se cumplen corriendo algo: recuentos, mediciones de prosa,
+comprobaciones del registro. Quien no pueda abrir una terminal puede entender las reglas y no puede
+certificar que las cumple, y lo honesto ahí es decirlo en vez de afirmar que se verificó.
 
 **Una instrucción de comprobación trae sus condiciones, no solo sus pasos.** Pedir que se toquen
 ciertas notas para verificar un sonido, sin decir que las notas por debajo del split no se evalúan y

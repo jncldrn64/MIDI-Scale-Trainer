@@ -1,6 +1,6 @@
 # DECISIONS.md: por qué el repo es como es
 
-> **Rol:** por qué el código es como es. Nivel 2 de la jerarquía de `AGENTS.md`, debajo del
+> **Rol:** por qué el código es como es. Nivel 2 de la jerarquía de `CLAUDE.md`, debajo del
 > código. **Régimen:** append-only. **Origen:** 2026-07-03, con la Fase 0.
 >
 > Registro append-only. No se borran entradas viejas aunque queden obsoletas — se agrega
@@ -3812,6 +3812,53 @@ entrada vieja.
 nombra a la que reemplaza. "Mantenimiento de ARCHITECTURE" dice que un gap es una viñeta con su
 título en negrita. La plantilla se corrige a esa forma; no es una entrada, así que corregirla no
 toca el append-only. Ninguna entrada escrita cambia.
+
+**Estado:** vigente.
+
+
+## 2026-10-25: La jerarquía se muda a `CLAUDE.md`, y `AGENTS.md` queda como isla
+
+**Contexto:** `AGENTS.md` guardaba la jerarquía de documentos, y el bloque de cita de ocho archivos
+decía su nivel en ella. La entrada del 2026-10-01 "Formato común de los documentos, y el encabezado
+de una decisión pasa a dos puntos" dejó escrito que esa jerarquía no cambia, y que se reabre solo
+con una razón nueva. El autor la dio el 2026-10-25, con sus palabras sin corregir:
+
+> "agents.mi deberia ser una entrada barata y bastardizada, una isla para cuando el agente que
+> este leyendo comienze por ese archivo y no sepa por donde ir, pero si el modelo lee claude.md
+> realmente no es necesario que ni sepa ra existencia de agents.md"
+
+**Decisión:** "Qué manda cuando dos documentos se contradicen" y "Lo que no se rompe" pasan a
+`CLAUDE.md` con las mismas palabras, salvo la línea que hablaba de `AGENTS.md`. El aviso sobre las
+reglas que se cumplen corriendo algo pasa a "Honestidad de estado". Lo demás que tenía ya vivía en
+otro lado: el propósito en `docs/REQUISITOS.md` y el resto en `CLAUDE.md`. Los bloques de cita
+nombran la jerarquía de `CLAUDE.md`, y `AGENTS.md` queda en dos oraciones que mandan ahí.
+
+**Estado:** vigente. Reemplaza a la entrada del 2026-10-01 "Formato común de los documentos, y el
+encabezado de una decisión pasa a dos puntos" en lo que dice de la jerarquía, y a la del 2026-09-02
+"`AGENTS.md` es el punto de entrada, y adoptarlo no garantiza que un modelo lo lea" en lo que el
+archivo guarda.
+
+## 2026-10-25: `DECISIONS.md` se lee por sus títulos
+
+**Contexto:** "Orden de lectura" pedía leer este archivo entero antes de tocar código, y hoy tiene
+40.485 palabras. Sus 103 títulos suman 1.557. Lo que justificaba leerlo entero sigue siendo cierto,
+porque hay restricciones que viven solo acá y que una sesión no encuentra en otro lado.
+
+**Decisión:** se lee la lista de títulos con `grep -E '^#{2,3} ' docs/DECISIONS.md`, y enteras las
+entradas que toca el trabajo. El nivel 3 entra en el comando porque las entradas del 2026-07-03,
+entre ellas "No migrar a framework", se escribieron con `###`.
+
+**Estado:** vigente. Refina "Orden de lectura" de `CLAUDE.md`.
+
+## 2026-10-25: El commit conserva su trailer
+
+**Contexto:** el ítem del ROADMAP "Dos reglas propuestas en la auditoría de estándares del
+2026-10-01" dejó sin decidir el trailer de autoría: las dos líneas, `Co-Authored-By` y
+`Claude-Session`, con que la herramienta cierra cada commit. Los 18 commits desde el 2026-09-01 que
+no son merges las llevan, contados con `git log --since=2026-09-01 --no-merges`.
+
+**Decisión:** el autor eligió escribirlo el 2026-10-25. El mensaje conserva esas dos líneas al
+final, y `CLAUDE.md`, "Commits", lo dice. La otra regla de ese ítem sigue abierta.
 
 **Estado:** vigente.
 
