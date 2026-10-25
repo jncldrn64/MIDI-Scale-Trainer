@@ -6,6 +6,20 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.117 — 2026-10-25
+
+Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
+V11.109 hasta el próximo PR de código.
+
+### Added
+- `docs/DECISIONS.md`: "El piso mide los `.md`, y los comentarios se revisan a mano" y "Repetir
+  tests intermitentes se descarta, con su medición".
+- `CLAUDE.md`, "Prosa": el piso mide los `.md`, y los comentarios se revisan a mano.
+
+### Removed
+- `docs/ROADMAP.md`: el ítem "Dos reglas propuestas en la auditoría de estándares del 2026-10-01",
+  porque sus dos reglas quedaron decididas.
+
 ## v11.116 — 2026-10-25
 
 Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en

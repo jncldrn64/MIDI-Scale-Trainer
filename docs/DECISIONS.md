@@ -3862,6 +3862,37 @@ final, y `CLAUDE.md`, "Commits", lo dice. La otra regla de ese ítem sigue abier
 
 **Estado:** vigente.
 
+## 2026-10-25: El piso mide los `.md`, y los comentarios se revisan a mano
+
+**Contexto:** "Prosa" aplica sus reglas a docs y comentarios, y el corpus de sus comandos son solo
+los `.md`. Nada decía qué pasa con los comentarios, que el 2026-10-25 suman 475 líneas con `//` en
+los 16 archivos `.js` de `src/` y `tests/`, contadas con
+`git ls-files 'src/*.js' 'tests/*.js' | xargs grep -hcE '^\s*//' | paste -sd+ | bc`. Ningún comando
+los midió nunca.
+
+**Decisión:** el autor eligió escribirlo el 2026-10-25. "Prosa" dice que el piso mide los `.md` y
+que los comentarios se revisan a mano, con las dos reglas de "Comentarios". Escribe lo que ya
+pasaba.
+
+**Estado:** vigente. Extiende la entrada del 2026-10-20 "Los comentarios tienen dos reglas, en
+`CLAUDE.md`".
+
+## 2026-10-25: Repetir tests intermitentes se descarta, con su medición
+
+**Contexto:** el ítem del ROADMAP "Dos reglas propuestas en la auditoría de estándares del
+2026-10-01" dejaba abierta la regla de correr varias veces, antes de darla por verde, una prueba que
+alguna vez falló de forma intermitente. Medido el 2026-10-25: ninguna fixture está registrada como
+intermitente, y ni `tests/` ni `src/engine.js` usan `Math.random`, `Date.now`, `setTimeout` o
+`performance.now`. Veinte corridas seguidas de `node tests/run.js` dieron las 46 fixtures verdes
+las veinte veces.
+
+**Decisión:** el autor la descartó el 2026-10-25, porque hoy no hay ningún beneficio que medir, y el
+ítem sale del ROADMAP con sus dos reglas decididas. Se vuelve a pesar si una fixture falla y pasa en
+la corrida siguiente sin un cambio de código.
+
+**Estado:** vigente. Junto con "El commit conserva su trailer", cierra el ítem del ROADMAP "Dos
+reglas propuestas en la auditoría de estándares del 2026-10-01".
+
 ---
 
 ---
