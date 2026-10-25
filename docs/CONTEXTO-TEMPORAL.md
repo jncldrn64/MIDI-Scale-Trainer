@@ -1,6 +1,6 @@
 # CONTEXTO-TEMPORAL.md: lo que se pierde si no se anota
 
-> **Rol:** tránsito. No está en la jerarquía de `AGENTS.md` y no manda nunca. **Régimen:** tiende a
+> **Rol:** tránsito. No está en la jerarquía de `CLAUDE.md` y no manda nunca. **Régimen:** tiende a
 > cero. **Origen:** 2026-08-20, "El archivo de tránsito filtraba por madurez, y lo que se pierde es lo
 > crudo".
 >

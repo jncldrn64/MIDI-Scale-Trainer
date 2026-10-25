@@ -1,10 +1,29 @@
 # CHANGELOG.md: qué cambió y cuándo
 
-> **Rol:** el registro de qué cambió y cuándo. No está en la jerarquía de `AGENTS.md`.
+> **Rol:** el registro de qué cambió y cuándo. No está en la jerarquía de `CLAUDE.md`.
 > **Régimen:** crece por secciones, lo más nuevo arriba, y una sección publicada no se reescribe.
 > **Origen:** 2026-07-04, con el primer estándar.
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
+
+## v11.116 — 2026-10-25
+
+Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
+V11.109 hasta el próximo PR de código.
+
+### Added
+- `docs/DECISIONS.md`: tres entradas, "La jerarquía se muda a `CLAUDE.md`, y `AGENTS.md` queda como
+  isla", "`DECISIONS.md` se lee por sus títulos" y "El commit conserva su trailer".
+
+### Changed
+- `CLAUDE.md` gana "Qué manda cuando dos documentos se contradicen" y "Lo que no se rompe", con las
+  palabras que tenían en `AGENTS.md`, y deja de describir ese archivo.
+- `AGENTS.md` queda en dos oraciones que mandan a `CLAUDE.md`. Los bloques de cita de ocho archivos
+  nombran la jerarquía de `CLAUDE.md`.
+- `CLAUDE.md`, "Orden de lectura": `DECISIONS.md` se lee por sus títulos y las entradas que toca el
+  trabajo. "Commits": el mensaje conserva `Co-Authored-By` y `Claude-Session`.
+- `docs/GLOSARIO.md` corrige "punto de entrada" y "documentación canónica", y el ítem del ROADMAP de
+  las dos reglas propuestas da el trailer por decidido.
 
 ## v11.115 — 2026-10-20
 
