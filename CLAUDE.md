@@ -434,6 +434,10 @@ estas ocho reglas por diseño, así que medirla sería medir algo que nadie va a
 los comandos lo deja afuera. Las viñetas del CHANGELOG que citan la lista de la regla 1 sí entran, y
 se descuentan a mano.
 
+**El piso mide los `.md`, y los comentarios se revisan a mano.** Siguen estas reglas y las dos de
+"Comentarios", pero ningún comando los cuenta. Ver `docs/DECISIONS.md`, entrada del 2026-10-25 "El
+piso mide los `.md`, y los comentarios se revisan a mano".
+
 El conteo de la regla 2 depende de su expresión regular: cambiarla cambia el número y rompe la
 comparación con la línea base. Si hace falta afinarla, se recalculan todos los archivos del corpus
 de una vez y se reescribe la tabla con los valores nuevos y su fecha.
