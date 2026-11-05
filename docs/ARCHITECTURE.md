@@ -31,7 +31,8 @@ State = {
   config: { latino, nombresTecla, accumMs, holdMs, errMs, splitNote, sonido, clicTeclas },  // persistido
   universe: { root, type, validPitches: Set },             // root y type persistidos; el Set se reconstruye
   midi: { access, activeBasses: Set, activeMelodies: Set, keysDown: Set, sustainActive },
-  harmony: { chord, isLocked, function },                  // function la escribe Readout.updateStatus
+  harmony: { chord, isLocked, function },                  // function no la declara state.js: nace
+                                                           // cuando Readout.updateStatus la escribe
   evaluations: Map<midiNote, {status, timeout, startTime}>,
   timers: { accumulation, contextHold },
   ui: { marcaSplit },                                      // no persiste
@@ -95,10 +96,12 @@ triggerContextTimeout(motivo)   [se re-arma con CUALQUIER movimiento de bajos, a
   → el 3 es el mismo mínimo de detectChord: con dos notas no hay acorde que sostener
 
 evaluateMelody(note)
-  → inScale = pc está en validPitches
-  → inChord = pc está en el template del acorde activo
-  → isSensible = escala menor && pc === (root+11)%12 && !inScale && !inChord
-  → status = inScale||inChord ? 'good' : (isSensible ? 'tension' : 'bad')
+  → status = Engine.evaluateMelodyStatus(...), con la jerarquía del §5:
+      en la escala o en el acorde activo          → 'good'
+      tono conductor de dominante secundaria      → 'good'
+      sensible en universo menor                  → 'tension'
+      nada de lo anterior                         → 'bad'
+  → la razón que va al log la recalcula MIDI con su propia cascada (BACKLOG del ROADMAP)
   → si status !== 'good': se autolimpia a los errMs (1000ms por defecto)
 
 noteOff(note)
