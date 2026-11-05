@@ -741,17 +741,58 @@ veredicto suena al apretar, y el indulto no lo corrige".
 
 **Estado:** `pendiente`
 
-**Objetivo:** que el motor detecte la secuencia de acordes en el tiempo y la exponga en el
-buffer del motor.
+**Objetivo:** que el sistema registre la secuencia de acordes que van sonando y la deje en el estado,
+lista para que un widget la lea.
 
-**Alcance:** es salida del motor, no una característica (ver el protocolo de clasificación en
-`DECISIONS.md`, 2026-07-25). El motor deriva la progresión del estado, los acordes que fueron
-sonando, y la escribe en el buffer del motor. Sin panel todavía: esta fase solo produce la
-salida que la característica de progresiones va a dibujar. Una progresión sin funciones
-nombradas no dice nada, por eso depende de la función tonal.
+**Alcance:** es salida del motor y no un widget (ver el protocolo de clasificación en
+`DECISIONS.md`, 2026-07-25). Sin widget todavía: esta fase solo produce la secuencia que el widget de
+la Fase 9 va a dibujar. Una progresión sin funciones nombradas no dice nada, por eso depende de la
+función tonal.
 
-**Criterio de aceptación:** el motor expone en el buffer la secuencia de acordes detectada
-del estado, lista para que un panel la consuma.
+**Quién escribe qué, corregido el 2026-11-05.** Este alcance decía que el motor deriva la progresión
+del estado y la escribe en el buffer, y el motor no puede hacer eso: `src/engine.js` no lee ni
+escribe `State`, y corre en Node contra las fixtures. Lo que entra al motor es una función pura que
+recibe la progresión y el acorde recién detectado y devuelve la progresión siguiente. La guarda en
+`State` el sistema, con su línea de `SysLog`, y así la regla de qué entra a la secuencia queda
+cubierta por fixtures. Ver `DECISIONS.md`, entrada del 2026-11-05 "La progresión la arma una función
+pura del motor y la guarda el sistema".
+
+**Lo que el autor contestó el 2026-11-05**, y que esa misma entrada fija:
+
+- **Un acorde repetido no suma.** Si el motor detecta el mismo acorde que ya está último, la
+  progresión no crece. El autor no vio nunca una progresión escrita con el mismo grado dos veces
+  seguidas, y a ese caso lo llamó grado extendido.
+- **Cambiar de universo vacía la progresión.** El grado de un acorde depende del universo: Sol es I
+  en Sol mayor y V en Do mayor, así que una secuencia leída con el universo anterior ya no dice lo
+  mismo.
+- **El largo es un ajuste del usuario**, con 6 de mínimo propuesto: cuatro acordes, que es la
+  progresión típica, más lugar para los acordes de paso.
+
+**Lo que sigue abierto, y bloquea el Criterio de aceptación:**
+
+- **La función tonal en menor.** `getTonalFunction` devuelve `por_definir` en `minor` y en
+  `harmonic_minor`, así que en dos de los tres universos la progresión sale sin funciones. O se
+  escribe antes la teoría de la menor en el Track paralelo, verificada contra fuentes como se hizo el
+  2026-09-02, o se acepta `por_definir` y se dice.
+- **Cuándo una liberación del contexto corta la progresión.** El autor propuso que dependa del
+  metrónomo y de un ajuste que el usuario pueda editar en Opciones o en el propio widget. El
+  metrónomo es un ítem del BACKLOG sin fase, así que hoy esa salida no existe.
+- **Tres defectos del ciclo de vida del acorde**, los tres en el BACKLOG: "El veredicto de melodía se
+  borra cuando aterriza un acorde", "La liberación del contexto también borra los veredictos de
+  melodía vivos" y la condición de reapertura de "La estrategia por contenido para soltar el
+  contexto". El tercero es el que toca esta fase: un racimo de tres bajos que no forma acorde, como
+  Do#-Re-Mib, deja vivo el acorde anterior, y la secuencia no registra el cambio. El autor opina que
+  ese racimo tendría que marcarse como error sin mover la detección; la cita está en
+  `docs/CONTEXTO-TEMPORAL.md`.
+- **Un acorde incompleto.** El autor preguntó qué pasa si después de Do mayor toca Mi sin el Si. Mi y
+  Sol solos son dos notas, y `detectChord` abre con `if (notesArray.length < 3) return null`, así
+  que no hay acorde nuevo. Con el Do todavía apretado, Do-Mi-Sol es Do mayor otra vez. Hoy el motor
+  no tiene con qué separar los dos gestos.
+
+**Criterio de aceptación:** el sistema expone en el estado la secuencia de acordes, lista para que un
+widget la consuma. Las fixtures de la función pura prueban que un acorde repetido no suma y que la
+secuencia no pasa del largo pedido. Cambiar de universo la vacía y deja su línea en el log. Lo demás
+espera a los puntos abiertos.
 
 **Nota (2026-07-30): una capacidad vecina que no es esta fase.** La fase detecta la secuencia de
 acordes de lo que se toca en vivo. Queda pendiente, sin fase, un caso distinto: entregarle al motor
@@ -761,7 +802,7 @@ MIDI cargado.
 
 **Bloquea:** Fase 9.
 
-**Bloqueada por:** Fase 4 (la función tonal).
+**Bloqueada por:** Fase 4 (la función tonal), cerrada el 2026-07-25, y los puntos abiertos de arriba.
 
 ---
 
@@ -769,23 +810,38 @@ MIDI cargado.
 
 **Estado:** `pendiente`
 
-**Objetivo:** la característica de progresiones, el panel que dibuja la progresión y sus
-ejemplos en una ranura.
+**Objetivo:** el widget de progresiones, que dibuja la secuencia y sus ejemplos dentro de su caja.
 
-**Alcance:** es una característica, un panel en una ranura. Reusa el sistema de ranuras que
-estrena la Fase 5 (las ranuras reservadas) y consume la secuencia de acordes del buffer del
-motor que produce la Fase 8.
+**Alcance:** es un widget que compite por el cap de tres. Usa el chasis de cajas que entregó la Fase
+5, el registro `CAJAS` de `src/cajas.js`, y lee la secuencia de acordes que deja la Fase 8. El
+encabezado conserva la palabra "característica", que es como se llamaba un widget hasta el
+2026-08-09, porque renombrar un encabezado de este archivo mueve anclajes.
+
+**Dónde vive, decidido el 2026-11-05:** en `widget-reservado`, el tercer widget de andamiaje, que
+`index.html` ya rotula "Tercer widget · por construir (progresiones, cuando exista)". Se le cambia
+el `nombre` en `CAJAS` y no el `id`: el `id` se persiste en `midiTrainerLayout`, y cambiarlo pide una
+regla de migración que el repo no tiene.
 
 **Criterio de aceptación:** por definir cuando exista la Fase 8 (detección de secuencia).
 
-**Bloqueada por:** Fase 8 (detección de secuencia) y Fase 5 (el sistema de ranuras).
+**Bloqueada por:** Fase 8 (detección de secuencia). La Fase 5, que aporta el chasis de cajas, cerró
+el 2026-08-11.
 
-**Nota (2026-07-25): pregunta abierta, el contrato de salida.** Cuando esta fase construya la
-primera característica de verdad, se define qué puede escribir una característica hacia afuera:
-colorear teclas, escribir el subtítulo de feedback, o solo pintar su propio panel; y si ese
-reporte va en abanico, con todos leyendo el buffer del motor, o en cadena. Es una pregunta
-abierta que se resuelve acá, con el primer caso real. Sin una característica que lo fuerce,
-cualquier estándar sería adivinanza.
+**Nota (2026-07-25): pregunta abierta, el contrato de salida.** Cuando esta fase construya el primer
+widget de verdad, se define qué puede escribir un widget hacia afuera: colorear teclas, escribir el
+subtítulo de feedback, o solo pintar su propia caja; y si ese reporte va en abanico, con todos
+leyendo lo que el motor deja en el estado, o en cadena. Es una pregunta abierta que se resuelve acá, con el primer caso real.
+Sin un widget que lo fuerce, cualquier estándar sería adivinanza.
+
+**Lo que el autor agregó el 2026-11-05, sin decidir.** El widget de progresiones podría pintar como
+error un acorde que no cabe en el universo. Pero el teclado ya pinta eso desde el universo activo, y
+el autor siente que los efectos empiezan a pisarse.
+
+Su propuesta es que un widget deje expuesta su
+"información estadística" para que otro la lea, igual que el universo es global y todos lo leen. Eso
+es el abanico de la nota de arriba. El punto de partida para decidirlo son las dos entradas de
+`DECISIONS.md` del 2026-08-11, "El contrato de permisos: sistema, permiso de escritura y solo
+lectura" y "Los efectos sobre las teclas, y la primera precedencia escrita del repo".
 
 ---
 
@@ -793,15 +849,17 @@ cualquier estándar sería adivinanza.
 
 **Estado:** `pendiente`
 
-**Objetivo:** agregar la rueda de quintas como segunda vista dentro del panel de la escala,
-con el conmutador que alterna entre lineal y rueda. El conmutador nace acá, con la segunda
-vista. Vista y no widget aparte: es el mismo widget de escala con el mismo permiso, según
-`DECISIONS.md`, entrada del 2026-08-11 "Una vista es cómo se mira, un widget es quién tiene el
-permiso".
+**Objetivo:** agregar la rueda de quintas como segunda vista dentro del widget de escala, con el
+conmutador que alterna entre lineal y rueda. El conmutador nace acá, con la segunda vista. Vista y
+no widget aparte: es el mismo widget de escala con el mismo permiso, según `DECISIONS.md`, entrada
+del 2026-08-11 "Una vista es cómo se mira, un widget es quién tiene el permiso".
 
-**Alcance:** esta fase mueve la escala del teclado a un panel de característica en una ranura,
-primero en vista lineal, y le suma la rueda de quintas como vista alterna con su conmutador. La
-rueda deriva del motor (`scalePitches`), no hardcodea nada. La rueda muestra las calidades de
+**Alcance:** la vista lineal ya existe desde la Fase 5: es `widget-escala`, con la fórmula en
+`formula-display`. Este alcance decía que la fase movía la escala a un panel en una ranura, y eso
+quedó hecho antes de que la fase empezara.
+
+Lo que esta fase le suma es la rueda de quintas, el conmutador y una función pura nueva de calidades
+por grado. La rueda deriva del motor (`scalePitches`), no hardcodea nada. Muestra las calidades de
 acorde de cada grado del universo activo, porque saber qué acordes entran es justo lo que se busca
 al mirarla. Las calidades se derivan, no se enumeran a mano: se arma la tríada sobre cada grado con
 las notas que `scalePitches` ya entrega y se lee su calidad contra las plantillas de intervalos que
@@ -829,17 +887,33 @@ control por otro más expresivo, no mover lógica musical a la interfaz. Esto de
 vistas sincronizadas de la regla 5 del ADR del 2026-07-24, no lo reemplaza: es la misma idea, con
 el detalle de qué se sincroniza con qué.
 
+**Los botones de la vista lineal, sumados el 2026-11-05.** El autor los quiere en esta fase y en la
+vista lineal, no en la rueda. Uno salta al relativo del universo activo: de Do mayor a La menor
+natural, que empieza en el VI grado, y de vuelta.
+
+Los otros pasan de la menor natural a la armónica, que eleva el VII, y de la armónica a la melódica,
+que eleva también el VI al subir. El orden es el de cómo una escala sale de la otra, y es lo que el
+autor quería ver sin pasar por el desplegable. La menor melódica todavía no existe en el motor: ese
+último botón depende del ítem del BACKLOG "Menor melódica clásica como escala disponible", que
+cambia la firma de `evaluateMelodyStatus`.
+
+La rueda tiene que entrar en el molde de 170 por 314.4 px de lienzo, o demostrar que no entra. La
+entrada del 2026-07-30 "Estándar espacial de los widgets" la nombra como la primera prueba real de
+si el molde aguanta.
+
 **Criterio de aceptación:** la rueda se muestra como vista alterna de la escala con su conmutador;
 girar un paso cambia una sola nota y las tres vistas acopladas se actualizan juntas; y las
 calidades de cada grado se muestran derivadas del universo activo, verificado en los tres universos
-que el motor soporta hoy, comprobando que en menor armónica aparece el grado aumentado.
+que el motor soporta hoy, comprobando que en menor armónica aparece el grado aumentado. El botón del
+relativo lleva de Do mayor a La menor natural y vuelve, con las mismas siete alturas pintadas antes y
+después.
 
 **Bloquea:** ninguna declarada.
 
-**Bloqueada por:** Fase 5 (la estructura de fondo y ranuras debe existir). No depende de la Fase 4:
-las calidades por grado se derivan de la escala sola, sin acorde detectado y sin función tonal.
-Tampoco depende de las fases de progresiones; su número es posterior por secuencia de decisión, no
-por dependencia.
+**Bloqueada por:** nada vigente, salvo el botón de la melódica, que espera a su ítem del BACKLOG. La
+Fase 5, que aportaba el fondo y las cajas, cerró el 2026-08-11. No depende de la Fase 4 ni de las de
+progresiones: las calidades se derivan de la escala sola, y su número es posterior por orden de
+decisión.
 
 ---
 
@@ -851,27 +925,33 @@ por dependencia.
 de otro modo. Es el tercer caso después del diatónico (que tiene función tonal, Fase 4) y de
 la dominante secundaria (que tiene relación, Fase 3): un acorde que no es ninguno de los dos.
 
-**Alcance:** es salida del motor, otra lente, no una característica; no lleva panel propio. El
-motor deriva la clasificación una vez escrita la teoría. Hoy estos acordes caen en "no
-diatónico" o "acorde no reconocido"; esta fase les da nombre. La teoría todavía no está
-escrita: qué acordes cuentan como intercambio modal, de qué modo se prestan y cómo se nombran,
-se escribe en el Track paralelo de teoría antes de tocar código, igual que se hizo con la
-función tonal.
+**Alcance:** es salida del motor, otra lente, y no un widget; no lleva caja propia. El motor deriva
+la clasificación una vez escrita la teoría. Hoy el readout muestra estos acordes como "Sin
+clasificar", que es el valor `unclassified` de `classifyChordRelation` desde el incremento 5.5.2, y
+si no forman ninguna plantilla el log dice "Acorde no reconocido".
+
+Esta fase les da nombre. La teoría todavía no está escrita: qué acordes cuentan como intercambio
+modal, de qué modo se prestan y cómo se nombran, se escribe en el Track paralelo de teoría antes de
+tocar código, igual que se hizo con la función tonal.
+
+**Y el motor no conoce los modos de los que se presta.** `SCALES` tiene tres universos, `major`,
+`minor` y `harmonic_minor`. El ítem del BACKLOG "El vocabulario del motor parece un hueco del
+roadmap" lo anotó el 2026-09-02: esta fase lo asume y no lo contempla.
 
 **Criterio de aceptación:** por definir. Requiere primero escribir la teoría del intercambio
 modal en el Track paralelo de teoría. Sin esa respuesta correcta escrita no hay fixture, y sin
 fixture el motor devolvería una adivinanza que nadie puede comprobar.
 
 **Nota (2026-07-25):** el disparador de esta fase es concreto. El día que toques una canción y
-el motor te marque un acorde "no diatónico" que tampoco sea dominante secundaria, esa es la
+el motor te marque un acorde "Sin clasificar" que tampoco sea dominante secundaria, esa es la
 señal de que falta esta fase. Ahí se escribe la teoría una vez, se le pone fixture, y el motor
-la deriva para todas las canciones.
+la deriva para todas las canciones. La etiqueta se llamaba "no diatónico" cuando se escribió esta
+nota.
 
 **Bloquea:** ninguna declarada.
 
-**Bloqueada por:** Fase 3 y Fase 4 (las dos lentes que lo definen por descarte deben existir),
-y la teoría escrita en el Track paralelo. El número la pone después de la Fase 10 por
-prioridad, no porque la rueda la bloquee.
+**Bloqueada por:** Fase 3 y Fase 4, cerradas, y la teoría escrita en el Track paralelo. El número la
+pone después de la Fase 10 por prioridad, no porque la rueda la bloquee.
 
 ---
 
@@ -1027,6 +1107,9 @@ prioridad, no porque la rueda la bloquee.
   espacial". Con ese mismo PR entró "Hundir el log cuando la barra crezca".
   **Reapuntado el 2026-08-11:** deja de ser una idea suelta. Es dependencia del widget de
   acompañamiento, que necesita un tempo para encadenar progresiones o tocar una figura.
+  **Ampliado el 2026-11-05:** el autor lo ve como un buffer universal del tempo, del que saldrían las
+  ventanas de detección y el momento en que se libera el contexto. La Fase 8 lo nombra como una de
+  las salidas posibles para decidir cuándo una liberación corta la progresión.
   **Por qué se anotó:** el CHANGELOG v11.41 da la razón entera, "porque el tiempo ya participa de
   la evaluación (el indulto de 180 ms y las cuatro ventanas del motor) y un tempo permitiría
   derivar esas ventanas en vez de fijarlas a mano". El PR que lo trajo trataba del estándar
@@ -1393,6 +1476,13 @@ prioridad, no porque la rueda la bloquee.
   mismo PR entraron "Salida MIDI configurable" y "Program Change como petición declarada".
   **Por qué se anotó:** salió de querer que el programa sonara a piano de verdad. Se anota para que
   quede el resultado medido y nadie vuelva a intentarlo por el mismo camino.
+  **Ampliado el 2026-11-05, desde `docs/CONTEXTO-TEMPORAL.md`.** El 2026-08-20 el autor dijo que el
+  tema de los sonidos se conectaba con otra fase, y no se supo cuál. Lo aclaró: sonidos propios en la
+  app, con un `.sf2` o generados en el navegador, vigilando la RAM y cortando esa función en vivo si
+  se excede, para que no se congele todo. **La mitad de la RAM choca con lo medido arriba:** los
+  búferes de audio viven fuera del heap que `performance.memory` ve, así que hoy no hay una medida
+  que dispare ese corte. El tope por tamaño de archivo sigue siendo el único criterio que se pudo
+  comprobar.
 - **Submenús para alterar los valores y los sonidos del feedback.** Elegir entre variantes de los
   tres sonidos que la Fase 7 entregó, y ajustar sus parámetros. La forma ya quedó preparada: en
   `src/sonido.js` los tres salen de la constante `SONIDOS`, con frecuencia, tipo de onda, duración y
@@ -1586,6 +1676,11 @@ prioridad, no porque la rueda la bloquee.
   atribuyó al rediseño visual hasta que se lo midió. El resto de los archivos tiene las dos columnas
   distintas de cero, que no prueba que cumplan: el comando detecta el caso peor y no certifica el
   bueno, así que hace falta leer función por función.
+  **Remedido el 2026-11-05**, con el mismo comando: `src/armonia.js` tiene cuatro escrituras y tres
+  `SysLog` desde la v11.98, y `src/widgets.js` cero y cero, porque su única escritura era el `===`
+  que el `[^=]` del 2026-08-23 dejó de contar. **Ya no queda ninguna violación segura.** Falta la
+  lectura función por función, y los casos más flojos son `src/escala.js`, con cinco escrituras y un
+  `SysLog`, y `src/readout.js`, con dos y uno.
   **Entró:** 2026-08-20, PR "doc: la regla de verbosidad del log, y el reintento de puertos que ya se
   probó". Con ese mismo PR entró "La razón que el log imprime se calcula dos veces".
   **Por qué se anotó:** la regla y su cumplimiento son dos PR a propósito, para que la regla no quede
@@ -2046,9 +2141,8 @@ hace la app. **Su condición de arranque se cumplió:** decía que nada de acá 
 la Fase 5 completa, y esa fase cerró el 2026-08-11 con sus seis incrementos entregados y corroborados.
 Lo que sigue frenando a estos puntos no es la Fase 5 sino que cada uno pide su propia discusión.
 
-Varios de estos puntos cambian el estándar compartido que vive en
-`CLAUDE.md`, así que no tocan solo este repo: tocan también los otros que siguen ese estándar. Por
-eso se parquean juntos y se ejecutan de a uno.
+Varios de estos puntos cambian el estándar que vive en `CLAUDE.md`, que manda sobre este archivo.
+Por eso se parquean juntos y se ejecutan de a uno.
 
 El motivo de fondo es uno solo. Un modelo no lee la conversación completa: lee un resumen
 comprimido donde los matices se pierden, y lo que se perdió no vuelve. El repo, en cambio, lo lee

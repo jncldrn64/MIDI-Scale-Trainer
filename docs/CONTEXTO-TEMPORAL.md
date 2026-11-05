@@ -41,7 +41,7 @@ algo que todavía no tiene línea en `docs/GLOSARIO.md`.** Si el término ya est
 previo y el resumen es seguro. Si no está, la anotación estrena vocabulario, y estrenar vocabulario
 mal es lo que cuesta una sesión de corregir.
 
-Ese archivo tiene 80 términos, contados con `grep -c "^- \*\*" docs/GLOSARIO.md`. El disparador no se
+Ese archivo tiene 85 términos el 2026-11-05, contados con `grep -c "^- \*\*" docs/GLOSARIO.md`. El disparador no se
 activa seguido, entonces: cubre el vocabulario que el proyecto ya fijó y deja afuera lo que recién
 aparece, que es lo que lo vuelve barato de cumplir.
 
@@ -122,13 +122,6 @@ condición de estado se reconoce, los números no se usan nunca.
 
 ## Anotaciones
 
-**2026-08-20, el autor.** El tema de los sonidos se conecta con otra fase. No dijo con cuál ni cómo.
-Decidió no abrirlo ahí para no diluir el trabajo que estaba en curso. Queda incompleto a propósito:
-lo que se pierde si no se anota es que la conexión existe, aunque no se sepa cuál.
-**Por qué sigue acá (2026-08-21):** no se puede colocar porque no se sabe qué dice. Espera a que el
-autor recuerde de qué se trataba; si no lo recuerda, se descarta, que es la cuarta salida que las
-reglas de arriba contemplan y que todavía no se ejerció ninguna vez.
-
 **2026-08-20, el autor.** Para las fixtures con partituras, ¿`.mid` o `.md`? Preguntó qué formato
 serviría mejor y quedó sin discutir. Va acá y no al BACKLOG porque el ítem "Fixtures derivadas de
 partituras de dominio público" ya dice que falta decidir el formato; lo que ese ítem no tiene son las
@@ -154,6 +147,13 @@ se pierda. No se decide nada acá.
 
 **Por qué sigue acá (2026-08-21):** es el estado de una discusión que está corriendo. Colocarlo ahora
 la congelaría antes de que termine.
+**Lo nuevo (2026-11-05, el autor):** las quiere sacar de archivos MIDI o PDF, no de lo que él toca, y
+encontrar casos borde que todavía no conoce. Cita: "en realidad esperaba mejorar las pruebas de
+alguna forma, creo que quedo anotado por ahi que queria extraerlas de mid o pdfs de alguna forma, para
+no tener que tener las mias ahi, o encontara edegesn cases que aun no se". Y el porqué: "cada vez
+conecto menos el teclado para tocar en la computadora actualmente". Solo Bad Apple y la Oda a la
+Alegría salieron de su propio teclado. Con esto, el `.md` de la anotación de arriba pierde peso
+frente al `.mid`, pero nadie lo decidió.
 
 **2026-08-21, el modelo que implementa.** Un entrenamiento que trae sus propios widgets choca con una
 regla que ya está escrita. La visión entró hoy a "Direcciones sin fase" del ROADMAP; la regla es la
@@ -226,24 +226,6 @@ tiene que ser verdad para que el programa esté bien hecho.
   programando", que dice estar parqueado ahí; y la subsección del material de referencia externo, que
   propone que el destino visual acordado viva "en el mismo documento de requisitos o en uno propio".
 
-**2026-08-23, el autor. Bloque B, lo que queda: dos ideas de vista, sin destino.** La teoría de este
-bloque la recogió la v11.104, que la verificó contra fuentes; el resultado vive en `docs/DECISIONS.md`,
-entrada del 2026-09-02, en `docs/GLOSARIO.md` y en el ítem de la menor melódica del ROADMAP. La línea
-sobre Mi# y Fa se descartó por duplicada: el ítem de enarmonía del BACKLOG ya la cubre. Queda esto,
-que no es teoría y no lo contesta ninguna fuente:
-
-- **Su lectura general de cómo se encadenan las escalas:** de la mayor sale la menor, y de la menor
-  salen las otras dos, como una recursión. Y la observación que trae pegada, que la rueda de quintas
-  muestra la relación entre mayor y menor y no muestra esas dos. Se toca con la Fase 10 y con lo de
-  abajo, así que se leen juntas.
-- **Lo que propone construir. Dos de las tres se colocaron el 2026-09-03**, en las reglas de la guía:
-  que la guía muestre formas alternativas de leer lo mismo es la tercera parte de cada sección, y
-  mejorar la descripción de los elementos es la primera. Ver `DECISIONS.md`, entrada de ese día.
-- **Queda una: un botón que salte al relativo** desde el selector de escala, sin pasar por el
-  desplegable. Lo quiere antes de la rueda de quintas.
-- **Por qué siguen acá:** las dos que quedan son de interfaz y tocan la Fase 10, que está pendiente.
-  Colocarlas pide decidir si son alcance de esa fase o ítems aparte, y eso no se decidió.
-
 **2026-08-23, el autor, aceptado por el revisor. Bloque C: lo que este repo hace es FDD, no TDD.**
 Entrega por características completas y verificables, con fases e incrementos, y las fixtures llegan
 después o junto, no antes. TDD estricto exige escribir la prueba primero y acá casi nunca pasó.
@@ -276,3 +258,52 @@ del BACKLOG sobre el vocabulario del motor como hueco del roadmap.
 
 **Sin decidir nada.** No se sabe todavía si eso es una fase, un ítem, o una lente más del motor como
 la función tonal.
+
+**2026-11-05, el autor, anotado por el modelo que implementa.** Tres términos que no están en
+`docs/GLOSARIO.md`: grado extendido, acorde envenenado y acorde de paso. El último ya apareció en la
+anotación del 2026-09-06, de arriba. El autor va a traer la transcripción de un video para mirarlo
+juntos, y ahí se aclara qué es cada uno. Citas, sin corregir:
+
+- "Haber, nunca he visto progresiones que digan I,I,V,IV, donde esten don veces seguidas el mismo
+  grado, quizas es un grado extendido?"
+- "en la escala LA menor armonica, veo que un acorde que es disminuido, "Tecnicamente lo puedo
+  escribir tambien como un mayor"... creo que era el de RE, pero aparentemente por lo que me dijo mi
+  profesor, no estoy contando bien las 3ras menores y tecnicamente si puedo hacer un acorde que tenga
+  las mismas notas permitidas de la escala, pero si no cuento en las 3ra menores o 3ra mayores es un
+  acorde envenenado por mucho que "entre" en la "escala")."
+- "pero entre ellos poder poner los acordes de paso (que confundia con la sensible, y la 7ma, en mi
+  buscqueda de tomar acordes que no estan permitidos en la escala, por que sus notas no estan, creo
+  que tambien habiamso llegado en que eran intercambios modales o algo asi)"
+
+Lo que se comprobó contra el motor, sin decidir nada: en La menor armónica el acorde sobre Re es Re
+menor (Re-Fa-La), y los dos disminuidos son el de Si (Si-Re-Fa) y el de Sol# (Sol#-Si-Re). Puede ser
+que el ejemplo hable de otro grado. **Por qué podría importar:** la Fase 8 reserva lugar para los
+acordes de paso en la progresión, y la Fase 11 depende de saber qué es intercambio modal y qué no.
+
+**2026-11-05, el autor.** Un racimo de bajos fuera del universo tendría que contar como error y no
+mover la detección del acorde, y él mismo ve que eso choca con los acordes que salen de la escala a
+propósito. Cita, sin corregir: "supoamos el alcorde que mencionas "Do#-Re-Mib" no pertenece ni de
+casualidad por ejemplo a la escala de "do mayor", por lo que el hacerlo deberia como minimo ser
+detectado como un error, y no afectar en la deteccion, posiblemente sea un error mio por no estar
+acostumbrado a hacer un salto, e inmediatamente quiera recuperame en la misma parte de la "cancion",
+por lo que debe haber un tiempo de deteccion del acorde anterior para evaluar unicamente el proximo
+que si este en la escala... pero esto chocara de lleno con los acordes que se salen de la escala mas
+adelante".
+
+**Por qué importa:** el BACKLOG trata el mismo caso al revés. La condición de reapertura de "La
+estrategia por contenido para soltar el contexto" lo cuenta como defecto, porque el racimo conserva
+el acorde anterior; el autor dice que conservarlo puede ser lo correcto, y lo que falta es marcar el
+error. Quiere refinarlo con el video. La Fase 8 lo cita como punto abierto.
+
+**2026-11-05, el autor.** Cada widget en su propio archivo, bajo `src/widget/`. Cita, sin corregir:
+"siento que cada widget deberia ser su propio archivo en src/widget, para facilitar la lectura
+externa, por que si bien ya esta todo separado del archivo unitario original en index.html, siento
+que realmente no hay una jerarquia clara entre los archivos scrips, quien es quien, y quien controla
+que."
+
+**Lo que dice el código hoy:** `src/` tiene dieciséis archivos en una sola carpeta, y el reparto por
+permiso de la Fase 5B vive en el nombre de cada uno, no en la estructura. Una subcarpeta funciona con
+scripts clásicos desde `file://`: corrido el 2026-11-05 en Chromium, una página con
+`<script src="src/widget/x.js">` abierta desde `file://` ejecutó el archivo y dejó escrita su
+variable global. Un script clásico no pasa por el CORS que frenó a los ES Modules. **Sin destino:** falta preguntarle si entra en la Fase 9, que
+estrena el widget de progresiones, o si es un trabajo aparte.

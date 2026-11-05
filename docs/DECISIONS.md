@@ -3895,6 +3895,33 @@ reglas propuestas en la auditoría de estándares del 2026-10-01".
 
 ---
 
+## 2026-11-05: La progresión la arma una función pura del motor y la guarda el sistema
+
+**Contexto:** el Alcance de la Fase 8 decía que el motor deriva la progresión del estado y la escribe
+en el buffer. `src/engine.js` no puede hacer eso: no lee ni escribe `State`, porque corre en Node
+contra las fixtures, y esa pureza es una de las tres cosas que `CLAUDE.md` declara que no se rompen.
+Al mismo tiempo, la regla que decide qué entra a la secuencia es teoría, y la teoría que no vive en el
+motor se queda sin fixtures. El autor contestó el 2026-11-05 tres preguntas sobre esa regla.
+
+**Decisión:** el motor tiene una función pura que recibe la progresión y el acorde recién detectado y
+devuelve la progresión siguiente. El sistema la guarda en `State` y deja su línea de `SysLog`, como
+pide "Verbosidad del registro". Con las respuestas del autor, tres reglas quedan fijas:
+
+1. Un acorde igual al último no suma. El autor no vio nunca una progresión escrita con el mismo grado
+   dos veces seguidas.
+2. Cambiar de universo vacía la progresión, porque el grado sale del universo: Sol es I en Sol mayor
+   y V en Do mayor.
+3. El largo es un ajuste del usuario, con 6 de mínimo propuesto: cuatro acordes más lugar para los
+   acordes de paso.
+
+Cuándo una liberación del contexto corta la progresión no se decide acá. El autor propuso atarlo al
+metrónomo y a un ajuste editable, y el metrónomo no existe.
+
+**Estado:** vigente. Refina el Alcance de la Fase 8 del `ROADMAP.md` y aplica a esa fase la entrada
+del 2026-08-11 "El motor no ejecuta lógica que venga de afuera".
+
+---
+
 ---
 
 ### Plantilla para nuevas entradas
