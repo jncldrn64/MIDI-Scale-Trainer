@@ -822,6 +822,14 @@ encabezado conserva la palabra "característica", que es como se llamaba un widg
 el `nombre` en `CAJAS` y no el `id`: el `id` se persiste en `midiTrainerLayout`, y cambiarlo pide una
 regla de migración que el repo no tiene.
 
+**La carpeta `src/widget/`, decidida el 2026-11-05.** El autor quiere cada widget en su propio archivo
+bajo `src/widget/`, porque los dieciséis archivos de `src/` viven en una sola carpeta y el permiso de
+cada uno se lee en su nombre, no en la estructura. Entra en esta fase, que estrena el primer widget
+nuevo desde la partición. Qué archivos se mudan se decide al arrancar, junto con el contrato de
+salida de la nota de abajo, porque `CAJAS` mezcla widgets que compiten con cajas de sistema. Un
+script clásico en una subcarpeta carga desde `file://`: corrido el 2026-11-05 en Chromium, con
+`<script src="src/widget/x.js">`.
+
 **Criterio de aceptación:** por definir cuando exista la Fase 8 (detección de secuencia).
 
 **Bloqueada por:** Fase 8 (detección de secuencia). La Fase 5, que aporta el chasis de cajas, cerró
@@ -937,6 +945,10 @@ tocar código, igual que se hizo con la función tonal.
 **Y el motor no conoce los modos de los que se presta.** `SCALES` tiene tres universos, `major`,
 `minor` y `harmonic_minor`. El ítem del BACKLOG "El vocabulario del motor parece un hueco del
 roadmap" lo anotó el 2026-09-02: esta fase lo asume y no lo contempla.
+
+**Y el motor escribe mal el numeral de los préstamos más comunes.** En Do mayor, Sib mayor sale `#VI`
+y no ♭VII. El detalle está en el ítem del BACKLOG "El numeral romano solo sabe escribir sostenidos",
+y esta fase lo necesita resuelto para nombrar lo que reconozca.
 
 **Criterio de aceptación:** por definir. Requiere primero escribir la teoría del intercambio
 modal en el Track paralelo de teoría. Sin esa respuesta correcta escrita no hay fixture, y sin
@@ -1943,6 +1955,21 @@ pone después de la Fase 10 por prioridad, no porque la rueda la bloquee.
   **Entró:** 2026-08-21, PR "doc: lo que salió de mirar qué hace la competencia".
   **Procedencia:** de la misma investigación. La herramienta de pago muestra la notación con
   enarmonía correcta, y comparar contra eso fue lo que hizo mirar la función que nombra las notas.
+
+- **El numeral romano solo sabe escribir sostenidos.** Medido el 2026-11-05 con `node` contra
+  `src/engine.js`. Cuando la raíz no está en la escala, `getRomanNumeral` busca el grado más cercano
+  por debajo y le pone un `#` por cada semitono que bajó, así que nunca escribe un bemol. Sib mayor en
+  Do mayor sale `#VI`, cuando el nombre de uso es ♭VII, y en La menor armónica Sol mayor sale `##VI`.
+
+  **Y un caso vecino, del clasificador.** En La menor natural, Mi mayor sale "V (V del i)": la
+  dominante de la propia tonalidad se lee como dominante secundaria de la tónica, porque el Sol# no
+  está en el universo. Es la sensible del glosario, vista desde el acorde.
+
+  **Por qué importa:** ♭III, ♭VI y ♭VII son los préstamos más comunes del intercambio modal, y la Fase
+  11 los va a nombrar mal mientras esto siga así. Toca `src/engine.js`, así que pide fixture.
+  **Entró:** 2026-11-05, PR "doc: pone las Fases 8 a 11 al día con el glosario y las respuestas del
+  autor".
+  **Por qué se anotó:** salió de comprobar contra el motor la teoría de la función tonal en menor.
 
 - **El vocabulario del motor parece un hueco del roadmap, no cinco ítems sueltos.** Anotado el
   2026-09-02 al revisar las fases contra la teoría verificada, y comprobado: **ninguna de las trece

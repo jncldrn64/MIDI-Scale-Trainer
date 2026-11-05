@@ -294,16 +294,3 @@ adelante".
 estrategia por contenido para soltar el contexto" lo cuenta como defecto, porque el racimo conserva
 el acorde anterior; el autor dice que conservarlo puede ser lo correcto, y lo que falta es marcar el
 error. Quiere refinarlo con el video. La Fase 8 lo cita como punto abierto.
-
-**2026-11-05, el autor.** Cada widget en su propio archivo, bajo `src/widget/`. Cita, sin corregir:
-"siento que cada widget deberia ser su propio archivo en src/widget, para facilitar la lectura
-externa, por que si bien ya esta todo separado del archivo unitario original en index.html, siento
-que realmente no hay una jerarquia clara entre los archivos scrips, quien es quien, y quien controla
-que."
-
-**Lo que dice el código hoy:** `src/` tiene dieciséis archivos en una sola carpeta, y el reparto por
-permiso de la Fase 5B vive en el nombre de cada uno, no en la estructura. Una subcarpeta funciona con
-scripts clásicos desde `file://`: corrido el 2026-11-05 en Chromium, una página con
-`<script src="src/widget/x.js">` abierta desde `file://` ejecutó el archivo y dejó escrita su
-variable global. Un script clásico no pasa por el CORS que frenó a los ES Modules. **Sin destino:** falta preguntarle si entra en la Fase 9, que
-estrena el widget de progresiones, o si es un trabajo aparte.
