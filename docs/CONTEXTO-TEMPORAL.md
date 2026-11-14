@@ -294,3 +294,87 @@ adelante".
 estrategia por contenido para soltar el contexto" lo cuenta como defecto, porque el racimo conserva
 el acorde anterior; el autor dice que conservarlo puede ser lo correcto, y lo que falta es marcar el
 error. Quiere refinarlo con el video. La Fase 8 lo cita como punto abierto.
+
+**2026-11-14, el modelo que implementa. Volcado preventivo, pedido por el autor.** La máquina de la
+sesión se reinició el 2026-11-14 y no se perdió nada, pero lo de abajo vivía solo en el chat del
+2026-11-05 al 2026-11-14. Se anota para que una sesión que no tenga ese chat no lo reconstruya de
+memoria. Son cuatro anotaciones.
+
+**2026-11-14, el modelo que implementa. Teoría de la función tonal en menor, buscada el 2026-11-05 y
+sin decidir.** El autor pidió que se buscara y se le presentara, y decide después de entenderla. Es
+lo que bloquea el primer punto abierto de la Fase 8.
+
+Acordes por grado en La menor, comprobados contra `SCALES`:
+
+| Grado | Menor natural | Menor armónica |
+|---|---|---|
+| I | La menor (i) | La menor (i) |
+| II | Si disminuido (ii°) | Si disminuido (ii°) |
+| III | Do mayor (III) | Do aumentado (III+) |
+| IV | Re menor (iv) | Re menor (iv) |
+| V | Mi menor (v) | Mi mayor (V) |
+| VI | Fa mayor (VI) | Fa mayor (VI) |
+| VII | Sol mayor (VII) | Sol# disminuido (vii°) |
+
+Donde las fuentes coinciden: tónica es i, con III y VI como sustitutos; subdominante es iv, y ii°
+también; dominante es V y vii°, que solo existen en la armónica porque el Sol# es la sensible.
+
+Las cuatro decisiones del autor, con la recomendación que el modelo le dio entre paréntesis, que es
+recomendación y no decisión:
+
+- a. VI, Fa mayor: tónica o subdominante. Las fuentes se dividen. (Tónica, como el vi en mayor.)
+- b. v y VII de la natural, Mi menor y Sol mayor: dominante débil o sin función de dominante. (Sin
+  función: no tienen sensible. Sol mayor funciona como V del III.)
+- c. Mi mayor con el universo en `minor`: hoy el motor lo lee como "V del i", dominante secundaria.
+  (Es la dominante propia de la tonalidad, y es la mitad del ítem del BACKLOG "El numeral romano solo
+  sabe escribir sostenidos".)
+- d. III y III+: tónica o sin teoría escrita. (Do mayor tónica, como tónica del relativo; Do
+  aumentado sin teoría escrita, casi no se usa.)
+
+Lo que hace el motor hoy en La menor, corrido con `node` el 2026-11-05: `getTonalFunction` devuelve
+`por_definir` para todo. En `minor`, Mi mayor sale `V` y `secondary_dominant` hacia La, y Sol#
+disminuido sale `#vii°` y `unclassified`. En `harmonic_minor`, Sol mayor sale `##VI` y
+`secondary_dominant` hacia Do, y Do mayor sale `III` y `secondary_dominant` hacia Fa.
+
+Fuentes: Puget Sound, https://musictheory.pugetsound.edu/mt21c/DiatonicChordsInMinor.html; Hutchinson
+en LibreTexts, capítulo 7.03 "Diatonic Chords in Minor"; Milne, "Fundamentals, Function, and Form",
+https://milnepublishing.geneseo.edu/fundamentals-function-form/?p=11991; Uniarts Helsinki,
+https://sites.uniarts.fi/en/web/musiikin-teoria-1/functionality/predominants; Mateu, "Los grados
+modales VI y III, funciones de tónica", en studylib.es; Correa, "clase revista nro 005", en
+alejandro-correa.com.ar.
+**Destino cuando el autor decida:** el Track paralelo de teoría del ROADMAP, con estas fuentes, y
+después fixtures.
+
+**2026-11-14, el modelo que implementa. Preguntas abiertas al autor, sin respuesta todavía.**
+
+- Los tres defectos del ciclo de vida del acorde: si la Fase 8 los acepta como límite escrito hasta
+  mirar el video. El 2026-11-05 el autor habló del video y no lo confirmó.
+- `src/widget/` en la Fase 9: se escribió en esa fase leyendo su "me parece adecuado...." como un sí,
+  y la Fase 9 lo marca como hipótesis hasta que lo confirme.
+- Los dos defectos del numeral romano: si se arreglan en la Fase 8, que va a mostrar numerales en la
+  progresión, o en la Fase 11, donde están anotados. Recomendación del modelo: Fase 8.
+- El PR #121: si se mergea antes de que arranque el código de la Fase 8, o se le siguen sumando
+  commits. Recomendación del modelo: mergearlo antes.
+- Dónde guardar la memoria de trabajo del modelo, `MEMORIA-CONTEXTUAL.md`, que hoy vive en el
+  scratchpad de la sesión y puede borrarse: un comentario en el PR, un séptimo documento en el repo,
+  o seguir donde está. Recomendación del modelo: el comentario, porque no cuenta como documento.
+- El gap del §6 de `ARCHITECTURE.md`, la sensible anclada al universo. El autor preguntó si la
+  sensible era el II grado; se le explicó que es el VII, a un semitono debajo de la tónica. No decidió
+  nada.
+
+**2026-11-14, el modelo que implementa. Lo que el autor dijo el 2026-11-05 y no quedó escrito en
+ningún lado.**
+
+- Sobre el orden de las fases: "Vamos en orden, para saber si en el desarrollo de cada usa surge algun
+  problema, discrepancia, novedad, o pregunta." O sea, 8, 9, 10 y 11, sin saltar a la 10.
+- Sobre el vocabulario: "mas adelnte quizas te pida que mejoremos el tecnicamente las palabras, o
+  ampliar que palabras cubren la misma definicion." Apunta a sinónimos en `docs/GLOSARIO.md`. Sin
+  destino hasta que lo pida.
+- Sobre la razón que el log calcula dos veces: preguntado si se arreglaba ahora, contestó con querer
+  mejorar las pruebas primero. **Hipótesis:** se lee como que no por ahora. Base: no habló del ítem,
+  habló de las fixtures.
+- Sobre el video, que todavía no mandó: "la verdad no es un video explicativo o de teoria, todo lo
+  contrairo presupones que sabes mucho, y mi idea mmas que data es extrar de el conceptuso que
+  seguramente no este cubriendo y esten relacionados a fines..." Se le pidió la transcripción aunque
+  tenga errores, capturas con marca de tiempo de cada progresión que muestre, el link y el título, y
+  lo que le llamó la atención aunque no sepa nombrarlo. El modelo no procesa video ni audio.

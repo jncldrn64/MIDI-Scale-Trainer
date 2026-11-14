@@ -822,10 +822,11 @@ encabezado conserva la palabra "característica", que es como se llamaba un widg
 el `nombre` en `CAJAS` y no el `id`: el `id` se persiste en `midiTrainerLayout`, y cambiarlo pide una
 regla de migración que el repo no tiene.
 
-**La carpeta `src/widget/`, decidida el 2026-11-05.** El autor quiere cada widget en su propio archivo
+**La carpeta `src/widget/`, puesta en esta fase el 2026-11-05.** El autor quiere cada widget en su propio archivo
 bajo `src/widget/`, porque los dieciséis archivos de `src/` viven en una sola carpeta y el permiso de
 cada uno se lee en su nombre, no en la estructura. Entra en esta fase, que estrena el primer widget
-nuevo desde la partición. Qué archivos se mudan se decide al arrancar, junto con el contrato de
+nuevo desde la partición, y eso es **hipótesis** leída de su "me parece adecuado" a la pregunta de
+si iba acá o aparte, que falta confirmar. Qué archivos se mudan se decide al arrancar, junto con el contrato de
 salida de la nota de abajo, porque `CAJAS` mezcla widgets que compiten con cajas de sistema. Un
 script clásico en una subcarpeta carga desde `file://`: corrido el 2026-11-05 en Chromium, con
 `<script src="src/widget/x.js">`.

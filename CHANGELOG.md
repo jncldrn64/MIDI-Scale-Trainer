@@ -6,6 +6,20 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.119 — 2026-11-14
+
+Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
+V11.109 hasta el próximo PR de código.
+
+### Added
+- `docs/CONTEXTO-TEMPORAL.md`: volcado preventivo de lo que solo vivía en el chat. Trae la teoría de
+  la función tonal en menor con sus fuentes y cuatro decisiones pendientes, las preguntas abiertas al
+  autor y cuatro dichos suyos sin destino.
+
+### Changed
+- `docs/ROADMAP.md`, Fase 9: `src/widget/` en esta fase queda marcado como hipótesis, porque se leyó
+  de un "me parece adecuado" y falta que el autor lo confirme.
+
 ## v11.118 — 2026-11-05
 
 Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
