@@ -41,7 +41,7 @@ algo que todavía no tiene línea en `docs/GLOSARIO.md`.** Si el término ya est
 previo y el resumen es seguro. Si no está, la anotación estrena vocabulario, y estrenar vocabulario
 mal es lo que cuesta una sesión de corregir.
 
-Ese archivo tiene 80 términos, contados con `grep -c "^- \*\*" docs/GLOSARIO.md`. El disparador no se
+Ese archivo tiene 85 términos el 2026-11-05, contados con `grep -c "^- \*\*" docs/GLOSARIO.md`. El disparador no se
 activa seguido, entonces: cubre el vocabulario que el proyecto ya fijó y deja afuera lo que recién
 aparece, que es lo que lo vuelve barato de cumplir.
 
@@ -122,13 +122,6 @@ condición de estado se reconoce, los números no se usan nunca.
 
 ## Anotaciones
 
-**2026-08-20, el autor.** El tema de los sonidos se conecta con otra fase. No dijo con cuál ni cómo.
-Decidió no abrirlo ahí para no diluir el trabajo que estaba en curso. Queda incompleto a propósito:
-lo que se pierde si no se anota es que la conexión existe, aunque no se sepa cuál.
-**Por qué sigue acá (2026-08-21):** no se puede colocar porque no se sabe qué dice. Espera a que el
-autor recuerde de qué se trataba; si no lo recuerda, se descarta, que es la cuarta salida que las
-reglas de arriba contemplan y que todavía no se ejerció ninguna vez.
-
 **2026-08-20, el autor.** Para las fixtures con partituras, ¿`.mid` o `.md`? Preguntó qué formato
 serviría mejor y quedó sin discutir. Va acá y no al BACKLOG porque el ítem "Fixtures derivadas de
 partituras de dominio público" ya dice que falta decidir el formato; lo que ese ítem no tiene son las
@@ -154,6 +147,13 @@ se pierda. No se decide nada acá.
 
 **Por qué sigue acá (2026-08-21):** es el estado de una discusión que está corriendo. Colocarlo ahora
 la congelaría antes de que termine.
+**Lo nuevo (2026-11-05, el autor):** las quiere sacar de archivos MIDI o PDF, no de lo que él toca, y
+encontrar casos borde que todavía no conoce. Cita: "en realidad esperaba mejorar las pruebas de
+alguna forma, creo que quedo anotado por ahi que queria extraerlas de mid o pdfs de alguna forma, para
+no tener que tener las mias ahi, o encontara edegesn cases que aun no se". Y el porqué: "cada vez
+conecto menos el teclado para tocar en la computadora actualmente". Solo Bad Apple y la Oda a la
+Alegría salieron de su propio teclado. Con esto, el `.md` de la anotación de arriba pierde peso
+frente al `.mid`, pero nadie lo decidió.
 
 **2026-08-21, el modelo que implementa.** Un entrenamiento que trae sus propios widgets choca con una
 regla que ya está escrita. La visión entró hoy a "Direcciones sin fase" del ROADMAP; la regla es la
@@ -226,24 +226,6 @@ tiene que ser verdad para que el programa esté bien hecho.
   programando", que dice estar parqueado ahí; y la subsección del material de referencia externo, que
   propone que el destino visual acordado viva "en el mismo documento de requisitos o en uno propio".
 
-**2026-08-23, el autor. Bloque B, lo que queda: dos ideas de vista, sin destino.** La teoría de este
-bloque la recogió la v11.104, que la verificó contra fuentes; el resultado vive en `docs/DECISIONS.md`,
-entrada del 2026-09-02, en `docs/GLOSARIO.md` y en el ítem de la menor melódica del ROADMAP. La línea
-sobre Mi# y Fa se descartó por duplicada: el ítem de enarmonía del BACKLOG ya la cubre. Queda esto,
-que no es teoría y no lo contesta ninguna fuente:
-
-- **Su lectura general de cómo se encadenan las escalas:** de la mayor sale la menor, y de la menor
-  salen las otras dos, como una recursión. Y la observación que trae pegada, que la rueda de quintas
-  muestra la relación entre mayor y menor y no muestra esas dos. Se toca con la Fase 10 y con lo de
-  abajo, así que se leen juntas.
-- **Lo que propone construir. Dos de las tres se colocaron el 2026-09-03**, en las reglas de la guía:
-  que la guía muestre formas alternativas de leer lo mismo es la tercera parte de cada sección, y
-  mejorar la descripción de los elementos es la primera. Ver `DECISIONS.md`, entrada de ese día.
-- **Queda una: un botón que salte al relativo** desde el selector de escala, sin pasar por el
-  desplegable. Lo quiere antes de la rueda de quintas.
-- **Por qué siguen acá:** las dos que quedan son de interfaz y tocan la Fase 10, que está pendiente.
-  Colocarlas pide decidir si son alcance de esa fase o ítems aparte, y eso no se decidió.
-
 **2026-08-23, el autor, aceptado por el revisor. Bloque C: lo que este repo hace es FDD, no TDD.**
 Entrega por características completas y verificables, con fases e incrementos, y las fixtures llegan
 después o junto, no antes. TDD estricto exige escribir la prueba primero y acá casi nunca pasó.
@@ -276,3 +258,123 @@ del BACKLOG sobre el vocabulario del motor como hueco del roadmap.
 
 **Sin decidir nada.** No se sabe todavía si eso es una fase, un ítem, o una lente más del motor como
 la función tonal.
+
+**2026-11-05, el autor, anotado por el modelo que implementa.** Tres términos que no están en
+`docs/GLOSARIO.md`: grado extendido, acorde envenenado y acorde de paso. El último ya apareció en la
+anotación del 2026-09-06, de arriba. El autor va a traer la transcripción de un video para mirarlo
+juntos, y ahí se aclara qué es cada uno. Citas, sin corregir:
+
+- "Haber, nunca he visto progresiones que digan I,I,V,IV, donde esten don veces seguidas el mismo
+  grado, quizas es un grado extendido?"
+- "en la escala LA menor armonica, veo que un acorde que es disminuido, "Tecnicamente lo puedo
+  escribir tambien como un mayor"... creo que era el de RE, pero aparentemente por lo que me dijo mi
+  profesor, no estoy contando bien las 3ras menores y tecnicamente si puedo hacer un acorde que tenga
+  las mismas notas permitidas de la escala, pero si no cuento en las 3ra menores o 3ra mayores es un
+  acorde envenenado por mucho que "entre" en la "escala")."
+- "pero entre ellos poder poner los acordes de paso (que confundia con la sensible, y la 7ma, en mi
+  buscqueda de tomar acordes que no estan permitidos en la escala, por que sus notas no estan, creo
+  que tambien habiamso llegado en que eran intercambios modales o algo asi)"
+
+Lo que se comprobó contra el motor, sin decidir nada: en La menor armónica el acorde sobre Re es Re
+menor (Re-Fa-La), y los dos disminuidos son el de Si (Si-Re-Fa) y el de Sol# (Sol#-Si-Re). Puede ser
+que el ejemplo hable de otro grado. **Por qué podría importar:** la Fase 8 reserva lugar para los
+acordes de paso en la progresión, y la Fase 11 depende de saber qué es intercambio modal y qué no.
+
+**2026-11-05, el autor.** Un racimo de bajos fuera del universo tendría que contar como error y no
+mover la detección del acorde, y él mismo ve que eso choca con los acordes que salen de la escala a
+propósito. Cita, sin corregir: "supoamos el alcorde que mencionas "Do#-Re-Mib" no pertenece ni de
+casualidad por ejemplo a la escala de "do mayor", por lo que el hacerlo deberia como minimo ser
+detectado como un error, y no afectar en la deteccion, posiblemente sea un error mio por no estar
+acostumbrado a hacer un salto, e inmediatamente quiera recuperame en la misma parte de la "cancion",
+por lo que debe haber un tiempo de deteccion del acorde anterior para evaluar unicamente el proximo
+que si este en la escala... pero esto chocara de lleno con los acordes que se salen de la escala mas
+adelante".
+
+**Por qué importa:** el BACKLOG trata el mismo caso al revés. La condición de reapertura de "La
+estrategia por contenido para soltar el contexto" lo cuenta como defecto, porque el racimo conserva
+el acorde anterior; el autor dice que conservarlo puede ser lo correcto, y lo que falta es marcar el
+error. Quiere refinarlo con el video. La Fase 8 lo cita como punto abierto.
+
+**2026-11-14, el modelo que implementa. Volcado preventivo, pedido por el autor.** La máquina de la
+sesión se reinició el 2026-11-14 y no se perdió nada, pero lo de abajo vivía solo en el chat del
+2026-11-05 al 2026-11-14. Se anota para que una sesión que no tenga ese chat no lo reconstruya de
+memoria. Son cuatro anotaciones.
+
+**2026-11-14, el modelo que implementa. Teoría de la función tonal en menor, buscada el 2026-11-05 y
+sin decidir.** El autor pidió que se buscara y se le presentara, y decide después de entenderla. Es
+lo que bloquea el primer punto abierto de la Fase 8.
+
+Acordes por grado en La menor, comprobados contra `SCALES`:
+
+| Grado | Menor natural | Menor armónica |
+|---|---|---|
+| I | La menor (i) | La menor (i) |
+| II | Si disminuido (ii°) | Si disminuido (ii°) |
+| III | Do mayor (III) | Do aumentado (III+) |
+| IV | Re menor (iv) | Re menor (iv) |
+| V | Mi menor (v) | Mi mayor (V) |
+| VI | Fa mayor (VI) | Fa mayor (VI) |
+| VII | Sol mayor (VII) | Sol# disminuido (vii°) |
+
+Donde las fuentes coinciden: tónica es i, con III y VI como sustitutos; subdominante es iv, y ii°
+también; dominante es V y vii°, que solo existen en la armónica porque el Sol# es la sensible.
+
+Las cuatro decisiones del autor, con la recomendación que el modelo le dio entre paréntesis, que es
+recomendación y no decisión:
+
+- a. VI, Fa mayor: tónica o subdominante. Las fuentes se dividen. (Tónica, como el vi en mayor.)
+- b. v y VII de la natural, Mi menor y Sol mayor: dominante débil o sin función de dominante. (Sin
+  función: no tienen sensible. Sol mayor funciona como V del III.)
+- c. Mi mayor con el universo en `minor`: hoy el motor lo lee como "V del i", dominante secundaria.
+  (Es la dominante propia de la tonalidad, y es la mitad del ítem del BACKLOG "El numeral romano solo
+  sabe escribir sostenidos".)
+- d. III y III+: tónica o sin teoría escrita. (Do mayor tónica, como tónica del relativo; Do
+  aumentado sin teoría escrita, casi no se usa.)
+
+Lo que hace el motor hoy en La menor, corrido con `node` el 2026-11-05: `getTonalFunction` devuelve
+`por_definir` para todo. En `minor`, Mi mayor sale `V` y `secondary_dominant` hacia La, y Sol#
+disminuido sale `#vii°` y `unclassified`. En `harmonic_minor`, Sol mayor sale `##VI` y
+`secondary_dominant` hacia Do, y Do mayor sale `III` y `secondary_dominant` hacia Fa.
+
+Fuentes: Puget Sound, https://musictheory.pugetsound.edu/mt21c/DiatonicChordsInMinor.html; Hutchinson
+en LibreTexts, capítulo 7.03 "Diatonic Chords in Minor"; Milne, "Fundamentals, Function, and Form",
+https://milnepublishing.geneseo.edu/fundamentals-function-form/?p=11991; Uniarts Helsinki,
+https://sites.uniarts.fi/en/web/musiikin-teoria-1/functionality/predominants; Mateu, "Los grados
+modales VI y III, funciones de tónica", en studylib.es; Correa, "clase revista nro 005", en
+alejandro-correa.com.ar.
+**Destino cuando el autor decida:** el Track paralelo de teoría del ROADMAP, con estas fuentes, y
+después fixtures.
+
+**2026-11-14, el modelo que implementa. Preguntas abiertas al autor, sin respuesta todavía.**
+
+- Los tres defectos del ciclo de vida del acorde: si la Fase 8 los acepta como límite escrito hasta
+  mirar el video. El 2026-11-05 el autor habló del video y no lo confirmó.
+- `src/widget/` en la Fase 9: se escribió en esa fase leyendo su "me parece adecuado...." como un sí,
+  y la Fase 9 lo marca como hipótesis hasta que lo confirme.
+- Los dos defectos del numeral romano: si se arreglan en la Fase 8, que va a mostrar numerales en la
+  progresión, o en la Fase 11, donde están anotados. Recomendación del modelo: Fase 8.
+- El PR #121: si se mergea antes de que arranque el código de la Fase 8, o se le siguen sumando
+  commits. Recomendación del modelo: mergearlo antes.
+- Dónde guardar la memoria de trabajo del modelo, `MEMORIA-CONTEXTUAL.md`, que hoy vive en el
+  scratchpad de la sesión y puede borrarse: un comentario en el PR, un séptimo documento en el repo,
+  o seguir donde está. Recomendación del modelo: el comentario, porque no cuenta como documento.
+- El gap del §6 de `ARCHITECTURE.md`, la sensible anclada al universo. El autor preguntó si la
+  sensible era el II grado; se le explicó que es el VII, a un semitono debajo de la tónica. No decidió
+  nada.
+
+**2026-11-14, el modelo que implementa. Lo que el autor dijo el 2026-11-05 y no quedó escrito en
+ningún lado.**
+
+- Sobre el orden de las fases: "Vamos en orden, para saber si en el desarrollo de cada usa surge algun
+  problema, discrepancia, novedad, o pregunta." O sea, 8, 9, 10 y 11, sin saltar a la 10.
+- Sobre el vocabulario: "mas adelnte quizas te pida que mejoremos el tecnicamente las palabras, o
+  ampliar que palabras cubren la misma definicion." Apunta a sinónimos en `docs/GLOSARIO.md`. Sin
+  destino hasta que lo pida.
+- Sobre la razón que el log calcula dos veces: preguntado si se arreglaba ahora, contestó con querer
+  mejorar las pruebas primero. **Hipótesis:** se lee como que no por ahora. Base: no habló del ítem,
+  habló de las fixtures.
+- Sobre el video, que todavía no mandó: "la verdad no es un video explicativo o de teoria, todo lo
+  contrairo presupones que sabes mucho, y mi idea mmas que data es extrar de el conceptuso que
+  seguramente no este cubriendo y esten relacionados a fines..." Se le pidió la transcripción aunque
+  tenga errores, capturas con marca de tiempo de cada progresión que muestre, el link y el título, y
+  lo que le llamó la atención aunque no sepa nombrarlo. El modelo no procesa video ni audio.

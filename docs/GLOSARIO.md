@@ -237,6 +237,11 @@
   teoría de la menor todavía no está escrita en este repo. Los dos últimos son admisiones de que el
   motor no sabe y no se ocultan. Fuente: 2026-08-11, *La función tonal se muestra completa, con las
   dos veces que el motor admite que no sabe*.
+- **progresión**: la secuencia de acordes distintos que fueron sonando, leída contra el universo
+  activo. Un acorde igual al último no suma, cambiar de universo la vacía y su largo lo elige el
+  usuario. La arma una función pura del motor y la guarda el sistema en `State`. Todavía no existe
+  en el código: es la Fase 8 del `ROADMAP.md`. Fuente: 2026-11-05, *La progresión la arma una
+  función pura del motor y la guarda el sistema*.
 - **dominante secundaria**: el acorde que funciona como dominante de un grado que no es la tónica,
   y que se escribe V/V, V/ii y así. Es el nombre técnico de lo que se percibe como una nota que
   empuja hacia otra y vuelve. El motor no la detecta como acorde: lo que evalúa desde la Fase 3 es su

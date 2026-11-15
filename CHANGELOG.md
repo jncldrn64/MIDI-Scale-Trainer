@@ -6,6 +6,53 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com). Lo más nuevo, arriba.
 
+## v11.119 — 2026-11-14
+
+Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
+V11.109 hasta el próximo PR de código.
+
+### Added
+- `docs/CONTEXTO-TEMPORAL.md`: volcado preventivo de lo que solo vivía en el chat. Trae la teoría de
+  la función tonal en menor con sus fuentes y cuatro decisiones pendientes, las preguntas abiertas al
+  autor y cuatro dichos suyos sin destino.
+
+### Changed
+- `docs/ROADMAP.md`, Fase 9: `src/widget/` en esta fase queda marcado como hipótesis, porque se leyó
+  de un "me parece adecuado" y falta que el autor lo confirme.
+
+## v11.118 — 2026-11-05
+
+Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
+V11.109 hasta el próximo PR de código.
+
+### Added
+- `docs/DECISIONS.md`: "La progresión la arma una función pura del motor y la guarda el sistema",
+  con las tres respuestas del autor sobre qué entra a la secuencia.
+- `docs/GLOSARIO.md`: el término "progresión".
+- `docs/CONTEXTO-TEMPORAL.md`: dos anotaciones del 2026-11-05, con sus citas. Una trae los términos
+  grado extendido, acorde envenenado y acorde de paso; la otra, el racimo de bajos fuera del universo.
+- `docs/ROADMAP.md`, BACKLOG: "El numeral romano solo sabe escribir sostenidos", medido contra el
+  motor. Sib mayor en Do mayor sale `#VI` en vez de ♭VII.
+
+### Changed
+- `docs/ROADMAP.md`, Fases 8 a 11: el texto pasa al vocabulario del glosario, widget y cap en vez de
+  panel, característica y ranura. Los encabezados no cambian.
+- Fase 8: el motor arma la progresión con una función pura y el sistema la guarda. Suma lo que el
+  autor decidió y lo que sigue abierto: la función tonal en menor, la liberación y los defectos del
+  acorde.
+- Fase 9: vive en `widget-reservado`, y estrena la carpeta `src/widget/`. Fase 10: la vista lineal ya existía, y suma los botones del
+  relativo y de natural a armónica a melódica. Fase 11: "Sin clasificar" y los modos que faltan.
+- `docs/ROADMAP.md`, BACKLOG: el SoundFont recibe la aclaración del autor sobre la RAM, el metrónomo
+  su papel en la Fase 8, y la verbosidad se remide sin violaciones seguras.
+- `docs/ROADMAP.md`, "Deuda de método": deja de decir que toca otros repos, que `CLAUDE.md` prohíbe
+  en "Scope de escritura".
+- `docs/ARCHITECTURE.md`: el §1 aclara que `harmony.function` nace en `Readout`, y el §3 describe la
+  evaluación con la jerarquía del §5.
+
+### Removed
+- `docs/CONTEXTO-TEMPORAL.md`: la anotación de los sonidos, colocada en el ítem del SoundFont, y el
+  Bloque B, colocado en la Fase 10.
+
 ## v11.117 — 2026-10-25
 
 Solo documentación. No toca `src/`, `index.html` ni las fixtures; la versión mostrada sigue en
